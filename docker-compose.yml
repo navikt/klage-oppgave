@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  frontend:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./public:/usr/src/app/public
+    environment:
+      NODE_ENV: production
+      INLINE_RUNTIME_CHUNK: "false"
+      REACT_APP_URL: http://localhost:8080
+      REACT_APP_LOGINSERVICE_URL: https://loginservice.dev.nav.no/login
+      REACT_API_URL: https://klage-oppgave-api.dev.nav.no

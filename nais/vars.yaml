@@ -1,0 +1,7 @@
+app: klage-oppgave
+namespace: klage
+team: klage
+image: docker.pkg.github.com/navikt/klage-oppgave/klage-oppgave:latest
+ingresses:
+  - https://klage-oppgave.dev.nav.no
+
