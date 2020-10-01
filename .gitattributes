@@ -1,0 +1,9 @@
+secretfile filter=git-crypt diff=git-crypt
+*.env* filter=git-crypt diff=git-crypt
+*.secrets.yaml filter=git-crypt diff=git-crypt
+*.secrets.yml filter=git-crypt diff=git-crypt
+*.secrets.properties filter=git-crypt diff=git-crypt
+*.secrets.json filter=git-crypt diff=git-crypt
+*.secrets.jks filter=git-crypt diff=git-crypt
+*.secrets.txt filter=git-crypt diff=git-crypt
+*.secret.* filter=git-crypt diff=git-crypt

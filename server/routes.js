@@ -60,12 +60,34 @@ const setup = (authClient) => {
     res.json(req.user);
   });
 
+  router.get("/graphtoken", (req, res) => {
+    const params = {
+      clientId: "https://graph.microsoft.com",
+      scopes: ["https://graph.microsoft.com/.default"],
+    };
+    authUtils
+      .getOnBehalfOfAccessToken(authClient, req, params)
+      .then((userinfo) => res.json(userinfo))
+      .catch((err) => res.status(500).json(err));
+  });
+
   router.get("/token", (req, res) => {
     const params = {
       clientId: "0bc199ef-35dd-4aa3-87e6-01506da3dd90",
       path: "api",
       url: "https://klage-oppgave-api.dev.nav.no/",
       scopes: [],
+    };
+    authUtils
+      .getOnBehalfOfAccessToken(authClient, req, params)
+      .then((userinfo) => res.json(userinfo))
+      .catch((err) => res.status(500).json(err));
+  });
+
+  router.get("/graphtoken", (req, res) => {
+    const params = {
+      clientId: "https://graph.microsoft.com",
+      scopes: ["https://graph.microsoft.com/.default"],
     };
     authUtils
       .getOnBehalfOfAccessToken(authClient, req, params)

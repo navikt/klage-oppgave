@@ -1,11 +1,7 @@
 let fs = require("fs");
 let path = require("path");
 
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv-flow").config();
-} else {
-  require("dotenv").config();
-}
+require("dotenv-flow").config();
 
 const envVar = ({ name, required = true }) => {
   if (!process.env[name] && required) {
