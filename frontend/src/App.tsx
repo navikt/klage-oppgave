@@ -39,10 +39,12 @@ const App = (): JSX.Element => {
       <nav className="main-nav">
         <ul>
           <li>
-            <a href="">Saker</a>
+            <a className="active" href="">
+              Saker
+            </a>
           </li>
           <li>
-            <a href="">Mine Saker</a>
+            <a href="">Mine&nbsp;Saker</a>
           </li>
           <li>
             <a href="">Innstillinger</a>
