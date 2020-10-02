@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import { Sidetittel, Normaltekst } from "nav-frontend-typografi";
-import { Logo } from "./assets/navlogo";
 import "./App.less";
 import { get } from "./api";
 
@@ -24,18 +23,25 @@ const App = (): JSX.Element => {
   }, []);
   return (
     <main className="container">
-      <Logo />
-      <Sidetittel>Klage Oppgave</Sidetittel>
-      <pre
-        style={{
-          maxWidth: 800,
-          whiteSpace: "pre-wrap",
-          wordWrap: "break-word",
-        }}
-      >
-        <h4>Respons fra API:</h4>
-        {JSON.stringify(tokendata)}
-      </pre>
+      <header className="main-head">NAV Klage</header>
+      <nav className="main-nav">
+        <ul>
+          <li>
+            <a href="">Saker</a>
+          </li>
+          <li>
+            <a href="">Mine Saker</a>
+          </li>
+          <li>
+            <a href="">Innstillinger</a>
+          </li>
+        </ul>
+      </nav>
+      <article className="content">
+        <p>Tildel meg sak...</p>
+      </article>
+      <aside className="side">Eventuelt?</aside>
+      <footer className="main-footer">Bunn</footer>
     </main>
   );
 };
