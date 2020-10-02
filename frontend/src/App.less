@@ -1,6 +1,21 @@
-.container > * {
-  border: 1px solid black;
+@import "~nav-frontend-typografi-style";
+
+* {
+  box-sizing: border-box;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.app {
+  .typo-normal-mixin();
+  font-family: @font-family;
+  line-height: @line-height-base;
+}
+
 .container {
   display: grid;
   grid-gap: 20px;
@@ -13,7 +28,15 @@
 }
 .main-head {
   grid-area: header;
+  background-color: #3e3832;
+  color: white;
+  min-height: 60px;
+  > div {
+    padding: 15px 10px;
+    font-size: larger;
+  }
 }
+
 .content {
   grid-area: content;
 }
@@ -23,11 +46,15 @@
 .side {
   grid-area: sidebar;
 }
-.ad {
-  grid-area: ad;
-}
 .main-footer {
   grid-area: footer;
+  background-color: #3e3832;
+  color: white;
+  min-height: 60px;
+  > div {
+    padding: 15px 10px;
+    font-size: larger;
+  }
 }
 @media (min-width: 500px) {
   .container {

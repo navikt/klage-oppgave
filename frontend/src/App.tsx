@@ -23,7 +23,9 @@ const App = (): JSX.Element => {
   }, []);
   return (
     <main className="container">
-      <header className="main-head">NAV Klage</header>
+      <header className="main-head">
+        <div>NAV Klage</div>
+      </header>
       <nav className="main-nav">
         <ul>
           <li>
@@ -39,9 +41,21 @@ const App = (): JSX.Element => {
       </nav>
       <article className="content">
         <p>Tildel meg sak...</p>
+        <h4>Respons fra API:</h4>
+        <pre
+          style={{
+            maxWidth: 800,
+            whiteSpace: "pre-wrap",
+            wordWrap: "break-word",
+          }}
+        >
+          {JSON.stringify(tokendata)}
+        </pre>
       </article>
-      <aside className="side">Eventuelt?</aside>
-      <footer className="main-footer">Bunn</footer>
+      <aside className="side">Eventuell sidebar</aside>
+      <footer className="main-footer">
+        <div>Bunnlinje</div>
+      </footer>
     </main>
   );
 };

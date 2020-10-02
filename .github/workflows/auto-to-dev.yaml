@@ -28,6 +28,8 @@ jobs:
           npm run clean
           npm run build
       - name: Build and publish Docker image
+        envFrom:
+          - SESSION_KEY: klage-session-key
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -42,9 +44,10 @@ jobs:
       - uses: actions/checkout@v2
         name: Checkout code
       - uses: nais/deploy/actions/deploy@master
+        envFrom:
+          - SESSION_KEY: klage-session-key
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          SESSION_KEY: ${{ secrets.klage-session-key }}
           CLUSTER: dev-gcp
           RESOURCE: nais/nais.yaml
           VARS: nais/vars.yaml
