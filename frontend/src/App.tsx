@@ -52,7 +52,6 @@ const App = (): JSX.Element => {
         </ul>
       </nav>
       <article className="content">
-        <p>Tildel meg sak...</p>
         <h4>Respons fra API:</h4>
         <pre
           style={{
@@ -66,7 +65,6 @@ const App = (): JSX.Element => {
           {JSON.stringify(tokendata)}
         </pre>
       </article>
-      <aside className="side">Eventuell sidebar</aside>
       <footer className="main-footer">
         <div>Bunnlinje</div>
       </footer>
