@@ -28,10 +28,9 @@ jobs:
           npm run clean
           npm run build
       - name: Build and publish Docker image
-        envFrom:
-          - SESSION_KEY: klage-session-key
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SESSION_KEY: klage-session-key
         run: |
           docker build --tag ${IMAGE} .
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
