@@ -43,9 +43,8 @@ jobs:
       - uses: actions/checkout@v2
         name: Checkout code
       - uses: nais/deploy/actions/deploy@master
-        envFrom:
-          - SESSION_KEY: klage-session-key
         env:
+          SESSION_KEY: klage-session-key
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/nais.yaml
