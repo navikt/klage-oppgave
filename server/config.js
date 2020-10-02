@@ -27,6 +27,7 @@ const server = {
   // name of the cookie, set to whatever your want
   cookieName: "security-blueprints-login",
 };
+console.log("SERVER", server);
 
 const azureAd = {
   // these are provided by nais at runtime

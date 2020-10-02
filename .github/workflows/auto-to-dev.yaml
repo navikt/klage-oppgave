@@ -44,6 +44,7 @@ jobs:
       - uses: nais/deploy/actions/deploy@master
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          SESSION_KEY: ${{ secrets.klage-session-key }}
           CLUSTER: dev-gcp
           RESOURCE: nais/nais.yaml
           VARS: nais/vars.yaml
