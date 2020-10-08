@@ -30,14 +30,14 @@ const Layout = (Component: JSX.Element) => {
   );
 };
 
-interface CardType {
+interface LayoutType {
   children: JSX.Element;
   loading: boolean;
 }
 
 import PropTypes from "prop-types";
 
-export default function Card({ children, loading }: CardType) {
+export default function Card({ children, loading }: LayoutType) {
   return (
     <main className="container">
       <header className="main-head">
@@ -68,7 +68,7 @@ export default function Card({ children, loading }: CardType) {
   );
 }
 
-Card.propTypes = {
+Layout.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.element),
     PropTypes.element.isRequired,

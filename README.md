@@ -1,10 +1,13 @@
 # NAV Oppgave
 
-Push til master ruller ut ny versjon på
+Push til main ruller ut ny versjon på
+
 https://klage-oppgave.dev.nav.no/
 
-Kjør opp i dev ved å gå til frontend og kjør npm start:
+Kjør opp i dev slik:
 
 `cd frontend`
+
 `npm install`
-`npm start`
+
+`NODE_ENV=development npm start`
