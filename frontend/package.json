@@ -68,6 +68,8 @@
     "nav-frontend-lenker-style": "^0.2.29",
     "nav-frontend-paneler": "^2.0.10",
     "nav-frontend-paneler-style": "^0.3.21",
+    "nav-frontend-spinner": "^2.0.6",
+    "nav-frontend-spinner-style": "^0.2.6",
     "nav-frontend-typografi": "^2.0.26",
     "nav-frontend-typografi-style": "^1.0.22",
     "prop-types": "^15.7.2",

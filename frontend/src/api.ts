@@ -11,7 +11,7 @@ let instance = axios.create({
 instance.interceptors.request.use(
   async (config) => {
     const token = await axios.get(
-      process.env.NODE_ENV === "development" ? "/api/token" : "/token"
+      window.location.host.startsWith("localhost") ? "/api/token" : "/token"
     );
     config.headers = {
       Authorization: `Bearer ${token.data}`,

@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from "react";
-
+import NavFrontendSpinner from "nav-frontend-spinner";
 import { Sidetittel, Normaltekst } from "nav-frontend-typografi";
+import Layout from "./components/Layout";
 import "./App.less";
 import { get } from "./api";
 
-export interface StringSkjema {
-  token: string;
-}
-
+type MainProps = { data: string };
+const Main = ({ data }: MainProps) => {
+  return (
+    <>
+      <pre
+        style={{
+          maxWidth: 800,
+          whiteSpace: "pre-wrap",
+          wordWrap: "break-word",
+        }}
+      >
+        {JSON.stringify(data)}
+      </pre>
+    </>
+  );
+};
 const App = (): JSX.Element => {
-  const [tokendata, setTokendata] = useState<StringSkjema>();
-  const [data, setData] = useState<StringSkjema>();
+  const [data, setData] = useState<string>("");
 
   useEffect(() => {
-    const tokenUrl = "https://klage-oppgave-api.dev.nav.no/tokeninfo";
-    get<StringSkjema>(tokenUrl)
-      .then((result) => {
-        setTokendata(result);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    const oppgaveUrl = "https://klage-oppgave-api.dev.nav.no/oppgaver";
-    get<StringSkjema>(oppgaveUrl)
+    const oppgaveUrl = "/api/oppgaver";
+    get<string>(oppgaveUrl)
       .then((result) => {
         setData(result);
       })
@@ -32,43 +36,9 @@ const App = (): JSX.Element => {
   }, []);
 
   return (
-    <main className="container">
-      <header className="main-head">
-        <div>NAV Klage</div>
-      </header>
-      <nav className="main-nav">
-        <ul>
-          <li>
-            <a className="active" href="">
-              Saker
-            </a>
-          </li>
-          <li>
-            <a href="">Mine&nbsp;Saker</a>
-          </li>
-          <li>
-            <a href="">Innstillinger</a>
-          </li>
-        </ul>
-      </nav>
-      <article className="content">
-        <h4>Respons fra API:</h4>
-        <pre
-          style={{
-            maxWidth: 800,
-            whiteSpace: "pre-wrap",
-            wordWrap: "break-word",
-          }}
-        >
-          {JSON.stringify(data)}
-
-          {JSON.stringify(tokendata)}
-        </pre>
-      </article>
-      <footer className="main-footer">
-        <div>Bunnlinje</div>
-      </footer>
-    </main>
+    <Layout loading={!data}>
+      <Main data={data} />
+    </Layout>
   );
 };
 
