@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import NavFrontendSpinner from "nav-frontend-spinner";
-import { Sidetittel, Normaltekst } from "nav-frontend-typografi";
 import Layout from "./components/Layout";
 import "./App.less";
 import { get } from "./api";
+import { getApiHost } from "./utility/getApiHost";
 
 type MainProps = { data: string };
 const Main = ({ data }: MainProps) => {
@@ -21,11 +20,12 @@ const Main = ({ data }: MainProps) => {
     </>
   );
 };
+
 const App = (): JSX.Element => {
   const [data, setData] = useState<string>("");
 
   useEffect(() => {
-    const oppgaveUrl = "/api/oppgaver";
+    const oppgaveUrl = `${getApiHost(window.location.host)}/oppgaver`;
     get<string>(oppgaveUrl)
       .then((result) => {
         setData(result);
