@@ -45,6 +45,7 @@ nav ul {
 .container {
   display: grid;
   grid-gap: 20px 0;
+  grid-template-columns: 1fr;
   grid-template-areas:
     "header"
     "nav"
@@ -88,6 +89,7 @@ nav ul {
 @media (min-width: 500px) {
   .container {
     grid-template-columns: 3fr auto;
+    grid-template-rows: 60px 100px 1fr 60px;
     grid-template-areas:
       "header  header"
       "nav     nav"
@@ -95,10 +97,10 @@ nav ul {
       "footer  footer";
   }
 }
-
 @media (min-width: 700px) {
   .container {
     grid-template-columns: 1fr 4fr;
+    grid-template-rows: 60px 50px 1fr 60px;
     grid-template-areas:
       "header  header "
       "nav     nav    "

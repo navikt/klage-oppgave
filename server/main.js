@@ -6,6 +6,7 @@ let express = require("express");
 let helmet = require("helmet");
 let passport = require("passport");
 let session = require("./session");
+let proxy = require("http-proxy-middleware");
 
 // for debugging during development
 let morganBody = require("morgan-body");
@@ -42,6 +43,23 @@ async function startApp() {
     passport.use("azureOidc", azureOidcStrategy);
     passport.serializeUser((user, done) => done(null, user));
     passport.deserializeUser((user, done) => done(null, user));
+
+    // setup proxy
+    function proxyHost() {
+      return "https://klage-oppgave-api.dev.no";
+    }
+
+    server.use(
+      "/api",
+      proxy({
+        target: proxyHost(),
+        changeOrigin: true,
+        pathRewrite: function (path, req) {
+          console.log({ path });
+          return path.replace("/api", "/");
+        },
+      })
+    );
 
     // setup routes
     server.use("/", routes.setup(azureAuthClient));
