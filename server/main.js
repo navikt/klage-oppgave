@@ -46,7 +46,7 @@ async function startApp() {
 
     // setup proxy
     function proxyHost() {
-      return "https://klage-oppgave-api.dev.no";
+      return "https://klage-oppgave-api.dev.nav.no";
     }
 
     server.use(
