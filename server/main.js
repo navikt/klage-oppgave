@@ -54,8 +54,12 @@ async function startApp() {
       createProxyMiddleware({
         target: proxyHost(),
         changeOrigin: true,
+        secure: false,
         pathRewrite: function (path, req) {
-          console.log({ path });
+          console.log({
+            from: path,
+            to: proxyHost() + path.replace("/api", ""),
+          });
           return path.replace("/api", "");
         },
       })
