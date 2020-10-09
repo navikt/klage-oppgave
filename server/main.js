@@ -56,7 +56,7 @@ async function startApp() {
         changeOrigin: true,
         pathRewrite: function (path, req) {
           console.log({ path });
-          return path.replace("/api", "/");
+          return path.replace("/api", "");
         },
       })
     );
