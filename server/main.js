@@ -6,7 +6,7 @@ let express = require("express");
 let helmet = require("helmet");
 let passport = require("passport");
 let session = require("./session");
-let proxy = require("http-proxy-middleware");
+let { createProxyMiddleware } = require("http-proxy-middleware");
 
 // for debugging during development
 let morganBody = require("morgan-body");
@@ -51,7 +51,7 @@ async function startApp() {
 
     server.use(
       "/api",
-      proxy({
+      createProxyMiddleware({
         target: proxyHost(),
         changeOrigin: true,
         pathRewrite: function (path, req) {
