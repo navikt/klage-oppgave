@@ -22,13 +22,12 @@ const server = {
   proxy: envVar({ name: "HTTP_PROXY", required: false }),
 
   // should be set to a random key of significant length for signing session ID cookies
-  sessionKey: envVar({ name: "SESSION_KEY", required: true }),
+  // bruk kube secret for å sette denne
+  sessionKey: envVar({ name: "SESS_KEY", required: true }),
 
   // name of the cookie, set to whatever your want
   cookieName: "security-blueprints-login",
 };
-console.log("SERVER", server);
-console.log("klage.session.key", process.env.klage.session.key);
 
 const azureAd = {
   // these are provided by nais at runtime
