@@ -28,6 +28,7 @@ const server = {
   cookieName: "security-blueprints-login",
 };
 console.log("SERVER", server);
+console.log("klage.session.key", process.env.klage.session.key);
 
 const azureAd = {
   // these are provided by nais at runtime
