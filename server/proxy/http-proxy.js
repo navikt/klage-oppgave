@@ -5,7 +5,6 @@ let { HttpsProxyAgent } = Agent;
 const agent = () => {
   const proxyUri = config.server.proxy;
   if (proxyUri) {
-    console.log(`Proxying requests via ${proxyUri} for openid-cilent`);
     const agent = new HttpsProxyAgent(proxyUri);
     return {
       http: agent,

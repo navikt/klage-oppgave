@@ -12,7 +12,6 @@ const metadata = {
 
 const client = async () => {
   const issuer = await Issuer.discover(config.azureAd.discoveryUrl);
-  console.log(`Discovered issuer ${issuer.issuer}`);
   const jwks = config.azureAd.clientJwks;
   return new issuer.Client(metadata, jwks);
 };

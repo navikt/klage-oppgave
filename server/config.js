@@ -99,7 +99,6 @@ const loadReverseProxyConfig = () => {
       required: false,
     });
     if (jsonConfig) {
-      console.log(`Loading reverse proxy config from DOWNSTREAM_APIS_CONFIG`);
       config = JSON.parse(jsonConfig);
     } else {
       console.log(

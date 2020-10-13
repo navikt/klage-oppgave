@@ -8,8 +8,6 @@ const getOnBehalfOfAccessToken = (authClient, req, api) => {
   return new Promise((resolve, reject) => {
     if (hasValidAccessToken(req, api.clientId)) {
       const tokenSets = getTokenSetsFromSession(req);
-      console.log("access_token (1)", tokenSets[api.clientId].access_token);
-      console.log("id_token (1)", tokenSets[api.clientId].id_token);
       resolve(tokenSets[api.clientId].access_token);
     } else {
       authClient
@@ -23,8 +21,6 @@ const getOnBehalfOfAccessToken = (authClient, req, api) => {
         })
         .then((tokenSet) => {
           req.user.tokenSets[api.clientId] = tokenSet;
-          console.log("access_token", tokenSet.access_token);
-          console.log("id_token", tokenSet.id_token);
           resolve(tokenSet.access_token);
         })
         .catch((err) => {

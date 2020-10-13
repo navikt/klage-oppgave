@@ -38,7 +38,6 @@ const setup = (authClient) => {
     "/oauth2/callback",
     passport.authenticate("azureOidc", { failureRedirect: "/error" }),
     (req, res) => {
-      console.log("autentisert med passprot");
       if (session.redirectTo) {
         res.redirect(session.redirectTo);
       } else {

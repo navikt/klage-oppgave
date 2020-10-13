@@ -34,7 +34,6 @@ const setupRedis = () => {
     port: config.redis.port,
   });
   client.unref();
-  client.on("error", console.log);
 
   return new RedisStore({
     client: client,
