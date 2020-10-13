@@ -7,6 +7,7 @@ interface LayoutType {
 }
 
 import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
 
 export default function Layout({ children, loading }: LayoutType) {
   return (
@@ -17,15 +18,19 @@ export default function Layout({ children, loading }: LayoutType) {
       <nav className="main-nav" role="navigation" aria-label="Meny">
         <ul>
           <li>
-            <a className="active" href="">
+            <NavLink className="link" to="/saker">
               Saker
-            </a>
+            </NavLink>
           </li>
           <li>
-            <a href="">Mine&nbsp;Saker</a>
+            <NavLink className="link" to="/minesaker">
+              Mine&nbsp;Saker
+            </NavLink>
           </li>
           <li>
-            <a href="">Innstillinger</a>
+            <NavLink className="link" to="/innstillinger">
+              Innstillinger
+            </NavLink>
           </li>
         </ul>
       </nav>
