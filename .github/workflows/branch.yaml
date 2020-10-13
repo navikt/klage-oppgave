@@ -1,4 +1,4 @@
-name: Bygg og rull ut branch
+name: Bygg og rull ut manuelt
 
 on:
   workflow_dispatch:
@@ -32,6 +32,7 @@ jobs:
       - name: Build and publish Docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SESSION_KEY: ${{ secrets.klage-session-key }}
         run: |
           docker build --tag ${IMAGE} .
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
@@ -45,6 +46,7 @@ jobs:
         name: Checkout code
       - uses: nais/deploy/actions/deploy@master
         env:
+          SESSION_KEY: ${{ secrets.klage-session-key }}
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/nais.yaml

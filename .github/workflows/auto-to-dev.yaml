@@ -1,4 +1,4 @@
-name: Bygg og rull ut til dev automatisk
+name: Automatisk main til dev
 
 on:
   push:
