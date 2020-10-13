@@ -5,10 +5,8 @@ import App from "./App";
 //import { ENV } from './constants/env';
 import store from "./state/configureStore";
 //import { initEnvironment } from './state/modules/environment';
-//import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from "react-router-dom";
 
-// Initialize environment configuration in the store
 //store.dispatch(initEnvironment(ENV));
 
 ReactDOM.render(
@@ -21,8 +19,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("app")
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-//serviceWorker.unregister();
