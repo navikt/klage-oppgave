@@ -44,7 +44,7 @@ async function startApp() {
     passport.deserializeUser((user, done) => done(null, user));
 
     // setup routes
-    server.use("/", routes.setup(azureAuthClient));
+    server.use("*", routes.setup(azureAuthClient));
     server.listen(port, () => console.log(`Listening on port ${port}`));
   } catch (error) {
     console.error("Error during start-up", error);
