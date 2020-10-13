@@ -2,44 +2,26 @@ import React, { useEffect, useState } from "react";
 import Layout from "./components/Layout";
 import "./App.less";
 import "./Tabell.less";
-import { get } from "./api";
-import { getApiHost } from "./utility/getApiHost";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  OppgaveRad,
+  OppgaveRader,
+  oppgaveRequest,
+} from "./state/modules/oppgave";
+import {
+  selectOppgaver,
+  selectFetching,
+} from "./state/modules/oppgave.selectors";
 
-interface OppgaveRad {
-  id: number;
-  bruker: {
-    fnr: string;
-    navn: string;
-  };
-  type: string;
-  ytelse: string;
-  hjemmel: [string];
-  frist: string;
-  saksbehandler: string;
-}
-
-interface OppgaveRader {
-  data: [OppgaveRad];
-}
-
-const initRad: OppgaveRad = {
-  id: 0,
-  bruker: {
-    fnr: "",
-    navn: "",
-  },
-  type: "",
-  ytelse: "",
-  hjemmel: [""],
-  frist: "",
-  saksbehandler: "",
+const OppgaveTabell = (oppgaver: OppgaveRader) => {
+  return (
+    <table className="oppgave">
+      <tbody>{genererTabellRader(oppgaver.rader)}</tbody>
+    </table>
+  );
 };
 
-const OppgaveSkjema = (data: OppgaveRader) => {
-  return <table className="oppgave">{visTabell(data.data)}</table>;
-};
-
-const OppgaveRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
+const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
   return (
     <tr>
       <td>{type}</td>
@@ -57,23 +39,21 @@ const OppgaveRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
   );
 };
 
-const visTabell = (rader: Array<OppgaveRad>): JSX.Element[] => {
-  return rader.map((rad) => <OppgaveRad key={rad.id} {...rad} />);
+const genererTabellRader = (rader: Array<OppgaveRad>): JSX.Element[] => {
+  return rader.map((rad) => <OppgaveTabellRad key={rad.id} {...rad} />);
 };
 
 const App = (): JSX.Element => {
-  const [data, setData] = useState<[OppgaveRad]>([initRad]);
+  const oppgaver = useSelector(selectOppgaver);
+  const fetching = useSelector(selectFetching);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const oppgaveUrl = `${getApiHost(window.location.host)}/oppgaver`;
-    get<[OppgaveRad]>(oppgaveUrl)
-      .then((result) => setData(result))
-      .catch((err) => console.error(err));
+    dispatch(oppgaveRequest());
   }, []);
-
   return (
-    <Layout loading={JSON.stringify(data[0]) === JSON.stringify(initRad)}>
-      <OppgaveSkjema data={data} />
+    <Layout loading={fetching}>
+      <OppgaveTabell rader={oppgaver.rader} />
     </Layout>
   );
 };
