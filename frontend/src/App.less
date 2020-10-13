@@ -1,5 +1,4 @@
 @import "~nav-frontend-typografi-style";
-
 * {
   box-sizing: border-box;
 }
@@ -8,32 +7,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-}
-
-nav ul {
-  display: flex;
-  justify-content: left;
-  flex-direction: row;
-  margin: 0 0 0 15px;
-  padding: 0;
-  li > {
-    list-style: none;
-    margin: 20px 10px 0 0;
-    text-align: center;
-    display: block;
-    width: 150px;
-    font-size: 1.2em;
-    word-break: keep-all;
-    > a {
-      color: #54483f;
-      font-weight: 600;
-      text-decoration: none;
-      &.active,
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
 }
 
 .app {
@@ -55,14 +28,6 @@ nav ul {
 
 .main-head {
   grid-area: header;
-  background-color: #3e3832;
-  color: white;
-  min-height: 60px;
-
-  > div {
-    padding: 15px 10px;
-    font-size: larger;
-  }
 }
 
 .content {
@@ -72,27 +37,6 @@ nav ul {
 
 .main-nav {
   grid-area: nav;
-}
-.main-nav ul {
-  padding: 5px 0 0 0;
-  margin: 0 20px;
-  border-bottom: 1px solid #3e3832;
-}
-.main-nav ul li {
-  width: 10em;
-  min-width: 10em;
-}
-a.link {
-  width: 100%;
-  display: block;
-  text-decoration: none;
-  border-bottom: 5px solid transparent;
-}
-a.link.active,
-a.link:hover {
-  text-decoration: none;
-  color: #0067c5;
-  border-bottom: 5px solid #0067c5;
 }
 
 .main-footer {
@@ -128,4 +72,26 @@ a.link:hover {
       "content content"
       "footer  footer ";
   }
+}
+
+.main-nav ul {
+  padding: 5px 0 0 0;
+  margin: 0 20px;
+  border-bottom: 1px solid #3e3832;
+}
+.main-nav ul li {
+  width: 10em;
+  min-width: 10em;
+}
+a.link {
+  width: 100%;
+  display: block;
+  text-decoration: none;
+  border-bottom: 5px solid transparent;
+}
+a.link.active,
+a.link:hover {
+  text-decoration: none;
+  color: #0067c5;
+  border-bottom: 5px solid #0067c5;
 }

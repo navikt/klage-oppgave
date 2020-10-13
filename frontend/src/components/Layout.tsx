@@ -1,5 +1,6 @@
 import NavFrontendSpinner from "nav-frontend-spinner";
 import React from "react";
+import "../Header.less";
 
 interface LayoutType {
   children: JSX.Element;
@@ -13,7 +14,14 @@ export default function Layout({ children, loading }: LayoutType) {
   return (
     <main className="container">
       <header className="main-head">
-        <div>NAV Klage</div>
+        <div className="left">
+          <div className="logo">NAV Klage</div>
+          <div className="search">Søk</div>
+        </div>
+        <div className="right">
+          <div className="menu">SVG</div>
+          <div className="name">Navn Navnesen</div>
+        </div>
       </header>
       <nav className="main-nav" role="navigation" aria-label="Meny">
         <ul>

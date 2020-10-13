@@ -1,0 +1,26 @@
+.main-head {
+  background-color: #3e3832;
+  color: white;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "left right";
+  height: 3em;
+  padding: 1em 0.75em;
+}
+
+.left {
+  grid-area: left;
+  display: flex;
+  justify-content: left;
+  > div {
+    margin: 0 1em 0 0;
+  }
+}
+.right {
+  grid-area: right;
+  display: flex;
+  justify-content: right;
+  > div {
+    margin: 0 1em 0 0;
+  }
+}

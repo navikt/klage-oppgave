@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Layout from "./components/Layout";
+import { Knapp } from "nav-frontend-knapper";
 import "./App.less";
+import "./Lists.less";
 import "./Tabell.less";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -53,7 +55,11 @@ const App = (): JSX.Element => {
   }, []);
   return (
     <Layout loading={fetching}>
-      <OppgaveTabell rader={oppgaver.rader} />
+      <>
+        <Knapp>Tildel meg neste sak</Knapp>
+
+        <OppgaveTabell rader={oppgaver.rader} />
+      </>
     </Layout>
   );
 };
