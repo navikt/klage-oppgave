@@ -1,4 +1,4 @@
-export function getApiHost(host: string): string {
+export function hentAPIUrl(host: string): string {
   if (host.startsWith("localhost")) {
     return "http://localhost:3000";
   } else if (host.indexOf(".dev.") !== -1) {

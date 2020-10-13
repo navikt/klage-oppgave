@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosPromise } from "axios";
 import qs from "qs";
 
-const initialization = (): AxiosInstance => {
+const settOppAxios = (): AxiosInstance => {
   let axiosInstance = axios.create({
     paramsSerializer: function (params) {
       return qs.stringify(params, { indices: false });
@@ -29,4 +29,4 @@ const initialization = (): AxiosInstance => {
   return axiosInstance;
 };
 
-export default initialization;
+export { settOppAxios };

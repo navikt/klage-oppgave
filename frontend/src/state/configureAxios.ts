@@ -1,8 +1,8 @@
 import { defer, Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import initializeAxios from "../utility/rxiosInit";
+import { settOppAxios } from "../utility/axiosOppsett";
 
-const axiosInstance = initializeAxios();
+const axiosInstance = settOppAxios();
 
 const get = <T>(url: string, queryParams?: object): Observable<T> => {
   return defer(() => axiosInstance.get<T>(url, { params: queryParams })).pipe(

@@ -5,7 +5,7 @@ import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { Observable, of } from "rxjs";
 import { catchError, map, switchMap, withLatestFrom } from "rxjs/operators";
-import { getApiHost } from "../../utility/getApiHost";
+import { hentAPIUrl } from "../../utility/hentAPIUrl";
 
 //==========
 // Reducer
@@ -75,7 +75,7 @@ function hentOppgaverEpic(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      const oppgaveUrl = `${getApiHost(window.location.host)}/oppgaver`;
+      const oppgaveUrl = `${hentAPIUrl(window.location.host)}/oppgaver`;
 
       return axios.get<[OppgaveRad]>(oppgaveUrl).pipe(
         map((oppgaver) => OPPGAVER_MOTTATT(oppgaver)),
