@@ -1,7 +1,6 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Rxios } from "rxios";
+import axios from "../configureAxios";
 
-const http = new Rxios();
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { Observable, of } from "rxjs";
@@ -23,6 +22,7 @@ export interface OppgaveRad {
   frist: string;
   saksbehandler: string;
 }
+
 export interface OppgaveRader {
   rader: [OppgaveRad];
 }
@@ -61,7 +61,7 @@ function hentTokenEpic() {
   const tokenUrl = window.location.host.startsWith("localhost")
     ? "/api/token"
     : "/token";
-  return http.get<string>(tokenUrl).pipe(
+  return axios.get<string>(tokenUrl).pipe(
     map((token) => token),
     catchError((err) => err)
   );
@@ -77,24 +77,12 @@ function hentOppgaverEpic(
     switchMap(([action, state]) => {
       const oppgaveUrl = `${getApiHost(window.location.host)}/oppgaver`;
 
-      return hentTokenEpic().pipe(
-        switchMap((payload) =>
-          http
-            .get<[OppgaveRad]>(oppgaveUrl, {
-              headers: {
-                Authorization: `Bearer ${payload}`,
-                Accept: "application/json",
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-            })
-            .pipe(
-              map((oppgaver) => OPPGAVER_MOTTATT(oppgaver)),
-              catchError((err) => {
-                console.error(err);
-                return of(OPPGAVER_MOTTATT(null));
-              })
-            )
-        )
+      return axios.get<[OppgaveRad]>(oppgaveUrl).pipe(
+        map((oppgaver) => OPPGAVER_MOTTATT(oppgaver)),
+        catchError((err) => {
+          console.error(err);
+          return of(OPPGAVER_MOTTATT(null));
+        })
       );
     })
   );
