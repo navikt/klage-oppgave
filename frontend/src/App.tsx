@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "./components/Layout";
-import { Knapp } from "nav-frontend-knapper";
+import { Knapp, Hovedknapp } from "nav-frontend-knapper";
 import "./App.less";
 import "./Lists.less";
 import "./Tabell.less";
@@ -56,7 +56,14 @@ const App = (): JSX.Element => {
   return (
     <Layout loading={fetching}>
       <>
-        <Knapp>Tildel meg neste sak</Knapp>
+        <div className="knapperad">
+          <div className="left">
+            <Hovedknapp>Tildel meg neste sak</Hovedknapp>
+          </div>
+          <div className="right">
+            <Knapp>Tildel flere</Knapp>
+          </div>
+        </div>
 
         <OppgaveTabell rader={oppgaver.rader} />
       </>
