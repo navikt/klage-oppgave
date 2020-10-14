@@ -18,7 +18,7 @@
     "es6": true
   },
   "rules": {
-    "indent": [2, 4, { "SwitchCase": 1 }],
+    "indent": [4, 2, { "SwitchCase": 1 }],
     "max-len": [2, 120, 4],
     "comma-dangle": [0, "never"],
     "@typescript-eslint/no-var-requires": 0,

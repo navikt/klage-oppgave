@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "./components/Layout";
+import Layout from "./komponenter/Layout";
 import { Knapp, Hovedknapp } from "nav-frontend-knapper";
 import "./App.less";
 import "./Lists.less";
@@ -9,11 +9,11 @@ import {
   OppgaveRad,
   OppgaveRader,
   oppgaveRequest,
-} from "./state/modules/oppgave";
+} from "./tilstand/moduler/oppgave";
 import {
   selectOppgaver,
   selectFetching,
-} from "./state/modules/oppgave.selectors";
+} from "./tilstand/moduler/oppgave.selectors";
 
 const OppgaveTabell = (oppgaver: OppgaveRader) => {
   return (

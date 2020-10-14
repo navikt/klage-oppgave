@@ -7,7 +7,7 @@ import {
 } from "redux-observable";
 import { Observable } from "rxjs";
 import { combineReducers } from "redux";
-import oppgaver, { OPPGAVER_EPICS } from "./modules/oppgave";
+import oppgaver, { OPPGAVER_EPICS } from "./moduler/oppgave";
 
 const epics: Array<(
   $action: ActionsObservable<PayloadAction<any>>,

@@ -1,9 +1,8 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../configureAxios";
-
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { Observable, of } from "rxjs";
+import { of } from "rxjs";
 import { catchError, map, switchMap, withLatestFrom } from "rxjs/operators";
 import { hentAPIUrl } from "../../utility/hentAPIUrl";
 
