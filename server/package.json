@@ -45,7 +45,6 @@
     "openid-client": "^4.0.2",
     "passport": "^0.4.0",
     "redis": "^3.0.2",
-    "better-npm-run": "^0.1.1",
     "snyk": "^1.400.0"
   },
   "devDependencies": {

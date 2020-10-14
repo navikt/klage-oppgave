@@ -4,6 +4,7 @@ import { Knapp, Hovedknapp } from "nav-frontend-knapper";
 import "./App.less";
 import "./Lists.less";
 import "./Tabell.less";
+import { Checkbox } from "nav-frontend-skjema";
 import { useDispatch, useSelector } from "react-redux";
 import {
   OppgaveRad,
@@ -35,7 +36,7 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
         <button>Tildel meg</button>
       </td>
       <td>
-        <input type="checkbox" />
+        <Checkbox className={"oppgave-checkbox"} label="&#8203;" />
       </td>
     </tr>
   );
