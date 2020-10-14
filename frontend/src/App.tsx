@@ -23,14 +23,14 @@ const OppgaveTabell = (oppgaver: OppgaveRader) => {
       <thead>
         <tr>
           <td>
-            <Select label="&#8203;" className="fixed-width-100px">
+            <Select label="&#8203;" className="fw120">
               <option value="">Type</option>
               <option value="klage">Klage</option>
               <option value="anke">Anke</option>
             </Select>
           </td>
           <td>
-            <Select label="&#8203;" className="fixed-width-100px">
+            <Select label="&#8203;" className="fw120">
               <option value="">Ytelse</option>
               <option value="sykepenger">Sykepenger</option>
               <option value="dagpenger">Dagpenger</option>
@@ -38,7 +38,7 @@ const OppgaveTabell = (oppgaver: OppgaveRader) => {
             </Select>
           </td>
           <td>
-            <Select label="&#8203;" className="fixed-width-100px">
+            <Select label="&#8203;" className="fw120">
               <option value="">Hjemmel</option>
               <option value="8-4">8-4</option>
               <option value="4-3">4-3</option>
