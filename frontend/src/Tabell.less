@@ -2,8 +2,9 @@ table.oppgave {
   margin: 3em 0;
   border-top: 1px solid #3e3832;
   width: 100%;
+
   > tbody tr td {
-    padding: 1em 0 1em 2em;
+    border-top: 1px solid #c6c2bf;
   }
 }
 
@@ -11,4 +12,62 @@ table.oppgave {
   display: flex;
   justify-content: space-between;
   margin: 3em 0 0 0;
+}
+
+div.frist {
+  display: grid;
+  width: calc(2em + 25px);
+  grid-template-columns: 2em 25px;
+  padding: 2em 0 0 1.5em;
+}
+
+div.piler {
+  position: relative;
+}
+
+.pil-opp {
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid black;
+}
+
+.pil-ned {
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid black;
+}
+
+.border-top-gray {
+  border-top: 5px solid gray;
+}
+
+.border-bottom-gray {
+  border-bottom: 5px solid gray;
+}
+
+.fixed-width-100px {
+  width: 100px;
+}
+
+.etikett-klage {
+  background-color: transparent;
+  border-color: red;
+}
+.etikett-anke {
+  background-color: black;
+  border-color: white;
+}
+.etikett-sykepenger {
+  background-color: #0067c5;
+  border-color: black;
+}
+.etikett-mangler {
+  background-color: transparent;
+  border-color: red;
 }

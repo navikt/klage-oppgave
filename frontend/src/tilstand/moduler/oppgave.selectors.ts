@@ -7,6 +7,6 @@ import { OppgaveRader } from "./oppgave";
 export function selectOppgaver(state: RootStateOrAny) {
   return state.oppgaver as OppgaveRader;
 }
-export function selectFetching(state: RootStateOrAny) {
+export function selectIsFetching(state: RootStateOrAny) {
   return state.oppgaver.fetching as boolean;
 }

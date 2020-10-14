@@ -11,6 +11,7 @@ body {
 
 .app {
   .typo-normal-mixin();
+  color: @navMorkGra;
   font-family: @font-family;
   line-height: @line-height-base;
 }
@@ -33,10 +34,12 @@ body {
 .content {
   grid-area: content;
   padding: 10px 15px;
+  max-width: 100em;
 }
 
 .main-nav {
   grid-area: nav;
+  max-width: 100em;
 }
 
 .main-footer {
