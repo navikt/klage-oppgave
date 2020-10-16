@@ -1,6 +1,6 @@
 import NavFrontendSpinner from "nav-frontend-spinner";
 import React from "react";
-import "../Header.less";
+import "../stilark/Header.less";
 
 interface LayoutType {
   children: JSX.Element;
@@ -10,7 +10,7 @@ interface LayoutType {
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 
-export default function Layout({ children, isFetching }: LayoutType) {
+export default function Oppsett({ children, isFetching }: LayoutType) {
   return (
     <main className="container">
       <header className="main-head">
@@ -52,7 +52,7 @@ export default function Layout({ children, isFetching }: LayoutType) {
   );
 }
 
-Layout.propTypes = {
+Oppsett.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.element),
     PropTypes.element.isRequired,

@@ -6,14 +6,14 @@ import {
   OppgaveRad,
   oppgaveRequest,
   oppgaveSorterFristStigende,
-  oppgaveSorterFristStigendeEpic,
+  oppgaveSorterFristStigendeEpos,
   oppgaveSorterFristSynkende,
-  oppgaveSorterFristSynkendeEpic,
+  oppgaveSorterFristSynkendeEpos,
   oppgaveFiltrerHjemmel,
-  oppgaveFiltrerHjemmelEpic,
+  oppgaveFiltrerHjemmelEpos,
 } from "./oppgave";
 
-describe("Oppgave Sortering epic", () => {
+describe("Oppgave Sortering epos", () => {
   let ts: TestScheduler;
 
   beforeEach(() => {
@@ -66,7 +66,7 @@ describe("Oppgave Sortering epic", () => {
           m.hot("a", observableValues),
           initState
         );
-        const actual$ = oppgaveSorterFristSynkendeEpic(action$, state$);
+        const actual$ = oppgaveSorterFristSynkendeEpos(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
 
         //@ts-ignore
@@ -117,7 +117,7 @@ describe("Oppgave Sortering epic", () => {
           m.hot("a", observableValues),
           initState
         );
-        const actual$ = oppgaveSorterFristStigendeEpic(action$, state$);
+        const actual$ = oppgaveSorterFristStigendeEpos(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
         //@ts-ignore
         expect(state$.value.oppgaver.rader).toStrictEqual(
@@ -163,7 +163,7 @@ describe("Oppgave Sortering epic", () => {
           m.hot("a", observableValues),
           initState
         );
-        const actual$ = oppgaveFiltrerHjemmelEpic(action$, state$);
+        const actual$ = oppgaveFiltrerHjemmelEpos(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
         //@ts-ignore
         expect(state$.value.oppgaver.rader).toStrictEqual(

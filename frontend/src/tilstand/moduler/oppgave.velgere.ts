@@ -8,5 +8,5 @@ export function selectOppgaver(state: RootStateOrAny) {
   return state.oppgaver as OppgaveRader;
 }
 export function selectIsFetching(state: RootStateOrAny) {
-  return state.oppgaver.fetching as boolean;
+  return state.oppgaver.lasterData as boolean;
 }

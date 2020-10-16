@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import App from "./App";
 //import { ENV } from './constants/env';
-import store from "./tilstand/configureStore";
+import store from "./tilstand/konfigurerTilstand";
 //import { initEnvironment } from './state/modules/environment';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 

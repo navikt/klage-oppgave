@@ -1,13 +1,13 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "../configureAxios";
+import axios from "../konfigurerAxios";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { of } from "rxjs";
 import { catchError, map, switchMap, withLatestFrom } from "rxjs/operators";
-import { hentAPIUrl } from "../../utility/hentAPIUrl";
+import { apiOppsett } from "../../utility/apiOppsett";
 
 //==========
-// Reducer
+// Type defs
 //==========
 export interface OppgaveRad {
   id: number;
@@ -29,22 +29,45 @@ export interface OppgaveRader {
 type OppgaveState = {
   rader?: [OppgaveRad?];
   utsnitt?: [OppgaveRad?];
-  fetching: boolean;
+  transformeringer: {
+    filtrering: {
+      type: undefined;
+      ytelse: undefined;
+      hjemmel: undefined;
+    };
+    sortering: {
+      frist: undefined;
+    };
+  };
+  lasterData: boolean;
 };
 
+//==========
+// Reducer
+//==========
 export const oppgaveSlice = createSlice({
   name: "oppgaver",
   initialState: {
     rader: [],
     utsnitt: [],
-    fetching: true,
+    lasterData: true,
+    transformeringer: {
+      filtrering: {
+        type: undefined,
+        ytelse: undefined,
+        hjemmel: undefined,
+      },
+      sortering: {
+        frist: undefined,
+      },
+    },
   } as OppgaveState,
   reducers: {
     OPPGAVER_MOTTATT: (state, action: PayloadAction<[OppgaveRad] | null>) => {
       if (action.payload) {
         state.rader = action.payload;
         state.utsnitt = action.payload;
-        state.fetching = false;
+        state.lasterData = false;
       }
     },
     OPPGAVER_UTSNITT: (state, action: PayloadAction<[OppgaveRad] | null>) => {
@@ -75,7 +98,7 @@ export const oppgaveFiltrerHjemmel = createAction<string | undefined>(
 //==========
 // Epics
 //==========
-function hentTokenEpic() {
+function hentTokenEpos() {
   const tokenUrl = window.location.host.startsWith("localhost")
     ? "/api/token"
     : "/token";
@@ -85,7 +108,7 @@ function hentTokenEpic() {
   );
 }
 
-export function oppgaveSorterFristStigendeEpic(
+export function oppgaveSorterFristStigendeEpos(
   action$: ActionsObservable<PayloadAction>,
   state$: StateObservable<RootStateOrAny>
 ) {
@@ -104,7 +127,7 @@ export function oppgaveSorterFristStigendeEpic(
   );
 }
 
-export function oppgaveSorterFristSynkendeEpic(
+export function oppgaveSorterFristSynkendeEpos(
   action$: ActionsObservable<PayloadAction>,
   state$: StateObservable<RootStateOrAny>
 ) {
@@ -123,7 +146,7 @@ export function oppgaveSorterFristSynkendeEpic(
   );
 }
 
-export function oppgaveFiltrerHjemmelEpic(
+export function oppgaveFiltrerHjemmelEpos(
   action$: ActionsObservable<PayloadAction<string | undefined, string>>,
   state$: StateObservable<RootStateOrAny>
 ) {
@@ -149,7 +172,7 @@ export function oppgaveFiltrerHjemmelEpic(
   );
 }
 
-function hentOppgaverEpic(
+function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveRad>>,
   state$: StateObservable<RootStateOrAny>
 ) {
@@ -157,7 +180,7 @@ function hentOppgaverEpic(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      const oppgaveUrl = `${hentAPIUrl(window.location.host)}/oppgaver`;
+      const oppgaveUrl = `${apiOppsett(window.location.host)}/oppgaver`;
 
       return axios.get<[OppgaveRad]>(oppgaveUrl).pipe(
         map((oppgaver) => OPPGAVER_MOTTATT(oppgaver)),
@@ -171,8 +194,8 @@ function hentOppgaverEpic(
 }
 
 export const OPPGAVER_EPICS = [
-  oppgaveSorterFristSynkendeEpic,
-  oppgaveSorterFristStigendeEpic,
-  oppgaveFiltrerHjemmelEpic,
-  hentOppgaverEpic,
+  oppgaveSorterFristSynkendeEpos,
+  oppgaveSorterFristStigendeEpos,
+  oppgaveFiltrerHjemmelEpos,
+  hentOppgaverEpos,
 ];

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Layout from "./komponenter/Layout";
+import Oppsett from "./komponenter/Oppsett";
 import { Knapp, Hovedknapp } from "nav-frontend-knapper";
 import EtikettBase from "nav-frontend-etiketter";
-import "./App.less";
-import "./Lists.less";
-import "./Tabell.less";
+import "./stilark/App.less";
+import "./stilark/Lists.less";
+import "./stilark/Tabell.less";
 import "nav-frontend-tabell-style";
 
 import { Checkbox, Select } from "nav-frontend-skjema";
@@ -24,7 +24,7 @@ import {
 import {
   selectOppgaver,
   selectIsFetching,
-} from "./tilstand/moduler/oppgave.selectors";
+} from "./tilstand/moduler/oppgave.velgere";
 
 const OppgaveTabell = (oppgaver: OppgaveRader) => {
   const dispatch = useDispatch();
@@ -169,7 +169,7 @@ const App = (): JSX.Element => {
   }, []);
 
   return (
-    <Layout isFetching={isFetching}>
+    <Oppsett isFetching={isFetching}>
       <>
         <div className="knapperad">
           <div className="left">
@@ -186,7 +186,7 @@ const App = (): JSX.Element => {
         </div>
         <OppgaveTabell utsnitt={oppgaver.utsnitt} />
       </>
-    </Layout>
+    </Oppsett>
   );
 };
 
