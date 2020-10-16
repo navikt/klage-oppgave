@@ -5,12 +5,20 @@ import EtikettBase from "nav-frontend-etiketter";
 import "./App.less";
 import "./Lists.less";
 import "./Tabell.less";
+import "nav-frontend-tabell-style";
+
 import { Checkbox, Select } from "nav-frontend-skjema";
 import { useDispatch, useSelector } from "react-redux";
+import { useEventCallback, useObservable } from "rxjs-hooks";
+import { interval, Observable } from "rxjs";
+import { map, mapTo } from "rxjs/operators";
+
 import {
   OppgaveRad,
   OppgaveRader,
   oppgaveRequest,
+  oppgaveSorterFristStigende,
+  oppgaveSorterFristSynkende,
 } from "./tilstand/moduler/oppgave";
 import {
   selectOppgaver,
@@ -18,41 +26,68 @@ import {
 } from "./tilstand/moduler/oppgave.selectors";
 
 const OppgaveTabell = (oppgaver: OppgaveRader) => {
+  const dispatch = useDispatch();
+  const [sortToggle, setSortToggle] = useState(0); // dette er bare for test, skal fjernes
+
+  const byttSortering = (
+    event: React.MouseEvent<HTMLElement | HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    if (sortToggle === 0) {
+      dispatch(oppgaveSorterFristStigende());
+      setSortToggle(1);
+    } else {
+      dispatch(oppgaveSorterFristSynkende());
+      setSortToggle(0);
+    }
+  };
+
   return (
-    <table className="oppgave" cellSpacing={0} cellPadding={10}>
+    <table className="tabell tabell--stripet" cellSpacing={0} cellPadding={10}>
       <thead>
         <tr>
-          <td>
+          <th>
             <Select label="&#8203;" className="fw120">
               <option value="">Type</option>
               <option value="klage">Klage</option>
               <option value="anke">Anke</option>
             </Select>
-          </td>
-          <td>
+          </th>
+          <th>
             <Select label="&#8203;" className="fw120">
               <option value="">Ytelse</option>
               <option value="sykepenger">Sykepenger</option>
               <option value="dagpenger">Dagpenger</option>
               <option value="foreldrepenger">Foreldrepenger</option>
             </Select>
-          </td>
-          <td>
+          </th>
+          <th>
             <Select label="&#8203;" className="fw120">
               <option value="">Hjemmel</option>
               <option value="8-4">8-4</option>
               <option value="4-3">4-3</option>
             </Select>
-          </td>
-          <td>
-            <div className="frist">
+          </th>
+          <th>
+            <div className="frist" onClick={byttSortering}>
               <div>Frist</div>
               <div className="piler">
-                <div className="pil-opp border-bottom-gray" />
-                <div className="pil-ned" />
+                {sortToggle === 0 && (
+                  <>
+                    <div className="pil-opp border-bottom-gray" />
+                    <div className="pil-ned" />
+                  </>
+                )}
+                {sortToggle === 1 && (
+                  <>
+                    <div className="pil-opp" />
+                    <div className="pil-ned border-top-gray" />
+                  </>
+                )}
               </div>
             </div>
-          </td>
+          </th>
+          <th colSpan={2} />
         </tr>
       </thead>
       <tbody>{genererTabellRader(oppgaver.rader)}</tbody>
@@ -114,6 +149,7 @@ const App = (): JSX.Element => {
   const oppgaver = useSelector(selectOppgaver);
   const isFetching = useSelector(selectIsFetching);
   const dispatch = useDispatch();
+  //const value = useObservable(() => interval(500).pipe(map((val) => val * 3)));
 
   useEffect(() => {
     dispatch(oppgaveRequest());

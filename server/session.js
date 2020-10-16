@@ -19,8 +19,8 @@ const setup = (app) => {
     unset: "destroy",
   };
   if (process.env.NODE_ENV !== "development") {
-    //options.cookie.secure = true;
-    //options.store = setupRedis();
+    options.cookie.secure = true;
+    options.store = setupRedis();
   }
   app.use(session(options));
 };
@@ -30,8 +30,6 @@ const setupRedis = () => {
 
   const client = redis.createClient({
     host: config.redis.host,
-    password: config.redis.password,
-    port: config.redis.port,
   });
   client.unref();
 

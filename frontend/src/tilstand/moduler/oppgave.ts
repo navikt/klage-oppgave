@@ -3,8 +3,15 @@ import axios from "../configureAxios";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { of } from "rxjs";
-import { catchError, map, switchMap, withLatestFrom } from "rxjs/operators";
+import {
+  catchError,
+  map,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from "rxjs/operators";
 import { hentAPIUrl } from "../../utility/hentAPIUrl";
+import React from "react";
 
 //==========
 // Reducer
@@ -52,6 +59,12 @@ export default oppgaveSlice.reducer;
 //==========
 export const { OPPGAVER_MOTTATT } = oppgaveSlice.actions;
 export const oppgaveRequest = createAction("oppgaver/OPPGAVER_HENT");
+export const oppgaveSorterFristStigende = createAction(
+  "oppgaver/OPPGAVER_SORTER_FRIST_STIGENDE"
+);
+export const oppgaveSorterFristSynkende = createAction(
+  "oppgaver/OPPGAVER_SORTER_FRIST_SYNKENDE"
+);
 
 //==========
 // Epics
@@ -63,6 +76,44 @@ function hentTokenEpic() {
   return axios.get<string>(tokenUrl).pipe(
     map((token) => token),
     catchError((err) => err)
+  );
+}
+
+export function oppgaveSorterFristStigendeEpic(
+  action$: ActionsObservable<PayloadAction>,
+  state$: StateObservable<RootStateOrAny>
+) {
+  return action$.pipe(
+    ofType(oppgaveSorterFristStigende.type),
+    withLatestFrom(state$),
+    switchMap(([action, state]) => {
+      return of(
+        OPPGAVER_MOTTATT(
+          state.oppgaver.rader.slice().sort(function (a: any, b: any) {
+            return new Date(b.frist).getTime() - new Date(a.frist).getTime();
+          })
+        )
+      );
+    })
+  );
+}
+
+export function oppgaveSorterFristSynkendeEpic(
+  action$: ActionsObservable<PayloadAction>,
+  state$: StateObservable<RootStateOrAny>
+) {
+  return action$.pipe(
+    ofType(oppgaveSorterFristSynkende.type),
+    withLatestFrom(state$),
+    switchMap(([action, state]) => {
+      return of(
+        OPPGAVER_MOTTATT(
+          state.oppgaver.rader.slice().sort(function (a: any, b: any) {
+            return new Date(a.frist).getTime() - new Date(b.frist).getTime();
+          })
+        )
+      );
+    })
   );
 }
 
@@ -87,4 +138,8 @@ function hentOppgaverEpic(
   );
 }
 
-export const OPPGAVER_EPICS = [hentOppgaverEpic];
+export const OPPGAVER_EPICS = [
+  oppgaveSorterFristSynkendeEpic,
+  oppgaveSorterFristStigendeEpic,
+  hentOppgaverEpic,
+];
