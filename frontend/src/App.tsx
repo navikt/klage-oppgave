@@ -154,6 +154,7 @@ const App = (): JSX.Element => {
   useEffect(() => {
     dispatch(oppgaveRequest());
   }, []);
+
   return (
     <Layout loading={isFetching}>
       <>

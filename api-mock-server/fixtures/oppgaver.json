@@ -1,0 +1,902 @@
+[
+  {
+    "id": 315993177,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2008-05-19",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 315993178,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["8-1"],
+    "frist": "2008-05-19",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 203592807,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["8-1"],
+    "frist": "2018-04-23",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 209074926,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2018-09-10",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 209464368,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2018-10-31",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 213097415,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2018-11-21",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 213206601,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2018-12-01",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 205086396,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-01-03",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 217733769,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-01-25",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 300449338,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-03-14",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 215195865,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-03-31",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 216819020,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-04-03",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 218769628,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-04-05",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 213305437,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-04-16",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 304995668,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-04-25",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 300279188,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-04-30",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 216675393,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-04-30",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 301848147,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-05-01",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 219557558,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-05-06",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 302235413,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-05-15",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 307280807,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-06-13",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 301162069,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-07-01",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 219541306,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-07-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 211370351,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-03",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 306967659,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-09",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 303216746,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-14",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 308908382,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-15",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 303878151,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-20",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 309833063,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-21",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 208221570,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-22",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 309985247,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-26",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 309986629,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-26",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 310094595,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-28",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 307067598,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-30",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 309922335,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-08-30",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 300497551,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-09",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 304622805,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-09",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 307434790,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-10",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 301208147,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-13",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 305864565,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-13",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 308461521,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-16",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 302169823,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-16",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 305824659,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-18",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 310438137,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-18",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 300496673,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-23",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 308238866,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-09-26",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 305888229,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-01",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 311589966,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-01",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 311675702,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-02",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 311752538,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 303075141,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-09",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 310669989,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-10",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 301788982,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-11",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 303268703,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-15",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312265982,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-16",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 308256765,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-17",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312323259,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-17",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 310967366,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-17",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 306847701,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-22",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312319428,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-22",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 305689858,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-22",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312547213,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-22",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312510429,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-22",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 302950642,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-23",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 306764042,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-24",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 311460720,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-25",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312768807,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-28",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312751575,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-28",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 310909254,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-29",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312887420,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-30",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 215545016,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-31",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312022505,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-31",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 302922062,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-10-31",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 303259123,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-01",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 303864954,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-01",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 309416015,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-01",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 307863693,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-01",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 313123118,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 204861320,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 313111331,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 313080286,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 307966879,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 303664009,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 310089242,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 307481558,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 313069156,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-04",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 308898661,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-05",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 307446550,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-05",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312993578,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-05",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 313160384,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-05",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 306984938,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-05",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 304607423,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-06",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 312636477,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-06",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 313202466,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-06",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 313246858,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-07",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 310153678,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-07",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 313276936,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-07",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 307414383,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-07",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 300251807,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-08",
+    "saksbehandler": "todo"
+  },
+  {
+    "id": 304844861,
+    "bruker": { "fnr": "Mangler fnr", "navn": "Mangler fnr" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "hjemmel": ["mangler"],
+    "frist": "2019-11-08",
+    "saksbehandler": "todo"
+  }
+]
