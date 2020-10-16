@@ -142,7 +142,9 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
 };
 
 const genererTabellRader = (rader: Array<OppgaveRad>): JSX.Element[] => {
-  return rader.map((rad) => <OppgaveTabellRad key={rad.id} {...rad} />);
+  return rader
+    .slice(0, 10)
+    .map((rad) => <OppgaveTabellRad key={rad.id} {...rad} />);
 };
 
 const App = (): JSX.Element => {
@@ -168,6 +170,9 @@ const App = (): JSX.Element => {
           </div>
         </div>
 
+        <div className="table-lbl">
+          Viser 10 av {oppgaver.rader.length} rader
+        </div>
         <OppgaveTabell rader={oppgaver.rader} />
       </>
     </Layout>
