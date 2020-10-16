@@ -9,6 +9,8 @@ import {
   oppgaveSorterFristStigendeEpic,
   oppgaveSorterFristSynkende,
   oppgaveSorterFristSynkendeEpic,
+  oppgaveFiltrerHjemmel,
+  oppgaveFiltrerHjemmelEpic,
 } from "./oppgave";
 
 describe("Oppgave Sortering epic", () => {
@@ -43,21 +45,17 @@ describe("Oppgave Sortering epic", () => {
             ],
           },
         };
-        const resultState = {
-          oppgaver: {
-            rader: [
-              { frist: "2018-12-21" },
-              { frist: "2019-09-12" },
-              { frist: "2020-12-15" },
-            ],
-          },
-        };
+        const resultPayload = [
+          { frist: "2018-12-21" },
+          { frist: "2019-09-12" },
+          { frist: "2020-12-15" },
+        ];
 
         const observableValues = {
           a: initState,
           c: {
-            payload: resultState.oppgaver.rader,
-            type: "oppgaver/OPPGAVER_MOTTATT",
+            payload: resultPayload,
+            type: "oppgaver/OPPGAVER_UTSNITT",
           },
         };
 
@@ -70,6 +68,11 @@ describe("Oppgave Sortering epic", () => {
         );
         const actual$ = oppgaveSorterFristSynkendeEpic(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
+
+        //@ts-ignore
+        expect(state$.value.oppgaver.rader).toStrictEqual(
+          initState.oppgaver.rader
+        );
       });
     })
   );
@@ -93,21 +96,17 @@ describe("Oppgave Sortering epic", () => {
             ],
           },
         };
-        const resultState = {
-          oppgaver: {
-            rader: [
-              { frist: "2020-12-15" },
-              { frist: "2019-09-12" },
-              { frist: "2018-12-21" },
-            ],
-          },
-        };
+        const resultPayload = [
+          { frist: "2020-12-15" },
+          { frist: "2019-09-12" },
+          { frist: "2018-12-21" },
+        ];
 
         const observableValues = {
           a: initState,
           c: {
-            payload: resultState.oppgaver.rader,
-            type: "oppgaver/OPPGAVER_MOTTATT",
+            payload: resultPayload,
+            type: "oppgaver/OPPGAVER_UTSNITT",
           },
         };
 
@@ -120,6 +119,56 @@ describe("Oppgave Sortering epic", () => {
         );
         const actual$ = oppgaveSorterFristStigendeEpic(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
+        //@ts-ignore
+        expect(state$.value.oppgaver.rader).toStrictEqual(
+          initState.oppgaver.rader
+        );
+      });
+    })
+  );
+
+  test(
+    "+++ SORTER ETTER HJEMMEL",
+    marbles(() => {
+      ts.run((m) => {
+        const inputMarble = "a-";
+        const expectedMarble = "c-";
+
+        const inputValues = {
+          a: oppgaveFiltrerHjemmel("8-4"),
+        };
+        const initState = {
+          oppgaver: {
+            rader: [
+              { frist: "2019-09-12", hjemmel: "8-4" },
+              { frist: "2020-12-15", hjemmel: "10-12" },
+              { frist: "2018-12-21", hjemmel: "mangler" },
+            ],
+          },
+        };
+        const payload = [{ frist: "2019-09-12", hjemmel: "8-4" }];
+
+        const observableValues = {
+          a: initState,
+          c: {
+            payload: payload,
+            type: "oppgaver/OPPGAVER_UTSNITT",
+          },
+        };
+
+        const action$ = new ActionsObservable(
+          ts.createHotObservable(inputMarble, inputValues)
+        );
+        const state$ = new StateObservable(
+          m.hot("a", observableValues),
+          initState
+        );
+        const actual$ = oppgaveFiltrerHjemmelEpic(action$, state$);
+        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
+        //@ts-ignore
+        expect(state$.value.oppgaver.rader).toStrictEqual(
+          initState.oppgaver.rader
+        );
       });
     })
   );

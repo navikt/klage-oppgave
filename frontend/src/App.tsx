@@ -14,6 +14,7 @@ import { interval, Observable } from "rxjs";
 import { map, mapTo } from "rxjs/operators";
 
 import {
+  oppgaveFiltrerHjemmel,
   OppgaveRad,
   OppgaveRader,
   oppgaveRequest,
@@ -42,6 +43,15 @@ const OppgaveTabell = (oppgaver: OppgaveRader) => {
     }
   };
 
+  const filtrerHjemmel = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    event.preventDefault();
+    let hjemmel = undefined;
+    if (event.target.value !== "Alle") {
+      hjemmel = event.target.value;
+    }
+    dispatch(oppgaveFiltrerHjemmel(hjemmel));
+  };
+
   return (
     <table className="tabell tabell--stripet" cellSpacing={0} cellPadding={10}>
       <thead>
@@ -62,10 +72,11 @@ const OppgaveTabell = (oppgaver: OppgaveRader) => {
             </Select>
           </th>
           <th>
-            <Select label="&#8203;" className="fw120">
+            <Select label="&#8203;" className="fw120" onChange={filtrerHjemmel}>
               <option value="">Hjemmel</option>
-              <option value="8-4">8-4</option>
-              <option value="4-3">4-3</option>
+              <option value={undefined}>Alle</option>
+              <option value="8-1">8-1</option>
+              <option value="mangler">mangler</option>
             </Select>
           </th>
           <th>
@@ -90,7 +101,7 @@ const OppgaveTabell = (oppgaver: OppgaveRader) => {
           <th colSpan={2} />
         </tr>
       </thead>
-      <tbody>{genererTabellRader(oppgaver.rader)}</tbody>
+      <tbody>{genererTabellRader(oppgaver.utsnitt)}</tbody>
     </table>
   );
 };
@@ -158,7 +169,7 @@ const App = (): JSX.Element => {
   }, []);
 
   return (
-    <Layout loading={isFetching}>
+    <Layout isFetching={isFetching}>
       <>
         <div className="knapperad">
           <div className="left">
@@ -171,9 +182,9 @@ const App = (): JSX.Element => {
         </div>
 
         <div className="table-lbl">
-          Viser 10 av {oppgaver.rader.length} rader
+          Viser inntil 10 av {oppgaver.utsnitt.length} rader i utvalget
         </div>
-        <OppgaveTabell rader={oppgaver.rader} />
+        <OppgaveTabell utsnitt={oppgaver.utsnitt} />
       </>
     </Layout>
   );

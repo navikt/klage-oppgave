@@ -3,15 +3,8 @@ import axios from "../configureAxios";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { of } from "rxjs";
-import {
-  catchError,
-  map,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from "rxjs/operators";
+import { catchError, map, switchMap, withLatestFrom } from "rxjs/operators";
 import { hentAPIUrl } from "../../utility/hentAPIUrl";
-import React from "react";
 
 //==========
 // Reducer
@@ -30,11 +23,12 @@ export interface OppgaveRad {
 }
 
 export interface OppgaveRader {
-  rader: [OppgaveRad];
+  utsnitt: [OppgaveRad];
 }
 
 type OppgaveState = {
   rader?: [OppgaveRad?];
+  utsnitt?: [OppgaveRad?];
   fetching: boolean;
 };
 
@@ -42,12 +36,21 @@ export const oppgaveSlice = createSlice({
   name: "oppgaver",
   initialState: {
     rader: [],
+    utsnitt: [],
     fetching: true,
   } as OppgaveState,
   reducers: {
     OPPGAVER_MOTTATT: (state, action: PayloadAction<[OppgaveRad] | null>) => {
-      if (action.payload) state.rader = action.payload;
-      state.fetching = false;
+      if (action.payload) {
+        state.rader = action.payload;
+        state.utsnitt = action.payload;
+        state.fetching = false;
+      }
+    },
+    OPPGAVER_UTSNITT: (state, action: PayloadAction<[OppgaveRad] | null>) => {
+      if (action.payload) {
+        state.utsnitt = action.payload;
+      }
     },
   },
 });
@@ -57,13 +60,16 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const { OPPGAVER_MOTTATT } = oppgaveSlice.actions;
+export const { OPPGAVER_MOTTATT, OPPGAVER_UTSNITT } = oppgaveSlice.actions;
 export const oppgaveRequest = createAction("oppgaver/OPPGAVER_HENT");
 export const oppgaveSorterFristStigende = createAction(
   "oppgaver/OPPGAVER_SORTER_FRIST_STIGENDE"
 );
 export const oppgaveSorterFristSynkende = createAction(
   "oppgaver/OPPGAVER_SORTER_FRIST_SYNKENDE"
+);
+export const oppgaveFiltrerHjemmel = createAction<string | undefined>(
+  "oppgaver/OPPGAVER_FILTRER_HJEMMEL"
 );
 
 //==========
@@ -88,7 +94,7 @@ export function oppgaveSorterFristStigendeEpic(
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       return of(
-        OPPGAVER_MOTTATT(
+        OPPGAVER_UTSNITT(
           state.oppgaver.rader.slice().sort(function (a: any, b: any) {
             return new Date(b.frist).getTime() - new Date(a.frist).getTime();
           })
@@ -107,9 +113,35 @@ export function oppgaveSorterFristSynkendeEpic(
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       return of(
-        OPPGAVER_MOTTATT(
+        OPPGAVER_UTSNITT(
           state.oppgaver.rader.slice().sort(function (a: any, b: any) {
             return new Date(a.frist).getTime() - new Date(b.frist).getTime();
+          })
+        )
+      );
+    })
+  );
+}
+
+export function oppgaveFiltrerHjemmelEpic(
+  action$: ActionsObservable<PayloadAction<string | undefined, string>>,
+  state$: StateObservable<RootStateOrAny>
+) {
+  return action$.pipe(
+    ofType(oppgaveFiltrerHjemmel.type),
+    withLatestFrom(state$),
+    switchMap(([action, state]) => {
+      return of(
+        OPPGAVER_UTSNITT(
+          state.oppgaver.rader.filter((rad: OppgaveRad) => {
+            if (action.payload) {
+              if (rad.hjemmel.includes(action.payload)) {
+                return rad;
+              }
+            }
+            if (action.payload === undefined) {
+              return rad;
+            }
           })
         )
       );
@@ -141,5 +173,6 @@ function hentOppgaverEpic(
 export const OPPGAVER_EPICS = [
   oppgaveSorterFristSynkendeEpic,
   oppgaveSorterFristStigendeEpic,
+  oppgaveFiltrerHjemmelEpic,
   hentOppgaverEpic,
 ];

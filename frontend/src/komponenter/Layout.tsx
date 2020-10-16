@@ -4,13 +4,13 @@ import "../Header.less";
 
 interface LayoutType {
   children: JSX.Element;
-  loading: boolean;
+  isFetching: boolean;
 }
 
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 
-export default function Layout({ children, loading }: LayoutType) {
+export default function Layout({ children, isFetching }: LayoutType) {
   return (
     <main className="container">
       <header className="main-head">
@@ -43,7 +43,7 @@ export default function Layout({ children, loading }: LayoutType) {
         </ul>
       </nav>
       <article className="content">
-        {loading ? <NavFrontendSpinner /> : children}
+        {isFetching ? <NavFrontendSpinner /> : children}
       </article>
       <footer className="main-footer">
         <div>Bunnlinje</div>
@@ -57,5 +57,5 @@ Layout.propTypes = {
     PropTypes.arrayOf(PropTypes.element),
     PropTypes.element.isRequired,
   ]),
-  loading: PropTypes.bool.isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
