@@ -3,7 +3,13 @@ import axios from "../konfigurerAxios";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { of } from "rxjs";
-import { catchError, map, switchMap, withLatestFrom } from "rxjs/operators";
+import {
+  catchError,
+  map,
+  mergeMap,
+  switchMap,
+  withLatestFrom,
+} from "rxjs/operators";
 import { apiOppsett } from "../../utility/apiOppsett";
 
 //==========
@@ -26,19 +32,21 @@ export interface OppgaveRader {
   utsnitt: [OppgaveRad];
 }
 
+export interface Transformasjoner {
+  filtrering: {
+    type: undefined;
+    ytelse: undefined;
+    hjemmel: undefined;
+  };
+  sortering: {
+    frist: undefined;
+  };
+}
+
 type OppgaveState = {
   rader?: [OppgaveRad?];
   utsnitt?: [OppgaveRad?];
-  transformeringer: {
-    filtrering: {
-      type: undefined;
-      ytelse: undefined;
-      hjemmel: undefined;
-    };
-    sortering: {
-      frist: undefined;
-    };
-  };
+  transformasjoner: Transformasjoner;
   lasterData: boolean;
 };
 
@@ -51,7 +59,7 @@ export const oppgaveSlice = createSlice({
     rader: [],
     utsnitt: [],
     lasterData: true,
-    transformeringer: {
+    transformasjoner: {
       filtrering: {
         type: undefined,
         ytelse: undefined,
@@ -75,6 +83,22 @@ export const oppgaveSlice = createSlice({
         state.utsnitt = action.payload;
       }
     },
+    OPPGAVER_TRANSFORMASJON: (
+      state,
+      action: PayloadAction<{
+        oppgaver: {
+          transformasjoner: Transformasjoner;
+          utsnitt: [OppgaveRad];
+        } | null;
+      }>
+    ) => {
+      if (action.payload?.oppgaver?.transformasjoner) {
+        state.transformasjoner = action.payload.oppgaver.transformasjoner;
+      }
+      if (action.payload?.oppgaver?.utsnitt) {
+        state.utsnitt = action.payload.oppgaver.utsnitt;
+      }
+    },
   },
 });
 
@@ -83,7 +107,11 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const { OPPGAVER_MOTTATT, OPPGAVER_UTSNITT } = oppgaveSlice.actions;
+export const {
+  OPPGAVER_MOTTATT,
+  OPPGAVER_UTSNITT,
+  OPPGAVER_TRANSFORMASJON,
+} = oppgaveSlice.actions;
 export const oppgaveRequest = createAction("oppgaver/OPPGAVER_HENT");
 export const oppgaveSorterFristStigende = createAction(
   "oppgaver/OPPGAVER_SORTER_FRIST_STIGENDE"
@@ -115,13 +143,27 @@ export function oppgaveSorterFristStigendeEpos(
   return action$.pipe(
     ofType(oppgaveSorterFristStigende.type),
     withLatestFrom(state$),
-    switchMap(([action, state]) => {
+    mergeMap(([action, state]) => {
       return of(
-        OPPGAVER_UTSNITT(
-          state.oppgaver.rader.slice().sort(function (a: any, b: any) {
-            return new Date(b.frist).getTime() - new Date(a.frist).getTime();
-          })
-        )
+        OPPGAVER_TRANSFORMASJON({
+          ...state,
+          oppgaver: {
+            ...state.oppgaver,
+            transformasjoner: {
+              ...state.transformasjoner,
+              sortering: {
+                frist: "ASC",
+              },
+            },
+            utsnitt: state.oppgaver.rader
+              .slice()
+              .sort(function (a: any, b: any) {
+                return (
+                  new Date(b.frist).getTime() - new Date(a.frist).getTime()
+                );
+              }),
+          },
+        })
       );
     })
   );
