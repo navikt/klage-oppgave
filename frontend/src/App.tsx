@@ -62,24 +62,24 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const filtrerHjemmel = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     let value = event.target.options[event.target.selectedIndex].value;
-    if (value === hjemmelFilter) return;
     if (value === "Alle" || value === "Hjemmel") settHjemmelFilter(undefined);
+    if (value === hjemmelFilter) return;
     else settHjemmelFilter(value);
   };
 
   const filtrerYtelse = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     let value = event.target.options[event.target.selectedIndex].value;
-    if (value === ytelseFilter) return;
     if (value === "Ytelse") settHjemmelFilter(undefined);
+    if (value === ytelseFilter) return;
     else settYtelseFilter(value);
   };
 
   const filtrerType = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     let value = event.target.options[event.target.selectedIndex].value;
-    if (value === typeFilter) return;
     if (value === "Type") settTypeFilter(undefined);
+    if (value === typeFilter) return;
     else settTypeFilter(value);
   };
 
