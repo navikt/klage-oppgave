@@ -9,17 +9,12 @@ import "nav-frontend-tabell-style";
 
 import { Checkbox, Select } from "nav-frontend-skjema";
 import { useDispatch, useSelector } from "react-redux";
-import { useEventCallback, useObservable } from "rxjs-hooks";
-import { interval, Observable } from "rxjs";
-import { map, mapTo } from "rxjs/operators";
 
 import {
-  oppgaveFiltrerHjemmel,
   OppgaveRad,
   OppgaveRader,
   oppgaveRequest,
-  oppgaveSorterFristStigende,
-  oppgaveSorterFristSynkende,
+  oppgaveTransformerRader,
 } from "./tilstand/moduler/oppgave";
 import {
   selectOppgaver,
@@ -29,27 +24,84 @@ import {
 const OppgaveTabell = (oppgaver: OppgaveRader) => {
   const dispatch = useDispatch();
   const [sortToggle, setSortToggle] = useState(0); // dette er bare for test, skal fjernes
+  const [hjemmelFilter, settHjemmelFilter] = useState<string | undefined>(
+    undefined
+  );
+  const [ytelseFilter, settYtelseFilter] = useState<string | undefined>(
+    undefined
+  );
+  const [typeFilter, settTypeFilter] = useState<"KLAGE" | "ANKE" | undefined>(
+    undefined
+  );
+  const [sorteringFilter, settSorteringFilter] = useState<
+    "ASC" | "DESC" | undefined
+  >("ASC");
+
+  useEffect(() => {
+    dispatchTransformering();
+  }, [hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter]);
+
+  const dispatchTransformering = () =>
+    dispatch(
+      oppgaveTransformerRader({
+        sortering: {
+          frist: sorteringFilter,
+        },
+        filtrering: {
+          hjemmel: hjemmelFilter,
+          type: typeFilter,
+          ytelse: ytelseFilter,
+        },
+      })
+    );
 
   const byttSortering = (
     event: React.MouseEvent<HTMLElement | HTMLButtonElement>
   ) => {
     event.preventDefault();
     if (sortToggle === 0) {
-      dispatch(oppgaveSorterFristStigende());
+      settSorteringFilter("DESC");
       setSortToggle(1);
     } else {
-      dispatch(oppgaveSorterFristSynkende());
+      settSorteringFilter("ASC");
       setSortToggle(0);
     }
   };
 
   const filtrerHjemmel = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
+    if (event.target.value === hjemmelFilter) return;
     let hjemmel = undefined;
     if (event.target.value !== "Alle") {
       hjemmel = event.target.value;
+      settHjemmelFilter(hjemmel || undefined);
+    } else {
+      settHjemmelFilter(undefined);
     }
-    dispatch(oppgaveFiltrerHjemmel(hjemmel));
+  };
+
+  const filtrerYtelse = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    event.preventDefault();
+    if (event.target.value === ytelseFilter) return;
+    let ytelse = undefined;
+    if (event.target.value !== "Alle") {
+      ytelse = event.target.value;
+      settYtelseFilter(ytelse || undefined);
+    } else {
+      settYtelseFilter(undefined);
+    }
+  };
+
+  const filtrerType = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    event.preventDefault();
+    if (event.target.value === typeFilter) return;
+    let type = undefined;
+    if (event.target.value !== "Alle") {
+      type = event.target.value as "KLAGE" | "ANKE";
+      settTypeFilter(type || undefined);
+    } else {
+      settTypeFilter(undefined);
+    }
   };
 
   return (
@@ -57,18 +109,18 @@ const OppgaveTabell = (oppgaver: OppgaveRader) => {
       <thead>
         <tr>
           <th>
-            <Select label="&#8203;" className="fw120">
+            <Select label="&#8203;" className="fw120" onChange={filtrerType}>
               <option value="">Type</option>
               <option value="klage">Klage</option>
               <option value="anke">Anke</option>
             </Select>
           </th>
           <th>
-            <Select label="&#8203;" className="fw120">
+            <Select label="&#8203;" className="fw120" onChange={filtrerYtelse}>
               <option value="">Ytelse</option>
-              <option value="sykepenger">Sykepenger</option>
-              <option value="dagpenger">Dagpenger</option>
-              <option value="foreldrepenger">Foreldrepenger</option>
+              <option value="SYK">Sykepenger</option>
+              <option value="DAG">Dagpenger</option>
+              <option value="FOR">Foreldrepenger</option>
             </Select>
           </th>
           <th>
@@ -76,7 +128,7 @@ const OppgaveTabell = (oppgaver: OppgaveRader) => {
               <option value="">Hjemmel</option>
               <option value={undefined}>Alle</option>
               <option value="8-1">8-1</option>
-              <option value="mangler">mangler</option>
+              <option value="8-1">8-4</option>
             </Select>
           </th>
           <th>
@@ -98,7 +150,7 @@ const OppgaveTabell = (oppgaver: OppgaveRader) => {
               </div>
             </div>
           </th>
-          <th colSpan={2} />
+          <th />
         </tr>
       </thead>
       <tbody>{genererTabellRader(oppgaver.utsnitt)}</tbody>
@@ -110,6 +162,10 @@ const ytelseOversettelse = (ytelse: string): string => {
   switch (ytelse) {
     case "SYK":
       return "Sykepenger";
+    case "DAG":
+      return "Dagpenger";
+    case "FOR":
+      return "Foreledrepenger";
     default:
       return ytelse;
   }
@@ -118,6 +174,8 @@ const typeOversettelse = (type: string): string => {
   switch (type) {
     case "klage":
       return "Klage";
+    case "anke":
+      return "Anke";
     default:
       return type;
   }
@@ -144,9 +202,6 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
       <td>{frist}</td>
       <td>
         <Knapp>Tildel meg</Knapp>
-      </td>
-      <td>
-        <Checkbox className={"oppgave-checkbox"} label="&#8203;" />
       </td>
     </tr>
   );

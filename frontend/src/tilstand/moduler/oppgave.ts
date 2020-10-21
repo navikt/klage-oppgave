@@ -6,8 +6,10 @@ import { of } from "rxjs";
 import {
   catchError,
   map,
+  mapTo,
   mergeMap,
   switchMap,
+  tap,
   withLatestFrom,
 } from "rxjs/operators";
 import { apiOppsett } from "../../utility/apiOppsett";
@@ -33,13 +35,13 @@ export interface OppgaveRader {
 }
 
 export interface Transformasjoner {
-  filtrering: {
-    type: undefined;
-    ytelse: undefined;
-    hjemmel: undefined;
+  filtrering?: {
+    type?: "KLAGE" | "ANKE" | undefined;
+    ytelse?: undefined | string;
+    hjemmel?: undefined | string;
   };
   sortering: {
-    frist: undefined;
+    frist: "ASC" | "DESC" | undefined;
   };
 }
 
@@ -71,145 +73,129 @@ export const oppgaveSlice = createSlice({
     },
   } as OppgaveState,
   reducers: {
-    OPPGAVER_MOTTATT: (state, action: PayloadAction<[OppgaveRad] | null>) => {
+    MOTTATT: (state, action: PayloadAction<[OppgaveRad] | null>) => {
       if (action.payload) {
         state.rader = action.payload;
         state.utsnitt = action.payload;
         state.lasterData = false;
       }
     },
-    OPPGAVER_UTSNITT: (state, action: PayloadAction<[OppgaveRad] | null>) => {
-      if (action.payload) {
-        state.utsnitt = action.payload;
-      }
-    },
-    OPPGAVER_TRANSFORMASJON: (
-      state,
-      action: PayloadAction<{
-        oppgaver: {
-          transformasjoner: Transformasjoner;
-          utsnitt: [OppgaveRad];
-        } | null;
-      }>
-    ) => {
-      if (action.payload?.oppgaver?.transformasjoner) {
-        state.transformasjoner = action.payload.oppgaver.transformasjoner;
-      }
-      if (action.payload?.oppgaver?.utsnitt) {
-        state.utsnitt = action.payload.oppgaver.utsnitt;
-      }
+    UTSNITT: (state, action: PayloadAction<RadMedTransformasjoner>) => {
+      state.transformasjoner = action.payload.transformasjoner;
+      state.utsnitt = action.payload.utsnitt;
     },
   },
 });
+
+interface RadMedTransformasjoner {
+  transformasjoner: Transformasjoner;
+  utsnitt: [OppgaveRad];
+}
 
 export default oppgaveSlice.reducer;
 
 //==========
 // Actions
 //==========
-export const {
-  OPPGAVER_MOTTATT,
-  OPPGAVER_UTSNITT,
-  OPPGAVER_TRANSFORMASJON,
-} = oppgaveSlice.actions;
-export const oppgaveRequest = createAction("oppgaver/OPPGAVER_HENT");
-export const oppgaveSorterFristStigende = createAction(
-  "oppgaver/OPPGAVER_SORTER_FRIST_STIGENDE"
-);
-export const oppgaveSorterFristSynkende = createAction(
-  "oppgaver/OPPGAVER_SORTER_FRIST_SYNKENDE"
-);
-export const oppgaveFiltrerHjemmel = createAction<string | undefined>(
-  "oppgaver/OPPGAVER_FILTRER_HJEMMEL"
+export const { MOTTATT, UTSNITT } = oppgaveSlice.actions;
+export const oppgaveRequest = createAction("oppgaver/HENT");
+export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
+
+export const oppgaveTransformerRader = createAction<Transformasjoner>(
+  "oppgaver/TRANSFORMER_RADER"
 );
 
 //==========
-// Epics
+// Sortering og filtrering
 //==========
-function hentTokenEpos() {
-  const tokenUrl = window.location.host.startsWith("localhost")
-    ? "/api/token"
-    : "/token";
-  return axios.get<string>(tokenUrl).pipe(
-    map((token) => token),
-    catchError((err) => err)
-  );
+function sorterASC(utsnitt: Array<OppgaveRad> | any) {
+  return utsnitt.slice().sort(function (a: any, b: any) {
+    return new Date(a.frist).getTime() - new Date(b.frist).getTime();
+  });
 }
 
-export function oppgaveSorterFristStigendeEpos(
-  action$: ActionsObservable<PayloadAction>,
+function sorterDESC(utsnitt: Array<OppgaveRad> | any) {
+  return utsnitt.slice().sort(function (a: any, b: any) {
+    return new Date(b.frist).getTime() - new Date(a.frist).getTime();
+  });
+}
+
+function filtrerHjemmel(
+  utsnitt: Array<OppgaveRad> | any,
+  hjemmel: string | undefined
+) {
+  return utsnitt.slice().filter((rad: OppgaveRad) => {
+    if (hjemmel === undefined) {
+      return rad;
+    } else {
+      if (rad.hjemmel.includes(hjemmel)) {
+        return rad;
+      }
+    }
+  });
+}
+
+function filtrerType(
+  utsnitt: Array<OppgaveRad> | any,
+  type: string | undefined
+) {
+  return utsnitt.slice().filter((rad: OppgaveRad) => {
+    if (type === undefined) {
+      return rad;
+    } else {
+      return rad.type.toLocaleLowerCase() === type.toLocaleLowerCase();
+    }
+  });
+}
+
+function filtrerYtelse(
+  utsnitt: Array<OppgaveRad> | any,
+  ytelse: string | undefined
+) {
+  return utsnitt.slice().filter((rad: OppgaveRad) => {
+    if (ytelse === undefined) {
+      return rad;
+    } else {
+      return rad.ytelse === ytelse;
+    }
+  });
+}
+
+//==========
+// Epos
+//==========
+export function oppgaveTransformerEpos(
+  action$: ActionsObservable<PayloadAction<Transformasjoner>>,
   state$: StateObservable<RootStateOrAny>
 ) {
   return action$.pipe(
-    ofType(oppgaveSorterFristStigende.type),
-    withLatestFrom(state$),
-    mergeMap(([action, state]) => {
-      return of(
-        OPPGAVER_TRANSFORMASJON({
-          ...state,
-          oppgaver: {
-            ...state.oppgaver,
-            transformasjoner: {
-              ...state.transformasjoner,
-              sortering: {
-                frist: "ASC",
-              },
-            },
-            utsnitt: state.oppgaver.rader
-              .slice()
-              .sort(function (a: any, b: any) {
-                return (
-                  new Date(b.frist).getTime() - new Date(a.frist).getTime()
-                );
-              }),
-          },
-        })
-      );
-    })
-  );
-}
-
-export function oppgaveSorterFristSynkendeEpos(
-  action$: ActionsObservable<PayloadAction>,
-  state$: StateObservable<RootStateOrAny>
-) {
-  return action$.pipe(
-    ofType(oppgaveSorterFristSynkende.type),
-    withLatestFrom(state$),
-    switchMap(([action, state]) => {
-      return of(
-        OPPGAVER_UTSNITT(
-          state.oppgaver.rader.slice().sort(function (a: any, b: any) {
-            return new Date(a.frist).getTime() - new Date(b.frist).getTime();
-          })
-        )
-      );
-    })
-  );
-}
-
-export function oppgaveFiltrerHjemmelEpos(
-  action$: ActionsObservable<PayloadAction<string | undefined, string>>,
-  state$: StateObservable<RootStateOrAny>
-) {
-  return action$.pipe(
-    ofType(oppgaveFiltrerHjemmel.type),
+    ofType(oppgaveTransformerRader.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      return of(
-        OPPGAVER_UTSNITT(
-          state.oppgaver.rader.filter((rad: OppgaveRad) => {
-            if (action.payload) {
-              if (rad.hjemmel.includes(action.payload)) {
-                return rad;
-              }
-            }
-            if (action.payload === undefined) {
-              return rad;
-            }
-          })
-        )
-      );
+      let rader = state.oppgaver.rader.slice();
+
+      if (action.payload.filtrering?.hjemmel) {
+        rader = filtrerHjemmel(rader, action.payload.filtrering.hjemmel);
+      } else if (action.payload.filtrering?.hjemmel === undefined) {
+        rader = filtrerHjemmel(rader, undefined);
+      }
+      if (action.payload.filtrering?.type) {
+        rader = filtrerType(rader, action.payload.filtrering.type);
+      } else if (action.payload.filtrering?.type === undefined) {
+        rader = filtrerType(rader, undefined);
+      }
+      if (action.payload.filtrering?.ytelse) {
+        rader = filtrerYtelse(rader, action.payload.filtrering.ytelse);
+      } else if (action.payload.filtrering?.ytelse === undefined) {
+        rader = filtrerYtelse(rader, undefined);
+      }
+      if (action.payload.sortering?.frist === "ASC") {
+        rader = sorterASC(rader);
+      } else {
+        rader = sorterDESC(rader);
+      }
+
+      return of(UTSNITT({ transformasjoner: action.payload, utsnitt: rader }));
     })
   );
 }
@@ -225,19 +211,14 @@ function hentOppgaverEpos(
       const oppgaveUrl = `${apiOppsett(window.location.host)}/oppgaver`;
 
       return axios.get<[OppgaveRad]>(oppgaveUrl).pipe(
-        map((oppgaver) => OPPGAVER_MOTTATT(oppgaver)),
+        map((oppgaver) => MOTTATT(oppgaver)),
         catchError((err) => {
           console.error(err);
-          return of(OPPGAVER_MOTTATT(null));
+          return of(MOTTATT(null));
         })
       );
     })
   );
 }
 
-export const OPPGAVER_EPICS = [
-  oppgaveSorterFristSynkendeEpos,
-  oppgaveSorterFristStigendeEpos,
-  oppgaveFiltrerHjemmelEpos,
-  hentOppgaverEpos,
-];
+export const OPPGAVER_EPICS = [oppgaveTransformerEpos, hentOppgaverEpos];

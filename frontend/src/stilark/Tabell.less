@@ -5,6 +5,18 @@
   display: none;
 }
 
+table {
+  width: calc(5 * 14em);
+}
+
+tr td,
+tr th {
+  width: 14em;
+  padding: 1em 0;
+  max-width: 14em;
+  overflow: hidden;
+}
+
 div.frist {
   display: grid;
   width: calc(2em + 25px);
@@ -57,11 +69,14 @@ div.piler {
 
 .etikett-klage {
   background-color: transparent;
+  width: 3.5em;
   border-color: red;
 }
+
 .etikett-anke {
   background-color: black;
-  border-color: white;
+  color: white;
+  width: 3.5em;
 }
 .etikett-sykepenger {
   background-color: #0067c5;
