@@ -113,6 +113,9 @@ export const oppgaveSlice = createSlice({
       if (antall) {
         state.meta.antall = antall;
         state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
+      } else {
+        state.meta.antall = 0;
+        state.meta.sider = 1;
       }
     },
   },
@@ -222,7 +225,7 @@ export function oppgaveTransformerEpos(
 }
 
 const oppgaveUrl = `${apiOppsett(window.location.host)}/oppgaver`;
-const fetchOppgave = axios.get<[OppgaveRad]>(oppgaveUrl).pipe(map((oppgaver) => MOTTATT(oppgaver)));
+const hentOppgaver = axios.get<[OppgaveRad]>(oppgaveUrl).pipe(map((oppgaver) => MOTTATT(oppgaver)));
 
 function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveRad>>,
@@ -232,7 +235,7 @@ function hentOppgaverEpos(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      return fetchOppgave.pipe(
+      return hentOppgaver.pipe(
         retryWhen((errors) =>
           errors.pipe(
             tap((val) => console.log("oppgave-henting feilet, prøver igjen")),

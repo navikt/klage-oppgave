@@ -118,21 +118,23 @@ const setup = (authClient) => {
     };
     return await authUtils
       .getOnBehalfOfAccessToken(authClient, req, params)
-      .then((userinfo) => {
-        const apiUrl = envVar({ name: "DOWNSTREAM_API_URL", required: true });
+      .then(async (userinfo) => {
+        const apiUrl = envVar({
+          name: "DOWNSTREAM_API_SERVICE_URL",
+          required: true,
+        });
         config.headers = {
           Authorization: `Bearer ${userinfo}`,
           Accept: "application/json",
           "Content-Type": "application/x-www-form-urlencoded",
         };
         const oppgaveUrl = axios.get(`${apiUrl}/oppgaver`);
-        console.log({ userinfo });
-        console.log("config", config.headers.Authorization);
         console.log("henter oppgaver", oppgaveUrl);
-        axios
+        await axios
           .get(apiUrl, config)
-          .then((data) => {
-            res.send(data);
+          .then((result) => {
+            console.log({ result });
+            res.send(result.data);
           })
           .catch((err) => {
             res.send({ err });

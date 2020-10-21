@@ -62,25 +62,31 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const filtrerHjemmel = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     let value = event.target.options[event.target.selectedIndex].value;
-    if (value === "Alle" || value === "Hjemmel") settHjemmelFilter(undefined);
-    if (value === hjemmelFilter) return;
-    else settHjemmelFilter(value);
+    if (value === "reset" || value === "Alle" || value === "Hjemmel") {
+      if (hjemmelFilter !== undefined) settHjemmelFilter(undefined);
+    } else {
+      if (hjemmelFilter !== value) settHjemmelFilter(value);
+    }
   };
 
   const filtrerYtelse = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     let value = event.target.options[event.target.selectedIndex].value;
-    if (value === "Ytelse") settHjemmelFilter(undefined);
-    if (value === ytelseFilter) return;
-    else settYtelseFilter(value);
+    if (value === "reset" || value === "Ytelse") {
+      if (ytelseFilter !== undefined) settYtelseFilter(undefined);
+    } else {
+      if (ytelseFilter !== value) settYtelseFilter(value);
+    }
   };
 
   const filtrerType = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     let value = event.target.options[event.target.selectedIndex].value;
-    if (value === "Type") settTypeFilter(undefined);
-    if (value === typeFilter) return;
-    else settTypeFilter(value);
+    if (value === "reset" || value === "Type") {
+      if (typeFilter !== undefined) settTypeFilter(undefined);
+    } else {
+      if (typeFilter !== value) settTypeFilter(value);
+    }
   };
 
   return (
@@ -89,14 +95,14 @@ const OppgaveTabell: React.FunctionComponent = () => {
         <tr>
           <th>
             <Select label="&#8203;" className="fw120" onChange={filtrerType}>
-              <option value={undefined}>Type</option>
+              <option value="reset">Type</option>
               <option value="klage">Klage</option>
               <option value="anke">Anke</option>
             </Select>
           </th>
           <th>
             <Select label="&#8203;" className="fw120" onChange={filtrerYtelse}>
-              <option value={undefined}>Ytelse</option>
+              <option value="reset">Ytelse</option>
               <option value="SYK">Sykepenger</option>
               <option value="DAG">Dagpenger</option>
               <option value="FOR">Foreldrepenger</option>
@@ -104,8 +110,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </th>
           <th>
             <Select label="&#8203;" className="fw120" onChange={filtrerHjemmel}>
-              <option value={undefined}>Hjemmel</option>
-              <option value={undefined}>Alle</option>
+              <option value="reset">Hjemmel</option>
+              <option value="reset">Alle</option>
               <option value="8-1">8-1</option>
               <option value="8-9">8-9</option>
             </Select>
