@@ -20,6 +20,9 @@
       }
     }
   },
+  "prettier": {
+    "printWidth": 120
+  },
   "author": "SA <sven.anders.robbestad@nav.no>",
   "license": "MIT",
   "devDependencies": {

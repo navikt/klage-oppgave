@@ -7,9 +7,7 @@ describe("Oppgave Sortering epos", () => {
   let ts: TestScheduler;
 
   beforeEach(() => {
-    ts = new TestScheduler((actual, expected) =>
-      expect(actual).toEqual(expected)
-    );
+    ts = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
   });
 
   afterEach(() => {
@@ -66,19 +64,12 @@ describe("Oppgave Sortering epos", () => {
           },
         };
 
-        const action$ = new ActionsObservable(
-          ts.createHotObservable(inputMarble, inputValues)
-        );
-        const state$ = new StateObservable(
-          m.hot("a", observableValues),
-          initState
-        );
+        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
         const actual$ = oppgaveTransformerEpos(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
         //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(
-          initState.oppgaver.rader
-        );
+        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
       });
     })
   );
@@ -103,41 +94,16 @@ describe("Oppgave Sortering epos", () => {
         const initState = {
           oppgaver: {
             rader: [
-              {
-                frist: "2019-09-12",
-                type: "Klage",
-                ytelse: "SYK",
-                hjemmel: "8-4",
-              },
-              {
-                frist: "2020-12-15",
-                type: "klage",
-                ytelse: "FOR",
-                hjemmel: "10-12",
-              },
-              {
-                frist: "2018-12-21",
-                type: "anke",
-                ytelse: "DAG",
-                hjemmel: "mangler",
-              },
+              { frist: "2019-09-12", type: "Klage", ytelse: "SYK", hjemmel: "8-4" },
+              { frist: "2020-12-15", type: "klage", ytelse: "FOR", hjemmel: "10-12" },
+              { frist: "2018-12-21", type: "anke", ytelse: "DAG", hjemmel: "mangler" },
             ],
           },
         };
         const resultPayload = {
           utsnitt: [
-            {
-              frist: "2019-09-12",
-              type: "Klage",
-              ytelse: "SYK",
-              hjemmel: "8-4",
-            },
-            {
-              frist: "2020-12-15",
-              type: "klage",
-              ytelse: "FOR",
-              hjemmel: "10-12",
-            },
+            { frist: "2019-09-12", type: "Klage", ytelse: "SYK", hjemmel: "8-4" },
+            { frist: "2020-12-15", type: "klage", ytelse: "FOR", hjemmel: "10-12" },
           ],
           transformasjoner: {
             sortering: {
@@ -157,19 +123,12 @@ describe("Oppgave Sortering epos", () => {
           },
         };
 
-        const action$ = new ActionsObservable(
-          ts.createHotObservable(inputMarble, inputValues)
-        );
-        const state$ = new StateObservable(
-          m.hot("a", observableValues),
-          initState
-        );
+        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
         const actual$ = oppgaveTransformerEpos(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
         //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(
-          initState.oppgaver.rader
-        );
+        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
       });
     })
   );
@@ -229,19 +188,12 @@ describe("Oppgave Sortering epos", () => {
           },
         };
 
-        const action$ = new ActionsObservable(
-          ts.createHotObservable(inputMarble, inputValues)
-        );
-        const state$ = new StateObservable(
-          m.hot("a", observableValues),
-          initState
-        );
+        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
         const actual$ = oppgaveTransformerEpos(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
         //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(
-          initState.oppgaver.rader
-        );
+        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
       });
     })
   );
@@ -293,19 +245,12 @@ describe("Oppgave Sortering epos", () => {
           },
         };
 
-        const action$ = new ActionsObservable(
-          ts.createHotObservable(inputMarble, inputValues)
-        );
-        const state$ = new StateObservable(
-          m.hot("a", observableValues),
-          initState
-        );
+        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
         const actual$ = oppgaveTransformerEpos(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
         //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(
-          initState.oppgaver.rader
-        );
+        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
       });
     })
   );
@@ -354,19 +299,12 @@ describe("Oppgave Sortering epos", () => {
           },
         };
 
-        const action$ = new ActionsObservable(
-          ts.createHotObservable(inputMarble, inputValues)
-        );
-        const state$ = new StateObservable(
-          m.hot("a", observableValues),
-          initState
-        );
+        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
         const actual$ = oppgaveTransformerEpos(action$, state$);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
         //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(
-          initState.oppgaver.rader
-        );
+        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
       });
     })
   );

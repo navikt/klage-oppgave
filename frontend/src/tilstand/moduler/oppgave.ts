@@ -2,13 +2,16 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../konfigurerAxios";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { of } from "rxjs";
+import { from, of, throwError } from "rxjs";
 import {
   catchError,
+  delay,
   map,
   mapTo,
   mergeMap,
+  retryWhen,
   switchMap,
+  take,
   tap,
   withLatestFrom,
 } from "rxjs/operators";
@@ -101,9 +104,7 @@ export const { MOTTATT, UTSNITT } = oppgaveSlice.actions;
 export const oppgaveRequest = createAction("oppgaver/HENT");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 
-export const oppgaveTransformerRader = createAction<Transformasjoner>(
-  "oppgaver/TRANSFORMER_RADER"
-);
+export const oppgaveTransformerRader = createAction<Transformasjoner>("oppgaver/TRANSFORMER_RADER");
 
 //==========
 // Sortering og filtrering
@@ -120,10 +121,7 @@ function sorterDESC(utsnitt: Array<OppgaveRad> | any) {
   });
 }
 
-function filtrerHjemmel(
-  utsnitt: Array<OppgaveRad> | any,
-  hjemmel: string | undefined
-) {
+function filtrerHjemmel(utsnitt: Array<OppgaveRad> | any, hjemmel: string | undefined) {
   return utsnitt.slice().filter((rad: OppgaveRad) => {
     if (hjemmel === undefined) {
       return rad;
@@ -135,10 +133,7 @@ function filtrerHjemmel(
   });
 }
 
-function filtrerType(
-  utsnitt: Array<OppgaveRad> | any,
-  type: string | undefined
-) {
+function filtrerType(utsnitt: Array<OppgaveRad> | any, type: string | undefined) {
   return utsnitt.slice().filter((rad: OppgaveRad) => {
     if (type === undefined) {
       return rad;
@@ -148,10 +143,7 @@ function filtrerType(
   });
 }
 
-function filtrerYtelse(
-  utsnitt: Array<OppgaveRad> | any,
-  ytelse: string | undefined
-) {
+function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: string | undefined) {
   return utsnitt.slice().filter((rad: OppgaveRad) => {
     if (ytelse === undefined) {
       return rad;
@@ -200,6 +192,9 @@ export function oppgaveTransformerEpos(
   );
 }
 
+const oppgaveUrl = `${apiOppsett(window.location.host)}/oppgaver`;
+const fetchOppgave = axios.get<[OppgaveRad]>(oppgaveUrl).pipe(map((oppgaver) => MOTTATT(oppgaver)));
+
 function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveRad>>,
   state$: StateObservable<RootStateOrAny>
@@ -208,14 +203,15 @@ function hentOppgaverEpos(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      const oppgaveUrl = `${apiOppsett(window.location.host)}/oppgaver`;
-
-      return axios.get<[OppgaveRad]>(oppgaveUrl).pipe(
-        map((oppgaver) => MOTTATT(oppgaver)),
-        catchError((err) => {
-          console.error(err);
-          return of(MOTTATT(null));
-        })
+      return fetchOppgave.pipe(
+        retryWhen((errors) =>
+          errors.pipe(
+            //log error message
+            tap((val) => console.log("oppgave-henting feilet, prøver igjen")),
+            delay(5000),
+            take(5)
+          )
+        )
       );
     })
   );
