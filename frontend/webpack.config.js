@@ -47,13 +47,13 @@ module.exports = {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
   },
   output: {
-    path: __dirname + "/dist",
+    path: path.resolve(__dirname, "dist"),
     publicPath: "/",
     filename: "bundle.js",
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
   devServer: {
-    contentBase: path.join(__dirname, "public"),
+    contentBase: path.resolve(__dirname, "public"),
     hot: true,
     historyApiFallback: true,
     proxy: {

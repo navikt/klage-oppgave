@@ -21,7 +21,7 @@
     }
   },
   "prettier": {
-    "printWidth": 120
+    "printWidth": 100
   },
   "author": "SA <sven.anders.robbestad@nav.no>",
   "license": "MIT",

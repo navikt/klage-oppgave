@@ -33,8 +33,16 @@ export interface OppgaveRad {
   saksbehandler: string;
 }
 
+interface Metadata {
+  antall: number;
+  sider: number;
+  treffPerSide: number;
+  side: number;
+}
+
 export interface OppgaveRader {
   utsnitt: [OppgaveRad];
+  meta: Metadata;
 }
 
 export interface Transformasjoner {
@@ -52,6 +60,7 @@ type OppgaveState = {
   rader?: [OppgaveRad?];
   utsnitt?: [OppgaveRad?];
   transformasjoner: Transformasjoner;
+  meta: Metadata;
   lasterData: boolean;
 };
 
@@ -64,6 +73,12 @@ export const oppgaveSlice = createSlice({
     rader: [],
     utsnitt: [],
     lasterData: true,
+    meta: {
+      antall: 0,
+      sider: 1,
+      treffPerSide: 5,
+      side: 1,
+    },
     transformasjoner: {
       filtrering: {
         type: undefined,
@@ -76,16 +91,29 @@ export const oppgaveSlice = createSlice({
     },
   } as OppgaveState,
   reducers: {
-    MOTTATT: (state, action: PayloadAction<[OppgaveRad] | null>) => {
+    MOTTATT: (state, action: PayloadAction<[OppgaveRad]>) => {
       if (action.payload) {
+        const antall = action.payload.length;
+        const t = state.meta.treffPerSide;
         state.rader = action.payload;
         state.utsnitt = action.payload;
+        state.meta.antall = antall;
+        state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
         state.lasterData = false;
       }
     },
     UTSNITT: (state, action: PayloadAction<RadMedTransformasjoner>) => {
       state.transformasjoner = action.payload.transformasjoner;
       state.utsnitt = action.payload.utsnitt;
+    },
+    SETT_SIDE: (state, action: PayloadAction<number>) => {
+      state.meta.side = action.payload;
+      const t = state.meta.treffPerSide;
+      const antall = state.utsnitt?.length;
+      if (antall) {
+        state.meta.antall = antall;
+        state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
+      }
     },
   },
 });
@@ -100,8 +128,9 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const { MOTTATT, UTSNITT } = oppgaveSlice.actions;
+export const { MOTTATT, UTSNITT, SETT_SIDE } = oppgaveSlice.actions;
 export const oppgaveRequest = createAction("oppgaver/HENT");
+export const settSide = createAction<number>("oppgaver/SETT_SIDE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 
 export const oppgaveTransformerRader = createAction<Transformasjoner>("oppgaver/TRANSFORMER_RADER");
@@ -168,7 +197,7 @@ export function oppgaveTransformerEpos(
 
       if (action.payload.filtrering?.hjemmel) {
         rader = filtrerHjemmel(rader, action.payload.filtrering.hjemmel);
-      } else if (action.payload.filtrering?.hjemmel === undefined) {
+      } else if (!action.payload.filtrering?.hjemmel) {
         rader = filtrerHjemmel(rader, undefined);
       }
       if (action.payload.filtrering?.type) {
@@ -206,7 +235,6 @@ function hentOppgaverEpos(
       return fetchOppgave.pipe(
         retryWhen((errors) =>
           errors.pipe(
-            //log error message
             tap((val) => console.log("oppgave-henting feilet, prøver igjen")),
             delay(5000),
             take(5)

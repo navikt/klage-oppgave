@@ -14,7 +14,7 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
-          <Route path="/saker" render={() => <App />} />
+          <Route path="/saker/:side" render={() => <App />} />
           <Route path="/minesaker" render={() => <App />} />
           <Route path="/innstillinger" render={() => <App />} />
           <Route path="/" render={() => <App />} />

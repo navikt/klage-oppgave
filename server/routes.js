@@ -4,9 +4,7 @@ let express = require("express");
 let passport = require("passport");
 let path = require("path");
 let session = require("express-session");
-//const { createProxyMiddleware } = require("http-proxy-middleware");
-const fetch = require("node-fetch");
-global.Headers = fetch.Headers;
+const axios = require("axios");
 const router = express.Router();
 
 const ensureAuthenticated = async (req, res, next) => {
@@ -16,6 +14,14 @@ const ensureAuthenticated = async (req, res, next) => {
     session.redirectTo = req.url;
     res.redirect("/login");
   }
+};
+
+const envVar = ({ name, required = true }) => {
+  if (!process.env[name] && required) {
+    console.error(`Missing required environment variable '${name}'`);
+    process.exit(1);
+  }
+  return process.env[name];
 };
 
 const setup = (authClient) => {
@@ -102,6 +108,39 @@ const setup = (authClient) => {
       .catch((err) => res.status(500).json(err));
   });
 
+  // hent oppgaver
+  router.get("/api/oppgaver", async (req, res) => {
+    const params = {
+      clientId: "0bc199ef-35dd-4aa3-87e6-01506da3dd90",
+      path: "api",
+      url: "https://klage-oppgave-api.dev.nav.no/",
+      scopes: [],
+    };
+    return await authUtils
+      .getOnBehalfOfAccessToken(authClient, req, params)
+      .then((userinfo) => {
+        const apiUrl = envVar({ name: "DOWNSTREAM_API_URL", required: true });
+        config.headers = {
+          Authorization: `Bearer ${userinfo}`,
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+        };
+        const oppgaveUrl = axios.get(`${apiUrl}/oppgaver`);
+        console.log({ userinfo });
+        console.log("config", config.headers.Authorization);
+        console.log("henter oppgaver", oppgaveUrl);
+        axios
+          .get(apiUrl, config)
+          .then((data) => {
+            res.send(data);
+          })
+          .catch((err) => {
+            res.send({ err });
+          });
+      })
+      .catch((err) => res.status(500).json(err));
+  });
+
   // log the user out
   router.get("/logout", (req, res) => {
     req.logOut();
@@ -118,7 +157,6 @@ const setup = (authClient) => {
   router.use("*", (req, res) => {
     res.sendFile("index.html", { root: buildPath });
   });
-
   return router;
 };
 
