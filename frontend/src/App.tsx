@@ -12,14 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   OppgaveRad,
-  OppgaveRader,
   oppgaveRequest,
   oppgaveTransformerRader,
   settSide,
 } from "./tilstand/moduler/oppgave";
 import { selectOppgaver, selectIsFetching } from "./tilstand/moduler/oppgave.velgere";
 import { NavLink, useParams } from "react-router-dom";
-import { number } from "prop-types";
 
 const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -28,7 +26,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [sortToggle, setSortToggle] = useState(0); // dette er bare for test, skal fjernes
   const [hjemmelFilter, settHjemmelFilter] = useState<string | undefined>(undefined);
   const [ytelseFilter, settYtelseFilter] = useState<string | undefined>(undefined);
-  const [typeFilter, settTypeFilter] = useState<"KLAGE" | "ANKE" | undefined>(undefined);
+  const [typeFilter, settTypeFilter] = useState<string | undefined>(undefined);
   const [sorteringFilter, settSorteringFilter] = useState<"ASC" | "DESC" | undefined>("ASC");
 
   useEffect(() => {
@@ -63,47 +61,26 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   const filtrerHjemmel = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
-    if (event.target.value === hjemmelFilter) return;
-    let hjemmel = undefined;
-    if (
-      event.target.value.toLocaleLowerCase() !== "alle" ||
-      event.target.value.toLocaleLowerCase() !== "hjemmel"
-    ) {
-      hjemmel = event.target.value;
-      settHjemmelFilter(hjemmel);
-    } else {
-      settHjemmelFilter(undefined);
-    }
+    let value = event.target.options[event.target.selectedIndex].value;
+    if (value === hjemmelFilter) return;
+    if (value === "Alle" || value === "Hjemmel") settHjemmelFilter(undefined);
+    else settHjemmelFilter(value);
   };
 
   const filtrerYtelse = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
-    if (event.target.value === ytelseFilter) return;
-    let ytelse = undefined;
-    if (
-      event.target.value.toLocaleLowerCase() !== "alle" ||
-      event.target.value.toLocaleLowerCase() !== "ytelse"
-    ) {
-      ytelse = event.target.value;
-      settYtelseFilter(ytelse);
-    } else {
-      settYtelseFilter(undefined);
-    }
+    let value = event.target.options[event.target.selectedIndex].value;
+    if (value === ytelseFilter) return;
+    if (value === "Ytelse") settHjemmelFilter(undefined);
+    else settYtelseFilter(value);
   };
 
   const filtrerType = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
-    if (event.target.value === typeFilter) return;
-    let type = undefined;
-    if (
-      event.target.value.toLocaleLowerCase() !== "alle" ||
-      event.target.value.toLocaleLowerCase() !== "ytelse"
-    ) {
-      type = event.target.value as "KLAGE" | "ANKE";
-      settTypeFilter(type);
-    } else {
-      settTypeFilter(undefined);
-    }
+    let value = event.target.options[event.target.selectedIndex].value;
+    if (value === typeFilter) return;
+    if (value === "Type") settTypeFilter(undefined);
+    else settTypeFilter(value);
   };
 
   return (

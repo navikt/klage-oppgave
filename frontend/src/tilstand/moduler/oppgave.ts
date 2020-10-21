@@ -47,7 +47,7 @@ export interface OppgaveRader {
 
 export interface Transformasjoner {
   filtrering?: {
-    type?: "KLAGE" | "ANKE" | undefined;
+    type?: undefined | string;
     ytelse?: undefined | string;
     hjemmel?: undefined | string;
   };
