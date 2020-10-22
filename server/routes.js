@@ -72,8 +72,6 @@ const setup = (authClient) => {
       );
       req.headers["Authorization"] = `Bearer ${token}`;
       req.headers["Accept"] = `application/json`;
-      console.log("satt følgende headers");
-      console.log(req.headers);
       next();
     } else {
       next();
@@ -87,27 +85,9 @@ const setup = (authClient) => {
       pathRewrite: {
         "^/api": "",
       },
-      onProxyReq(proxyReq, req, res) {
-        proxyReq.setHeader("foo", `bar`);
-        console.log(
-          "-->  ",
-          req.method,
-          req.path,
-          "->",
-          "->",
-          proxyReq.baseUrl + proxyReq.path
-        );
-        console.log("**** proxyReq.headers:");
-        console.log(proxyReq.headers);
-        console.log("**** req.headers: ");
-        console.log(req.headers);
-      },
       onError: function onError(err, req, res) {
-        console.error(err);
-        console.log("**** req.headers: ");
-        console.log(req.headers);
         res.status(500);
-        res.json({ error: "Error when connecting to remote server." });
+        res.json({ error: "Kunne ikke koble til API" });
       },
       logLevel: "debug",
       changeOrigin: true,

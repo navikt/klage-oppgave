@@ -9,6 +9,7 @@ const settOppAxios = (): AxiosInstance => {
   });
 
   // Request interceptor for API calls
+  /*
   axiosInstance.interceptors.request.use(
     async (config) => {
       const token = await axios.get(
@@ -25,7 +26,7 @@ const settOppAxios = (): AxiosInstance => {
       Promise.reject(error);
     }
   );
-
+*/
   return axiosInstance;
 };
 

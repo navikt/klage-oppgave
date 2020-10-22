@@ -15,7 +15,6 @@ import {
   tap,
   withLatestFrom,
 } from "rxjs/operators";
-import { apiOppsett } from "../../utility/apiOppsett";
 
 //==========
 // Type defs
@@ -224,7 +223,7 @@ export function oppgaveTransformerEpos(
   );
 }
 
-const oppgaveUrl = `${apiOppsett(window.location.host)}/oppgaver`;
+const oppgaveUrl = `/api/oppgaver`;
 const hentOppgaver = axios.get<[OppgaveRad]>(oppgaveUrl).pipe(map((oppgaver) => MOTTATT(oppgaver)));
 
 function hentOppgaverEpos(
