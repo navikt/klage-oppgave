@@ -56,12 +56,24 @@ const setup = (authClient) => {
   // The routes below require the user to be authenticated
   router.use(ensureAuthenticated);
 
-  router.use((req, res, next) => {
+  router.use(async (req, res, next) => {
     if (req.path.startsWith("/api")) {
-      req.headers[
-        "Authorization"
-      ] = `Bearer ${req.user.tokenSets.self.access_token}`;
+      const params = {
+        clientId: "0bc199ef-35dd-4aa3-87e6-01506da3dd90",
+        path: "api",
+        url: "https://klage-oppgave-api.dev.nav.no/",
+        scopes: [],
+      };
+      const token = await new Promise((resolve, reject) =>
+        authUtils
+          .getOnBehalfOfAccessToken(authClient, req, params)
+          .then((userinfo) => resolve(userinfo))
+          .catch((err) => reject(err))
+      );
+      req.headers["Authorization"] = `Bearer ${token}`;
       req.headers["Accept"] = `application/json`;
+      console.log("satt følgende headers");
+      console.log(req.headers);
       next();
     } else {
       next();
@@ -75,6 +87,29 @@ const setup = (authClient) => {
       pathRewrite: {
         "^/api": "",
       },
+      onProxyReq(proxyReq, req, res) {
+        proxyReq.setHeader("foo", `bar`);
+        console.log(
+          "-->  ",
+          req.method,
+          req.path,
+          "->",
+          "->",
+          proxyReq.baseUrl + proxyReq.path
+        );
+        console.log("**** proxyReq.headers:");
+        console.log(proxyReq.headers);
+        console.log("**** req.headers: ");
+        console.log(req.headers);
+      },
+      onError: function onError(err, req, res) {
+        console.error(err);
+        console.log("**** req.headers: ");
+        console.log(req.headers);
+        res.status(500);
+        res.json({ error: "Error when connecting to remote server." });
+      },
+      logLevel: "debug",
       changeOrigin: true,
     })
   );
