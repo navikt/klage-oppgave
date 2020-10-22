@@ -6,6 +6,7 @@ let path = require("path");
 let session = require("express-session");
 const axios = require("axios");
 const router = express.Router();
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const ensureAuthenticated = async (req, res, next) => {
   if (req.isAuthenticated() && authUtils.hasValidAccessToken(req)) {
@@ -54,6 +55,29 @@ const setup = (authClient) => {
 
   // The routes below require the user to be authenticated
   router.use(ensureAuthenticated);
+
+  router.use((req, res, next) => {
+    if (req.path.startsWith("/api")) {
+      req.headers[
+        "Authorization"
+      ] = `Bearer ${req.user.tokenSets.self.access_token}`;
+      req.headers["Accept"] = `application/json`;
+      next();
+    } else {
+      next();
+    }
+  });
+
+  router.use(
+    "/api",
+    createProxyMiddleware({
+      target: "http://klage-oppgave-api",
+      pathRewrite: {
+        "^/api": "",
+      },
+      changeOrigin: true,
+    })
+  );
 
   router.get("/", (req, res) => {
     return res
@@ -105,41 +129,6 @@ const setup = (authClient) => {
     authUtils
       .getUserInfoFromGraphApi(authClient, req)
       .then((userinfo) => res.json(userinfo))
-      .catch((err) => res.status(500).json(err));
-  });
-
-  // hent oppgaver
-  router.get("/api/oppgaver", async (req, res) => {
-    const params = {
-      clientId: "0bc199ef-35dd-4aa3-87e6-01506da3dd90",
-      path: "api",
-      url: "https://klage-oppgave-api.dev.nav.no/",
-      scopes: [],
-    };
-    return await authUtils
-      .getOnBehalfOfAccessToken(authClient, req, params)
-      .then(async (userinfo) => {
-        const apiUrl = envVar({
-          name: "DOWNSTREAM_API_SERVICE_URL",
-          required: true,
-        });
-        config.headers = {
-          Authorization: `Bearer ${userinfo}`,
-          Accept: "application/json",
-          "Content-Type": "application/x-www-form-urlencoded",
-        };
-        const oppgaveUrl = axios.get(`${apiUrl}/oppgaver`);
-        console.log("henter oppgaver", oppgaveUrl);
-        await axios
-          .get(oppgaveUrl, config)
-          .then((result) => {
-            console.log({ result });
-            res.send(result.data);
-          })
-          .catch((err) => {
-            res.send({ err });
-          });
-      })
       .catch((err) => res.status(500).json(err));
   });
 
