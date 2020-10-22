@@ -281,6 +281,17 @@ const App = (): JSX.Element => {
     dispatch(oppgaveRequest());
   }, []);
 
+  if (oppgaver.meta.feilmelding) {
+    return (
+      <Oppsett isFetching={false}>
+        <div className={"feil"}>
+          <h1>{oppgaver.meta.feilmelding}</h1>
+          <div>Vennligst forsøk igjen litt senere...</div>
+        </div>
+      </Oppsett>
+    );
+  }
+
   return (
     <Oppsett isFetching={isFetching}>
       <>

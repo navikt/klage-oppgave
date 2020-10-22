@@ -2,19 +2,9 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../konfigurerAxios";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { from, of, throwError } from "rxjs";
-import {
-  catchError,
-  delay,
-  map,
-  mapTo,
-  mergeMap,
-  retryWhen,
-  switchMap,
-  take,
-  tap,
-  withLatestFrom,
-} from "rxjs/operators";
+import { of } from "rxjs";
+import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
+import { provIgjenStrategi } from "../../utility/rxUtils";
 
 //==========
 // Type defs
@@ -37,6 +27,7 @@ interface Metadata {
   sider: number;
   treffPerSide: number;
   side: number;
+  feilmelding?: string | undefined;
 }
 
 export interface OppgaveRader {
@@ -99,11 +90,16 @@ export const oppgaveSlice = createSlice({
         state.meta.antall = antall;
         state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
         state.lasterData = false;
+        state.meta.feilmelding = undefined;
       }
     },
     UTSNITT: (state, action: PayloadAction<RadMedTransformasjoner>) => {
       state.transformasjoner = action.payload.transformasjoner;
       state.utsnitt = action.payload.utsnitt;
+    },
+    FEILET: (state, action: PayloadAction<string>) => {
+      state.meta.feilmelding = "Oppgave-henting feilet";
+      state.lasterData = false;
     },
     SETT_SIDE: (state, action: PayloadAction<number>) => {
       state.meta.side = action.payload;
@@ -130,10 +126,11 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const { MOTTATT, UTSNITT, SETT_SIDE } = oppgaveSlice.actions;
+export const { MOTTATT, UTSNITT, SETT_SIDE, FEILET } = oppgaveSlice.actions;
 export const oppgaveRequest = createAction("oppgaver/HENT");
 export const settSide = createAction<number>("oppgaver/SETT_SIDE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
+export const oppgaveHentingFeilet = createAction<string>("oppgaver/FEILET");
 
 export const oppgaveTransformerRader = createAction<Transformasjoner>("oppgaver/TRANSFORMER_RADER");
 
@@ -235,13 +232,8 @@ function hentOppgaverEpos(
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       return hentOppgaver.pipe(
-        retryWhen((errors) =>
-          errors.pipe(
-            tap((val) => console.log("oppgave-henting feilet, prøver igjen")),
-            delay(5000),
-            take(5)
-          )
-        )
+        retryWhen(provIgjenStrategi()),
+        catchError((error) => of(FEILET(error)))
       );
     })
   );
