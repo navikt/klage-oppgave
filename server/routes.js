@@ -131,7 +131,7 @@ const setup = (authClient) => {
         const oppgaveUrl = axios.get(`${apiUrl}/oppgaver`);
         console.log("henter oppgaver", oppgaveUrl);
         await axios
-          .get(apiUrl, config)
+          .get(oppgaveUrl, config)
           .then((result) => {
             console.log({ result });
             res.send(result.data);
