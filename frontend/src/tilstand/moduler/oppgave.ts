@@ -66,7 +66,7 @@ export const oppgaveSlice = createSlice({
     meta: {
       antall: 0,
       sider: 1,
-      treffPerSide: 5,
+      treffPerSide: 10,
       side: 1,
     },
     transformasjoner: {
