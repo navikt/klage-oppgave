@@ -9,8 +9,11 @@ interface LayoutType {
 
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { velgMeg } from "../tilstand/moduler/meg.velgere";
 
 export default function Oppsett({ children, isFetching }: LayoutType) {
+  const person = useSelector(velgMeg);
   return (
     <main className="container">
       <header className="main-head">
@@ -20,7 +23,7 @@ export default function Oppsett({ children, isFetching }: LayoutType) {
         </div>
         <div className="right">
           <div className="menu">SVG</div>
-          <div className="name">Navn Navnesen</div>
+          <div className="name">{person.navn}</div>
         </div>
       </header>
       <nav className="main-nav" role="navigation" aria-label="Meny">
@@ -42,9 +45,7 @@ export default function Oppsett({ children, isFetching }: LayoutType) {
           </li>
         </ul>
       </nav>
-      <article className="content">
-        {isFetching ? <NavFrontendSpinner /> : children}
-      </article>
+      <article className="content">{isFetching ? <NavFrontendSpinner /> : children}</article>
       <footer className="main-footer">
         <div>Bunnlinje</div>
       </footer>

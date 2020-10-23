@@ -26,32 +26,35 @@ const server = {
   sessionKey: envVar({ name: "SESS_KEY", required: true }),
 
   // name of the cookie, set to whatever your want
-  cookieName: "security-blueprints-login",
+  cookieName: "klage-oppgave-frontend",
 };
 
-const azureAd = {
-  // these are provided by nais at runtime
-  discoveryUrl: envVar({ name: "AZURE_APP_WELL_KNOWN_URL", required: true }),
-  clientId: envVar({ name: "AZURE_APP_CLIENT_ID", required: true }),
-  clientJwks: JSON.parse(envVar({ name: "AZURE_APP_JWKS", required: true })),
+let azureAd = {};
 
-  // where the user should be redirected after authenticating at the third party
-  // should be "$host + /oauth2/callback", e.g. http://localhost:3000/oauth2/callback
-  redirectUri: envVar({ name: "AZURE_APP_REDIRECT_URL", required: true }),
+if (process.env.NODE_ENV === "production") {
+  azureAd = {
+    // these are provided by nais at runtime
+    discoveryUrl: envVar({ name: "AZURE_APP_WELL_KNOWN_URL", required: true }),
+    clientId: envVar({ name: "AZURE_APP_CLIENT_ID", required: true }),
+    clientJwks: JSON.parse(envVar({ name: "AZURE_APP_JWKS", required: true })),
 
-  // where your application should redirect after logout
-  logoutRedirectUri: envVar({
-    name: "AZURE_APP_LOGOUT_REDIRECT_URL",
-    required: true,
-  }),
+    // where the user should be redirected after authenticating at the third party
+    // should be "$host + /oauth2/callback", e.g. http://localhost:3000/oauth2/callback
+    redirectUri: envVar({ name: "AZURE_APP_REDIRECT_URL", required: true }),
 
-  // leave at default
-  tokenEndpointAuthMethod: "private_key_jwt",
-  responseTypes: ["code"],
-  responseMode: "query",
-  tokenEndpointAuthSigningAlg: "RS256",
-};
+    // where your application should redirect after logout
+    logoutRedirectUri: envVar({
+      name: "AZURE_APP_LOGOUT_REDIRECT_URL",
+      required: true,
+    }),
 
+    // leave at default
+    tokenEndpointAuthMethod: "private_key_jwt",
+    responseTypes: ["code"],
+    responseMode: "query",
+    tokenEndpointAuthSigningAlg: "RS256",
+  };
+}
 const redis = {
   host: envVar({ name: "REDIS_HOST", required: false }),
   port: envVar({ name: "REDIS_PORT", required: false }) || 6379,

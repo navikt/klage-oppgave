@@ -1,0 +1,12 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users(onPremisesSamAccountName,displayName,givenName,mail,officeLocation,surname,userPrincipalName,id,jobTitle)/$entity",
+  "onPremisesSamAccountName": "Z994488",
+  "displayName": "F_Z994488 E_Z994488",
+  "givenName": "F_Z994488",
+  "mail": "F_Z994488.E_Z994488@trygdeetaten.no",
+  "officeLocation": "2970 NAV IKT DRIFT",
+  "surname": "E_Z994488",
+  "userPrincipalName": "F_Z994488.E_Z994488@trygdeetaten.no",
+  "id": "dc4f7dd9-36cf-460a-a887-6472ada8d399",
+  "jobTitle": "AAA1234"
+}

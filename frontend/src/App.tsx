@@ -10,12 +10,17 @@ import "nav-frontend-tabell-style";
 import { Checkbox, Select } from "nav-frontend-skjema";
 import { useDispatch, useSelector } from "react-redux";
 
+import { hjemler } from "./domene/hjemler.json";
+
 import {
   OppgaveRad,
   oppgaveRequest,
   oppgaveTransformerRader,
   settSide,
 } from "./tilstand/moduler/oppgave";
+
+import { hentMegHandling } from "./tilstand/moduler/meg";
+
 import { selectOppgaver, selectIsFetching } from "./tilstand/moduler/oppgave.velgere";
 import { NavLink, useParams } from "react-router-dom";
 
@@ -62,7 +67,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const filtrerHjemmel = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     let value = event.target.options[event.target.selectedIndex].value;
-    if (value === "reset" || value === "Alle" || value === "Hjemmel") {
+    if (value === "reset" || value === "Hjemmel") {
       if (hjemmelFilter !== undefined) settHjemmelFilter(undefined);
     } else {
       if (hjemmelFilter !== value) settHjemmelFilter(value);
@@ -111,9 +116,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
           <th>
             <Select label="&#8203;" className="fw120" onChange={filtrerHjemmel}>
               <option value="reset">Hjemmel</option>
-              <option value="reset">Alle</option>
-              <option value="8-1">8-1</option>
-              <option value="8-9">8-9</option>
+              {hjemler.map((rad) => (
+                <option value={rad}>{rad}</option>
+              ))}
             </Select>
           </th>
           <th>
@@ -279,6 +284,7 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(oppgaveRequest());
+    dispatch(hentMegHandling());
   }, []);
 
   if (oppgaver.meta.feilmelding) {

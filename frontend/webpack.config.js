@@ -61,6 +61,9 @@ module.exports = {
         target: "http://localhost:3000",
         pathRewrite: { "^/api": "" },
       },
+      "/me": {
+        target: "http://localhost:3000",
+      },
     },
   },
 };

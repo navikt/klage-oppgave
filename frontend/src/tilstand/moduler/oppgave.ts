@@ -17,7 +17,7 @@ export interface OppgaveRad {
   };
   type: string;
   ytelse: string;
-  hjemmel: [string];
+  hjemmel: string;
   frist: string;
   saksbehandler: string;
 }
@@ -92,14 +92,17 @@ export const oppgaveSlice = createSlice({
         state.lasterData = false;
         state.meta.feilmelding = undefined;
       }
+      return state;
     },
     UTSNITT: (state, action: PayloadAction<RadMedTransformasjoner>) => {
       state.transformasjoner = action.payload.transformasjoner;
       state.utsnitt = action.payload.utsnitt;
+      return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
       state.meta.feilmelding = "Oppgave-henting feilet";
       state.lasterData = false;
+      return state;
     },
     SETT_SIDE: (state, action: PayloadAction<number>) => {
       state.meta.side = action.payload;
@@ -112,6 +115,7 @@ export const oppgaveSlice = createSlice({
         state.meta.antall = 0;
         state.meta.sider = 1;
       }
+      return state;
     },
   },
 });
@@ -154,9 +158,7 @@ function filtrerHjemmel(utsnitt: Array<OppgaveRad> | any, hjemmel: string | unde
     if (hjemmel === undefined) {
       return rad;
     } else {
-      if (rad.hjemmel.includes(hjemmel)) {
-        return rad;
-      }
+      return rad.hjemmel.split(" ").includes(hjemmel);
     }
   });
 }
@@ -199,6 +201,7 @@ export function oppgaveTransformerEpos(
       } else if (!action.payload.filtrering?.hjemmel) {
         rader = filtrerHjemmel(rader, undefined);
       }
+
       if (action.payload.filtrering?.type) {
         rader = filtrerType(rader, action.payload.filtrering.type);
       } else if (action.payload.filtrering?.type === undefined) {

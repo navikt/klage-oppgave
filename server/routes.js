@@ -5,6 +5,7 @@ let passport = require("passport");
 let path = require("path");
 let session = require("express-session");
 const axios = require("axios");
+const { hentFraRedis, cacheMiddleWare, handleProxyRes } = require("./cache");
 const router = express.Router();
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
@@ -26,9 +27,6 @@ const envVar = ({ name, required = true }) => {
 };
 
 const setup = (authClient) => {
-  // These routes are unprotected and do not require auth to reach
-
-  // Liveness and readiness probes for Kubernetes / nais
   router.get("/isAlive", (req, res) => res.send("Alive"));
   router.get("/isReady", (req, res) => res.send("Ready"));
 
@@ -37,10 +35,11 @@ const setup = (authClient) => {
     "/login",
     passport.authenticate("azureOidc", { failureRedirect: "/login" })
   );
+
   router.get("/error", (req, res) => {
-    console.log(req);
     res.send("error");
   });
+
   router.use(
     "/oauth2/callback",
     passport.authenticate("azureOidc", { failureRedirect: "/error" }),
@@ -53,7 +52,6 @@ const setup = (authClient) => {
     }
   );
 
-  // The routes below require the user to be authenticated
   router.use(ensureAuthenticated);
 
   router.use(async (req, res, next) => {
@@ -72,6 +70,7 @@ const setup = (authClient) => {
       );
       req.headers["Authorization"] = `Bearer ${token}`;
       req.headers["Accept"] = `application/json`;
+      console.log({ token });
       next();
     } else {
       next();
@@ -80,6 +79,7 @@ const setup = (authClient) => {
 
   router.use(
     "/api",
+    cacheMiddleWare,
     createProxyMiddleware({
       target: "http://klage-oppgave-api",
       pathRewrite: {
@@ -88,6 +88,9 @@ const setup = (authClient) => {
       onError: function onError(err, req, res) {
         res.status(500);
         res.json({ error: "Kunne ikke koble til API" });
+      },
+      async onProxyRes(proxyRes, req, res) {
+        await handleProxyRes(proxyRes, req, res);
       },
       logLevel: "debug",
       changeOrigin: true,
@@ -100,46 +103,34 @@ const setup = (authClient) => {
       .sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
   });
 
-  router.get("/usertoken", (req, res) => {
-    res.json(req.user);
-  });
+  /*
+		router.get("/usertoken", (req, res) => {
+			res.json(req.user);
+		});
+		router.get("/graphtoken", (req, res) => {
+			const params = {
+				clientId: "https://graph.microsoft.com",
+				scopes: ["https://graph.microsoft.com/.default"],
+			};
+			authUtils
+				.getOnBehalfOfAccessToken(authClient, req, params)
+				.then((userinfo) => res.json(userinfo))
+				.catch((err) => res.status(500).json(err));
+		});
+		router.get("/token", (req, res) => {
+			const params = {
+				clientId: "0bc199ef-35dd-4aa3-87e6-01506da3dd90",
+				path: "api",
+				url: "https://klage-oppgave-api.dev.nav.no/",
+				scopes: [],
+			};
+			authUtils
+				.getOnBehalfOfAccessToken(authClient, req, params)
+				.then((userinfo) => res.json(userinfo))
+				.catch((err) => res.status(500).json(err));
+		});
+	*/
 
-  router.get("/graphtoken", (req, res) => {
-    const params = {
-      clientId: "https://graph.microsoft.com",
-      scopes: ["https://graph.microsoft.com/.default"],
-    };
-    authUtils
-      .getOnBehalfOfAccessToken(authClient, req, params)
-      .then((userinfo) => res.json(userinfo))
-      .catch((err) => res.status(500).json(err));
-  });
-
-  router.get("/token", (req, res) => {
-    const params = {
-      clientId: "0bc199ef-35dd-4aa3-87e6-01506da3dd90",
-      path: "api",
-      url: "https://klage-oppgave-api.dev.nav.no/",
-      scopes: [],
-    };
-    authUtils
-      .getOnBehalfOfAccessToken(authClient, req, params)
-      .then((userinfo) => res.json(userinfo))
-      .catch((err) => res.status(500).json(err));
-  });
-
-  router.get("/graphtoken", (req, res) => {
-    const params = {
-      clientId: "https://graph.microsoft.com",
-      scopes: ["https://graph.microsoft.com/.default"],
-    };
-    authUtils
-      .getOnBehalfOfAccessToken(authClient, req, params)
-      .then((userinfo) => res.json(userinfo))
-      .catch((err) => res.status(500).json(err));
-  });
-
-  // return user info fetched from the Microsoft Graph API
   router.get("/me", (req, res) => {
     authUtils
       .getUserInfoFromGraphApi(authClient, req)

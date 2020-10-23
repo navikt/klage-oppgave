@@ -1,8 +1,11 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { createEpicMiddleware } from "redux-observable";
 import reducer, { rootEpic } from "./root";
+import { ajax } from "rxjs/ajax";
 
-const epicMiddleware = createEpicMiddleware();
+const epicMiddleware = createEpicMiddleware({
+  dependencies: { getJSON: ajax.getJSON },
+});
 
 const defaultMiddleware = getDefaultMiddleware({
   serializableCheck: {
