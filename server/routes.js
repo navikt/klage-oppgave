@@ -4,8 +4,7 @@ let express = require("express");
 let passport = require("passport");
 let path = require("path");
 let session = require("express-session");
-const axios = require("axios");
-const { hentFraRedis, cacheMiddleWare, handleProxyRes } = require("./cache");
+const { cacheMiddleWare, handleProxyRes } = require("./cache");
 const router = express.Router();
 const { createProxyMiddleware } = require("http-proxy-middleware");
 

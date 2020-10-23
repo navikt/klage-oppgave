@@ -32,7 +32,6 @@ function cacheMiddleWare(req, res, next) {
   return hentFraRedis("oppgaver")
     .then((oppgaver) => {
       if (oppgaver) {
-        const data = JSON.stringify(oppgaver.replace("\\", ""));
         res.setHeader("content-type", "application/json");
         res.status(200).end(oppgaver);
       } else {
