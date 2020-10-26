@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import React from "react";
-import "./Paginering.less";
+import "./paginering.less";
 
 type PagineringType = {
   startSide: number;
@@ -62,18 +62,34 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
   return (
     <>
       {startSide - 1 > 0 && (
-        <NavLink className={"pagineringslenke pagpad"} to={`/saker/${startSide - 1}`}>
+        <NavLink
+          data-testid={"forrige"}
+          className={"pagineringslenke pagpad"}
+          to={`/saker/${startSide - 1}`}
+        >
           Forrige side
         </NavLink>
       )}
-      {startSide - 1 == 0 && <span className={"inactive pagpad"}>Forrige side</span>}
+      {startSide - 1 == 0 && (
+        <span data-testid={"forrige"} className={"inactive pagpad"}>
+          Forrige side
+        </span>
+      )}
       {out.map((element) => element)}
       {startSide + 1 < antallSider && (
-        <NavLink className={"pagineringslenke pagpad"} to={`/saker/${startSide + 1}`}>
+        <NavLink
+          data-testid={"neste"}
+          className={"pagineringslenke pagpad"}
+          to={`/saker/${startSide + 1}`}
+        >
           Neste side
         </NavLink>
       )}
-      {startSide + 1 >= antallSider && <span className={"inactive pagpad"}>Neste side</span>}
+      {startSide + 1 >= antallSider && (
+        <span data-testid={"neste"} className={"inactive pagpad"}>
+          Neste side
+        </span>
+      )}
     </>
   );
 };

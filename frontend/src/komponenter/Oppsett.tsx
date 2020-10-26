@@ -22,7 +22,9 @@ export default function Oppsett({ children, isFetching }: LayoutType) {
           <div className="search">Søk</div>
         </div>
         <div className="right">
-          <div className="menu">SVG</div>
+          <div className="menu">
+            <span />
+          </div>
           <div className="name">{person.navn}</div>
         </div>
       </header>

@@ -5,7 +5,7 @@ import App from "./App";
 //import { ENV } from './constants/env';
 import store from "./tilstand/konfigurerTilstand";
 //import { initEnvironment } from './state/modules/environment';
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import MineSaker from "./komponenter/MineSaker";
 
 //store.dispatch(initEnvironment(ENV));
@@ -19,7 +19,9 @@ ReactDOM.render(
           <Route exact path="/saker/:side" render={() => <App />} />
           <Route path="/minesaker" render={() => <MineSaker />} />
           <Route path="/innstillinger" render={() => <App />} />
-          <Route path="/" render={() => <App />} />
+          <Route exact path="/">
+            <Redirect to="/home" />
+          </Route>
         </Switch>
       </BrowserRouter>
     </Provider>
