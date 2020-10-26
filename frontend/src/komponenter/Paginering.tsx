@@ -14,25 +14,25 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
   let j = 0;
   let it = 2;
   temp.push(
-    <span className={"pagpad active"} key={`n${n}`}>
+    <span className={"paginering_padding active"} key={`n${n}`}>
       {n}
     </span>
   );
   while (n-- > 1 && j++ < it) {
     temp.push(
-      <NavLink className={"pagpad"} key={`n${n}`} to={`/saker/${n}`}>
+      <NavLink className={"paginering_padding"} key={`n${n}`} to={`/saker/${n}`}>
         {n}
       </NavLink>
     );
   }
   if (startSide > it + 1) {
     temp.push(
-      <span key={"dotdot1"} className={"pagpad dots"}>
+      <span key={"dotdot1"} className={"paginering_padding dots"}>
         ..
       </span>
     );
     temp.push(
-      <NavLink className={"pagpad"} key={`side${1}`} to={`/saker/${1}`}>
+      <NavLink className={"paginering_padding"} key={`side${1}`} to={`/saker/${1}`}>
         {1}
       </NavLink>
     );
@@ -42,19 +42,23 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
   n = startSide;
   while (n++ < antallSider && j++ < it) {
     out.push(
-      <NavLink className={"pagpad"} key={`side${n}`} to={`/saker/${n}`}>
+      <NavLink className={"paginering_padding"} key={`side${n}`} to={`/saker/${n}`}>
         {n}
       </NavLink>
     );
   }
   if (n < antallSider) {
     out.push(
-      <span key={"dotdot2"} className={"pagpad dots"}>
+      <span key={"dotdot2"} className={"paginering_padding dots"}>
         ...
       </span>
     );
     out.push(
-      <NavLink className={"pagpad active"} key={`side${antallSider}`} to={`/saker/${antallSider}`}>
+      <NavLink
+        className={"paginering_padding active"}
+        key={`side${antallSider}`}
+        to={`/saker/${antallSider}`}
+      >
         {antallSider}
       </NavLink>
     );
@@ -64,14 +68,14 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
       {startSide - 1 > 0 && (
         <NavLink
           data-testid={"forrige"}
-          className={"pagineringslenke pagpad"}
+          className={"pagineringslenke paginering_padding"}
           to={`/saker/${startSide - 1}`}
         >
           Forrige
         </NavLink>
       )}
       {startSide - 1 == 0 && (
-        <span data-testid={"forrige"} className={"inactive pagpad"}>
+        <span data-testid={"forrige"} className={"inactive paginering_padding"}>
           Forrige
         </span>
       )}
@@ -79,14 +83,14 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
       {startSide + 1 <= antallSider && (
         <NavLink
           data-testid={"neste"}
-          className={"pagineringslenke pagpad"}
+          className={"pagineringslenke paginering_padding"}
           to={`/saker/${startSide + 1}`}
         >
           Neste
         </NavLink>
       )}
       {startSide + 1 > antallSider && (
-        <span data-testid={"neste"} className={"inactive pagpad"}>
+        <span data-testid={"neste"} className={"inactive paginering_padding"}>
           Neste
         </span>
       )}
