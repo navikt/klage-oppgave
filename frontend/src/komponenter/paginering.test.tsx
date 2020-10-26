@@ -24,9 +24,6 @@ describe("Paginering", () => {
     );
 
     await waitFor(() => screen.queryAllByTestId("forrige"));
-
-    expect(screen.getByTestId("forrige")).toHaveTextContent("Forrige side");
-
-    //expect(queryAllByTestId(/forrige/i)).toHaveTextContent("forrige");
+    expect(screen.getByTestId("forrige")).toHaveTextContent("Forrige");
   });
 });

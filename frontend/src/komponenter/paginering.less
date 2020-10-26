@@ -3,11 +3,13 @@
   margin: 0 auto;
   justify-content: center;
   font-weight: 400;
+
   > .pagpad:not(a) {
-    padding: 0.1em;
+    padding: 0.2em;
     border-radius: 0.2em;
-    margin: 0 0 0 0.5em;
+    margin: 0.25em 0 0 0.25em;
   }
+
   > .pagpad:not(a).active {
     color: white;
     background-color: #0067c5;
@@ -17,25 +19,32 @@
   > a.pagpad {
     background-color: transparent;
     border: 1px solid transparent;
-    padding: 0.1em;
+    padding: 0.2em;
     color: black;
-    margin: 0 0 0 0.25em;
+    margin: 0.25em 0 0 0.25em;
     text-decoration: none;
   }
+
   > .pagpad:not(.inactive):hover {
     color: blue;
     cursor: pointer;
     transform: scale(1.05);
     transition: transform 0.2s ease;
   }
+
   > .pagpad:not(a).active:hover {
-    color: white;
     transform: scale(1);
   }
+
   > .pagpad.dots {
     background-color: transparent;
     border: 1px solid transparent;
     color: black;
     margin: 0;
+  }
+
+  > .pagpad.dots:hover {
+    transform: scale(1);
+    color: black;
   }
 }
