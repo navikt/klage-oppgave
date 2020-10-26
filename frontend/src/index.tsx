@@ -20,7 +20,7 @@ ReactDOM.render(
           <Route path="/minesaker" render={() => <MineSaker />} />
           <Route path="/innstillinger" render={() => <App />} />
           <Route exact path="/">
-            <Redirect to="/home" />
+            <Redirect to="/saker" />
           </Route>
         </Switch>
       </BrowserRouter>
