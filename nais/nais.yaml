@@ -28,6 +28,3 @@ spec:
   {{/each}}
   envFrom:
     - secret: klagesessionkey
-  env:
-    - name: CACHE_EXP
-      value: 3600

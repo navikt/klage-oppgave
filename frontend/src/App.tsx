@@ -23,6 +23,7 @@ import { hentMegHandling } from "./tilstand/moduler/meg";
 
 import { velgOppgaver, velgSideLaster } from "./tilstand/moduler/oppgave.velgere";
 import { NavLink, useParams } from "react-router-dom";
+import Paginering from "./komponenter/Paginering";
 
 const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -208,65 +209,6 @@ const genererTabellRader = (): JSX.Element[] => {
     .map((rad) => <OppgaveTabellRad key={rad.id} {...rad} />);
 };
 
-type SideProps = {
-  startSide: number;
-  antallSider: number;
-};
-const Sider = ({ startSide, antallSider }: SideProps) => {
-  let n = startSide;
-  let out = [];
-  let temp = [];
-  let j = 0;
-  let it = 2;
-  temp.push(
-    <span className={"pagpad"} key={`n${n}`}>
-      {n}
-    </span>
-  );
-  while (n-- > 1 && j++ < it) {
-    temp.push(
-      <NavLink className={"pagpad"} key={`n${n}`} to={`/saker/${n}`}>
-        {n}
-      </NavLink>
-    );
-  }
-  if (startSide > it + 1) {
-    temp.push(
-      <span key={"dotdot1"} className={"pagpad dots"}>
-        ...
-      </span>
-    );
-    temp.push(
-      <NavLink className={"pagpad"} key={`side${1}`} to={`/saker/${1}`}>
-        {1}
-      </NavLink>
-    );
-  }
-  out.push(temp.reverse());
-  j = 0;
-  n = startSide;
-  while (n++ < antallSider && j++ < it) {
-    out.push(
-      <NavLink className={"pagpad"} key={`side${n}`} to={`/saker/${n}`}>
-        {n}
-      </NavLink>
-    );
-  }
-  if (n < antallSider) {
-    out.push(
-      <span key={"dotdot2"} className={"pagpad dots"}>
-        ...
-      </span>
-    );
-    out.push(
-      <NavLink className={"pagpad"} key={`side${antallSider}`} to={`/saker/${antallSider}`}>
-        {antallSider}
-      </NavLink>
-    );
-  }
-  return <>{out.map((element) => element)}</>;
-};
-
 const App = (): JSX.Element => {
   const oppgaver = useSelector(velgOppgaver);
   const sideLaster = useSelector(velgSideLaster);
@@ -326,18 +268,12 @@ const App = (): JSX.Element => {
             </div>
           </div>
           <div className={"paginering"}>
-            <Sider startSide={oppgaver.meta.side} antallSider={oppgaver.meta.sider} />
+            <Paginering startSide={oppgaver.meta.side} antallSider={oppgaver.meta.sider} />
           </div>
         </div>
       </>
     </Oppsett>
   );
 };
-
-/*
-                        <NavLink className={"pagineringslenke"} to={`/saker/${oppgaver.meta.side - 1}`}>Forrige side</NavLink>
-                        <NavLink className={"pagineringslenke"} to={`/saker/${oppgaver.meta.side + 1}`}>Neste side</NavLink>
-
- */
 
 export default App;
