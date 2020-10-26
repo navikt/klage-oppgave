@@ -6,6 +6,7 @@ import App from "./App";
 import store from "./tilstand/konfigurerTilstand";
 //import { initEnvironment } from './state/modules/environment';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import MineSaker from "./komponenter/MineSaker";
 
 //store.dispatch(initEnvironment(ENV));
 
@@ -14,8 +15,9 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
-          <Route path="/saker/:side" render={() => <App />} />
-          <Route path="/minesaker" render={() => <App />} />
+          <Route exact path="/saker" render={() => <App />} />
+          <Route exact path="/saker/:side" render={() => <App />} />
+          <Route path="/minesaker" render={() => <MineSaker />} />
           <Route path="/innstillinger" render={() => <App />} />
           <Route path="/" render={() => <App />} />
         </Switch>

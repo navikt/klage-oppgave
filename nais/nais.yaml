@@ -7,6 +7,9 @@ metadata:
     team: klage
 spec:
   image: {{image}}
+  env:
+  - name: CACHE_EXP
+    value: 3600
   replicas:
     min: 1
     max: 1

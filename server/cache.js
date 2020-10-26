@@ -19,7 +19,7 @@ function lagreIRedis(key, value) {
   });
   const bufferData = Buffer.from(value);
   client.set(key, bufferData);
-  client.expire(key, 600);
+  client.expire(key, process.env.CACHE_EXP || 600);
 }
 
 async function hentFraRedis(key) {

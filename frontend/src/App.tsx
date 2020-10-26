@@ -21,12 +21,12 @@ import {
 
 import { hentMegHandling } from "./tilstand/moduler/meg";
 
-import { selectOppgaver, selectIsFetching } from "./tilstand/moduler/oppgave.velgere";
+import { velgOppgaver, velgSideLaster } from "./tilstand/moduler/oppgave.velgere";
 import { NavLink, useParams } from "react-router-dom";
 
 const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
-  const oppgaver = useSelector(selectOppgaver);
+  const oppgaver = useSelector(velgOppgaver);
 
   const [sortToggle, setSortToggle] = useState(0); // dette er bare for test, skal fjernes
   const [hjemmelFilter, settHjemmelFilter] = useState<string | undefined>(undefined);
@@ -198,7 +198,7 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
 };
 
 const genererTabellRader = (): JSX.Element[] => {
-  const oppgaver = useSelector(selectOppgaver);
+  const oppgaver = useSelector(velgOppgaver);
 
   return oppgaver.utsnitt
     .slice(
@@ -268,8 +268,8 @@ const Sider = ({ startSide, antallSider }: SideProps) => {
 };
 
 const App = (): JSX.Element => {
-  const oppgaver = useSelector(selectOppgaver);
-  const isFetching = useSelector(selectIsFetching);
+  const oppgaver = useSelector(velgOppgaver);
+  const sideLaster = useSelector(velgSideLaster);
   const dispatch = useDispatch();
 
   interface ParamTypes {
@@ -299,7 +299,7 @@ const App = (): JSX.Element => {
   }
 
   return (
-    <Oppsett isFetching={isFetching}>
+    <Oppsett isFetching={sideLaster}>
       <>
         <div className="knapperad">
           <div className="left">
