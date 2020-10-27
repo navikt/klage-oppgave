@@ -118,7 +118,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
             <Select label="&#8203;" className="fw120" onChange={filtrerHjemmel}>
               <option value="reset">Hjemmel</option>
               {hjemler.map((rad) => (
-                <option value={rad}>{rad}</option>
+                <option key={rad} value={rad}>
+                  {rad}
+                </option>
               ))}
             </Select>
           </th>
@@ -150,6 +152,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
 };
 
 const ytelseOversettelse = (ytelse: string): string => {
+  if (!ytelse) debugger;
   switch (ytelse) {
     case "SYK":
       return "Sykepenger";

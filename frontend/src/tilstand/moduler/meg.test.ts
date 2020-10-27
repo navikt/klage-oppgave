@@ -41,10 +41,12 @@ describe("'Meg' epos", () => {
           fornavn: "rBot",
           mail: "rbo@de.ninro",
           etternavn: "dENiro",
+          id: "Z994488",
         };
         const mockedResponse = {
           displayName: "Rboert dEniro",
           givenName: "rBot",
+          onPremisesSamAccountName: "Z994488",
           mail: "rbo@de.ninro",
           surname: "dENiro",
         };
