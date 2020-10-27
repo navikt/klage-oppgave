@@ -24,8 +24,9 @@ const speedLimiter = slowDown({
 app.use(speedLimiter);
 
 app.get("/oppgaver", (req, res) => {
-  // sjekk for query params....
-  // backend API har to typer: "erTildelt" og "saksbehandler"
+  // klage-oppgave-api har to definert to parametre: "erTildelt" og "saksbehandler"
+  // "erTildelt" virker ikke å ha noen funksjon enda
+
   const saksbehandler = req.query.saksbehandler;
   res.header("transfer-encoding", "chunked");
   res.header("content-type", "application/json");
