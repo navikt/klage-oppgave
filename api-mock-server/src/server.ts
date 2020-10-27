@@ -90,20 +90,6 @@ app.get("/oppgaver", (req, res) => {
   }
 });
 
-/*:w
-
-app.get("/oppgaver", (req, res) => {
-    res.header("transfer-encoding", "chunked");
-    var stream = fs.createReadStream("./fixtures/oppgaver.json");
-
-    stream.on("data", function (data) {
-        res.write(data);
-    });
-    stream.on("end", function () {
-        res.end();
-    });
-});
-*/
 interface OppgaveModell {
   ident: String;
 }
