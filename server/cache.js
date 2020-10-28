@@ -49,7 +49,7 @@ function cacheMiddleWare(req, res, next) {
 }
 
 function handleProxyRes(proxyRes, req, res) {
-  if (req.path.startsWith("/oppgaver")) {
+  if (req.path === "/oppgaver" && req.method === "GET") {
     let dataSet = "";
     proxyRes.on("data", function (data) {
       dataSet += data;

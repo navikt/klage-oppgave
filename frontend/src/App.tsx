@@ -122,7 +122,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
               <option value="klage">Klage</option>
               <option value="anke">Anke</option>
             </Select>
-            <button onClick={(e) => tildelMeg(e, 7576879341)}>Tildel</button>
+            <button onClick={(e) => tildelMeg(e, 315993177)}>Tildel</button>
           </th>
           <th>
             <Select label="&#8203;" className="fw120" onChange={filtrerYtelse}>
