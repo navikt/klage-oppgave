@@ -68,11 +68,7 @@ export function tildelEpos(
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       const tildelMegUrl = `/api/oppgaver/${action.payload.oppgaveId}/saksbehandler`;
-      return put(
-        tildelMegUrl,
-        { ident: action.payload.ident },
-        { "Content-Type": "application/json" }
-      )
+      return put(tildelMegUrl, JSON.stringify({ ident: action.payload.ident }))
         .pipe(
           map(({ response }) => {
             return tildeltHandling({
