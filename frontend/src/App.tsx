@@ -20,20 +20,37 @@ import {
 } from "./tilstand/moduler/oppgave";
 
 import { hentMegHandling } from "./tilstand/moduler/meg";
+import { velgMeg } from "./tilstand/moduler/meg.velgere";
 
 import { velgOppgaver, velgSideLaster } from "./tilstand/moduler/oppgave.velgere";
 import { NavLink, useParams } from "react-router-dom";
 import Paginering from "./komponenter/Paginering";
+import { tildelMegHandling, TildelType } from "./tilstand/moduler/saksbehandler";
 
 const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const oppgaver = useSelector(velgOppgaver);
+  const person = useSelector(velgMeg);
 
   const [sortToggle, setSortToggle] = useState(0); // dette er bare for test, skal fjernes
   const [hjemmelFilter, settHjemmelFilter] = useState<string | undefined>(undefined);
   const [ytelseFilter, settYtelseFilter] = useState<string | undefined>(undefined);
   const [typeFilter, settTypeFilter] = useState<string | undefined>(undefined);
   const [sorteringFilter, settSorteringFilter] = useState<"ASC" | "DESC" | undefined>("ASC");
+  const [oppgaveId, settValgOppgaveId] = useState<number>(0);
+
+  const tildelMeg = (
+    event: React.MouseEvent<HTMLElement | HTMLButtonElement>,
+    oppgaveId: number
+  ) => {
+    settValgOppgaveId(oppgaveId);
+  };
+
+  useEffect(() => {
+    if (oppgaveId) {
+      dispatch(tildelMegHandling({ oppgaveId: oppgaveId, ident: person.id }));
+    }
+  }, [oppgaveId]);
 
   useEffect(() => {
     dispatchTransformering();
@@ -105,6 +122,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
               <option value="klage">Klage</option>
               <option value="anke">Anke</option>
             </Select>
+            <button onClick={(e) => tildelMeg(e, 7576879341)}>Tildel</button>
           </th>
           <th>
             <Select label="&#8203;" className="fw120" onChange={filtrerYtelse}>
@@ -195,7 +213,9 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
       </td>
       <td>{frist}</td>
       <td>
-        <Knapp className={"knapp"}>Tildel meg</Knapp>
+        <Knapp className={"knapp"} onClick={(e) => {}}>
+          Tildel meg
+        </Knapp>
       </td>
     </tr>
   );
@@ -258,18 +278,6 @@ const App = (): JSX.Element => {
 
         <OppgaveTabell />
         <div className="table-lbl">
-          <div className={"debug"}>
-            Viser{" "}
-            {oppgaver.utsnitt.length < oppgaver.meta.treffPerSide
-              ? oppgaver.utsnitt.length
-              : oppgaver.meta.treffPerSide}
-            {oppgaver.utsnitt.length === 1 ? " rad " : " rader "}i utvalget av{" "}
-            {oppgaver.meta.antall}
-            <div>
-              Side {oppgaver.meta.side} av
-              {" " + oppgaver.meta.sider}
-            </div>
-          </div>
           <div className={"paginering"}>
             <Paginering startSide={oppgaver.meta.side} antallSider={oppgaver.meta.sider} />
           </div>

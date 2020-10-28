@@ -98,15 +98,18 @@ interface OppgaveModell {
 app.put("/oppgaver/:id/saksbehandler", async (req, res) => {
   const id = parseInt(req.params.id, 10) as number;
   const body = req.body as OppgaveModell;
+  console.log(chalk.greenBright(id));
+  console.log(chalk.green(JSON.stringify(body)));
+
   const data = require("../fixtures/oppgaver.json");
-  const oppgave = data.filter((rad: { id: number }) =>
+  const oppgave = await data.filter((rad: { id: number }) =>
     eqNumber.equals(rad.id, id)
   )[0];
   res.send({
     ...oppgave,
     saksbehandler: {
       ident: body.ident,
-      navn: "borat sagdiyev",
+      navn: oppgave.saksbehandler.navn,
     },
   });
 });

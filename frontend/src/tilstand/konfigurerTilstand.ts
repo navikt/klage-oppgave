@@ -4,7 +4,7 @@ import reducer, { rootEpic } from "./root";
 import { ajax } from "rxjs/ajax";
 
 const epicMiddleware = createEpicMiddleware({
-  dependencies: { getJSON: ajax.getJSON },
+  dependencies: { getJSON: ajax.getJSON, put: ajax.put },
 });
 
 const defaultMiddleware = getDefaultMiddleware({

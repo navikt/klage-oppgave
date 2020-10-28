@@ -41,7 +41,7 @@ loop do
   file.write(lagData())
   file.write(",");
   i += 1;
-  if i == 5000
+  if i == 50
     file.write(lagData())
     break
   end
