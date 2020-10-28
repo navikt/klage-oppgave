@@ -20,6 +20,7 @@ export interface OppgaveRad {
   hjemmel: string;
   frist: string;
   saksbehandler: string;
+  settValgOppgaveId: Function;
 }
 
 interface Metadata {

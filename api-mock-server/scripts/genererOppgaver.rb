@@ -16,7 +16,7 @@ end
 
 def lagData()
   data = {
-    'id' => Faker::Number.number(digits: 10),
+    'id' => Faker::Number.number(digits: 7),
     'bruker': {
       'fnr': Faker::Number.number(digits: 11),
       'navn': Faker::Name.name

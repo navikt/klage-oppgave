@@ -105,13 +105,17 @@ app.put("/oppgaver/:id/saksbehandler", async (req, res) => {
   const oppgave = await data.filter((rad: { id: number }) =>
     eqNumber.equals(rad.id, id)
   )[0];
-  res.send({
-    ...oppgave,
-    saksbehandler: {
-      ident: body.ident,
-      navn: oppgave.saksbehandler.navn,
-    },
-  });
+  if (!oppgave) {
+    res.send({});
+  } else {
+    res.send({
+      ...oppgave,
+      saksbehandler: {
+        ident: body.ident,
+        navn: oppgave.saksbehandler.navn,
+      },
+    });
+  }
 });
 
 // define a route handler for the default home page

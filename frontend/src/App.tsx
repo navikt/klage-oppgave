@@ -47,6 +47,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
+    console.log("settValgOppgaveId", oppgaveId);
     if (oppgaveId) {
       dispatch(tildelMegHandling({ oppgaveId: oppgaveId, ident: person.id }));
     }
@@ -122,7 +123,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
               <option value="klage">Klage</option>
               <option value="anke">Anke</option>
             </Select>
-            <button onClick={(e) => tildelMeg(e, 315993177)}>Tildel</button>
           </th>
           <th>
             <Select label="&#8203;" className="fw120" onChange={filtrerYtelse}>
@@ -164,7 +164,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           <th />
         </tr>
       </thead>
-      <tbody>{genererTabellRader()}</tbody>
+      <tbody>{genererTabellRader(settValgOppgaveId)}</tbody>
     </table>
   );
 };
@@ -193,7 +193,7 @@ const typeOversettelse = (type: string): string => {
   }
 };
 
-const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
+const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist, settValgOppgaveId }: OppgaveRad) => {
   return (
     <tr className="table-filter">
       <td>
@@ -213,7 +213,7 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
       </td>
       <td>{frist}</td>
       <td>
-        <Knapp className={"knapp"} onClick={(e) => {}}>
+        <Knapp className={"knapp"} onClick={(e) => settValgOppgaveId(id)}>
           Tildel meg
         </Knapp>
       </td>
@@ -221,7 +221,7 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
   );
 };
 
-const genererTabellRader = (): JSX.Element[] => {
+const genererTabellRader = (settValgOppgaveId: Function): JSX.Element[] => {
   const oppgaver = useSelector(velgOppgaver);
 
   return oppgaver.utsnitt
@@ -229,7 +229,7 @@ const genererTabellRader = (): JSX.Element[] => {
       (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide,
       oppgaver.meta.treffPerSide + (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide
     )
-    .map((rad) => <OppgaveTabellRad key={rad.id} {...rad} />);
+    .map((rad) => <OppgaveTabellRad key={rad.id} {...rad} settValgOppgaveId={settValgOppgaveId} />);
 };
 
 const App = (): JSX.Element => {
