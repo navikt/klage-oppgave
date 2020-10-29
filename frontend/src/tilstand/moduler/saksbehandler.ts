@@ -2,8 +2,8 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { of } from "rxjs";
-import { catchError, map, retryWhen, switchMap, tap, withLatestFrom } from "rxjs/operators";
-import { ajax, AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { catchError, map, switchMap, withLatestFrom } from "rxjs/operators";
+import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 
 //==========
 // Type defs
@@ -39,7 +39,6 @@ export const saksbehandlerSlice = createSlice({
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
-      debugger;
       console.error(action.payload);
     },
   },
@@ -66,7 +65,7 @@ export function tildelEpos(
   return action$.pipe(
     ofType(tildelMegHandling.type),
     withLatestFrom(state$),
-    switchMap(([action, state]) => {
+    switchMap(([action]) => {
       const tildelMegUrl = `/api/oppgaver/${action.payload.oppgaveId}/saksbehandler`;
       return put(
         tildelMegUrl,
@@ -84,7 +83,7 @@ export function tildelEpos(
             });
           })
         )
-        .pipe(catchError((error) => of(FEILET(error))));
+        .pipe(catchError((error) => of(FEILET(JSON.stringify(error)))));
     })
   );
 }
