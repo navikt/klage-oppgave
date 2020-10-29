@@ -12,13 +12,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Paginering from "./Paginering";
 import OppgaveTabell from "./Oppgaver";
-import { velgOppgaver, velgSideLaster } from "../tilstand/moduler/oppgave.velgere";
-import { oppgaveRequest, settSide } from "../tilstand/moduler/oppgave";
+import { velgMineSaker, velgSideLaster } from "../tilstand/moduler/mine_saker.velgere";
+import { hentMineSakerHandling, settSide } from "../tilstand/moduler/mine_saker";
 import { hentMegHandling } from "../tilstand/moduler/meg";
+import { velgMeg } from "../tilstand/moduler/meg.velgere";
 
 const App = (): JSX.Element => {
-  const oppgaver = useSelector(velgOppgaver);
+  const oppgaver = useSelector(velgMineSaker);
   const sideLaster = useSelector(velgSideLaster);
+  const saksbehandler = useSelector(velgMeg);
   const dispatch = useDispatch();
 
   interface ParamTypes {
@@ -32,7 +34,12 @@ const App = (): JSX.Element => {
   }, [side]);
 
   useEffect(() => {
-    dispatch(oppgaveRequest());
+    if (saksbehandler.id) {
+      dispatch(hentMineSakerHandling(saksbehandler.id));
+    }
+  }, [saksbehandler]);
+
+  useEffect(() => {
     dispatch(hentMegHandling());
   }, []);
 
@@ -47,20 +54,12 @@ const App = (): JSX.Element => {
     );
   }
 
+  console.log(oppgaver);
+
   return (
     <Oppsett isFetching={sideLaster}>
       <>
-        <div className="knapperad">
-          <div className="left">
-            <Hovedknapp>Tildel meg neste sak</Hovedknapp>
-          </div>
-          <div className="right">
-            <Knapp>Tildel flere</Knapp>
-            <Checkbox label="&#8203;" />
-          </div>
-        </div>
-
-        <OppgaveTabell />
+        <OppgaveTabell {...oppgaver} />
         <div className="table-lbl">
           <div className={"paginering"}>
             <Paginering startSide={oppgaver.meta.side} antallSider={oppgaver.meta.sider} />

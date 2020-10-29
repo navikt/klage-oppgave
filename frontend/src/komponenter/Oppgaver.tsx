@@ -1,4 +1,9 @@
-import { OppgaveRad, oppgaveTransformerRader, settSide } from "../tilstand/moduler/oppgave";
+import {
+  OppgaveRad,
+  OppgaveRader,
+  oppgaveTransformerRader,
+  settSide,
+} from "../tilstand/moduler/oppgave";
 import EtikettBase from "nav-frontend-etiketter";
 import { Knapp } from "nav-frontend-knapper";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +14,7 @@ import { tildelMegHandling } from "../tilstand/moduler/saksbehandler";
 import { Select } from "nav-frontend-skjema";
 import { hjemler } from "../domene/hjemler.json";
 
-const OppgaveTabell: React.FunctionComponent = () => {
+const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const dispatch = useDispatch();
   const person = useSelector(velgMeg);
 
@@ -28,7 +33,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    console.log("settValgOppgaveId", oppgaveId);
     if (oppgaveId) {
       dispatch(tildelMegHandling({ oppgaveId: oppgaveId, ident: person.id }));
     }
@@ -145,7 +149,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           <th />
         </tr>
       </thead>
-      <tbody>{genererTabellRader(settValgOppgaveId)}</tbody>
+      <tbody>{genererTabellRader(settValgOppgaveId, oppgaver)}</tbody>
     </table>
   );
 };
@@ -202,15 +206,16 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist, settValgOppgaveId 
   );
 };
 
-const genererTabellRader = (settValgOppgaveId: Function): JSX.Element[] => {
-  const oppgaver = useSelector(velgOppgaver);
-
+const genererTabellRader = (settValgOppgaveId: Function, oppgaver: OppgaveRader): JSX.Element[] => {
+  console.log(oppgaver);
   return oppgaver.utsnitt
     .slice(
       (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide,
       oppgaver.meta.treffPerSide + (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide
     )
-    .map((rad) => <OppgaveTabellRad key={rad.id} {...rad} settValgOppgaveId={settValgOppgaveId} />);
+    .map((rad: any) => (
+      <OppgaveTabellRad key={rad.id} {...rad} settValgOppgaveId={settValgOppgaveId} />
+    ));
 };
 
 export default OppgaveTabell;

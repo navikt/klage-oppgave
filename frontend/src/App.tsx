@@ -62,7 +62,7 @@ const App = (): JSX.Element => {
           </div>
         </div>
 
-        <OppgaveTabell />
+        <OppgaveTabell {...oppgaver} />
         <div className="table-lbl">
           <div className={"paginering"}>
             <Paginering startSide={oppgaver.meta.side} antallSider={oppgaver.meta.sider} />
