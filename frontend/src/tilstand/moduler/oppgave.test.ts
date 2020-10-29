@@ -3,7 +3,7 @@ import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
 import { oppgaveTransformerRader, oppgaveTransformerEpos } from "./oppgave";
 
-describe("Oppgave Sortering epos", () => {
+describe("Oppgave epos", () => {
   let ts: TestScheduler;
 
   beforeEach(() => {
