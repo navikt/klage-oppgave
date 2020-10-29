@@ -15,6 +15,7 @@ const setup = (app) => {
     secret: config.server.sessionKey,
     name: config.server.cookieName,
     resave: false,
+    prefix: "klageoppgave",
     saveUninitialized: false,
     unset: "destroy",
   };
