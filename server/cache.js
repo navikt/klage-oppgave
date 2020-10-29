@@ -29,23 +29,27 @@ async function hentFraRedis(key) {
 }
 
 function cacheMiddleWare(req, res, next) {
-  return hentFraRedis("oppgaver")
-    .then((oppgaver) => {
-      if (oppgaver) {
-        res.setHeader("content-type", "application/json");
-        res.status(200).end(oppgaver);
-      } else {
+  console.log(req.method);
+  if (req.path !== "/oppgaver") next();
+  else {
+    return hentFraRedis("oppgaver")
+      .then((oppgaver) => {
+        if (oppgaver) {
+          res.setHeader("content-type", "application/json");
+          res.status(200).end(oppgaver);
+        } else {
+          next();
+        }
+      })
+      .catch((err) => {
+        console.error(err);
         next();
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      next();
-    });
+      });
+  }
 }
 
 function handleProxyRes(proxyRes, req, res) {
-  if (req.path.startsWith("/oppgaver")) {
+  if (req.path === "/oppgaver" && req.method === "GET") {
     let dataSet = "";
     proxyRes.on("data", function (data) {
       dataSet += data;

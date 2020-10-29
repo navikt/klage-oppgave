@@ -30,9 +30,6 @@ async function startApp() {
 
     server.use(speedLimiter);
 
-    server.use(express.json());
-    server.use(express.urlencoded({ extended: true }));
-
     // setup sane defaults for CORS and HTTP headers
     server.use(
       helmet({

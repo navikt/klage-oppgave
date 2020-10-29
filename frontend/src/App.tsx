@@ -20,20 +20,38 @@ import {
 } from "./tilstand/moduler/oppgave";
 
 import { hentMegHandling } from "./tilstand/moduler/meg";
+import { velgMeg } from "./tilstand/moduler/meg.velgere";
 
 import { velgOppgaver, velgSideLaster } from "./tilstand/moduler/oppgave.velgere";
 import { NavLink, useParams } from "react-router-dom";
 import Paginering from "./komponenter/Paginering";
+import { tildelMegHandling, TildelType } from "./tilstand/moduler/saksbehandler";
 
 const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const oppgaver = useSelector(velgOppgaver);
+  const person = useSelector(velgMeg);
 
   const [sortToggle, setSortToggle] = useState(0); // dette er bare for test, skal fjernes
   const [hjemmelFilter, settHjemmelFilter] = useState<string | undefined>(undefined);
   const [ytelseFilter, settYtelseFilter] = useState<string | undefined>(undefined);
   const [typeFilter, settTypeFilter] = useState<string | undefined>(undefined);
   const [sorteringFilter, settSorteringFilter] = useState<"ASC" | "DESC" | undefined>("ASC");
+  const [oppgaveId, settValgOppgaveId] = useState<number>(0);
+
+  const tildelMeg = (
+    event: React.MouseEvent<HTMLElement | HTMLButtonElement>,
+    oppgaveId: number
+  ) => {
+    settValgOppgaveId(oppgaveId);
+  };
+
+  useEffect(() => {
+    console.log("settValgOppgaveId", oppgaveId);
+    if (oppgaveId) {
+      dispatch(tildelMegHandling({ oppgaveId: oppgaveId, ident: person.id }));
+    }
+  }, [oppgaveId]);
 
   useEffect(() => {
     dispatchTransformering();
@@ -146,7 +164,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           <th />
         </tr>
       </thead>
-      <tbody>{genererTabellRader()}</tbody>
+      <tbody>{genererTabellRader(settValgOppgaveId)}</tbody>
     </table>
   );
 };
@@ -175,7 +193,7 @@ const typeOversettelse = (type: string): string => {
   }
 };
 
-const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
+const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist, settValgOppgaveId }: OppgaveRad) => {
   return (
     <tr className="table-filter">
       <td>
@@ -195,13 +213,15 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist }: OppgaveRad) => {
       </td>
       <td>{frist}</td>
       <td>
-        <Knapp className={"knapp"}>Tildel meg</Knapp>
+        <Knapp className={"knapp"} onClick={(e) => settValgOppgaveId(id)}>
+          Tildel meg
+        </Knapp>
       </td>
     </tr>
   );
 };
 
-const genererTabellRader = (): JSX.Element[] => {
+const genererTabellRader = (settValgOppgaveId: Function): JSX.Element[] => {
   const oppgaver = useSelector(velgOppgaver);
 
   return oppgaver.utsnitt
@@ -209,7 +229,7 @@ const genererTabellRader = (): JSX.Element[] => {
       (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide,
       oppgaver.meta.treffPerSide + (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide
     )
-    .map((rad) => <OppgaveTabellRad key={rad.id} {...rad} />);
+    .map((rad) => <OppgaveTabellRad key={rad.id} {...rad} settValgOppgaveId={settValgOppgaveId} />);
 };
 
 const App = (): JSX.Element => {
@@ -258,18 +278,6 @@ const App = (): JSX.Element => {
 
         <OppgaveTabell />
         <div className="table-lbl">
-          <div className={"debug"}>
-            Viser{" "}
-            {oppgaver.utsnitt.length < oppgaver.meta.treffPerSide
-              ? oppgaver.utsnitt.length
-              : oppgaver.meta.treffPerSide}
-            {oppgaver.utsnitt.length === 1 ? " rad " : " rader "}i utvalget av{" "}
-            {oppgaver.meta.antall}
-            <div>
-              Side {oppgaver.meta.side} av
-              {" " + oppgaver.meta.sider}
-            </div>
-          </div>
           <div className={"paginering"}>
             <Paginering startSide={oppgaver.meta.side} antallSider={oppgaver.meta.sider} />
           </div>

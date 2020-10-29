@@ -1,26 +1,41 @@
-/* https://klage-oppgave-api.dev.nav.no/oppgaver/315993177/saksbehandler */
-
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { of } from "rxjs";
-import { catchError, map, retryWhen, switchMap, tap, withLatestFrom } from "rxjs/operators";
-import { provIgjenStrategi } from "../../utility/rxUtils";
+import { catchError, map, switchMap, withLatestFrom } from "rxjs/operators";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 
 //==========
 // Type defs
 //==========
+export type TildelType = {
+  id: number;
+  saksbehandler: {
+    navn: string;
+    ident: string;
+  };
+};
+export type PayloadType = {
+  ident: string;
+  oppgaveId: number;
+};
 
 //==========
 // Reducer
 //==========
-export const megSlice = createSlice({
-  name: "meg",
-  initialState: {},
+export const saksbehandlerSlice = createSlice({
+  name: "saksbehandler",
+  initialState: {
+    id: 0,
+    saksbehandler: {
+      navn: "",
+      ident: "",
+    },
+  },
   reducers: {
-    HENTET: (state, action: PayloadAction) => {
-      //state = { ...action.payload };
+    HENTET: (state, action: PayloadAction<TildelType>) => {
+      state.id = action.payload.id;
+      state.saksbehandler = action.payload.saksbehandler;
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
@@ -29,42 +44,48 @@ export const megSlice = createSlice({
   },
 });
 
-export default megSlice.reducer;
+export default saksbehandlerSlice.reducer;
 
 //==========
 // Actions
 //==========
-export const { HENTET, FEILET } = megSlice.actions;
-export const hentMegHandling = createAction("saksbehandler/HENT_MEG");
-export const hentetHandling = createAction("saksbehandler/HENTET");
+export const { HENTET, FEILET } = saksbehandlerSlice.actions;
+export const tildelMegHandling = createAction<PayloadType>("saksbehandler/TILDEL_MEG");
+export const tildeltHandling = createAction<TildelType>("saksbehandler/TILDELT");
 export const feiletHandling = createAction("saksbehandler/FEILET");
 
 //==========
 // Epos
 //==========
-const megUrl = `/me`;
-
-export function hentMegEpos(
-  action$: ActionsObservable<PayloadAction>,
+export function tildelEpos(
+  action$: ActionsObservable<PayloadAction<PayloadType>>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { put }: AjaxCreationMethod
 ) {
   return action$.pipe(
-    ofType(hentMegHandling.type),
+    ofType(tildelMegHandling.type),
     withLatestFrom(state$),
-    switchMap(([action, state]) => {
-      return getJSON<any>(megUrl)
+    switchMap(([action]) => {
+      const tildelMegUrl = `/api/oppgaver/${action.payload.oppgaveId}/saksbehandler`;
+      return put(
+        tildelMegUrl,
+        { ident: action.payload.ident },
+        { "Content-Type": "application/json" }
+      )
         .pipe(
-          map((response) => {
-            return hentetHandling();
+          map(({ response }) => {
+            return tildeltHandling({
+              id: response.id,
+              saksbehandler: {
+                ident: response.saksbehandler.ident,
+                navn: response.saksbehandler.navn,
+              },
+            });
           })
         )
-        .pipe(
-          retryWhen(provIgjenStrategi()),
-          catchError((error) => of(FEILET(error)))
-        );
+        .pipe(catchError((error) => of(FEILET(JSON.stringify(error)))));
     })
   );
 }
 
-export const MEG_EPICS = [hentMegEpos];
+export const TILDEL_EPICS = [tildelEpos];

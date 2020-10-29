@@ -78,7 +78,7 @@ const setup = (authClient) => {
 
   router.use(
     "/api",
-    cacheMiddleWare,
+    // cacheMiddleWare,
     createProxyMiddleware({
       target: "http://klage-oppgave-api",
       pathRewrite: {
@@ -88,9 +88,9 @@ const setup = (authClient) => {
         res.status(500);
         res.json({ error: "Kunne ikke koble til API" });
       },
-      async onProxyRes(proxyRes, req, res) {
+      /* async onProxyRes(proxyRes, req, res) {
         await handleProxyRes(proxyRes, req, res);
-      },
+      },*/
       logLevel: "debug",
       changeOrigin: true,
     })
@@ -101,34 +101,6 @@ const setup = (authClient) => {
       .status(200)
       .sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
   });
-
-  /*
-		router.get("/usertoken", (req, res) => {
-			res.json(req.user);
-		});
-		router.get("/graphtoken", (req, res) => {
-			const params = {
-				clientId: "https://graph.microsoft.com",
-				scopes: ["https://graph.microsoft.com/.default"],
-			};
-			authUtils
-				.getOnBehalfOfAccessToken(authClient, req, params)
-				.then((userinfo) => res.json(userinfo))
-				.catch((err) => res.status(500).json(err));
-		});
-		router.get("/token", (req, res) => {
-			const params = {
-				clientId: "0bc199ef-35dd-4aa3-87e6-01506da3dd90",
-				path: "api",
-				url: "https://klage-oppgave-api.dev.nav.no/",
-				scopes: [],
-			};
-			authUtils
-				.getOnBehalfOfAccessToken(authClient, req, params)
-				.then((userinfo) => res.json(userinfo))
-				.catch((err) => res.status(500).json(err));
-		});
-	*/
 
   router.get("/me", (req, res) => {
     authUtils

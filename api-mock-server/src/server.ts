@@ -3,13 +3,10 @@ import cors from "cors";
 import slowDown from "express-slow-down";
 import * as fs from "fs";
 import bodyParser from "body-parser";
-import { eqBoolean, eqDate, eqNumber, eqString } from "fp-ts/lib/Eq";
+import { eqNumber } from "fp-ts/lib/Eq";
 import JSONStream from "JSONStream";
 import es from "event-stream";
 import chalk from "chalk";
-import { callbackify } from "util";
-
-const JSONStreamStringify = require("json-stream-stringify");
 
 const app = express();
 app.use(cors());
@@ -84,7 +81,7 @@ app.get("/oppgaver", (req, res) => {
         res.write(data);
         res.flushHeaders();
       })
-      .on("end", (data: string) => {
+      .on("end", () => {
         res.write("]");
         res.end();
       });
@@ -98,17 +95,23 @@ interface OppgaveModell {
 app.put("/oppgaver/:id/saksbehandler", async (req, res) => {
   const id = parseInt(req.params.id, 10) as number;
   const body = req.body as OppgaveModell;
+  console.log(chalk.greenBright(id));
+  console.log(chalk.green(JSON.stringify(body)));
   const data = require("../fixtures/oppgaver.json");
-  const oppgave = data.filter((rad: { id: number }) =>
+  const oppgave = await data.filter((rad: { id: number }) =>
     eqNumber.equals(rad.id, id)
   )[0];
-  res.send({
-    ...oppgave,
-    saksbehandler: {
-      ident: body.ident,
-      navn: "borat sagdiyev",
-    },
-  });
+  if (!oppgave) {
+    res.send({});
+  } else {
+    res.send({
+      ...oppgave,
+      saksbehandler: {
+        ident: body.ident,
+        navn: oppgave.saksbehandler.navn,
+      },
+    });
+  }
 });
 
 // define a route handler for the default home page

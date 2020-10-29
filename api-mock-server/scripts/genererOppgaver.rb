@@ -16,7 +16,7 @@ end
 
 def lagData()
   data = {
-    'id' => Faker::Number.number(digits: 10),
+    'id' => Faker::Number.number(digits: 7),
     'bruker': {
       'fnr': Faker::Number.number(digits: 11),
       'navn': Faker::Name.name
@@ -41,7 +41,7 @@ loop do
   file.write(lagData())
   file.write(",");
   i += 1;
-  if i == 5000
+  if i == 50
     file.write(lagData())
     break
   end
