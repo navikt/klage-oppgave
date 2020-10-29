@@ -30,7 +30,7 @@ describe("TILDEL 'Meg' epos", () => {
         const expectedMarble = "c-";
 
         const inputValues = {
-          a: tildelMegHandling({ oppgaveId: 123456, ident: "ZAKSBEHANDLER" }),
+          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
         };
         const initState = {
           oppgaver: {
@@ -41,11 +41,13 @@ describe("TILDEL 'Meg' epos", () => {
           saksbehandler: {
             ident: "ZAKSBEHANDLER",
           },
+          versjon: 5,
           id: 123456,
         };
         const mockedResponse = {
           response: {
             id: 123456,
+            versjon: 5,
             saksbehandler: {
               ident: "ZAKSBEHANDLER",
             },

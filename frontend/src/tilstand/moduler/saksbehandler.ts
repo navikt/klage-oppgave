@@ -9,7 +9,8 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 // Type defs
 //==========
 export type TildelType = {
-  id: number;
+  id: string;
+  versjon: number;
   saksbehandler: {
     navn: string;
     ident: string;
@@ -17,7 +18,8 @@ export type TildelType = {
 };
 export type PayloadType = {
   ident: string;
-  oppgaveId: number;
+  oppgaveId: string;
+  versjon: number;
 };
 
 //==========
@@ -26,7 +28,8 @@ export type PayloadType = {
 export const saksbehandlerSlice = createSlice({
   name: "saksbehandler",
   initialState: {
-    id: 0,
+    id: "0",
+    versjon: 1,
     saksbehandler: {
       navn: "",
       ident: "",
@@ -35,6 +38,7 @@ export const saksbehandlerSlice = createSlice({
   reducers: {
     HENTET: (state, action: PayloadAction<TildelType>) => {
       state.id = action.payload.id;
+      state.versjon = action.payload.versjon;
       state.saksbehandler = action.payload.saksbehandler;
       return state;
     },
@@ -69,18 +73,12 @@ export function tildelEpos(
       const tildelMegUrl = `/api/oppgaver/${action.payload.oppgaveId}/saksbehandler`;
       return put(
         tildelMegUrl,
-        { ident: action.payload.ident },
+        { ident: action.payload.ident, versjon: action.payload.versjon },
         { "Content-Type": "application/json" }
       )
         .pipe(
           map(({ response }) => {
-            return tildeltHandling({
-              id: response.id,
-              saksbehandler: {
-                ident: response.saksbehandler.ident,
-                navn: response.saksbehandler.navn,
-              },
-            });
+            return tildeltHandling(response);
           })
         )
         .pipe(catchError((error) => of(FEILET(JSON.stringify(error)))));

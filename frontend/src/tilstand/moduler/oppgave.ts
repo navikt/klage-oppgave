@@ -10,17 +10,18 @@ import { provIgjenStrategi } from "../../utility/rxUtils";
 // Type defs
 //==========
 export interface OppgaveRad {
-  id: number;
+  id: string;
   bruker: {
     fnr: string;
     navn: string;
   };
   type: string;
+  versjon: number;
   ytelse: string;
   hjemmel: string;
   frist: string;
   saksbehandler: string;
-  settValgOppgaveId: Function;
+  settValgOppgave: Function;
 }
 
 interface Metadata {

@@ -11,7 +11,7 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 // Type defs
 //==========
 export interface OppgaveRad {
-  id: number;
+  id: string;
   bruker: {
     fnr: string;
     navn: string;
@@ -19,6 +19,7 @@ export interface OppgaveRad {
   type: string;
   ytelse: string;
   hjemmel: string;
+  versjon: number;
   frist: string;
   saksbehandler: string;
   endreOppgave?: Function;

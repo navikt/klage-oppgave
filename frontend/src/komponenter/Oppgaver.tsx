@@ -14,6 +14,11 @@ import { tildelMegHandling } from "../tilstand/moduler/saksbehandler";
 import { Select } from "nav-frontend-skjema";
 import { hjemler } from "../domene/hjemler.json";
 
+type valgtOppgaveType = {
+  id: string;
+  versjon: number;
+};
+
 const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const dispatch = useDispatch();
   const person = useSelector(velgMeg);
@@ -23,20 +28,19 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const [ytelseFilter, settYtelseFilter] = useState<string | undefined>(undefined);
   const [typeFilter, settTypeFilter] = useState<string | undefined>(undefined);
   const [sorteringFilter, settSorteringFilter] = useState<"ASC" | "DESC" | undefined>("ASC");
-  const [oppgaveId, settValgOppgaveId] = useState<number>(0);
-
-  const tildelMeg = (
-    event: React.MouseEvent<HTMLElement | HTMLButtonElement>,
-    oppgaveId: number
-  ) => {
-    settValgOppgaveId(oppgaveId);
-  };
+  const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
   useEffect(() => {
-    if (oppgaveId) {
-      dispatch(tildelMegHandling({ oppgaveId: oppgaveId, ident: person.id }));
+    if (valgtOppgave.id) {
+      dispatch(
+        tildelMegHandling({
+          oppgaveId: valgtOppgave.id,
+          ident: person.id,
+          versjon: valgtOppgave.versjon,
+        })
+      );
     }
-  }, [oppgaveId]);
+  }, [valgtOppgave.id]);
 
   useEffect(() => {
     dispatchTransformering();
@@ -149,7 +153,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
           <th />
         </tr>
       </thead>
-      <tbody>{genererTabellRader(settValgOppgaveId, oppgaver)}</tbody>
+      <tbody>{genererTabellRader(settValgOppgave, oppgaver)}</tbody>
     </table>
   );
 };
@@ -178,7 +182,15 @@ const typeOversettelse = (type: string): string => {
   }
 };
 
-const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist, settValgOppgaveId }: OppgaveRad) => {
+const OppgaveTabellRad = ({
+  id,
+  type,
+  ytelse,
+  hjemmel,
+  frist,
+  versjon,
+  settValgOppgave,
+}: OppgaveRad) => {
   return (
     <tr className="table-filter">
       <td>
@@ -198,7 +210,7 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist, settValgOppgaveId 
       </td>
       <td>{frist}</td>
       <td>
-        <Knapp className={"knapp"} onClick={(e) => settValgOppgaveId(id)}>
+        <Knapp className={"knapp"} onClick={(e) => settValgOppgave({ id, versjon })}>
           Tildel meg
         </Knapp>
       </td>
@@ -207,14 +219,13 @@ const OppgaveTabellRad = ({ id, type, ytelse, hjemmel, frist, settValgOppgaveId 
 };
 
 const genererTabellRader = (settValgOppgaveId: Function, oppgaver: OppgaveRader): JSX.Element[] => {
-  console.log(oppgaver);
   return oppgaver.utsnitt
     .slice(
       (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide,
       oppgaver.meta.treffPerSide + (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide
     )
     .map((rad: any) => (
-      <OppgaveTabellRad key={rad.id} {...rad} settValgOppgaveId={settValgOppgaveId} />
+      <OppgaveTabellRad key={rad.id} {...rad} settValgOppgave={settValgOppgaveId} />
     ));
 };
 

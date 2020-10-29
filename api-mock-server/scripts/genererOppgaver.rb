@@ -23,6 +23,7 @@ def lagData()
     },
     "type": rand(2) == 1 ? "klage" : "anke",
     "ytelse": tilfeldigYtelse(),
+    "versjon": Faker::Number.number(digits: 1),
     "hjemmel": "8-" << Faker::Number.number(digits: 2).to_s,
     "frist": Faker::Date.between(from: "2018-01-01", to: Date.today),
     "saksbehandler": {
