@@ -54,8 +54,6 @@ const App = (): JSX.Element => {
     );
   }
 
-  console.log(oppgaver);
-
   return (
     <Oppsett isFetching={sideLaster}>
       <>
