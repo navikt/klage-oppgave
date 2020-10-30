@@ -1,512 +1,512 @@
 [
   {
-    "id": 1377292,
-    "bruker": { "fnr": 28586243042, "navn": "Ferne Flatley" },
-    "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 6,
-    "hjemmel": "8-94",
-    "frist": "2020-03-31",
-    "saksbehandler": { "ident": "hunter.h", "navn:": "Buttercup" }
-  },
-  {
-    "id": 9862579,
-    "bruker": { "fnr": 91350831581, "navn": "Leonard Goodwin" },
-    "type": "anke",
-    "ytelse": "DAG",
-    "versjon": 3,
-    "hjemmel": "8-15",
-    "frist": "2020-03-03",
-    "saksbehandler": { "ident": "armanda.", "navn:": "Buttercup" }
-  },
-  {
-    "id": 9001900,
-    "bruker": { "fnr": 95699574672, "navn": "Jeromy Homenick" },
+    "id": 3033490,
+    "bruker": { "fnr": 32078397130, "navn": "Mrs. Darron Schuppe" },
     "type": "klage",
     "ytelse": "DAG",
-    "versjon": 7,
-    "hjemmel": "8-19",
-    "frist": "2019-01-12",
-    "saksbehandler": { "ident": "steviest", "navn:": "The Albino" }
-  },
-  {
-    "id": 2906628,
-    "bruker": { "fnr": 92336725313, "navn": "Adolph Stiedemann" },
-    "type": "klage",
-    "ytelse": "FOR",
-    "versjon": 3,
-    "hjemmel": "8-47",
-    "frist": "2019-01-30",
-    "saksbehandler": { "ident": "marnie_b", "navn:": "King Lotharon" }
-  },
-  {
-    "id": 5533051,
-    "bruker": { "fnr": 68093872298, "navn": "Morton Gottlieb DC" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 4,
-    "hjemmel": "8-54",
-    "frist": "2020-10-23",
-    "saksbehandler": { "ident": "blondell", "navn:": "Prince Humperdinck" }
-  },
-  {
-    "id": 3308400,
-    "bruker": { "fnr": 82869236336, "navn": "Lyndsay Kunde" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 1,
-    "hjemmel": "8-42",
-    "frist": "2018-11-08",
-    "saksbehandler": { "ident": "scottie", "navn:": "Buttercup" }
-  },
-  {
-    "id": 4529512,
-    "bruker": { "fnr": 25253178603, "navn": "Roberto Green" },
-    "type": "klage",
-    "ytelse": "FOR",
-    "versjon": 4,
-    "hjemmel": "8-34",
-    "frist": "2018-01-19",
-    "saksbehandler": { "ident": "julianne", "navn:": "The Albino" }
-  },
-  {
-    "id": 7136682,
-    "bruker": { "fnr": 26721007465, "navn": "Colby Cronin V" },
-    "type": "anke",
-    "ytelse": "DAG",
-    "versjon": 7,
-    "hjemmel": "8-78",
-    "frist": "2020-06-24",
-    "saksbehandler": { "ident": "collenco", "navn:": "Fezzik" }
-  },
-  {
-    "id": 5140780,
-    "bruker": { "fnr": 86659469750, "navn": "Domingo Hudson" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 5,
-    "hjemmel": "8-22",
-    "frist": "2019-10-02",
-    "saksbehandler": { "ident": "reginald", "navn:": "Yellin" }
-  },
-  {
-    "id": 3223235,
-    "bruker": { "fnr": 14879014450, "navn": "Dr. Cristopher Schuppe" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 9,
-    "hjemmel": "8-87",
-    "frist": "2018-11-14",
-    "saksbehandler": { "ident": "fredrick", "navn:": "Count Rugen" }
-  },
-  {
-    "id": 7225719,
-    "bruker": { "fnr": 71679261646, "navn": "Nickole Hand DC" },
-    "type": "anke",
-    "ytelse": "DAG",
-    "versjon": 9,
-    "hjemmel": "8-67",
-    "frist": "2019-10-25",
-    "saksbehandler": { "ident": "marcela", "navn:": "Yellin" }
-  },
-  {
-    "id": 1591837,
-    "bruker": { "fnr": 74562478425, "navn": "Amb. Hilton Kuhn" },
-    "type": "anke",
-    "ytelse": "SYK",
-    "versjon": 5,
-    "hjemmel": "8-29",
-    "frist": "2019-11-30",
-    "saksbehandler": { "ident": "tenisha", "navn:": "The Countess" }
-  },
-  {
-    "id": 9136171,
-    "bruker": { "fnr": 45602605882, "navn": "Jonathan Leffler" },
-    "type": "klage",
-    "ytelse": "SYK",
     "versjon": 8,
-    "hjemmel": "8-94",
-    "frist": "2020-09-09",
-    "saksbehandler": { "ident": "brendon", "navn:": "Inigo Montoya" }
-  },
-  {
-    "id": 9248891,
-    "bruker": { "fnr": 80042463001, "navn": "Maira Roob II" },
-    "type": "anke",
-    "ytelse": "DAG",
-    "versjon": 0,
-    "hjemmel": "8-91",
-    "frist": "2020-10-19",
-    "saksbehandler": { "ident": "genevive", "navn:": "King Lotharon" }
-  },
-  {
-    "id": 8060604,
-    "bruker": { "fnr": 13647136735, "navn": "Toney Towne" },
-    "type": "klage",
-    "ytelse": "SYK",
-    "versjon": 7,
-    "hjemmel": "8-69",
-    "frist": "2020-08-01",
-    "saksbehandler": { "ident": "ezequiel", "navn:": "Prince Humperdinck" }
-  },
-  {
-    "id": 1080899,
-    "bruker": { "fnr": 30652573934, "navn": "Dana Harris" },
-    "type": "anke",
-    "ytelse": "DAG",
-    "versjon": 3,
-    "hjemmel": "8-17",
-    "frist": "2019-05-19",
-    "saksbehandler": { "ident": "roseann", "navn:": "The Countess" }
-  },
-  {
-    "id": 3967522,
-    "bruker": { "fnr": 61782339227, "navn": "Ty Fahey" },
-    "type": "anke",
-    "ytelse": "DAG",
-    "versjon": 1,
-    "hjemmel": "8-92",
-    "frist": "2019-08-23",
-    "saksbehandler": { "ident": "scottie", "navn:": "Prince Humperdinck" }
-  },
-  {
-    "id": 8321347,
-    "bruker": { "fnr": 59096132905, "navn": "Paulita McClure" },
-    "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 3,
-    "hjemmel": "8-43",
-    "frist": "2018-04-28",
-    "saksbehandler": { "ident": "emanuel", "navn:": "The Countess" }
-  },
-  {
-    "id": 5329882,
-    "bruker": { "fnr": 75249674379, "navn": "Osvaldo Collier" },
-    "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 8,
-    "hjemmel": "8-80",
-    "frist": "2018-10-23",
-    "saksbehandler": { "ident": "jeanelle", "navn:": "Fezzik" }
-  },
-  {
-    "id": 2481463,
-    "bruker": { "fnr": 27938492770, "navn": "Zola Medhurst" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 7,
-    "hjemmel": "8-29",
-    "frist": "2018-08-13",
-    "saksbehandler": { "ident": "angella", "navn:": "Yeste" }
-  },
-  {
-    "id": 2171701,
-    "bruker": { "fnr": 30930566526, "navn": "Prudence Ankunding" },
-    "type": "klage",
-    "ytelse": "SYK",
-    "versjon": 8,
-    "hjemmel": "8-62",
-    "frist": "2020-07-20",
-    "saksbehandler": { "ident": "columbus", "navn:": "Dread Pirate Roberts" }
-  },
-  {
-    "id": 6488266,
-    "bruker": { "fnr": 20078685448, "navn": "Perry Hane CPA" },
-    "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 7,
-    "hjemmel": "8-43",
-    "frist": "2020-09-11",
-    "saksbehandler": { "ident": "scottie", "navn:": "Dread Pirate Roberts" }
-  },
-  {
-    "id": 1624543,
-    "bruker": { "fnr": 49551963209, "navn": "Lilliam Blick" },
-    "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 7,
-    "hjemmel": "8-72",
-    "frist": "2018-07-03",
-    "saksbehandler": { "ident": "delphia", "navn:": "Miracle Max" }
-  },
-  {
-    "id": 4100652,
-    "bruker": { "fnr": 16493476447, "navn": "Laurel Upton" },
-    "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 1,
-    "hjemmel": "8-71",
-    "frist": "2019-02-11",
-    "saksbehandler": { "ident": "jamison", "navn:": "Count Rugen" }
-  },
-  {
-    "id": 2790036,
-    "bruker": { "fnr": 84452284558, "navn": "Karine Aufderhar" },
-    "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 1,
-    "hjemmel": "8-92",
+    "hjemmel": "8-74",
     "frist": "2019-09-07",
-    "saksbehandler": { "ident": "matthew", "navn:": "The Countess" }
+    "saksbehandler": { "ident": "tatyana", "navn:": "Count Rugen" }
   },
   {
-    "id": 2373896,
-    "bruker": { "fnr": 93335286859, "navn": "Loreta Kautzer" },
-    "type": "anke",
-    "ytelse": "SYK",
-    "versjon": 6,
-    "hjemmel": "8-97",
-    "frist": "2018-12-12",
-    "saksbehandler": { "ident": "kiley_sc", "navn:": "King Lotharon" }
-  },
-  {
-    "id": 4383016,
-    "bruker": { "fnr": 86569242766, "navn": "Tianna Bartell Ret." },
+    "id": 9744019,
+    "bruker": { "fnr": 18974445223, "navn": "Ismael Rau" },
     "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 3,
-    "hjemmel": "8-96",
-    "frist": "2019-08-15",
-    "saksbehandler": { "ident": "dorothea", "navn:": "Domingo Montoya" }
+    "ytelse": "SYK",
+    "versjon": 5,
+    "hjemmel": "8-65",
+    "frist": "2018-01-30",
+    "saksbehandler": { "ident": "hyun.tur", "navn:": "Domingo Montoya" }
   },
   {
-    "id": 3764644,
-    "bruker": { "fnr": 15753165208, "navn": "Nyla Volkman" },
+    "id": 7347052,
+    "bruker": { "fnr": 44992055425, "navn": "Gov. Helen Sanford" },
     "type": "anke",
     "ytelse": "DAG",
     "versjon": 3,
-    "hjemmel": "8-82",
-    "frist": "2019-05-07",
-    "saksbehandler": { "ident": "bernardo", "navn:": "Prince Humperdinck" }
+    "hjemmel": "8-39",
+    "frist": "2019-08-10",
+    "saksbehandler": { "ident": "kaitlyn", "navn:": "The Albino" }
   },
   {
-    "id": 4782516,
-    "bruker": { "fnr": 71843946814, "navn": "Wilfredo Volkman" },
+    "id": 1579947,
+    "bruker": { "fnr": 18224323681, "navn": "Kera McKenzie" },
     "type": "anke",
     "ytelse": "FOR",
     "versjon": 5,
-    "hjemmel": "8-53",
-    "frist": "2019-10-15",
-    "saksbehandler": { "ident": "michelle", "navn:": "Dread Pirate Roberts" }
+    "hjemmel": "8-35",
+    "frist": "2019-08-02",
+    "saksbehandler": { "ident": "chantal", "navn:": "The Albino" }
   },
   {
-    "id": 2333391,
-    "bruker": { "fnr": 80372664131, "navn": "Jamika Hahn I" },
+    "id": 5768888,
+    "bruker": { "fnr": 15912230049, "navn": "The Hon. Darnell Ritchie" },
     "type": "klage",
     "ytelse": "SYK",
-    "versjon": 0,
-    "hjemmel": "8-78",
-    "frist": "2019-09-14",
-    "saksbehandler": { "ident": "felecia.", "navn:": "Domingo Montoya" }
+    "versjon": 5,
+    "hjemmel": "8-58",
+    "frist": "2019-02-22",
+    "saksbehandler": { "ident": "grover_r", "navn:": "Queen Bella" }
   },
   {
-    "id": 2452020,
-    "bruker": { "fnr": 88471417353, "navn": "Rudolf Dickinson" },
+    "id": 2868049,
+    "bruker": { "fnr": 77249532923, "navn": "Trevor Ward" },
     "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 6,
+    "hjemmel": "8-31",
+    "frist": "2018-10-13",
+    "saksbehandler": { "ident": "darrin_c", "navn:": "Vizzini" }
+  },
+  {
+    "id": 3270164,
+    "bruker": { "fnr": 23624490307, "navn": "Rolf Jacobs" },
+    "type": "anke",
+    "ytelse": "SYK",
+    "versjon": 2,
+    "hjemmel": "8-57",
+    "frist": "2018-02-14",
+    "saksbehandler": { "ident": "terresa", "navn:": "Yellin" }
+  },
+  {
+    "id": 2597335,
+    "bruker": { "fnr": 36429925925, "navn": "Scottie Williamson" },
+    "type": "klage",
+    "ytelse": "FOR",
+    "versjon": 4,
+    "hjemmel": "8-44",
+    "frist": "2018-07-31",
+    "saksbehandler": { "ident": "breanne", "navn:": "King Lotharon" }
+  },
+  {
+    "id": 1537813,
+    "bruker": { "fnr": 73056276735, "navn": "Charley Hickle VM" },
+    "type": "klage",
     "ytelse": "FOR",
     "versjon": 7,
-    "hjemmel": "8-42",
-    "frist": "2020-08-08",
-    "saksbehandler": { "ident": "salvador", "navn:": "Count Rugen" }
+    "hjemmel": "8-21",
+    "frist": "2018-09-03",
+    "saksbehandler": { "ident": "matthew", "navn:": "Westley" }
   },
   {
-    "id": 9922481,
-    "bruker": { "fnr": 28554759466, "navn": "Jude Schaden" },
+    "id": 6547432,
+    "bruker": { "fnr": 19135095348, "navn": "Patience Stiedemann" },
+    "type": "klage",
+    "ytelse": "FOR",
+    "versjon": 2,
+    "hjemmel": "8-60",
+    "frist": "2019-12-11",
+    "saksbehandler": { "ident": "garland", "navn:": "Westley" }
+  },
+  {
+    "id": 8410533,
+    "bruker": { "fnr": 34912930619, "navn": "Katelynn Donnelly Jr." },
+    "type": "anke",
+    "ytelse": "SYK",
+    "versjon": 5,
+    "hjemmel": "8-78",
+    "frist": "2019-11-17",
+    "saksbehandler": { "ident": "valerie", "navn:": "Vizzini" }
+  },
+  {
+    "id": 6757009,
+    "bruker": { "fnr": 58137277016, "navn": "Porter Friesen" },
     "type": "anke",
     "ytelse": "FOR",
     "versjon": 9,
-    "hjemmel": "8-97",
-    "frist": "2020-04-09",
-    "saksbehandler": { "ident": "tashina", "navn:": "Vizzini" }
+    "hjemmel": "8-96",
+    "frist": "2020-07-26",
+    "saksbehandler": { "ident": "winfred", "navn:": "Yellin" }
   },
   {
-    "id": 3667182,
-    "bruker": { "fnr": 69821683862, "navn": "Christel Simonis" },
+    "id": 6114690,
+    "bruker": { "fnr": 80980261300, "navn": "Wade White" },
     "type": "anke",
     "ytelse": "FOR",
+    "versjon": 3,
+    "hjemmel": "8-48",
+    "frist": "2020-03-19",
+    "saksbehandler": { "ident": "mohamed", "navn:": "King Lotharon" }
+  },
+  {
+    "id": 8897114,
+    "bruker": { "fnr": 16180674615, "navn": "Wilda Mraz" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 0,
+    "hjemmel": "8-25",
+    "frist": "2020-08-01",
+    "saksbehandler": { "ident": "isabelle", "navn:": "Prince Humperdinck" }
+  },
+  {
+    "id": 2374188,
+    "bruker": { "fnr": 91623668779, "navn": "The Hon. Rupert Jakubowski" },
+    "type": "klage",
+    "ytelse": "DAG",
+    "versjon": 1,
+    "hjemmel": "8-68",
+    "frist": "2020-08-05",
+    "saksbehandler": { "ident": "lachelle", "navn:": "Inigo Montoya" }
+  },
+  {
+    "id": 8749171,
+    "bruker": { "fnr": 21046346242, "navn": "Damian Lehner IV" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 7,
+    "hjemmel": "8-33",
+    "frist": "2019-04-29",
+    "saksbehandler": { "ident": "suzanne", "navn:": "Vizzini" }
+  },
+  {
+    "id": 3714546,
+    "bruker": { "fnr": 68243878926, "navn": "Todd Williamson MD" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 3,
+    "hjemmel": "8-81",
+    "frist": "2018-10-17",
+    "saksbehandler": { "ident": "Z994488", "navn:": "Prince Humperdinck" }
+  },
+  {
+    "id": 4476003,
+    "bruker": { "fnr": 64166089373, "navn": "Reginald Muller" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "versjon": 9,
+    "hjemmel": "8-92",
+    "frist": "2020-09-29",
+    "saksbehandler": { "ident": "benedict", "navn:": "King Lotharon" }
+  },
+  {
+    "id": 8378534,
+    "bruker": { "fnr": 65656726142, "navn": "Taylor Hirthe" },
+    "type": "anke",
+    "ytelse": "FOR",
+    "versjon": 7,
+    "hjemmel": "8-97",
+    "frist": "2018-02-20",
+    "saksbehandler": { "ident": "clarence", "navn:": "Valerie" }
+  },
+  {
+    "id": 3653102,
+    "bruker": { "fnr": 98883060092, "navn": "Kiera Rohan" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "versjon": 0,
+    "hjemmel": "8-14",
+    "frist": "2019-09-06",
+    "saksbehandler": { "ident": "federico", "navn:": "Vizzini" }
+  },
+  {
+    "id": 9577003,
+    "bruker": { "fnr": 68540964887, "navn": "Marcellus Hilpert" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 9,
+    "hjemmel": "8-74",
+    "frist": "2019-09-19",
+    "saksbehandler": { "ident": "maryanna", "navn:": "Queen Bella" }
+  },
+  {
+    "id": 2956125,
+    "bruker": { "fnr": 99292350200, "navn": "Graciela Greenfelder" },
+    "type": "anke",
+    "ytelse": "SYK",
+    "versjon": 3,
+    "hjemmel": "8-55",
+    "frist": "2020-01-26",
+    "saksbehandler": { "ident": "maurine", "navn:": "The Countess" }
+  },
+  {
+    "id": 5733130,
+    "bruker": { "fnr": 10928965242, "navn": "Phillip Wolff" },
+    "type": "klage",
+    "ytelse": "FOR",
+    "versjon": 0,
+    "hjemmel": "8-16",
+    "frist": "2019-10-04",
+    "saksbehandler": { "ident": "alphonso", "navn:": "Westley" }
+  },
+  {
+    "id": 6571221,
+    "bruker": { "fnr": 99494087164, "navn": "Tom Farrell" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 3,
+    "hjemmel": "8-38",
+    "frist": "2020-03-20",
+    "saksbehandler": { "ident": "cristoba", "navn:": "Miracle Max" }
+  },
+  {
+    "id": 2636704,
+    "bruker": { "fnr": 44724593339, "navn": "Mike Cronin" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 7,
+    "hjemmel": "8-36",
+    "frist": "2020-09-03",
+    "saksbehandler": { "ident": "Z994488", "navn:": "Dread Pirate Roberts" }
+  },
+  {
+    "id": 7778228,
+    "bruker": { "fnr": 95438791745, "navn": "Leonora McGlynn" },
+    "type": "anke",
+    "ytelse": "SYK",
+    "versjon": 4,
+    "hjemmel": "8-36",
+    "frist": "2018-06-05",
+    "saksbehandler": { "ident": "mckinley", "navn:": "Buttercup" }
+  },
+  {
+    "id": 7371924,
+    "bruker": { "fnr": 45371505138, "navn": "The Hon. Dion Strosin" },
+    "type": "anke",
+    "ytelse": "FOR",
+    "versjon": 2,
+    "hjemmel": "8-18",
+    "frist": "2020-02-15",
+    "saksbehandler": { "ident": "shirley", "navn:": "The Countess" }
+  },
+  {
+    "id": 5566077,
+    "bruker": { "fnr": 13511579365, "navn": "Lewis Fisher" },
+    "type": "klage",
+    "ytelse": "DAG",
+    "versjon": 8,
+    "hjemmel": "8-32",
+    "frist": "2020-04-23",
+    "saksbehandler": { "ident": "shantae", "navn:": "Prince Humperdinck" }
+  },
+  {
+    "id": 4356938,
+    "bruker": { "fnr": 51894022698, "navn": "Veda Bradtke" },
+    "type": "anke",
+    "ytelse": "FOR",
+    "versjon": 4,
+    "hjemmel": "8-31",
+    "frist": "2020-02-14",
+    "saksbehandler": { "ident": "hunter.h", "navn:": "King Lotharon" }
+  },
+  {
+    "id": 2184507,
+    "bruker": { "fnr": 21661298995, "navn": "Fr. Dorine Jenkins" },
+    "type": "anke",
+    "ytelse": "SYK",
+    "versjon": 4,
+    "hjemmel": "8-99",
+    "frist": "2019-12-03",
+    "saksbehandler": { "ident": "Z994488", "navn:": "Count Rugen" }
+  },
+  {
+    "id": 7145724,
+    "bruker": { "fnr": 99667142916, "navn": "Fr. Gwen Bernhard" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 6,
+    "hjemmel": "8-31",
+    "frist": "2019-06-14",
+    "saksbehandler": { "ident": "chelsea", "navn:": "The Countess" }
+  },
+  {
+    "id": 9899589,
+    "bruker": { "fnr": 84411612063, "navn": "Francis Stroman" },
+    "type": "klage",
+    "ytelse": "DAG",
     "versjon": 0,
     "hjemmel": "8-81",
-    "frist": "2020-06-04",
-    "saksbehandler": { "ident": "giovanni", "navn:": "Miracle Max" }
+    "frist": "2019-01-13",
+    "saksbehandler": { "ident": "pete_lin", "navn:": "Inigo Montoya" }
   },
   {
-    "id": 7337402,
-    "bruker": { "fnr": 90703334357, "navn": "Norene Lind" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 4,
-    "hjemmel": "8-90",
-    "frist": "2020-09-06",
-    "saksbehandler": { "ident": "jonathon", "navn:": "Yellin" }
-  },
-  {
-    "id": 9634859,
-    "bruker": { "fnr": 29695095366, "navn": "Amb. Demetrius Jerde" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 0,
-    "hjemmel": "8-23",
-    "frist": "2020-05-04",
-    "saksbehandler": { "ident": "candida", "navn:": "The Albino" }
-  },
-  {
-    "id": 3736353,
-    "bruker": { "fnr": 22889623418, "navn": "Ruthanne Reichel" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 6,
-    "hjemmel": "8-33",
-    "frist": "2019-07-31",
-    "saksbehandler": { "ident": "paul_gol", "navn:": "Fezzik" }
-  },
-  {
-    "id": 9994666,
-    "bruker": { "fnr": 24256024545, "navn": "Lee Dickens" },
+    "id": 3161066,
+    "bruker": { "fnr": 93566979874, "navn": "Enrique Moen" },
     "type": "klage",
     "ytelse": "FOR",
-    "versjon": 4,
-    "hjemmel": "8-26",
-    "frist": "2019-02-24",
-    "saksbehandler": { "ident": "mitchell", "navn:": "Westley" }
+    "versjon": 7,
+    "hjemmel": "8-73",
+    "frist": "2019-06-09",
+    "saksbehandler": { "ident": "Z994488", "navn:": "Fezzik" }
   },
   {
-    "id": 3335843,
-    "bruker": { "fnr": 27189185867, "navn": "Chasidy Schamberger" },
+    "id": 8920899,
+    "bruker": { "fnr": 33447222072, "navn": "Mrs. Robbi Wuckert" },
     "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 2,
-    "hjemmel": "8-27",
-    "frist": "2018-10-01",
-    "saksbehandler": { "ident": "dalilada", "navn:": "Fezzik" }
-  },
-  {
-    "id": 4790450,
-    "bruker": { "fnr": 79373831875, "navn": "Prof. Erwin Heathcote" },
-    "type": "anke",
-    "ytelse": "DAG",
-    "versjon": 3,
-    "hjemmel": "8-42",
-    "frist": "2018-10-31",
-    "saksbehandler": { "ident": "normand", "navn:": "Dread Pirate Roberts" }
-  },
-  {
-    "id": 3929710,
-    "bruker": { "fnr": 63278862156, "navn": "Woodrow O'Keefe" },
-    "type": "klage",
-    "ytelse": "FOR",
-    "versjon": 6,
-    "hjemmel": "8-86",
-    "frist": "2020-07-23",
-    "saksbehandler": { "ident": "georgene", "navn:": "The Countess" }
-  },
-  {
-    "id": 5252338,
-    "bruker": { "fnr": 51756247666, "navn": "Ora Legros" },
-    "type": "klage",
     "ytelse": "SYK",
-    "versjon": 9,
-    "hjemmel": "8-76",
-    "frist": "2019-10-22",
-    "saksbehandler": { "ident": "orville", "navn:": "Miracle Max" }
-  },
-  {
-    "id": 1120871,
-    "bruker": { "fnr": 72818028090, "navn": "Dessie Prohaska" },
-    "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 4,
-    "hjemmel": "8-87",
-    "frist": "2020-03-19",
-    "saksbehandler": { "ident": "raphael", "navn:": "Domingo Montoya" }
-  },
-  {
-    "id": 5718407,
-    "bruker": { "fnr": 78269155417, "navn": "Eulah Bayer" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 0,
-    "hjemmel": "8-35",
-    "frist": "2020-05-24",
-    "saksbehandler": { "ident": "armandar", "navn:": "Fezzik" }
-  },
-  {
-    "id": 4928747,
-    "bruker": { "fnr": 42252659919, "navn": "Ione Parisian" },
-    "type": "klage",
-    "ytelse": "FOR",
     "versjon": 1,
-    "hjemmel": "8-13",
-    "frist": "2019-07-20",
-    "saksbehandler": { "ident": "kenneth", "navn:": "Miracle Max" }
+    "hjemmel": "8-65",
+    "frist": "2020-03-21",
+    "saksbehandler": { "ident": "pam.gerl", "navn:": "Buttercup" }
   },
   {
-    "id": 3332281,
-    "bruker": { "fnr": 57877748105, "navn": "Mel Feil" },
-    "type": "klage",
-    "ytelse": "FOR",
-    "versjon": 2,
-    "hjemmel": "8-68",
-    "frist": "2018-02-07",
-    "saksbehandler": { "ident": "phillip", "navn:": "Westley" }
-  },
-  {
-    "id": 7110784,
-    "bruker": { "fnr": 83214504066, "navn": "Sen. Cassi Ondricka" },
+    "id": 9864948,
+    "bruker": { "fnr": 52400286063, "navn": "Mason Trantow" },
     "type": "anke",
     "ytelse": "SYK",
-    "versjon": 3,
-    "hjemmel": "8-80",
-    "frist": "2019-02-23",
-    "saksbehandler": { "ident": "eddie_sp", "navn:": "King Lotharon" }
+    "versjon": 1,
+    "hjemmel": "8-40",
+    "frist": "2020-06-16",
+    "saksbehandler": { "ident": "giuseppe", "navn:": "Yeste" }
   },
   {
-    "id": 5041683,
-    "bruker": { "fnr": 51430353323, "navn": "Herschel Halvorson" },
+    "id": 6201794,
+    "bruker": { "fnr": 61384724039, "navn": "Etta Blick LLD" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 1,
+    "hjemmel": "8-17",
+    "frist": "2019-10-21",
+    "saksbehandler": { "ident": "eleanor", "navn:": "Yellin" }
+  },
+  {
+    "id": 6328673,
+    "bruker": { "fnr": 16975450702, "navn": "Pres. Savannah O'Connell" },
+    "type": "anke",
+    "ytelse": "SYK",
+    "versjon": 7,
+    "hjemmel": "8-70",
+    "frist": "2019-06-08",
+    "saksbehandler": { "ident": "dominick", "navn:": "Count Rugen" }
+  },
+  {
+    "id": 5945330,
+    "bruker": { "fnr": 96974459488, "navn": "Odis Abshire" },
+    "type": "anke",
+    "ytelse": "FOR",
+    "versjon": 4,
+    "hjemmel": "8-40",
+    "frist": "2018-12-12",
+    "saksbehandler": { "ident": "Z994488", "navn:": "Vizzini" }
+  },
+  {
+    "id": 8495381,
+    "bruker": { "fnr": 42193599264, "navn": "Bee Kautzer" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 9,
+    "hjemmel": "8-36",
+    "frist": "2018-12-27",
+    "saksbehandler": { "ident": "cathrine", "navn:": "Vizzini" }
+  },
+  {
+    "id": 1892056,
+    "bruker": { "fnr": 85284263660, "navn": "Riley Kirlin" },
+    "type": "anke",
+    "ytelse": "SYK",
+    "versjon": 0,
+    "hjemmel": "8-28",
+    "frist": "2018-11-07",
+    "saksbehandler": { "ident": "tristan", "navn:": "Yeste" }
+  },
+  {
+    "id": 9578865,
+    "bruker": { "fnr": 60857937841, "navn": "The Hon. Bernetta Emmerich" },
+    "type": "anke",
+    "ytelse": "FOR",
+    "versjon": 4,
+    "hjemmel": "8-71",
+    "frist": "2019-08-15",
+    "saksbehandler": { "ident": "raquel.m", "navn:": "Prince Humperdinck" }
+  },
+  {
+    "id": 2820175,
+    "bruker": { "fnr": 30106690737, "navn": "Anisa Kessler" },
+    "type": "anke",
+    "ytelse": "DAG",
+    "versjon": 7,
+    "hjemmel": "8-32",
+    "frist": "2019-11-05",
+    "saksbehandler": { "ident": "candace", "navn:": "Inigo Montoya" }
+  },
+  {
+    "id": 8071603,
+    "bruker": { "fnr": 90767837565, "navn": "Allan Bruen" },
+    "type": "anke",
+    "ytelse": "FOR",
+    "versjon": 3,
+    "hjemmel": "8-70",
+    "frist": "2018-11-17",
+    "saksbehandler": { "ident": "raleigh", "navn:": "Queen Bella" }
+  },
+  {
+    "id": 2427641,
+    "bruker": { "fnr": 88011772028, "navn": "Gladys Rolfson" },
+    "type": "klage",
+    "ytelse": "FOR",
+    "versjon": 4,
+    "hjemmel": "8-75",
+    "frist": "2020-04-09",
+    "saksbehandler": { "ident": "Z994488", "navn:": "Yeste" }
+  },
+  {
+    "id": 2276527,
+    "bruker": { "fnr": 13008679150, "navn": "Tomeka Hudson" },
+    "type": "klage",
+    "ytelse": "SYK",
+    "versjon": 7,
+    "hjemmel": "8-34",
+    "frist": "2018-02-08",
+    "saksbehandler": { "ident": "jamaal_p", "navn:": "Prince Humperdinck" }
+  },
+  {
+    "id": 4894414,
+    "bruker": { "fnr": 90046575896, "navn": "Maynard Strosin" },
     "type": "klage",
     "ytelse": "SYK",
     "versjon": 4,
-    "hjemmel": "8-84",
-    "frist": "2019-03-10",
-    "saksbehandler": { "ident": "ronnie_c", "navn:": "Yeste" }
+    "hjemmel": "8-91",
+    "frist": "2018-02-15",
+    "saksbehandler": { "ident": "lonny_ro", "navn:": "Inigo Montoya" }
   },
   {
-    "id": 8790315,
-    "bruker": { "fnr": 12135788725, "navn": "Sen. Mose Swaniawski" },
-    "type": "klage",
-    "ytelse": "SYK",
-    "versjon": 7,
-    "hjemmel": "8-85",
-    "frist": "2018-10-13",
-    "saksbehandler": { "ident": "sharilyn", "navn:": "The Albino" }
-  },
-  {
-    "id": 2658465,
-    "bruker": { "fnr": 24893802939, "navn": "Domingo Goodwin" },
+    "id": 7666921,
+    "bruker": { "fnr": 82080003970, "navn": "Fr. Latosha Zieme" },
     "type": "klage",
     "ytelse": "DAG",
-    "versjon": 7,
-    "hjemmel": "8-60",
-    "frist": "2019-10-17",
-    "saksbehandler": { "ident": "teddy_wy", "navn:": "Yellin" }
+    "versjon": 3,
+    "hjemmel": "8-46",
+    "frist": "2018-03-15",
+    "saksbehandler": { "ident": "Z994488", "navn:": "Valerie" }
   },
   {
-    "id": 8129543,
-    "bruker": { "fnr": 13111476335, "navn": "Solomon Jaskolski" },
-    "type": "anke",
+    "id": 2447027,
+    "bruker": { "fnr": 90545255108, "navn": "Pres. Latrina Osinski" },
+    "type": "klage",
     "ytelse": "SYK",
-    "versjon": 8,
-    "hjemmel": "8-54",
-    "frist": "2018-07-23",
-    "saksbehandler": { "ident": "lakeshia", "navn:": "The Albino" }
+    "versjon": 5,
+    "hjemmel": "8-68",
+    "frist": "2019-07-07",
+    "saksbehandler": { "ident": "clarisa", "navn:": "The Albino" }
   },
   {
-    "id": 8938484,
-    "bruker": { "fnr": 15209743084, "navn": "Donald Treutel Ret." },
+    "id": 3995406,
+    "bruker": { "fnr": 55388767203, "navn": "Ben Hammes Ret." },
     "type": "anke",
+    "ytelse": "FOR",
+    "versjon": 0,
+    "hjemmel": "8-76",
+    "frist": "2019-01-14",
+    "saksbehandler": { "ident": "Z994488", "navn:": "King Lotharon" }
+  },
+  {
+    "id": 5950019,
+    "bruker": { "fnr": 45457366207, "navn": "Marshall Bradtke" },
+    "type": "klage",
     "ytelse": "SYK",
     "versjon": 3,
-    "hjemmel": "8-71",
-    "frist": "2018-07-06",
-    "saksbehandler": { "ident": "whitney", "navn:": "Domingo Montoya" }
+    "hjemmel": "8-25",
+    "frist": "2018-05-25",
+    "saksbehandler": { "ident": "harland", "navn:": "Inigo Montoya" }
+  },
+  {
+    "id": 6664683,
+    "bruker": { "fnr": 52224034517, "navn": "Zenia Bergnaum" },
+    "type": "anke",
+    "ytelse": "SYK",
+    "versjon": 0,
+    "hjemmel": "8-91",
+    "frist": "2019-09-22",
+    "saksbehandler": { "ident": "thaddeus", "navn:": "Count Rugen" }
   }
 ]

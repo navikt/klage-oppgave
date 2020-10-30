@@ -50,12 +50,12 @@ app.get("/oppgaver", (req, res) => {
           if (first) {
             cb(
               null,
-              data.saksbehandler === saksbehandler
+              data.saksbehandler.ident === saksbehandler
                 ? "[" + JSON.stringify(data)
                 : "["
             );
             first = false;
-            if (data.saksbehandler === saksbehandler) written = true;
+            if (data.saksbehandler.ident === saksbehandler) written = true;
           } else {
             if (written) {
               cb(
@@ -72,7 +72,7 @@ app.get("/oppgaver", (req, res) => {
                   : ""
               );
             }
-            if (!written && data.saksbehandler === saksbehandler)
+            if (!written && data.saksbehandler.ident === saksbehandler)
               written = true;
           }
         })

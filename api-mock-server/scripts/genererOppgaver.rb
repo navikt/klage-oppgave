@@ -1,3 +1,5 @@
+# generer 51 tilfeldige oppgaver
+
 require 'json'
 require 'faker'
 
@@ -14,6 +16,10 @@ def tilfeldigYtelse()
   end
 end
 
+def nestenTilfeldigSaksbehandler()
+  return rand(15) <= 1 ?  "Z994488" : Faker::Internet.username(specifier: 6..8)
+end
+
 def lagData()
   data = {
     'id' => Faker::Number.number(digits: 7),
@@ -27,7 +33,7 @@ def lagData()
     "hjemmel": "8-" << Faker::Number.number(digits: 2).to_s,
     "frist": Faker::Date.between(from: "2018-01-01", to: Date.today),
     "saksbehandler": {
-      "ident": Faker::Internet.username(specifier: 6..8),
+      "ident": nestenTilfeldigSaksbehandler(), 
       "navn:": Faker::Movies::PrincessBride.character 
     }
   }

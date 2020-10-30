@@ -1,11 +1,8 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "../konfigurerAxios";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { of } from "rxjs";
-import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
-import { provIgjenStrategi } from "../../utility/rxUtils";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { switchMap, withLatestFrom } from "rxjs/operators";
 
 //==========
 // Type defs
@@ -17,12 +14,17 @@ export interface OppgaveRad {
     navn: string;
   };
   type: string;
+  versjon: number;
   ytelse: string;
   hjemmel: string;
-  versjon: number;
   frist: string;
   saksbehandler: string;
-  endreOppgave?: Function;
+  settValgOppgave: Function;
+}
+
+export interface OppgaveRader {
+  utsnitt: [OppgaveRad];
+  meta: Metadata;
 }
 
 interface Metadata {
@@ -33,11 +35,6 @@ interface Metadata {
   feilmelding?: string | undefined;
 }
 
-export interface OppgaveRader {
-  utsnitt: [OppgaveRad];
-  meta: Metadata;
-}
-
 export interface Transformasjoner {
   filtrering?: {
     type?: undefined | string;
@@ -45,7 +42,7 @@ export interface Transformasjoner {
     hjemmel?: undefined | string;
   };
   sortering: {
-    frist: "ASC" | "DESC" | undefined;
+    frist: "ASC" | "DESC";
   };
 }
 
@@ -60,8 +57,8 @@ type OppgaveState = {
 //==========
 // Reducer
 //==========
-export const oppgaveSlice = createSlice({
-  name: "mineSaker",
+export const filteringSlice = createSlice({
+  name: "filtrering",
   initialState: {
     rader: [],
     utsnitt: [],
@@ -79,7 +76,7 @@ export const oppgaveSlice = createSlice({
         hjemmel: undefined,
       },
       sortering: {
-        frist: undefined,
+        frist: "ASC",
       },
     },
   } as OppgaveState,
@@ -88,7 +85,6 @@ export const oppgaveSlice = createSlice({
       if (action.payload) {
         const antall = action.payload.length;
         const t = state.meta.treffPerSide;
-
         state.rader = action.payload;
         state.utsnitt = action.payload;
         state.meta.antall = antall;
@@ -104,7 +100,7 @@ export const oppgaveSlice = createSlice({
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
-      state.meta.feilmelding = "MineSaker-henting feilet";
+      state.meta.feilmelding = "Oppgave-henting feilet";
       state.lasterData = false;
       return state;
     },
@@ -129,20 +125,16 @@ interface RadMedTransformasjoner {
   utsnitt: [OppgaveRad];
 }
 
-export default oppgaveSlice.reducer;
+export default filteringSlice.reducer;
 
 //==========
 // Actions
 //==========
-export const { MOTTATT, UTSNITT, SETT_SIDE, FEILET } = oppgaveSlice.actions;
-export const hentMineSakerHandling = createAction<string>("mineSaker/HENT");
-export const settSide = createAction<number>("mineSaker/SETT_SIDE");
-export const mineSakerUtsnitt = createAction<[OppgaveRad]>("mineSaker/UTSNITT");
-export const oppgaveHentingFeilet = createAction<string>("mineSaker/FEILET");
+export const { MOTTATT, UTSNITT, SETT_SIDE, FEILET } = filteringSlice.actions;
+export const oppgaverUtsnitt = createAction<[OppgaveRad]>("filtrering/UTSNITT");
+export const oppgaveHentingFeilet = createAction<string>("filtrering/FEILET");
 
-export const oppgaveTransformerRader = createAction<Transformasjoner>(
-  "mineSaker/TRANSFORMER_RADER"
-);
+export const transformerRader = createAction<Transformasjoner>("filtrering/TRANSFORMER_RADER");
 
 //==========
 // Sortering og filtrering
@@ -192,15 +184,15 @@ function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: string | undefi
 //==========
 // Epos
 //==========
-export function oppgaveTransformerEpos(
+export function transformerEpos(
   action$: ActionsObservable<PayloadAction<Transformasjoner>>,
   state$: StateObservable<RootStateOrAny>
 ) {
   return action$.pipe(
-    ofType(oppgaveTransformerRader.type),
+    ofType(transformerRader.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      let rader = state.mineSaker.rader.slice();
+      let rader = state.oppgaver.rader.slice();
 
       if (action.payload.filtrering?.hjemmel) {
         rader = filtrerHjemmel(rader, action.payload.filtrering.hjemmel);
@@ -229,28 +221,4 @@ export function oppgaveTransformerEpos(
   );
 }
 
-export function hentMineSakerEpos(
-  action$: ActionsObservable<PayloadAction<string>>,
-  state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
-) {
-  return action$.pipe(
-    ofType(hentMineSakerHandling.type),
-    withLatestFrom(state$),
-    switchMap(([action]) => {
-      const url = `/api/oppgaver?saksbehandler=${action.payload}`;
-      const hentMineSaker = getJSON<[OppgaveRad]>(url).pipe(
-        map((mineSaker) => {
-          console.log({ mineSaker });
-          return MOTTATT(mineSaker);
-        })
-      );
-      return hentMineSaker.pipe(
-        retryWhen(provIgjenStrategi()),
-        catchError((error) => of(FEILET(error)))
-      );
-    })
-  );
-}
-
-export const MINESAKER_EPICS = [oppgaveTransformerEpos, hentMineSakerEpos];
+export const OPPGAVER_EPICS = [transformerEpos];
