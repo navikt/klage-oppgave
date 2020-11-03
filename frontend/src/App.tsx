@@ -3,7 +3,6 @@ import Oppsett from "./komponenter/Oppsett";
 import { Hovedknapp, Knapp } from "nav-frontend-knapper";
 import "./stilark/App.less";
 import "./stilark/Lists.less";
-import "./stilark/Tabell.less";
 import "nav-frontend-tabell-style";
 
 import { Checkbox } from "nav-frontend-skjema";
@@ -15,8 +14,8 @@ import { hentMegHandling } from "./tilstand/moduler/meg";
 
 import { velgOppgaver, velgSideLaster } from "./tilstand/moduler/oppgave.velgere";
 import { useParams } from "react-router-dom";
-import Paginering from "./komponenter/Paginering";
-import OppgaveTabell from "./komponenter/Oppgaver";
+import Paginering from "./komponenter/Paginering/Paginering";
+import OppgaveTabell from "./komponenter/Tabell/Tabell";
 
 const App = (): JSX.Element => {
   const oppgaver = useSelector(velgOppgaver);
@@ -52,16 +51,6 @@ const App = (): JSX.Element => {
   return (
     <Oppsett isFetching={sideLaster}>
       <>
-        <div className="knapperad">
-          <div className="left">
-            <Hovedknapp>Tildel meg neste sak</Hovedknapp>
-          </div>
-          <div className="right">
-            <Knapp>Tildel flere</Knapp>
-            <Checkbox label="&#8203;" />
-          </div>
-        </div>
-
         <OppgaveTabell {...oppgaver} />
         <div className="table-lbl">
           <div className={"paginering"}>

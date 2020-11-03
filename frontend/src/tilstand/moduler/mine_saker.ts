@@ -88,6 +88,7 @@ export const oppgaveSlice = createSlice({
       if (action.payload) {
         const antall = action.payload.length;
         const t = state.meta.treffPerSide;
+
         state.rader = action.payload;
         state.utsnitt = action.payload;
         state.meta.antall = antall;
@@ -238,7 +239,12 @@ export function hentMineSakerEpos(
     withLatestFrom(state$),
     switchMap(([action]) => {
       const url = `/api/oppgaver?saksbehandler=${action.payload}`;
-      const hentMineSaker = getJSON<[OppgaveRad]>(url).pipe(map((mineSaker) => MOTTATT(mineSaker)));
+      const hentMineSaker = getJSON<[OppgaveRad]>(url).pipe(
+        map((mineSaker) => {
+          console.log({ mineSaker });
+          return MOTTATT(mineSaker);
+        })
+      );
       return hentMineSaker.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => of(FEILET(error)))
