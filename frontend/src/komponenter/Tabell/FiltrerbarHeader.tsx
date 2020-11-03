@@ -25,7 +25,7 @@ export const useOnInteractOutside = ({
   }, [ref.current, active]);
 };
 
-export const FilterMenuItem = ({ children, onFilter, aktiv }: FilterMenuItemProps) => (
+export const FilterRad = ({ children, onFilter, aktiv }: FilterMenuItemProps) => (
   <li>
     <label className={"filterLabel"}>
       <input type="checkbox" checked={aktiv} onChange={onFilter} />
@@ -64,7 +64,7 @@ export function settFilter(
 
 export const FiltrerbarHeader = ({
   children,
-  filtere,
+  filtre,
   onFilter,
   aktiveFiltere,
   dispatchFunc,
@@ -75,7 +75,7 @@ export const FiltrerbarHeader = ({
   const isFirstRun = useRef(true);
   const onClick = () => setOpen((o) => !o);
   useOnInteractOutside({ ref, onInteractOutside: () => setOpen(false), active: open });
-  const alleFiltereErAktive = filtere.every((filter) =>
+  const alleFiltreErAktive = filtre.every((filter) =>
     aktiveFiltere.find((aktivtFilter) => aktivtFilter.label === filter.label)
   );
   useEffect(() => {
@@ -96,17 +96,15 @@ export const FiltrerbarHeader = ({
       </button>
       {open && (
         <ul className={"filterList"}>
-          <FilterMenuItem
-            onFilter={() => onFilter(filtere, !alleFiltereErAktive)}
-            aktiv={alleFiltereErAktive}
+          <FilterRad
+            onFilter={() => onFilter(filtre, !alleFiltreErAktive)}
+            aktiv={alleFiltreErAktive}
           >
-            {alleFiltereErAktive ? "Opphev alle" : "Velg alle"}
-          </FilterMenuItem>
+            {alleFiltreErAktive ? "Opphev alle" : "Velg alle"}
+          </FilterRad>
           <hr />
-          {/*JSON.stringify(filtere)}<br/>
-                    {JSON.stringify(aktiveFiltere)*/}
-          {filtere.map((filter, i) => (
-            <FilterMenuItem
+          {filtre.map((filter, i) => (
+            <FilterRad
               key={filter.label as string}
               onFilter={() => onFilter([filter])}
               aktiv={
@@ -115,7 +113,7 @@ export const FiltrerbarHeader = ({
               }
             >
               {filter.label}
-            </FilterMenuItem>
+            </FilterRad>
           ))}
         </ul>
       )}

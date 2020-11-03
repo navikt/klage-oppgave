@@ -127,7 +127,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
             onFilter={(filter, velgAlleEllerIngen) =>
               settFilter(settAktiveTyper, filter, aktiveTyper, velgAlleEllerIngen)
             }
-            filtere={[{ label: "Klage" }, { label: "Anke" }]}
+            filtre={[{ label: "Klage" }, { label: "Anke" }]}
             dispatchFunc={filtrerType}
             aktiveFiltere={aktiveTyper}
           >
@@ -138,7 +138,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
             onFilter={(filter, velgAlleEllerIngen) =>
               settFilter(settAktiveYtelser, filter, aktiveYtelser, velgAlleEllerIngen)
             }
-            filtere={[{ label: "Foreldrepenger" }, { label: "Sykepenger" }, { label: "Dagpenger" }]}
+            filtre={[{ label: "Foreldrepenger" }, { label: "Sykepenger" }, { label: "Dagpenger" }]}
             dispatchFunc={filtrerYtelse}
             aktiveFiltere={aktiveYtelser}
           >
@@ -149,7 +149,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
             onFilter={(filter, velgAlleEllerIngen) =>
               settFilter(settAktiveHjemler, filter, aktiveHjemler, velgAlleEllerIngen)
             }
-            filtere={[{ label: "8-65" }, { label: "8-66" }, { label: "8-67" }]}
+            filtre={[{ label: "8-65" }, { label: "8-66" }, { label: "8-67" }]}
             dispatchFunc={filtrerHjemmel}
             aktiveFiltere={aktiveHjemler}
           >

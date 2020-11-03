@@ -4,7 +4,7 @@ import { Filter } from "../tilstand/moduler/oppgave";
 export interface FiltrerbarHeaderProps {
   children: ReactNode | ReactNode[];
   onFilter: (filter: Filter | Filter[], override?: boolean) => void;
-  filtere: Filter[];
+  filtre: Filter[];
   dispatchFunc: Function;
   aktiveFiltere: Filter[];
   kolonner?: number;
