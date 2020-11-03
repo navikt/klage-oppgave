@@ -31,7 +31,7 @@ describe("Oppgave epos", () => {
               frist: "ASC",
             },
             filtrering: {
-              ytelse: "SYK",
+              ytelse: "Sykepenger",
             },
           }),
         };
@@ -51,7 +51,7 @@ describe("Oppgave epos", () => {
               frist: "ASC",
             },
             filtrering: {
-              ytelse: "SYK",
+              ytelse: "Sykepenger",
             },
           },
         };
