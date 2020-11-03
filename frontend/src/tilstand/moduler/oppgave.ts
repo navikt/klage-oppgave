@@ -147,6 +147,8 @@ interface RadMedTransformasjoner {
   utsnitt: [OppgaveRad];
 }
 
+export type ytelseType = "Foreldrepenger" | "Dagpenger" | "Sykepenger" | undefined;
+
 export default oppgaveSlice.reducer;
 
 //==========
@@ -195,12 +197,23 @@ function filtrerType(utsnitt: Array<OppgaveRad> | any, type: string | undefined)
   });
 }
 
-function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: string | undefined) {
+function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: ytelseType) {
   return utsnitt.slice().filter((rad: OppgaveRad) => {
     if (ytelse === undefined) {
       return rad;
     } else {
-      return rad.ytelse === ytelse;
+      let ytelseKode;
+      switch (ytelse) {
+        case "Foreldrepenger":
+          ytelseKode = "FOR";
+          break;
+        case "Dagpenger":
+          ytelseKode = "DAG";
+          break;
+        case "Sykepenger":
+          ytelseKode = "SYK";
+      }
+      return rad.ytelse === ytelseKode;
     }
   });
 }
@@ -230,7 +243,7 @@ export function oppgaveTransformerEpos(
         rader = filtrerType(rader, undefined);
       }
       if (action.payload.filtrering?.ytelse) {
-        rader = filtrerYtelse(rader, action.payload.filtrering.ytelse as string);
+        rader = filtrerYtelse(rader, action.payload.filtrering.ytelse as ytelseType);
       } else if (action.payload.filtrering?.ytelse === undefined) {
         rader = filtrerYtelse(rader, undefined);
       }

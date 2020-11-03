@@ -3,6 +3,7 @@ import {
   OppgaveRader,
   oppgaveTransformerRader,
   settSide,
+  ytelseType,
 } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
@@ -24,7 +25,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const [hjemmelFilter, settHjemmelFilter] = useState<string | undefined>(undefined);
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>([]);
 
-  const [ytelseFilter, settYtelseFilter] = useState<string | undefined>(undefined);
+  const [ytelseFilter, settYtelseFilter] = useState<ytelseType>(undefined);
   const [aktiveYtelser, settAktiveYtelser] = useState<Filter[]>([]);
 
   const [typeFilter, settTypeFilter] = useState<string | undefined>(undefined);
@@ -110,7 +111,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
         return { label: `${a.label},${b.label}` };
       });
       console.log("dispatch ytelser:", ytelser.label);
-      settYtelseFilter(ytelser.label as string);
+      settYtelseFilter(ytelser.label as ytelseType);
     }
   };
 
