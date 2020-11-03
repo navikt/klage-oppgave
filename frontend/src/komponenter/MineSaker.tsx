@@ -10,8 +10,8 @@ import { Checkbox } from "nav-frontend-skjema";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useParams } from "react-router-dom";
-import Paginering from "./Paginering";
-import OppgaveTabell from "./Oppgaver";
+import Paginering from "./Paginering/Paginering";
+import OppgaveTabell from "./Tabell/Tabell";
 import { velgMineSaker, velgSideLaster } from "../tilstand/moduler/mine_saker.velgere";
 import { hentMineSakerHandling, settSide } from "../tilstand/moduler/mine_saker";
 import { hentMegHandling } from "../tilstand/moduler/meg";

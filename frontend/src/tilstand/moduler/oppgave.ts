@@ -5,6 +5,7 @@ import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { of } from "rxjs";
 import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
+import { ReactNode } from "react";
 
 //==========
 // Type defs
@@ -24,6 +25,25 @@ export interface OppgaveRad {
   settValgOppgave: Function;
 }
 
+export interface Filter {
+  /**
+   * Navnet på filteret. Rendres i en liste av alle filtere som kan velges for kolonnen. Må være unik for alle
+   * filtere i samme kolonne.
+   */
+  label: ReactNode;
+}
+
+export interface Filtrering {
+  /**
+   * Aktive filtere som brukes til å filtrere rader i tabellen.
+   */
+  filtere: {
+    filter: Filter;
+    kolonne: number;
+    active: boolean;
+  }[];
+}
+
 interface Metadata {
   antall: number;
   sider: number;
@@ -39,9 +59,9 @@ export interface OppgaveRader {
 
 export interface Transformasjoner {
   filtrering?: {
-    type?: undefined | string;
-    ytelse?: undefined | string;
-    hjemmel?: undefined | string;
+    type?: undefined | string | Filter[];
+    ytelse?: undefined | string | Filter[];
+    hjemmel?: undefined | string | Filter[];
   };
   sortering: {
     frist: "ASC" | "DESC" | undefined;
@@ -199,18 +219,18 @@ export function oppgaveTransformerEpos(
       let rader = state.oppgaver.rader.slice();
 
       if (action.payload.filtrering?.hjemmel) {
-        rader = filtrerHjemmel(rader, action.payload.filtrering.hjemmel);
+        rader = filtrerHjemmel(rader, action.payload.filtrering.hjemmel as string);
       } else if (!action.payload.filtrering?.hjemmel) {
         rader = filtrerHjemmel(rader, undefined);
       }
 
       if (action.payload.filtrering?.type) {
-        rader = filtrerType(rader, action.payload.filtrering.type);
+        rader = filtrerType(rader, action.payload.filtrering.type as string);
       } else if (action.payload.filtrering?.type === undefined) {
         rader = filtrerType(rader, undefined);
       }
       if (action.payload.filtrering?.ytelse) {
-        rader = filtrerYtelse(rader, action.payload.filtrering.ytelse);
+        rader = filtrerYtelse(rader, action.payload.filtrering.ytelse as string);
       } else if (action.payload.filtrering?.ytelse === undefined) {
         rader = filtrerYtelse(rader, undefined);
       }
