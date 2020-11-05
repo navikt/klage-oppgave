@@ -76,6 +76,11 @@ type OppgaveState = {
   lasterData: boolean;
 };
 
+interface RaderMedMetadata {
+  antallTreffTotalt: number;
+  oppgaver: [OppgaveRad];
+}
+
 //==========
 // Reducer
 //==========
@@ -103,12 +108,12 @@ export const oppgaveSlice = createSlice({
     },
   } as OppgaveState,
   reducers: {
-    MOTTATT: (state, action: PayloadAction<[OppgaveRad]>) => {
+    MOTTATT: (state, action: PayloadAction<RaderMedMetadata>) => {
       if (action.payload) {
-        const antall = action.payload.length;
+        const antall = action.payload.antallTreffTotalt;
         const t = state.meta.treffPerSide;
-        state.rader = action.payload;
-        state.utsnitt = action.payload;
+        state.rader = action.payload.oppgaver;
+        state.utsnitt = action.payload.oppgaver;
         state.meta.antall = antall;
         state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
         state.lasterData = false;
@@ -279,7 +284,7 @@ function hentOppgaverEpos(
     switchMap(([action]) => {
       let oppgaveUrl = `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver?limit=${action.payload.limit}&offset=${action.payload.offset}`;
       const hentOppgaver = axios
-        .get<[OppgaveRad]>(oppgaveUrl)
+        .get<RaderMedMetadata>(oppgaveUrl)
         .pipe(map((oppgaver) => MOTTATT(oppgaver)));
       return hentOppgaver.pipe(
         retryWhen(provIgjenStrategi()),

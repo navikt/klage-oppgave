@@ -21,7 +21,20 @@ const speedLimiter = slowDown({
 app.use(speedLimiter);
 
 app.get("/ansatte/:id/ikketildelteoppgaver", (req, res) => {
+  return fs
+    .createReadStream("./fixtures/oppgaver.json")
+    .on("data", (data: string) => {
+      res.write(data);
+    })
+    .on("end", () => {
+      res.end();
+    });
+});
+
+app.get("/ansatte/:id/tildelteoppgaver", (req, res) => {
   const saksbehandler = req.params.id;
+  console.log(req.params, saksbehandler);
+
   let first = true;
   let written = false;
   return fs
@@ -32,29 +45,30 @@ app.get("/ansatte/:id/ikketildelteoppgaver", (req, res) => {
         if (first) {
           cb(
             null,
-            data.saksbehandler.ident === saksbehandler
+            data.oppgaver.saksbehandler.ident === saksbehandler
               ? "[" + JSON.stringify(data)
               : "["
           );
           first = false;
-          if (data.saksbehandler.ident === saksbehandler) written = true;
+          if (data.oppgaver.saksbehandler.ident === saksbehandler)
+            written = true;
         } else {
           if (written) {
             cb(
               null,
-              data.saksbehandler.ident == saksbehandler
+              data.oppgaver.saksbehandler.ident == saksbehandler
                 ? "," + JSON.stringify(data)
                 : ""
             );
           } else {
             cb(
               null,
-              data.saksbehandler.ident == saksbehandler
+              data.oppgaver.saksbehandler.ident == saksbehandler
                 ? JSON.stringify(data)
                 : ""
             );
           }
-          if (!written && data.saksbehandler.ident === saksbehandler)
+          if (!written && data.oppgaver.saksbehandler.ident === saksbehandler)
             written = true;
         }
       })
@@ -79,7 +93,7 @@ app.put("/oppgaver/:id/saksbehandler", async (req, res) => {
   console.log(chalk.greenBright(id));
   console.log(chalk.green(JSON.stringify(body)));
   const data = require("../fixtures/oppgaver.json");
-  const oppgave = await data.filter((rad: { id: number }) =>
+  const oppgave = await data.oppgaver.filter((rad: { id: number }) =>
     eqNumber.equals(rad.id, id)
   )[0];
   if (!oppgave) {

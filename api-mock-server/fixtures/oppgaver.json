@@ -1,102 +1,165 @@
-[
-  {
-    "id": 3033490,
-    "bruker": { "fnr": 32078397130, "navn": "Mrs. Darron Schuppe" },
-    "type": "klage",
-    "ytelse": "DAG",
-    "versjon": 8,
-    "hjemmel": "8-74",
-    "frist": "2019-09-07",
-    "saksbehandler": { "ident": "tatyana", "navn:": "Count Rugen" }
-  },
-  {
-    "id": 9744019,
-    "bruker": { "fnr": 18974445223, "navn": "Ismael Rau" },
-    "type": "klage",
-    "ytelse": "SYK",
-    "versjon": 5,
-    "hjemmel": "8-65",
-    "frist": "2018-01-30",
-    "saksbehandler": { "ident": "hyun.tur", "navn:": "Domingo Montoya" }
-  },
-  {
-    "id": 7347052,
-    "bruker": { "fnr": 44992055425, "navn": "Gov. Helen Sanford" },
-    "type": "anke",
-    "ytelse": "DAG",
-    "versjon": 3,
-    "hjemmel": "8-39",
-    "frist": "2019-08-10",
-    "saksbehandler": { "ident": "Z994488", "navn:": "The Albino" }
-  },
-  {
-    "id": 1579947,
-    "bruker": { "fnr": 18224323681, "navn": "Kera McKenzie" },
-    "type": "anke",
-    "ytelse": "FOR",
-    "versjon": 5,
-    "hjemmel": "8-65",
-    "frist": "2019-08-02",
-    "saksbehandler": { "ident": "chantal", "navn:": "The Albino" }
-  },
-  {
-    "id": 5768888,
-    "bruker": { "fnr": 15912230049, "navn": "The Hon. Darnell Ritchie" },
-    "type": "klage",
-    "ytelse": "SYK",
-    "versjon": 5,
-    "hjemmel": "8-58",
-    "frist": "2019-02-22",
-    "saksbehandler": { "ident": "grover_r", "navn:": "Queen Bella" }
-  },
-  {
-    "id": 2868049,
-    "bruker": { "fnr": 77249532923, "navn": "Trevor Ward" },
-    "type": "anke",
-    "ytelse": "DAG",
-    "versjon": 6,
-    "hjemmel": "8-31",
-    "frist": "2018-10-13",
-    "saksbehandler": { "ident": "darrin_c", "navn:": "Vizzini" }
-  },
-  {
-    "id": 3270164,
-    "bruker": { "fnr": 23624490307, "navn": "Rolf Jacobs" },
-    "type": "anke",
-    "ytelse": "SYK",
-    "versjon": 2,
-    "hjemmel": "8-57",
-    "frist": "2018-02-14",
-    "saksbehandler": { "ident": "terresa", "navn:": "Yellin" }
-  },
-  {
-    "id": 2597335,
-    "bruker": { "fnr": 36429925925, "navn": "Scottie Williamson" },
-    "type": "klage",
-    "ytelse": "FOR",
-    "versjon": 4,
-    "hjemmel": "8-44",
-    "frist": "2018-07-31",
-    "saksbehandler": { "ident": "breanne", "navn:": "King Lotharon" }
-  },
-  {
-    "id": 1537813,
-    "bruker": { "fnr": 73056276735, "navn": "Charley Hickle VM" },
-    "type": "klage",
-    "ytelse": "FOR",
-    "versjon": 7,
-    "hjemmel": "8-21",
-    "frist": "2018-09-03",
-    "saksbehandler": { "ident": "matthew", "navn:": "Westley" }
-  },
-  {
-    "id": 6664683,
-    "bruker": { "fnr": 52224034517, "navn": "Zenia Bergnaum" },
-    "type": "anke",
-    "ytelse": "SYK",
-    "versjon": 0,
-    "hjemmel": "8-91",
-    "frist": "2019-09-22",
-    "saksbehandler": { "ident": "thaddeus", "navn:": "Count Rugen" }
-  }
-]
+{
+  "antallTreffTotalt": 2134,
+  "oppgaver": [
+    {
+      "id": 3033490,
+      "bruker": {
+        "fnr": 32078397130,
+        "navn": "Mrs. Darron Schuppe"
+      },
+      "type": "klage",
+      "ytelse": "DAG",
+      "versjon": 8,
+      "hjemmel": "8-74",
+      "frist": "2019-09-07",
+      "saksbehandler": {
+        "ident": "tatyana",
+        "navn:": "Count Rugen"
+      }
+    },
+    {
+      "id": 9744019,
+      "bruker": {
+        "fnr": 18974445223,
+        "navn": "Ismael Rau"
+      },
+      "type": "klage",
+      "ytelse": "SYK",
+      "versjon": 5,
+      "hjemmel": "8-65",
+      "frist": "2018-01-30",
+      "saksbehandler": {
+        "ident": "hyun.tur",
+        "navn:": "Domingo Montoya"
+      }
+    },
+    {
+      "id": 7347052,
+      "bruker": {
+        "fnr": 44992055425,
+        "navn": "Gov. Helen Sanford"
+      },
+      "type": "anke",
+      "ytelse": "DAG",
+      "versjon": 3,
+      "hjemmel": "8-39",
+      "frist": "2019-08-10",
+      "saksbehandler": {
+        "ident": "Z994488",
+        "navn:": "The Albino"
+      }
+    },
+    {
+      "id": 1579947,
+      "bruker": {
+        "fnr": 18224323681,
+        "navn": "Kera McKenzie"
+      },
+      "type": "anke",
+      "ytelse": "FOR",
+      "versjon": 5,
+      "hjemmel": "8-65",
+      "frist": "2019-08-02",
+      "saksbehandler": {
+        "ident": "chantal",
+        "navn:": "The Albino"
+      }
+    },
+    {
+      "id": 5768888,
+      "bruker": {
+        "fnr": 15912230049,
+        "navn": "The Hon. Darnell Ritchie"
+      },
+      "type": "klage",
+      "ytelse": "SYK",
+      "versjon": 5,
+      "hjemmel": "8-58",
+      "frist": "2019-02-22",
+      "saksbehandler": {
+        "ident": "grover_r",
+        "navn:": "Queen Bella"
+      }
+    },
+    {
+      "id": 2868049,
+      "bruker": {
+        "fnr": 77249532923,
+        "navn": "Trevor Ward"
+      },
+      "type": "anke",
+      "ytelse": "DAG",
+      "versjon": 6,
+      "hjemmel": "8-31",
+      "frist": "2018-10-13",
+      "saksbehandler": {
+        "ident": "darrin_c",
+        "navn:": "Vizzini"
+      }
+    },
+    {
+      "id": 3270164,
+      "bruker": {
+        "fnr": 23624490307,
+        "navn": "Rolf Jacobs"
+      },
+      "type": "anke",
+      "ytelse": "SYK",
+      "versjon": 2,
+      "hjemmel": "8-57",
+      "frist": "2018-02-14",
+      "saksbehandler": {
+        "ident": "terresa",
+        "navn:": "Yellin"
+      }
+    },
+    {
+      "id": 2597335,
+      "bruker": {
+        "fnr": 36429925925,
+        "navn": "Scottie Williamson"
+      },
+      "type": "klage",
+      "ytelse": "FOR",
+      "versjon": 4,
+      "hjemmel": "8-44",
+      "frist": "2018-07-31",
+      "saksbehandler": {
+        "ident": "breanne",
+        "navn:": "King Lotharon"
+      }
+    },
+    {
+      "id": 1537813,
+      "bruker": {
+        "fnr": 73056276735,
+        "navn": "Charley Hickle VM"
+      },
+      "type": "klage",
+      "ytelse": "FOR",
+      "versjon": 7,
+      "hjemmel": "8-21",
+      "frist": "2018-09-03",
+      "saksbehandler": {
+        "ident": "matthew",
+        "navn:": "Westley"
+      }
+    },
+    {
+      "id": 6664683,
+      "bruker": {
+        "fnr": 52224034517,
+        "navn": "Zenia Bergnaum"
+      },
+      "type": "anke",
+      "ytelse": "SYK",
+      "versjon": 0,
+      "hjemmel": "8-91",
+      "frist": "2019-09-22",
+      "saksbehandler": {
+        "ident": "thaddeus",
+        "navn:": "Count Rugen"
+      }
+    }
+  ]
+}
