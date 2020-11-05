@@ -147,6 +147,17 @@ interface RadMedTransformasjoner {
   utsnitt: [OppgaveRad];
 }
 
+export interface OppgaveParams {
+  ident: string;
+  offset: number;
+  limit: number;
+  hjemler?: string[];
+  order?: "ASC" | "DESC";
+  orderBy?: string;
+  typer?: string[];
+  ytelser?: string[];
+}
+
 export type ytelseType = "Foreldrepenger" | "Dagpenger" | "Sykepenger" | undefined;
 
 export default oppgaveSlice.reducer;
@@ -155,10 +166,10 @@ export default oppgaveSlice.reducer;
 // Actions
 //==========
 export const { MOTTATT, UTSNITT, SETT_SIDE, FEILET } = oppgaveSlice.actions;
-export const oppgaveRequest = createAction<string>("oppgaver/HENT");
+export const oppgaveRequest = createAction<OppgaveParams>("oppgaver/HENT");
 export const settSide = createAction<number>("oppgaver/SETT_SIDE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
-export const oppgaveHentingFeilet = createAction<string>("oppgaver/FEILET");
+export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 
 export const oppgaveTransformerRader = createAction<Transformasjoner>("oppgaver/TRANSFORMER_RADER");
 
@@ -259,14 +270,14 @@ export function oppgaveTransformerEpos(
 }
 
 function hentOppgaverEpos(
-  action$: ActionsObservable<PayloadAction<string>>,
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
-      const oppgaveUrl = `/api/ansatte/${action.payload}/ikketildelteoppgaver`;
+      let oppgaveUrl = `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver?limit=${action.payload.limit}&offset=${action.payload.offset}`;
       const hentOppgaver = axios
         .get<[OppgaveRad]>(oppgaveUrl)
         .pipe(map((oppgaver) => MOTTATT(oppgaver)));

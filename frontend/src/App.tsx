@@ -39,7 +39,9 @@ const App = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    dispatch(oppgaveRequest(meg.id));
+    if (meg.id) {
+      dispatch(oppgaveRequest({ ident: meg.id, limit: 15, offset: 0 }));
+    }
   }, [meg.id]);
 
   if (oppgaver.meta.feilmelding) {
