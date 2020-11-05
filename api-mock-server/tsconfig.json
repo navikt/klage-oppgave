@@ -6,6 +6,7 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
+    "declaration": true,
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
@@ -18,7 +19,11 @@
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "lib": ["esnext", "dom"],
+    "allowJs": false,
+    "jsx": "react",
+    "rootDirs": ["packages", "stories"]
   },
   "include": ["src/**/*"]
 }

@@ -1,6 +1,6 @@
 import NavFrontendSpinner from "nav-frontend-spinner";
 import React from "react";
-import "../stilark/Header.less";
+import { Header } from "./Header/Header";
 
 interface LayoutType {
   children: JSX.Element;
@@ -11,23 +11,15 @@ import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
+import { Sok } from "./Header/Sok";
 
 export default function Oppsett({ children, isFetching }: LayoutType) {
   const person = useSelector(velgMeg);
   return (
     <main className="container">
-      <header className="main-head">
-        <div className="left">
-          <div className="logo">NAV Klage</div>
-          <div className="search">Søk</div>
-        </div>
-        <div className="right">
-          <div className="menu">
-            <span />
-          </div>
-          <div className="name">{person.navn}</div>
-        </div>
-      </header>
+      <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
+        <Sok onSok={() => Promise.resolve("test")} />
+      </Header>
       <nav className="main-nav" role="navigation" aria-label="Meny">
         <ul>
           <li>

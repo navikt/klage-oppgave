@@ -1,0 +1,162 @@
+.header__rad {
+  display: flex;
+  align-items: center;
+}
+
+.header__gap {
+  > *:not(:last-child) {
+  }
+}
+
+.header__kolonne {
+  display: flex;
+  flex-direction: column;
+}
+
+.headerTekst() {
+  font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  text-align: left;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+}
+
+.header__tekstNormal {
+  .headerTekst();
+  font-size: 15px;
+}
+
+.header__tekstLiten {
+  .headerTekst();
+  font-size: 12px;
+}
+
+.header__button() {
+  border: none;
+  background: none;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #59514b;
+  }
+
+  &:active {
+    background: none;
+  }
+
+  &:focus,
+  &:active {
+    outline: none;
+    box-shadow: inset 0 0 0 3px #ffa733;
+  }
+}
+
+.header__systemknapp {
+  width: 50px;
+  height: 50px;
+  .header__button();
+}
+
+.header__bruker() {
+  background-color: transparent;
+  border: none;
+}
+
+.header__knapp {
+  position: relative;
+  margin: 0 0 0 1em;
+  width: 1.5em;
+}
+.header__brukerinfo {
+  display: flex;
+  width: 15em;
+  justify-content: space-between;
+}
+
+.header__aapen {
+  .header__chevron(45deg);
+}
+
+.header__lukket {
+  .header__chevron(135deg);
+}
+
+.header__chevron(@rotation) {
+  @horizontalPosition: 15px;
+  @horizontalOffset: 7px;
+  border-color: #fff;
+  fill: #ffa733;
+
+  &:before,
+  &:after {
+    transition: transform 0.2s ease-in-out;
+  }
+  &:before {
+    position: absolute;
+    content: "";
+    right: @horizontalPosition;
+    width: 0.5rem;
+    top: 50%;
+    border-radius: 2px;
+    border: 1px solid #fff;
+    transform: rotate(-@rotation);
+  }
+
+  &:after {
+    position: absolute;
+    content: "";
+    right: calc(@horizontalPosition - @horizontalOffset);
+    width: 0.5rem;
+    top: 50%;
+    border-radius: 2px;
+    border: 1px solid #fff;
+    transform: rotate(@rotation);
+  }
+}
+
+.header__aapneknapp {
+  composes: header__brukerknapp;
+  .header__bruker();
+}
+
+.header__lukkeknapp {
+  composes: header__brukerknapp;
+  .header__bruker();
+}
+
+.header__avdeler {
+  width: 1px;
+  height: 100%;
+  background: #78706a;
+}
+
+.header__container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 100vw;
+  width: 100vw;
+  height: 50px;
+  padding: 0 1.5rem;
+  background: #3e3832;
+
+  > *:first-child > *:not(:last-child) {
+    margin-right: 1.5rem;
+  }
+}
+
+.header__tittel {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
+
+  > a {
+    text-decoration: none;
+    color: inherit;
+    font-size: inherit;
+  }
+}
