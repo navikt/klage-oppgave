@@ -4,7 +4,7 @@ import slowDown from "express-slow-down";
 import * as fs from "fs";
 import bodyParser from "body-parser";
 import { eqNumber } from "fp-ts/lib/Eq";
-import JSONStream from "JSONStream";
+import JSONStream from "jsonstream";
 import es from "event-stream";
 import chalk from "chalk";
 
@@ -20,72 +20,53 @@ const speedLimiter = slowDown({
 });
 app.use(speedLimiter);
 
-app.get("/oppgaver", (req, res) => {
-  // klage-oppgave-api har to definert to parametre: "erTildelt" og "saksbehandler"
-  // "erTildelt" virker ikke å ha noen funksjon enda
-
-  const saksbehandler = req.query.saksbehandler;
-  res.header("transfer-encoding", "chunked");
-  res.header("content-type", "application/json");
-
-  if (!saksbehandler) {
-    var stream = fs.createReadStream("./fixtures/oppgaver.json");
-
-    stream.on("data", function (data) {
-      res.write(data);
-    });
-    stream.on("end", function () {
-      res.end();
-    });
-  }
-
-  if (saksbehandler) {
-    let first = true;
-    let written = false;
-    return fs
-      .createReadStream("./fixtures/oppgaver.json")
-      .pipe(JSONStream.parse("*"))
-      .pipe(
-        es.map(function (data: any, cb: Function) {
-          if (first) {
+app.get("/ansatte/:id/ikketildelteoppgaver", (req, res) => {
+  const saksbehandler = req.params.id;
+  let first = true;
+  let written = false;
+  return fs
+    .createReadStream("./fixtures/oppgaver.json")
+    .pipe(JSONStream.parse("*"))
+    .pipe(
+      es.map(function (data: any, cb: Function) {
+        if (first) {
+          cb(
+            null,
+            data.saksbehandler.ident === saksbehandler
+              ? "[" + JSON.stringify(data)
+              : "["
+          );
+          first = false;
+          if (data.saksbehandler.ident === saksbehandler) written = true;
+        } else {
+          if (written) {
             cb(
               null,
-              data.saksbehandler.ident === saksbehandler
-                ? "[" + JSON.stringify(data)
-                : "["
+              data.saksbehandler.ident == saksbehandler
+                ? "," + JSON.stringify(data)
+                : ""
             );
-            first = false;
-            if (data.saksbehandler.ident === saksbehandler) written = true;
           } else {
-            if (written) {
-              cb(
-                null,
-                data.saksbehandler.ident == saksbehandler
-                  ? "," + JSON.stringify(data)
-                  : ""
-              );
-            } else {
-              cb(
-                null,
-                data.saksbehandler.ident == saksbehandler
-                  ? JSON.stringify(data)
-                  : ""
-              );
-            }
-            if (!written && data.saksbehandler.ident === saksbehandler)
-              written = true;
+            cb(
+              null,
+              data.saksbehandler.ident == saksbehandler
+                ? JSON.stringify(data)
+                : ""
+            );
           }
-        })
-      )
-      .on("data", (data: string) => {
-        res.write(data);
-        res.flushHeaders();
+          if (!written && data.saksbehandler.ident === saksbehandler)
+            written = true;
+        }
       })
-      .on("end", () => {
-        res.write("]");
-        res.end();
-      });
-  }
+    )
+    .on("data", (data: string) => {
+      res.write(data);
+      res.flushHeaders();
+    })
+    .on("end", () => {
+      res.write("]");
+      res.end();
+    });
 });
 
 interface OppgaveModell {

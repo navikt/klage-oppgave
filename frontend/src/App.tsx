@@ -16,9 +16,11 @@ import { velgOppgaver, velgSideLaster } from "./tilstand/moduler/oppgave.velgere
 import { useParams } from "react-router-dom";
 import Paginering from "./komponenter/Paginering/Paginering";
 import OppgaveTabell from "./komponenter/Tabell/Tabell";
+import { velgMeg } from "./tilstand/moduler/meg.velgere";
 
 const App = (): JSX.Element => {
   const oppgaver = useSelector(velgOppgaver);
+  const meg = useSelector(velgMeg);
   const sideLaster = useSelector(velgSideLaster);
   const dispatch = useDispatch();
 
@@ -33,9 +35,12 @@ const App = (): JSX.Element => {
   }, [side]);
 
   useEffect(() => {
-    dispatch(oppgaveRequest());
     dispatch(hentMegHandling());
   }, []);
+
+  useEffect(() => {
+    dispatch(oppgaveRequest(meg.id));
+  }, [meg.id]);
 
   if (oppgaver.meta.feilmelding) {
     return (

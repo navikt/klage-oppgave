@@ -155,7 +155,7 @@ export default oppgaveSlice.reducer;
 // Actions
 //==========
 export const { MOTTATT, UTSNITT, SETT_SIDE, FEILET } = oppgaveSlice.actions;
-export const oppgaveRequest = createAction("oppgaver/HENT");
+export const oppgaveRequest = createAction<string>("oppgaver/HENT");
 export const settSide = createAction<number>("oppgaver/SETT_SIDE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 export const oppgaveHentingFeilet = createAction<string>("oppgaver/FEILET");
@@ -258,17 +258,18 @@ export function oppgaveTransformerEpos(
   );
 }
 
-const oppgaveUrl = `/api/oppgaver`;
-const hentOppgaver = axios.get<[OppgaveRad]>(oppgaveUrl).pipe(map((oppgaver) => MOTTATT(oppgaver)));
-
 function hentOppgaverEpos(
-  action$: ActionsObservable<PayloadAction<OppgaveRad>>,
+  action$: ActionsObservable<PayloadAction<string>>,
   state$: StateObservable<RootStateOrAny>
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
-    switchMap(([action, state]) => {
+    switchMap(([action]) => {
+      const oppgaveUrl = `/api/ansatte/${action.payload}/ikketildelteoppgaver`;
+      const hentOppgaver = axios
+        .get<[OppgaveRad]>(oppgaveUrl)
+        .pipe(map((oppgaver) => MOTTATT(oppgaver)));
       return hentOppgaver.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => of(FEILET(error)))
