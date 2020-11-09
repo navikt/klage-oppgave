@@ -40,9 +40,7 @@ export default function Oppsett({ children, isFetching }: LayoutType) {
         </ul>
       </nav>
       <article className="content">{isFetching ? <NavFrontendSpinner /> : children}</article>
-      <footer className="main-footer">
-        <div>Bunnlinje</div>
-      </footer>
+      <footer className="main-footer"></footer>
     </main>
   );
 }

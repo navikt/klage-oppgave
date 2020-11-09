@@ -22,13 +22,13 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const person = useSelector(velgMeg);
 
   const [sortToggle, setSortToggle] = useState(0);
-  const [hjemmelFilter, settHjemmelFilter] = useState<string | undefined>(undefined);
+  const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>([]);
 
   const [ytelseFilter, settYtelseFilter] = useState<ytelseType>(undefined);
   const [aktiveYtelser, settAktiveYtelser] = useState<Filter[]>([]);
 
-  const [typeFilter, settTypeFilter] = useState<string | undefined>(undefined);
+  const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>([]);
 
   const [sorteringFilter, settSorteringFilter] = useState<"ASC" | "DESC" | undefined>("ASC");
@@ -73,7 +73,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
         return { label: `${a.label},${b.label}` };
       });
       console.log("dispatch typer:", typer.label);
-      settTypeFilter(typer.label as string);
+      settTypeFilter([typer.label as string]);
     }
   };
   const skiftSortering = (
@@ -100,7 +100,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
         return { label: `${a.label},${b.label}` };
       });
       console.log("dispatch hjemler:", hjemler.label);
-      settHjemmelFilter(hjemler.label as string);
+      settHjemmelFilter([hjemler.label as string]);
     }
   };
   const filtrerYtelse = (filtre: Filter[]) => {

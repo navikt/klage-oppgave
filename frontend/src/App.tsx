@@ -40,7 +40,7 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     if (meg.id) {
-      dispatch(oppgaveRequest({ ident: meg.id, limit: 15, offset: 0 }));
+      dispatch(oppgaveRequest({ ident: meg.id, limit: 15, offset: 0, typer: ["Anke", "Klage"] }));
     }
   }, [meg.id]);
 

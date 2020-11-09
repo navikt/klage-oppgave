@@ -59,9 +59,9 @@ export interface OppgaveRader {
 
 export interface Transformasjoner {
   filtrering?: {
-    type?: undefined | string | Filter[];
-    ytelse?: undefined | string | Filter[];
-    hjemmel?: undefined | string | Filter[];
+    type?: undefined | string[] | Filter[];
+    ytelse?: undefined | string[] | Filter[];
+    hjemmel?: undefined | string[] | Filter[];
   };
   sortering: {
     frist: "ASC" | "DESC" | undefined;
@@ -163,7 +163,7 @@ export interface OppgaveParams {
   ytelser?: string[];
 }
 
-export type ytelseType = "Foreldrepenger" | "Dagpenger" | "Sykepenger" | undefined;
+export type ytelseType = ["Foreldrepenger"] | ["Dagpenger"] | ["Sykepenger"] | undefined;
 
 export default oppgaveSlice.reducer;
 
@@ -219,7 +219,7 @@ function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: ytelseType) {
       return rad;
     } else {
       let ytelseKode;
-      switch (ytelse) {
+      switch (ytelse[0]) {
         case "Foreldrepenger":
           ytelseKode = "FOR";
           break;
@@ -247,32 +247,49 @@ export function oppgaveTransformerEpos(
     switchMap(([action, state]) => {
       let rader = state.oppgaver.rader.slice();
 
-      if (action.payload.filtrering?.hjemmel) {
-        rader = filtrerHjemmel(rader, action.payload.filtrering.hjemmel as string);
-      } else if (!action.payload.filtrering?.hjemmel) {
-        rader = filtrerHjemmel(rader, undefined);
-      }
+      /*
+            if (action.payload.filtrering?.hjemmel) {
+                rader = filtrerHjemmel(rader, action.payload.filtrering.hjemmel as string);
+            } else if (!action.payload.filtrering?.hjemmel) {
+                rader = filtrerHjemmel(rader, undefined);
+            }
 
-      if (action.payload.filtrering?.type) {
-        rader = filtrerType(rader, action.payload.filtrering.type as string);
-      } else if (action.payload.filtrering?.type === undefined) {
-        rader = filtrerType(rader, undefined);
-      }
-      if (action.payload.filtrering?.ytelse) {
-        rader = filtrerYtelse(rader, action.payload.filtrering.ytelse as ytelseType);
-      } else if (action.payload.filtrering?.ytelse === undefined) {
-        rader = filtrerYtelse(rader, undefined);
-      }
-      if (action.payload.sortering?.frist === "ASC") {
-        rader = sorterASC(rader);
-      } else {
-        rader = sorterDESC(rader);
-      }
+            if (action.payload.filtrering?.type) {
+                rader = filtrerType(rader, action.payload.filtrering.type as string);
+            } else if (action.payload.filtrering?.type === undefined) {
+                rader = filtrerType(rader, undefined);
+            }
+            if (action.payload.filtrering?.ytelse) {
+                rader = filtrerYtelse(rader, action.payload.filtrering.ytelse as ytelseType);
+            } else if (action.payload.filtrering?.ytelse === undefined) {
+                rader = filtrerYtelse(rader, undefined);
+            }
+            if (action.payload.sortering?.frist === "ASC") {
+                rader = sorterASC(rader);
+            } else {
+                rader = sorterDESC(rader);
+            }
+
+ */
 
       return of(UTSNITT({ transformasjoner: action.payload, utsnitt: rader }));
     })
   );
 }
+
+const buildQuery = function (url: string, data: OppgaveParams) {
+  let query = [];
+  for (let key in data) {
+    if (key !== "ident") {
+      if (data.hasOwnProperty(key)) {
+        if (Array.isArray(data[key])) {
+          query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key].join("|")));
+        } else query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+      }
+    }
+  }
+  return `${url}?${query.join("&")}`;
+};
 
 function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
@@ -282,7 +299,10 @@ function hentOppgaverEpos(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
-      let oppgaveUrl = `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver?antall=${action.payload.limit}&start=${action.payload.offset}`;
+      let oppgaveUrl = buildQuery(
+        `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver`,
+        action.payload
+      );
       const hentOppgaver = axios
         .get<RaderMedMetadata>(oppgaveUrl)
         .pipe(map((oppgaver) => MOTTATT(oppgaver)));
