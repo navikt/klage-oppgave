@@ -243,9 +243,9 @@ export function buildQuery(url: string, data: OppgaveParams) {
         );
     }
   }
-  return `${url}?${query.join("&")}&antall=${data.antall}&start=${data.start}&rekkefoelge=${
-    data.transformasjoner.sortering.frist
-  }`;
+  return `${url}?${query.join("&")}&antall=${data.antall}&start=${
+    data.start
+  }&rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`;
 }
 
 //==========
