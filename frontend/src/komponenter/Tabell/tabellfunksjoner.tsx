@@ -44,7 +44,7 @@ export const genererTabellRader = (
   settValgOppgaveId: Function,
   oppgaver: OppgaveRader
 ): JSX.Element[] =>
-  oppgaver.utsnitt
+  oppgaver.rader
     .slice(
       (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide,
       oppgaver.meta.treffPerSide + (oppgaver.meta.side - 1) * oppgaver.meta.treffPerSide

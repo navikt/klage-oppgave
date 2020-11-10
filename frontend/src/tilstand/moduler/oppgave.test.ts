@@ -147,11 +147,10 @@ describe("Oppgave epos", () => {
         const observableValues = {
           a: initState,
           c: {
-            payload: resultPayload,
+            payload: resultPayload.payload,
             type: "oppgaver/MOTTATT",
           },
         };
-        console.log(resultPayload);
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);

@@ -102,7 +102,7 @@ describe("Mine Saker epos", () => {
           },
         };
         const resultPayload = {
-          utsnitt: [
+          rader: [
             { frist: "2019-09-12", type: "Klage", ytelse: "SYK", hjemmel: "8-4" },
             { frist: "2020-12-15", type: "klage", ytelse: "FOR", hjemmel: "10-12" },
           ],

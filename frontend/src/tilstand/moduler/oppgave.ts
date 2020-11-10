@@ -54,7 +54,7 @@ interface Metadata {
 }
 
 export interface OppgaveRader {
-  utsnitt: [OppgaveRad];
+  rader: [OppgaveRad];
   meta: Metadata;
 }
 
@@ -146,7 +146,7 @@ export const oppgaveSlice = createSlice({
 
 interface RadMedTransformasjoner {
   transformasjoner: Transformasjoner;
-  utsnitt: [OppgaveRad];
+  rader: [OppgaveRad];
 }
 
 export interface OppgaveParams {
@@ -174,20 +174,20 @@ export const oppgaveTransformerRader = createAction<OppgaveParams>("oppgaver/TRA
 //==========
 // Sortering og filtrering
 //==========
-function sorterASC(utsnitt: Array<OppgaveRad> | any) {
-  return utsnitt.slice().sort(function (a: any, b: any) {
+function sorterASC(rader: Array<OppgaveRad> | any) {
+  return rader.slice().sort(function (a: any, b: any) {
     return new Date(a.frist).getTime() - new Date(b.frist).getTime();
   });
 }
 
-function sorterDESC(utsnitt: Array<OppgaveRad> | any) {
-  return utsnitt.slice().sort(function (a: any, b: any) {
+function sorterDESC(rader: Array<OppgaveRad> | any) {
+  return rader.slice().sort(function (a: any, b: any) {
     return new Date(b.frist).getTime() - new Date(a.frist).getTime();
   });
 }
 
-function filtrerHjemmel(utsnitt: Array<OppgaveRad> | any, hjemmel: string | undefined) {
-  return utsnitt.slice().filter((rad: OppgaveRad) => {
+function filtrerHjemmel(rader: Array<OppgaveRad> | any, hjemmel: string | undefined) {
+  return rader.slice().filter((rad: OppgaveRad) => {
     if (hjemmel === undefined) {
       return rad;
     } else {
@@ -196,8 +196,8 @@ function filtrerHjemmel(utsnitt: Array<OppgaveRad> | any, hjemmel: string | unde
   });
 }
 
-function filtrerType(utsnitt: Array<OppgaveRad> | any, type: string | undefined) {
-  return utsnitt.slice().filter((rad: OppgaveRad) => {
+function filtrerType(rader: Array<OppgaveRad> | any, type: string | undefined) {
+  return rader.slice().filter((rad: OppgaveRad) => {
     if (type === undefined) {
       return rad;
     } else {
@@ -206,8 +206,8 @@ function filtrerType(utsnitt: Array<OppgaveRad> | any, type: string | undefined)
   });
 }
 
-function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: ytelseType) {
-  return utsnitt.slice().filter((rad: OppgaveRad) => {
+function filtrerYtelse(rader: Array<OppgaveRad> | any, ytelse: ytelseType) {
+  return rader.slice().filter((rad: OppgaveRad) => {
     if (ytelse === undefined) {
       return rad;
     } else {
