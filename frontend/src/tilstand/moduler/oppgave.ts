@@ -64,7 +64,7 @@ export interface Transformasjoner {
     hjemmel?: undefined | string[] | Filter[];
   };
   sortering: {
-    frist: "ASC" | "DESC" | undefined;
+    frist: "ASC" | "DESC";
   };
 }
 
@@ -103,7 +103,7 @@ export const oppgaveSlice = createSlice({
         hjemmel: undefined,
       },
       sortering: {
-        frist: undefined,
+        frist: "ASC",
       },
     },
   } as OppgaveState,
@@ -154,13 +154,9 @@ interface RadMedTransformasjoner {
 
 export interface OppgaveParams {
   ident: string;
-  offset: number;
-  limit: number;
-  hjemler?: string[];
-  order?: "ASC" | "DESC";
-  orderBy?: string;
-  typer?: string[];
-  ytelser?: string[];
+  start: number;
+  antall: number;
+  transformasjoner: Transformasjoner;
 }
 
 export type ytelseType = ["Foreldrepenger"] | ["Dagpenger"] | ["Sykepenger"] | undefined;
@@ -176,7 +172,7 @@ export const settSide = createAction<number>("oppgaver/SETT_SIDE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 
-export const oppgaveTransformerRader = createAction<Transformasjoner>("oppgaver/TRANSFORMER_RADER");
+export const oppgaveTransformerRader = createAction<OppgaveParams>("oppgaver/TRANSFORMER_RADER");
 
 //==========
 // Sortering og filtrering
@@ -234,11 +230,25 @@ function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: ytelseType) {
   });
 }
 
+export function buildQuery(url: string, data: OppgaveParams) {
+  let query = [];
+  for (let key in data) {
+    if (key !== "ident") {
+      if (data.hasOwnProperty(key)) {
+        if (Array.isArray(data[key])) {
+          query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key].join("|")));
+        } else query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+      }
+    }
+  }
+  return `${url}?${query.join("&")}`;
+}
+
 //==========
 // Epos
 //==========
 export function oppgaveTransformerEpos(
-  action$: ActionsObservable<PayloadAction<Transformasjoner>>,
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>
 ) {
   return action$.pipe(
@@ -246,6 +256,14 @@ export function oppgaveTransformerEpos(
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let rader = state.oppgaver.rader.slice();
+      let url = buildQuery(
+        `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver`,
+        action.payload
+      );
+      console.log("URL!");
+      console.log(url);
+
+      //      /api/ansatte/undefined/ikketildelteoppgaver?sortering=%5Bobject%20Object%5D
 
       /*
             if (action.payload.filtrering?.hjemmel) {
@@ -272,24 +290,10 @@ export function oppgaveTransformerEpos(
 
  */
 
-      return of(UTSNITT({ transformasjoner: action.payload, utsnitt: rader }));
+      return of(UTSNITT({ transformasjoner: action.payload.transformasjoner, utsnitt: rader }));
     })
   );
 }
-
-const buildQuery = function (url: string, data: OppgaveParams) {
-  let query = [];
-  for (let key in data) {
-    if (key !== "ident") {
-      if (data.hasOwnProperty(key)) {
-        if (Array.isArray(data[key])) {
-          query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key].join("|")));
-        } else query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
-      }
-    }
-  }
-  return `${url}?${query.join("&")}`;
-};
 
 function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,

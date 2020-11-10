@@ -23,7 +23,7 @@ describe("Mine Saker epos", () => {
   /**
    * Tester henting
    */
-  test(
+  xtest(
     "+++ HENT MINE SAKER",
     marbles(() => {
       ts.run((m) => {
