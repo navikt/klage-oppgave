@@ -19,7 +19,7 @@ import { genererTabellRader } from "./tabellfunksjoner";
 
 const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const dispatch = useDispatch();
-  const person = useSelector(velgMeg);
+  const meg = useSelector(velgMeg);
 
   const [sortToggle, setSortToggle] = useState(0);
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
@@ -39,7 +39,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
       dispatch(
         tildelMegHandling({
           oppgaveId: valgtOppgave.id,
-          ident: person.id,
+          ident: meg.id,
           versjon: valgtOppgave.versjon,
         })
       );
@@ -54,17 +54,17 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const dispatchTransformering = () =>
     dispatch(
       oppgaveRequest({
-        ident: "",
-        antall: 15,
+        ident: meg.id,
+        antall: 5,
         start: 0,
         transformasjoner: {
-          sortering: {
-            frist: sorteringFilter,
-          },
           filtrering: {
             hjemmel: hjemmelFilter,
             type: typeFilter,
             ytelse: ytelseFilter,
+          },
+          sortering: {
+            frist: sorteringFilter,
           },
         },
       })
