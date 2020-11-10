@@ -73,7 +73,7 @@ describe("Oppgave epos", () => {
           frist: "stigende" as "stigende",
         },
         filtrering: {
-          type: ["klage"],
+          type: undefined,
           ytelse: ["Sykepenger", "Dagpenger"],
           hjemmel: ["8-12", "9-31"],
         },
@@ -81,7 +81,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/ikketildelteoppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/ikketildelteoppgaver?type=klage&ytelse=Sykepenger%2CDagpenger&hjemmel=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE"
+      "/ansatte/ZATHRAS/ikketildelteoppgaver?ytelse=Sykepenger%2CDagpenger&hjemmel=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE"
     );
   });
 

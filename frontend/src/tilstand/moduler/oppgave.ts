@@ -173,14 +173,14 @@ export function buildQuery(url: string, data: OppgaveParams) {
   for (let key in data.transformasjoner?.filtrering) {
     if (data.transformasjoner?.filtrering.hasOwnProperty(key)) {
       if (Array.isArray(data.transformasjoner.filtrering[key])) {
-        if (data.transformasjoner.filtrering[key] !== undefined) {
+        if ("undefined" !== typeof data.transformasjoner.filtrering[key]) {
           query.push(
             encodeURIComponent(key) +
               "=" +
               encodeURIComponent(data.transformasjoner.filtrering[key].join(","))
           );
         }
-      } else
+      } else if ("undefined" !== typeof data.transformasjoner.filtrering[key])
         query.push(
           encodeURIComponent(key) + "=" + encodeURIComponent(data.transformasjoner.filtrering[key])
         );
