@@ -1,15 +1,7 @@
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
-import {
-  oppgaveTransformerRader,
-  buildQuery,
-  hentOppgaverEpos,
-  oppgaveRequest,
-  MOTTATT,
-  UTSNITT,
-  RaderMedMetadata,
-} from "./oppgave";
+import { buildQuery, hentOppgaverEpos, oppgaveRequest, MOTTATT, RaderMedMetadata } from "./oppgave";
 import { ajax } from "rxjs/ajax";
 import { of } from "rxjs";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";

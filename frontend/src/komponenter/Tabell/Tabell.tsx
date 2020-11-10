@@ -1,7 +1,7 @@
 import {
   Filter,
   OppgaveRader,
-  oppgaveTransformerRader,
+  oppgaveRequest,
   settSide,
   ytelseType,
 } from "../../tilstand/moduler/oppgave";
@@ -53,9 +53,9 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
 
   const dispatchTransformering = () =>
     dispatch(
-      oppgaveTransformerRader({
+      oppgaveRequest({
         ident: "",
-        antall: 12,
+        antall: 15,
         start: 0,
         transformasjoner: {
           sortering: {

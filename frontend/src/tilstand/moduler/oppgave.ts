@@ -119,10 +119,6 @@ export const oppgaveSlice = createSlice({
       }
       return state;
     },
-    UTSNITT: (state, action: PayloadAction<RadMedTransformasjoner>) => {
-      state.transformasjoner = action.payload.transformasjoner;
-      return state;
-    },
     FEILET: (state, action: PayloadAction<string>) => {
       state.meta.feilmelding = "Oppgave-henting feilet";
       state.lasterData = false;
@@ -163,70 +159,15 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const { MOTTATT, UTSNITT, SETT_SIDE, FEILET } = oppgaveSlice.actions;
+export const { MOTTATT, SETT_SIDE, FEILET } = oppgaveSlice.actions;
 export const oppgaveRequest = createAction<OppgaveParams>("oppgaver/HENT");
 export const settSide = createAction<number>("oppgaver/SETT_SIDE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 
-export const oppgaveTransformerRader = createAction<OppgaveParams>("oppgaver/TRANSFORMER_RADER");
-
 //==========
 // Sortering og filtrering
 //==========
-function sorterASC(rader: Array<OppgaveRad> | any) {
-  return rader.slice().sort(function (a: any, b: any) {
-    return new Date(a.frist).getTime() - new Date(b.frist).getTime();
-  });
-}
-
-function sorterDESC(rader: Array<OppgaveRad> | any) {
-  return rader.slice().sort(function (a: any, b: any) {
-    return new Date(b.frist).getTime() - new Date(a.frist).getTime();
-  });
-}
-
-function filtrerHjemmel(rader: Array<OppgaveRad> | any, hjemmel: string | undefined) {
-  return rader.slice().filter((rad: OppgaveRad) => {
-    if (hjemmel === undefined) {
-      return rad;
-    } else {
-      return rad.hjemmel.split(" ").includes(hjemmel);
-    }
-  });
-}
-
-function filtrerType(rader: Array<OppgaveRad> | any, type: string | undefined) {
-  return rader.slice().filter((rad: OppgaveRad) => {
-    if (type === undefined) {
-      return rad;
-    } else {
-      return rad.type.toLocaleLowerCase() === type.toLocaleLowerCase();
-    }
-  });
-}
-
-function filtrerYtelse(rader: Array<OppgaveRad> | any, ytelse: ytelseType) {
-  return rader.slice().filter((rad: OppgaveRad) => {
-    if (ytelse === undefined) {
-      return rad;
-    } else {
-      let ytelseKode;
-      switch (ytelse[0]) {
-        case "Foreldrepenger":
-          ytelseKode = "FOR";
-          break;
-        case "Dagpenger":
-          ytelseKode = "DAG";
-          break;
-        case "Sykepenger":
-          ytelseKode = "SYK";
-      }
-      return rad.ytelse === ytelseKode;
-    }
-  });
-}
-
 export function buildQuery(url: string, data: OppgaveParams) {
   let query = [];
   for (let key in data.transformasjoner?.filtrering) {
