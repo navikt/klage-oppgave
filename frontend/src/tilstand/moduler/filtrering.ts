@@ -42,7 +42,7 @@ export interface Transformasjoner {
     hjemmel?: undefined | string;
   };
   sortering: {
-    frist: "ASC" | "DESC";
+    frist: "synkende" | "stigende";
   };
 }
 
@@ -76,7 +76,7 @@ export const filteringSlice = createSlice({
         hjemmel: undefined,
       },
       sortering: {
-        frist: "ASC",
+        frist: "synkende",
       },
     },
   } as OppgaveState,
@@ -210,7 +210,7 @@ export function transformerEpos(
       } else if (action.payload.filtrering?.ytelse === undefined) {
         rader = filtrerYtelse(rader, undefined);
       }
-      if (action.payload.sortering?.frist === "ASC") {
+      if (action.payload.sortering?.frist === "synkende") {
         rader = sorterASC(rader);
       } else {
         rader = sorterDESC(rader);

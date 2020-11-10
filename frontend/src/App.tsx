@@ -40,7 +40,21 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     if (meg.id) {
-      dispatch(oppgaveRequest({ ident: meg.id, limit: 15, offset: 0, typer: ["Anke", "Klage"] }));
+      dispatch(
+        oppgaveRequest({
+          ident: meg.id,
+          antall: 15,
+          start: 0,
+          transformasjoner: {
+            filtrering: {
+              type: ["Anke", "Klage"],
+            },
+            sortering: {
+              frist: "synkende",
+            },
+          },
+        })
+      );
     }
   }, [meg.id]);
 

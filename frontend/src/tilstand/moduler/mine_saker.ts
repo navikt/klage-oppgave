@@ -45,7 +45,7 @@ export interface Transformasjoner {
     hjemmel?: undefined | string;
   };
   sortering: {
-    frist: "ASC" | "DESC" | undefined;
+    frist: "synkende" | "stigende" | undefined;
   };
 }
 
@@ -218,7 +218,7 @@ export function oppgaveTransformerEpos(
       } else if (action.payload.filtrering?.ytelse === undefined) {
         rader = filtrerYtelse(rader, undefined);
       }
-      if (action.payload.sortering?.frist === "ASC") {
+      if (action.payload.sortering?.frist === "synkende") {
         rader = sorterASC(rader);
       } else {
         rader = sorterDESC(rader);

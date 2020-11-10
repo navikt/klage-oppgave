@@ -85,7 +85,7 @@ describe("Mine Saker epos", () => {
         const inputValues = {
           a: transformerRader({
             sortering: {
-              frist: "ASC",
+              frist: "synkende",
             },
             filtrering: {
               type: "KLAGE",
@@ -108,7 +108,7 @@ describe("Mine Saker epos", () => {
           ],
           transformasjoner: {
             sortering: {
-              frist: "ASC",
+              frist: "synkende",
             },
             filtrering: {
               type: "KLAGE",

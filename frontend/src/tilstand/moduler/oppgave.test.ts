@@ -1,10 +1,22 @@
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
-import { oppgaveTransformerRader, oppgaveTransformerEpos, buildQuery } from "./oppgave";
+import {
+  oppgaveTransformerRader,
+  buildQuery,
+  hentOppgaverEpos,
+  oppgaveRequest,
+  MOTTATT,
+  UTSNITT,
+  RaderMedMetadata,
+} from "./oppgave";
+import { ajax } from "rxjs/ajax";
+import { of } from "rxjs";
+import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
+  const originalAjaxGet = ajax.get;
 
   beforeEach(() => {
     ts = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
@@ -12,28 +24,72 @@ describe("Oppgave epos", () => {
 
   afterEach(() => {
     ts.flush();
+    ajax.get = originalAjaxGet;
   });
 
   /**
    * Test queryBuilder
    */
-  test("+++ QUERYBUILDER", () => {
+  test("+++ QUERYBUILDER ytelse", () => {
     const inputValues = {
       ident: "ZATHRAS",
       antall: 2,
       start: 0,
       transformasjoner: {
         sortering: {
-          frist: "ASC" as "ASC",
+          frist: "synkende" as "synkende",
         },
         filtrering: {
-          ytelse: ["Sykepenger"],
+          ytelse: ["Sykepenger", "Dagpenger"],
         },
       },
     };
-    const url = buildQuery("/ansatte", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/ikketildelteoppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/ikketildelteoppgaver?type=klage&ytelse=helse&hjemmel=8-1&order=asc&pagesize=10&offset=10"
+      "/ansatte/ZATHRAS/ikketildelteoppgaver?ytelse=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=synkende"
+    );
+  });
+
+  test("+++ QUERYBUILDER type", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 2,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "synkende" as "synkende",
+        },
+        filtrering: {
+          type: ["klage"],
+          ytelse: ["Sykepenger", "Dagpenger"],
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/ikketildelteoppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/ikketildelteoppgaver?type=klage&ytelse=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=synkende"
+    );
+  });
+
+  test("+++ QUERYBUILDER type", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 2,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "stigende" as "stigende",
+        },
+        filtrering: {
+          type: ["klage"],
+          ytelse: ["Sykepenger", "Dagpenger"],
+          hjemmel: ["8-12", "9-31"],
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/ikketildelteoppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/ikketildelteoppgaver?type=klage&ytelse=Sykepenger%2CDagpenger&hjemmel=8-12%2C9-31&antall=2&start=0&rekkefoelge=stigende"
     );
   });
 
@@ -41,7 +97,7 @@ describe("Oppgave epos", () => {
    * Tester filtrering
    */
 
-  xtest(
+  test(
     "+++ FILTRER ETTER YTELSE",
     marbles(() => {
       ts.run((m) => {
@@ -49,13 +105,13 @@ describe("Oppgave epos", () => {
         const expectedMarble = "c-";
 
         const inputValues = {
-          a: oppgaveTransformerRader({
+          a: oppgaveRequest({
             ident: "ZATHRAS",
-            limit: 2,
-            offset: 0,
+            antall: 2,
+            start: 0,
             transformasjoner: {
               sortering: {
-                frist: "ASC",
+                frist: "synkende",
               },
               filtrering: {
                 ytelse: ["Sykepenger"],
@@ -63,6 +119,18 @@ describe("Oppgave epos", () => {
             },
           }),
         };
+        const mockedResponse = <RaderMedMetadata>{
+          antallTreffTotalt: 2,
+          oppgaver: [
+            { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" },
+            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
+          ],
+        };
+
+        const dependencies = {
+          getJSON: (url: string) => of(mockedResponse),
+        };
+
         const initState = {
           oppgaver: {
             rader: [
@@ -74,32 +142,21 @@ describe("Oppgave epos", () => {
             ],
           },
         };
-        const resultPayload = {
-          utsnitt: [{ frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" }],
-          transformasjoner: {
-            sortering: {
-              frist: "ASC",
-            },
-            filtrering: {
-              ytelse: ["Sykepenger"],
-            },
-          },
-        };
+        const resultPayload = MOTTATT(mockedResponse);
 
         const observableValues = {
           a: initState,
           c: {
             payload: resultPayload,
-            type: "oppgaver/UTSNITT",
+            type: "oppgaver/MOTTATT",
           },
         };
+        console.log(resultPayload);
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = oppgaveTransformerEpos(action$, state$);
+        const actual$ = hentOppgaverEpos(action$, state$, <AjaxCreationMethod>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
-        //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
       });
     })
   );

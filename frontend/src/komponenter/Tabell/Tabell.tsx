@@ -31,7 +31,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>([]);
 
-  const [sorteringFilter, settSorteringFilter] = useState<"ASC" | "DESC" | undefined>("ASC");
+  const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">("synkende");
   const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
   useEffect(() => {
@@ -54,13 +54,18 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const dispatchTransformering = () =>
     dispatch(
       oppgaveTransformerRader({
-        sortering: {
-          frist: sorteringFilter,
-        },
-        filtrering: {
-          hjemmel: hjemmelFilter,
-          type: typeFilter,
-          ytelse: ytelseFilter,
+        ident: "",
+        antall: 12,
+        start: 0,
+        transformasjoner: {
+          sortering: {
+            frist: sorteringFilter,
+          },
+          filtrering: {
+            hjemmel: hjemmelFilter,
+            type: typeFilter,
+            ytelse: ytelseFilter,
+          },
         },
       })
     );
@@ -84,10 +89,10 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   ) => {
     event.preventDefault();
     if (sortToggle === 0) {
-      settSorteringFilter("DESC");
+      settSorteringFilter("stigende");
       setSortToggle(1);
     } else {
-      settSorteringFilter("ASC");
+      settSorteringFilter("synkende");
       setSortToggle(0);
     }
   };

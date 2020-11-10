@@ -6,6 +6,7 @@ import { of } from "rxjs";
 import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
+import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 
 //==========
 // Type defs
@@ -64,21 +65,20 @@ export interface Transformasjoner {
     hjemmel?: undefined | string[] | Filter[];
   };
   sortering: {
-    frist: "ASC" | "DESC";
+    frist: "synkende" | "stigende";
   };
 }
 
 type OppgaveState = {
-  rader?: [OppgaveRad?];
-  utsnitt?: [OppgaveRad?];
+  rader?: OppgaveRad[];
   transformasjoner: Transformasjoner;
   meta: Metadata;
   lasterData: boolean;
 };
 
-interface RaderMedMetadata {
+export interface RaderMedMetadata {
   antallTreffTotalt: number;
-  oppgaver: [OppgaveRad];
+  oppgaver: OppgaveRad[];
 }
 
 //==========
@@ -88,7 +88,6 @@ export const oppgaveSlice = createSlice({
   name: "oppgaver",
   initialState: {
     rader: [],
-    utsnitt: [],
     lasterData: true,
     meta: {
       antall: 0,
@@ -103,7 +102,7 @@ export const oppgaveSlice = createSlice({
         hjemmel: undefined,
       },
       sortering: {
-        frist: "ASC",
+        frist: "synkende",
       },
     },
   } as OppgaveState,
@@ -113,7 +112,6 @@ export const oppgaveSlice = createSlice({
         const antall = action.payload.antallTreffTotalt;
         const t = state.meta.treffPerSide;
         state.rader = action.payload.oppgaver;
-        state.utsnitt = action.payload.oppgaver;
         state.meta.antall = antall;
         state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
         state.lasterData = false;
@@ -123,7 +121,6 @@ export const oppgaveSlice = createSlice({
     },
     UTSNITT: (state, action: PayloadAction<RadMedTransformasjoner>) => {
       state.transformasjoner = action.payload.transformasjoner;
-      state.utsnitt = action.payload.utsnitt;
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
@@ -134,7 +131,7 @@ export const oppgaveSlice = createSlice({
     SETT_SIDE: (state, action: PayloadAction<number>) => {
       state.meta.side = action.payload;
       const t = state.meta.treffPerSide;
-      const antall = state.utsnitt?.length;
+      const antall = state.rader?.length;
       if (antall) {
         state.meta.antall = antall;
         state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
@@ -232,84 +229,45 @@ function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: ytelseType) {
 
 export function buildQuery(url: string, data: OppgaveParams) {
   let query = [];
-  for (let key in data) {
-    if (key !== "ident") {
-      if (data.hasOwnProperty(key)) {
-        if (Array.isArray(data[key])) {
-          query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key].join("|")));
-        } else query.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
-      }
+  for (let key in data.transformasjoner?.filtrering) {
+    if (data.transformasjoner?.filtrering.hasOwnProperty(key)) {
+      if (Array.isArray(data.transformasjoner.filtrering[key])) {
+        query.push(
+          encodeURIComponent(key) +
+            "=" +
+            encodeURIComponent(data.transformasjoner.filtrering[key].join(","))
+        );
+      } else
+        query.push(
+          encodeURIComponent(key) + "=" + encodeURIComponent(data.transformasjoner.filtrering[key])
+        );
     }
   }
-  return `${url}?${query.join("&")}`;
+  return `${url}?${query.join("&")}&antall=${data.antall}&start=${data.start}&rekkefoelge=${
+    data.transformasjoner.sortering.frist
+  }`;
 }
 
 //==========
 // Epos
 //==========
-export function oppgaveTransformerEpos(
+export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>
-) {
-  return action$.pipe(
-    ofType(oppgaveTransformerRader.type),
-    withLatestFrom(state$),
-    switchMap(([action, state]) => {
-      let rader = state.oppgaver.rader.slice();
-      let url = buildQuery(
-        `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver`,
-        action.payload
-      );
-      console.log("URL!");
-      console.log(url);
-
-      //      /api/ansatte/undefined/ikketildelteoppgaver?sortering=%5Bobject%20Object%5D
-
-      /*
-            if (action.payload.filtrering?.hjemmel) {
-                rader = filtrerHjemmel(rader, action.payload.filtrering.hjemmel as string);
-            } else if (!action.payload.filtrering?.hjemmel) {
-                rader = filtrerHjemmel(rader, undefined);
-            }
-
-            if (action.payload.filtrering?.type) {
-                rader = filtrerType(rader, action.payload.filtrering.type as string);
-            } else if (action.payload.filtrering?.type === undefined) {
-                rader = filtrerType(rader, undefined);
-            }
-            if (action.payload.filtrering?.ytelse) {
-                rader = filtrerYtelse(rader, action.payload.filtrering.ytelse as ytelseType);
-            } else if (action.payload.filtrering?.ytelse === undefined) {
-                rader = filtrerYtelse(rader, undefined);
-            }
-            if (action.payload.sortering?.frist === "ASC") {
-                rader = sorterASC(rader);
-            } else {
-                rader = sorterDESC(rader);
-            }
-
- */
-
-      return of(UTSNITT({ transformasjoner: action.payload.transformasjoner, utsnitt: rader }));
-    })
-  );
-}
-
-function hentOppgaverEpos(
-  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
-    switchMap(([action]) => {
+    switchMap(([action, state]) => {
+      let rader = state.oppgaver.rader.slice();
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver`,
         action.payload
       );
-      const hentOppgaver = axios
-        .get<RaderMedMetadata>(oppgaveUrl)
-        .pipe(map((oppgaver) => MOTTATT(oppgaver)));
+      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
+        map((oppgaver) => MOTTATT(oppgaver))
+      );
       return hentOppgaver.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => of(FEILET(error)))
@@ -318,4 +276,4 @@ function hentOppgaverEpos(
   );
 }
 
-export const OPPGAVER_EPICS = [oppgaveTransformerEpos, hentOppgaverEpos];
+export const OPPGAVER_EPICS = [hentOppgaverEpos];
