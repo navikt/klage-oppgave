@@ -282,7 +282,7 @@ function hentOppgaverEpos(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
-      let oppgaveUrl = `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver?limit=${action.payload.limit}&offset=${action.payload.offset}`;
+      let oppgaveUrl = `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver?antall=${action.payload.limit}&start=${action.payload.offset}`;
       const hentOppgaver = axios
         .get<RaderMedMetadata>(oppgaveUrl)
         .pipe(map((oppgaver) => MOTTATT(oppgaver)));
