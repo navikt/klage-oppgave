@@ -29,7 +29,7 @@ const App = (): JSX.Element => {
   }
 
   let { side } = useParams<ParamTypes>();
-  let tolketSide = parseInt(side as string, 10) || 0;
+  let tolketSide = parseInt(side as string, 10) || 1;
   let antall = 15;
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const App = (): JSX.Element => {
         oppgaveRequest({
           ident: meg.id,
           antall: antall,
-          start: tolketSide * antall || 0,
+          start: tolketSide * antall || 1,
           transformasjoner: {
             filtrering: {
               type: ["Anke", "Klage"],

@@ -20,7 +20,7 @@ const speedLimiter = slowDown({
 });
 app.use(speedLimiter);
 
-app.get("/ansatte/:id/ikketildelteoppgaver", (req, res) => {
+app.get("/ansatte/:id/oppgaver", (req, res) => {
   return fs
     .createReadStream("./fixtures/oppgaver.json")
     .on("data", (data: string) => {
