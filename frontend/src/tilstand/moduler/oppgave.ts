@@ -195,10 +195,7 @@ export function hentOppgaverEpos(
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let rader = state.oppgaver.rader.slice();
-      let oppgaveUrl = buildQuery(
-        `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver`,
-        action.payload
-      );
+      let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
         map((oppgaver) =>
           MOTTATT({ side: action.payload.start / action.payload.antall, ...oppgaver })

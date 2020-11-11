@@ -43,9 +43,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/ikketildelteoppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/ikketildelteoppgaver?ytelse=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
+      "/ansatte/ZATHRAS/oppgaver?ytelse=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
     );
   });
 
@@ -64,9 +64,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/ikketildelteoppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/ikketildelteoppgaver?type=klage&ytelse=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
+      "/ansatte/ZATHRAS/oppgaver?type=klage&ytelse=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
     );
   });
 
@@ -86,9 +86,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/ikketildelteoppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/ikketildelteoppgaver?ytelse=Sykepenger%2CDagpenger&hjemmel=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE"
+      "/ansatte/ZATHRAS/oppgaver?ytelse=Sykepenger%2CDagpenger&hjemmel=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE"
     );
   });
 
@@ -103,10 +103,8 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/ikketildelteoppgaver", inputValues);
-    expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/ikketildelteoppgaver?antall=25&start=100&rekkefoelge=STIGENDE"
-    );
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual("/ansatte/ZATHRAS/oppgaver?antall=25&start=100&rekkefoelge=STIGENDE");
   });
 
   /**
