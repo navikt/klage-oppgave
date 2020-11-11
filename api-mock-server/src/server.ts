@@ -21,14 +21,23 @@ const speedLimiter = slowDown({
 app.use(speedLimiter);
 
 app.get("/ansatte/:id/oppgaver", (req, res) => {
-  return fs
-    .createReadStream("./fixtures/oppgaver.json")
-    .on("data", (data: string) => {
-      res.write(data);
-    })
-    .on("end", () => {
-      res.end();
-    });
+  const { type, antall, start, rekkefoelge } = req.query;
+  console.log(chalk.yellow("type", type));
+  console.log(chalk.red("antall", antall));
+  console.log(chalk.red("start", start));
+  console.log(chalk.red("slutt", Number(start) + Number(antall)));
+  console.log(chalk.cyan("rekkefølge", rekkefoelge));
+  const buffer = fs.readFileSync("./fixtures/oppgaver.json");
+  const antallTreffTotalt = JSON.parse(buffer.toString("utf8"))
+    .antallTreffTotalt;
+  const oppgaver = JSON.parse(buffer.toString("utf8")).oppgaver.slice(
+    start,
+    Number(start) + Number(antall)
+  );
+  res.send({
+    antallTreffTotalt,
+    oppgaver,
+  });
 });
 
 app.get("/ansatte/:id/tildelteoppgaver", (req, res) => {

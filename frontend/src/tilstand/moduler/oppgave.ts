@@ -69,7 +69,7 @@ export interface Transformasjoner {
   };
 }
 
-type OppgaveState = {
+export type OppgaveState = {
   rader?: OppgaveRad[];
   transformasjoner: Transformasjoner;
   meta: Metadata;
@@ -81,12 +81,30 @@ export interface RaderMedMetadata {
   oppgaver: OppgaveRad[];
 }
 export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
-  side: number;
+  start: number;
+  antall: number;
 }
 
 //==========
 // Reducer
 //==========
+export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
+  const { antallTreffTotalt, start, antall } = payload;
+  console.log({ antallTreffTotalt, start, antall });
+  state.rader = payload.oppgaver;
+  state.meta.antall = antall;
+  if (start === 0) {
+    state.meta.side = 1;
+  } else {
+    state.meta.side = start / antall + 1;
+  }
+  state.meta.sider =
+    Math.floor(antallTreffTotalt / antall) + (antallTreffTotalt % antall !== 0 ? 1 : 0);
+  state.lasterData = false;
+  state.meta.feilmelding = undefined;
+  return state;
+}
+
 export const oppgaveSlice = createSlice({
   name: "oppgaver",
   initialState: {
@@ -112,14 +130,7 @@ export const oppgaveSlice = createSlice({
   reducers: {
     MOTTATT: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
       if (action.payload) {
-        const antall = action.payload.antallTreffTotalt;
-        const t = state.meta.treffPerSide;
-        state.rader = action.payload.oppgaver;
-        state.meta.antall = antall;
-        state.meta.side = action.payload.side;
-        state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
-        state.lasterData = false;
-        state.meta.feilmelding = undefined;
+        state = MottatteRader(action.payload, state);
       }
       return state;
     },
@@ -198,7 +209,11 @@ export function hentOppgaverEpos(
       let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
         map((oppgaver) =>
-          MOTTATT({ side: action.payload.start / action.payload.antall, ...oppgaver })
+          MOTTATT({
+            start: action.payload.start,
+            antall: action.payload.antall,
+            ...oppgaver,
+          })
         )
       );
       return hentOppgaver.pipe(

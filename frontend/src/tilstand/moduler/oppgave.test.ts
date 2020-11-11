@@ -8,6 +8,11 @@ import {
   MOTTATT,
   RaderMedMetadata,
   RaderMedMetadataUtvidet,
+  oppgaveSlice,
+  MottatteRader,
+  OppgaveState,
+  OppgaveRad,
+  Transformasjoner,
 } from "./oppgave";
 import { ajax } from "rxjs/ajax";
 import { of } from "rxjs";
@@ -107,6 +112,88 @@ describe("Oppgave epos", () => {
     expect(url).toStrictEqual("/ansatte/ZATHRAS/oppgaver?antall=25&start=100&rekkefoelge=STIGENDE");
   });
 
+  test("+++ APP sideantall meta", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 15,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "stigende" as "stigende",
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual("/ansatte/ZATHRAS/oppgaver?antall=15&start=0&rekkefoelge=STIGENDE");
+  });
+
+  test("+++ APP sideantall meta for side 1", () => {
+    const mockedResponse = <RaderMedMetadataUtvidet>{
+      antallTreffTotalt: 72,
+      start: 0,
+      antall: 15,
+      oppgaver: [],
+    };
+    const initState = ({
+      rader: [],
+      transformasjoner: {},
+      meta: {},
+      lasterData: false,
+    } as unknown) as OppgaveState;
+    const resultState = MottatteRader(mockedResponse, initState);
+    expect(resultState.meta.side).toStrictEqual(1);
+  });
+
+  test("+++ APP sideantall meta for side 2", () => {
+    const mockedResponse = <RaderMedMetadataUtvidet>{
+      antallTreffTotalt: 72,
+      start: 15,
+      antall: 15,
+      oppgaver: [],
+    };
+    const initState = ({
+      rader: [],
+      transformasjoner: {},
+      meta: {},
+      lasterData: false,
+    } as unknown) as OppgaveState;
+    const resultState = MottatteRader(mockedResponse, initState);
+    expect(resultState.meta.side).toStrictEqual(2);
+  });
+  test("+++ APP sideantall meta for side 3", () => {
+    const mockedResponse = <RaderMedMetadataUtvidet>{
+      antallTreffTotalt: 72,
+      start: 30,
+      antall: 15,
+      oppgaver: [],
+    };
+    const initState = ({
+      rader: [],
+      transformasjoner: {},
+      meta: {},
+      lasterData: false,
+    } as unknown) as OppgaveState;
+    const resultState = MottatteRader(mockedResponse, initState);
+    expect(resultState.meta.side).toStrictEqual(3);
+    expect(resultState.meta.sider).toStrictEqual(5);
+  });
+  test("+++ APP sideantall meta for side 5", () => {
+    const mockedResponse = <RaderMedMetadataUtvidet>{
+      antallTreffTotalt: 72,
+      start: 60,
+      antall: 15,
+      oppgaver: [],
+    };
+    const initState = ({
+      rader: [],
+      transformasjoner: {},
+      meta: {},
+      lasterData: false,
+    } as unknown) as OppgaveState;
+    const resultState = MottatteRader(mockedResponse, initState);
+    expect(resultState.meta.side).toStrictEqual(5);
+  });
+
   /**
    * Tester filtrering
    */
@@ -135,7 +222,8 @@ describe("Oppgave epos", () => {
         };
         const mockedResponse = <RaderMedMetadataUtvidet>{
           antallTreffTotalt: 2,
-          side: 0,
+          start: 0,
+          antall: 2,
           oppgaver: [
             { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" },
             { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },

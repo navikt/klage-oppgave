@@ -43,7 +43,9 @@ end
 
 file = File.open("../fixtures/oppgaver.json", "w")
 i=0
-file.write("[")
+file.write("{ ")
+file.write("\"antallTreffTotalt\": " + 51.to_s + ",")
+file.write("\"oppgaver\": [")
 loop do
   file.write(lagData())
   file.write(",");
@@ -53,5 +55,5 @@ loop do
     break
   end
 end
-file.write("]")
+file.write("]}")
 

@@ -42,7 +42,7 @@ const App = (): JSX.Element => {
         oppgaveRequest({
           ident: meg.id,
           antall: antall,
-          start: tolketSide * antall || 1,
+          start: tolketSide === 1 ? 0 : (tolketSide - 1) * antall,
           transformasjoner: {
             filtrering: {
               type: ["Anke", "Klage"],
