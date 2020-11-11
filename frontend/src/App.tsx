@@ -8,7 +8,7 @@ import "nav-frontend-tabell-style";
 import { Checkbox } from "nav-frontend-skjema";
 import { useDispatch, useSelector } from "react-redux";
 
-import { oppgaveRequest, settSide } from "./tilstand/moduler/oppgave";
+import { oppgaveRequest } from "./tilstand/moduler/oppgave";
 
 import { hentMegHandling } from "./tilstand/moduler/meg";
 
@@ -28,11 +28,9 @@ const App = (): JSX.Element => {
     side: string | undefined;
   }
 
-  const { side } = useParams<ParamTypes>();
-
-  useEffect(() => {
-    if (Number(side) > 0) dispatch(settSide(Number(side)));
-  }, [side]);
+  let { side } = useParams<ParamTypes>();
+  let tolketSide = parseInt(side as string, 10) || 0;
+  let antall = 15;
 
   useEffect(() => {
     dispatch(hentMegHandling());
@@ -43,8 +41,8 @@ const App = (): JSX.Element => {
       dispatch(
         oppgaveRequest({
           ident: meg.id,
-          antall: 15,
-          start: 0,
+          antall: antall,
+          start: tolketSide * antall || 0,
           transformasjoner: {
             filtrering: {
               type: ["Anke", "Klage"],
@@ -56,7 +54,7 @@ const App = (): JSX.Element => {
         })
       );
     }
-  }, [meg.id]);
+  }, [meg.id, tolketSide]);
 
   if (oppgaver.meta.feilmelding) {
     return (
@@ -71,14 +69,7 @@ const App = (): JSX.Element => {
 
   return (
     <Oppsett isFetching={sideLaster}>
-      <>
-        <OppgaveTabell {...oppgaver} />
-        <div className="table-lbl">
-          <div className={"paginering"}>
-            <Paginering startSide={oppgaver.meta.side} antallSider={oppgaver.meta.sider} />
-          </div>
-        </div>
-      </>
+      <OppgaveTabell {...oppgaver} />
     </Oppsett>
   );
 };

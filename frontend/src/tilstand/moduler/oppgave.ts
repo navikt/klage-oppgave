@@ -80,6 +80,9 @@ export interface RaderMedMetadata {
   antallTreffTotalt: number;
   oppgaver: OppgaveRad[];
 }
+export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
+  side: number;
+}
 
 //==========
 // Reducer
@@ -92,7 +95,7 @@ export const oppgaveSlice = createSlice({
     meta: {
       antall: 0,
       sider: 1,
-      treffPerSide: 10,
+      treffPerSide: 15,
       side: 1,
     },
     transformasjoner: {
@@ -107,12 +110,13 @@ export const oppgaveSlice = createSlice({
     },
   } as OppgaveState,
   reducers: {
-    MOTTATT: (state, action: PayloadAction<RaderMedMetadata>) => {
+    MOTTATT: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
       if (action.payload) {
         const antall = action.payload.antallTreffTotalt;
         const t = state.meta.treffPerSide;
         state.rader = action.payload.oppgaver;
         state.meta.antall = antall;
+        state.meta.side = action.payload.side;
         state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
         state.lasterData = false;
         state.meta.feilmelding = undefined;
@@ -122,19 +126,6 @@ export const oppgaveSlice = createSlice({
     FEILET: (state, action: PayloadAction<string>) => {
       state.meta.feilmelding = "Oppgave-henting feilet";
       state.lasterData = false;
-      return state;
-    },
-    SETT_SIDE: (state, action: PayloadAction<number>) => {
-      state.meta.side = action.payload;
-      const t = state.meta.treffPerSide;
-      const antall = state.rader?.length;
-      if (antall) {
-        state.meta.antall = antall;
-        state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
-      } else {
-        state.meta.antall = 0;
-        state.meta.sider = 1;
-      }
       return state;
     },
   },
@@ -159,9 +150,8 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const { MOTTATT, SETT_SIDE, FEILET } = oppgaveSlice.actions;
+export const { MOTTATT, FEILET } = oppgaveSlice.actions;
 export const oppgaveRequest = createAction<OppgaveParams>("oppgaver/HENT");
-export const settSide = createAction<number>("oppgaver/SETT_SIDE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 
@@ -186,9 +176,10 @@ export function buildQuery(url: string, data: OppgaveParams) {
         );
     }
   }
-  return `${url}?${query.join("&")}&antall=${data.antall}&start=${
-    data.start
-  }&rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`;
+  query.push(`antall=${data.antall}`);
+  query.push(`start=${data.start}`);
+  query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
+  return `${url}?${query.join("&")}`;
 }
 
 //==========
@@ -209,7 +200,9 @@ export function hentOppgaverEpos(
         action.payload
       );
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
-        map((oppgaver) => MOTTATT(oppgaver))
+        map((oppgaver) =>
+          MOTTATT({ side: action.payload.start / action.payload.antall, ...oppgaver })
+        )
       );
       return hentOppgaver.pipe(
         retryWhen(provIgjenStrategi()),

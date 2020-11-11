@@ -1,7 +1,14 @@
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
-import { buildQuery, hentOppgaverEpos, oppgaveRequest, MOTTATT, RaderMedMetadata } from "./oppgave";
+import {
+  buildQuery,
+  hentOppgaverEpos,
+  oppgaveRequest,
+  MOTTATT,
+  RaderMedMetadata,
+  RaderMedMetadataUtvidet,
+} from "./oppgave";
 import { ajax } from "rxjs/ajax";
 import { of } from "rxjs";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
@@ -85,6 +92,23 @@ describe("Oppgave epos", () => {
     );
   });
 
+  test("+++ QUERYBUILDER sideantall", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 25,
+      start: 100,
+      transformasjoner: {
+        sortering: {
+          frist: "stigende" as "stigende",
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/ikketildelteoppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/ikketildelteoppgaver?antall=25&start=100&rekkefoelge=STIGENDE"
+    );
+  });
+
   /**
    * Tester filtrering
    */
@@ -111,8 +135,9 @@ describe("Oppgave epos", () => {
             },
           }),
         };
-        const mockedResponse = <RaderMedMetadata>{
+        const mockedResponse = <RaderMedMetadataUtvidet>{
           antallTreffTotalt: 2,
+          side: 0,
           oppgaver: [
             { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" },
             { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },

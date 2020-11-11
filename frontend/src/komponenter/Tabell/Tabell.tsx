@@ -1,12 +1,6 @@
-import {
-  Filter,
-  OppgaveRader,
-  oppgaveRequest,
-  settSide,
-  ytelseType,
-} from "../../tilstand/moduler/oppgave";
+import { Filter, OppgaveRader, oppgaveRequest, ytelseType } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import { Select } from "nav-frontend-skjema";
@@ -16,6 +10,8 @@ import "../../stilark/TabellHead.less";
 import FiltrerbarHeader, { settFilter } from "./FiltrerbarHeader";
 import { valgtOppgaveType } from "../types";
 import { genererTabellRader } from "./tabellfunksjoner";
+import { useParams } from "react-router-dom";
+import Paginering from "../Paginering/Paginering";
 
 const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const dispatch = useDispatch();
@@ -34,6 +30,11 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">("synkende");
   const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
+  const [antall, settAntall] = useState<number>(15);
+  const [side, settSide] = useState<number>(0);
+
+  const isFirstRun = useRef(true);
+
   useEffect(() => {
     if (valgtOppgave.id) {
       dispatch(
@@ -47,16 +48,19 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   }, [valgtOppgave.id]);
 
   useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
     dispatchTransformering();
-    dispatch(settSide(1));
-  }, [hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter]);
+  }, [hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter, side]);
 
   const dispatchTransformering = () =>
     dispatch(
       oppgaveRequest({
         ident: meg.id,
-        antall: 5,
-        start: 0,
+        antall: antall,
+        start: side,
         transformasjoner: {
           filtrering: {
             hjemmel: hjemmelFilter,
@@ -121,59 +125,70 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   };
 
   return (
-    <table
-      className={classNames("Tabell", "tabell tabell--stripet")}
-      cellSpacing={0}
-      cellPadding={10}
-    >
-      <thead>
-        <tr>
-          <FiltrerbarHeader
-            onFilter={(filter, velgAlleEllerIngen) =>
-              settFilter(settAktiveTyper, filter, aktiveTyper, velgAlleEllerIngen)
-            }
-            filtre={[{ label: "Klage" }, { label: "Anke" }]}
-            dispatchFunc={filtrerType}
-            aktiveFiltere={aktiveTyper}
-          >
-            Type
-          </FiltrerbarHeader>
-
-          <FiltrerbarHeader
-            onFilter={(filter, velgAlleEllerIngen) =>
-              settFilter(settAktiveYtelser, filter, aktiveYtelser, velgAlleEllerIngen)
-            }
-            filtre={[{ label: "Foreldrepenger" }, { label: "Sykepenger" }, { label: "Dagpenger" }]}
-            dispatchFunc={filtrerYtelse}
-            aktiveFiltere={aktiveYtelser}
-          >
-            Ytelse
-          </FiltrerbarHeader>
-
-          <FiltrerbarHeader
-            onFilter={(filter, velgAlleEllerIngen) =>
-              settFilter(settAktiveHjemler, filter, aktiveHjemler, velgAlleEllerIngen)
-            }
-            filtre={[{ label: "8-65" }, { label: "8-66" }, { label: "8-67" }]}
-            dispatchFunc={filtrerHjemmel}
-            aktiveFiltere={aktiveHjemler}
-          >
-            Hjemmel
-          </FiltrerbarHeader>
-
-          <th role="columnheader" aria-sort={sortToggle === 0 ? "ascending" : "descending"}>
-            <div
-              className={`sortHeader ${sortToggle === 0 ? "ascending" : "descending"}`}
-              onClick={(e) => skiftSortering(e, sortToggle, settSorteringFilter, setSortToggle)}
+    <>
+      <table
+        className={classNames("Tabell", "tabell tabell--stripet")}
+        cellSpacing={0}
+        cellPadding={10}
+      >
+        <thead>
+          <tr>
+            <FiltrerbarHeader
+              onFilter={(filter, velgAlleEllerIngen) =>
+                settFilter(settAktiveTyper, filter, aktiveTyper, velgAlleEllerIngen)
+              }
+              filtre={[{ label: "Klage" }, { label: "Anke" }]}
+              dispatchFunc={filtrerType}
+              aktiveFiltere={aktiveTyper}
             >
-              Frist
-            </div>
-          </th>
-          <th />
-        </tr>
-      </thead>
-      <tbody>{genererTabellRader(settValgOppgave, oppgaver)}</tbody>
-    </table>
+              Type
+            </FiltrerbarHeader>
+
+            <FiltrerbarHeader
+              onFilter={(filter, velgAlleEllerIngen) =>
+                settFilter(settAktiveYtelser, filter, aktiveYtelser, velgAlleEllerIngen)
+              }
+              filtre={[
+                { label: "Foreldrepenger" },
+                { label: "Sykepenger" },
+                { label: "Dagpenger" },
+              ]}
+              dispatchFunc={filtrerYtelse}
+              aktiveFiltere={aktiveYtelser}
+            >
+              Ytelse
+            </FiltrerbarHeader>
+
+            <FiltrerbarHeader
+              onFilter={(filter, velgAlleEllerIngen) =>
+                settFilter(settAktiveHjemler, filter, aktiveHjemler, velgAlleEllerIngen)
+              }
+              filtre={[{ label: "8-65" }, { label: "8-66" }, { label: "8-67" }]}
+              dispatchFunc={filtrerHjemmel}
+              aktiveFiltere={aktiveHjemler}
+            >
+              Hjemmel
+            </FiltrerbarHeader>
+
+            <th role="columnheader" aria-sort={sortToggle === 0 ? "ascending" : "descending"}>
+              <div
+                className={`sortHeader ${sortToggle === 0 ? "ascending" : "descending"}`}
+                onClick={(e) => skiftSortering(e, sortToggle, settSorteringFilter, setSortToggle)}
+              >
+                Frist
+              </div>
+            </th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>{genererTabellRader(settValgOppgave, oppgaver)}</tbody>
+      </table>
+      <div className="table-lbl">
+        <div className={"paginering"}>
+          <Paginering startSide={oppgaver.meta.side} antallSider={oppgaver.meta.sider} />
+        </div>
+      </div>
+    </>
   );
 };
 
