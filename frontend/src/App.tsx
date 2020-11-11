@@ -48,7 +48,7 @@ const App = (): JSX.Element => {
               type: ["Anke", "Klage"],
             },
             sortering: {
-              frist: "synkende",
+              frist: "stigende",
             },
           },
         })

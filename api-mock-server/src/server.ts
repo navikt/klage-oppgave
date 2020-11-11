@@ -30,13 +30,30 @@ app.get("/ansatte/:id/oppgaver", (req, res) => {
   const buffer = fs.readFileSync("./fixtures/oppgaver.json");
   const antallTreffTotalt = JSON.parse(buffer.toString("utf8"))
     .antallTreffTotalt;
-  const oppgaver = JSON.parse(buffer.toString("utf8")).oppgaver.slice(
-    start,
-    Number(start) + Number(antall)
-  );
+  let oppgaver = JSON.parse(buffer.toString("utf8")).oppgaver;
+
+  if (rekkefoelge === "SYNKENDE")
+    oppgaver = oppgaver.slice().sort(function (a: any, b: any) {
+      return new Date(a.frist).getTime() - new Date(b.frist).getTime();
+    });
+  else
+    oppgaver = oppgaver.slice().sort(function (a: any, b: any) {
+      return new Date(b.frist).getTime() - new Date(a.frist).getTime();
+    });
+
+  let filtrerteOppgaver: any = [];
+  oppgaver.forEach((oppgave: any) => {
+    const typer = (type as string).split(",");
+    typer.forEach((t) => {
+      if (oppgave.type.toLocaleLowerCase() === t.toLocaleLowerCase()) {
+        filtrerteOppgaver.push(oppgave);
+      }
+    });
+  });
+
   res.send({
     antallTreffTotalt,
-    oppgaver,
+    oppgaver: filtrerteOppgaver.slice(start, Number(start) + Number(antall)),
   });
 });
 
