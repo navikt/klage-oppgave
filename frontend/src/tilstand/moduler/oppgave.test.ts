@@ -133,6 +133,12 @@ describe("Oppgave epos", () => {
       start: 0,
       antall: 15,
       oppgaver: [],
+      transformasjoner: {
+        filtrering: {},
+        sortering: {
+          frist: "stigende",
+        },
+      },
     };
     const initState = ({
       rader: [],
@@ -150,6 +156,12 @@ describe("Oppgave epos", () => {
       start: 15,
       antall: 15,
       oppgaver: [],
+      transformasjoner: {
+        filtrering: {},
+        sortering: {
+          frist: "stigende",
+        },
+      },
     };
     const initState = ({
       rader: [],
@@ -166,6 +178,12 @@ describe("Oppgave epos", () => {
       start: 30,
       antall: 15,
       oppgaver: [],
+      transformasjoner: {
+        filtrering: {},
+        sortering: {
+          frist: "stigende",
+        },
+      },
     };
     const initState = ({
       rader: [],
@@ -183,6 +201,12 @@ describe("Oppgave epos", () => {
       start: 60,
       antall: 15,
       oppgaver: [],
+      transformasjoner: {
+        filtrering: {},
+        sortering: {
+          frist: "stigende",
+        },
+      },
     };
     const initState = ({
       rader: [],

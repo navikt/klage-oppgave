@@ -83,6 +83,7 @@ export interface RaderMedMetadata {
 export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
   start: number;
   antall: number;
+  transformasjoner: Transformasjoner;
 }
 
 //==========
@@ -102,6 +103,7 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
     Math.floor(antallTreffTotalt / antall) + (antallTreffTotalt % antall !== 0 ? 1 : 0);
   state.lasterData = false;
   state.meta.feilmelding = undefined;
+  state.transformasjoner = payload.transformasjoner;
   return state;
 }
 
@@ -130,6 +132,7 @@ export const oppgaveSlice = createSlice({
   reducers: {
     MOTTATT: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
       if (action.payload) {
+        console.log("MOTTATT", action.payload);
         state = MottatteRader(action.payload, state);
       }
       return state;
@@ -212,6 +215,7 @@ export function hentOppgaverEpos(
           MOTTATT({
             start: action.payload.start,
             antall: action.payload.antall,
+            transformasjoner: action.payload.transformasjoner,
             ...oppgaver,
           })
         )

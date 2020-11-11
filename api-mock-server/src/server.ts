@@ -43,12 +43,16 @@ app.get("/ansatte/:id/oppgaver", (req, res) => {
 
   let filtrerteOppgaver: any = [];
   oppgaver.forEach((oppgave: any) => {
-    const typer = (type as string).split(",");
-    typer.forEach((t) => {
-      if (oppgave.type.toLocaleLowerCase() === t.toLocaleLowerCase()) {
-        filtrerteOppgaver.push(oppgave);
-      }
-    });
+    if ("undefined" !== typeof type) {
+      const typer = (type as string).split(",");
+      typer.forEach((t) => {
+        if (oppgave.type.toLocaleLowerCase() === t.toLocaleLowerCase()) {
+          filtrerteOppgaver.push(oppgave);
+        }
+      });
+    } else {
+      filtrerteOppgaver = oppgaver;
+    }
   });
 
   res.send({

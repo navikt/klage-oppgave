@@ -10,3 +10,9 @@ export function velgOppgaver(state: RootStateOrAny) {
 export function velgSideLaster(state: RootStateOrAny) {
   return state.oppgaver.lasterData as boolean;
 }
+export function velgFiltrering(state: RootStateOrAny) {
+  return state.oppgaver.transformasjoner.filtrering;
+}
+export function velgSortering(state: RootStateOrAny) {
+  return state.oppgaver.transformasjoner.sortering;
+}

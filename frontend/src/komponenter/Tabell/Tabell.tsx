@@ -2,6 +2,7 @@ import { Filter, OppgaveRader, oppgaveRequest, ytelseType } from "../../tilstand
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useRef, useState } from "react";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
+import { velgFiltrering, velgSortering } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import { Select } from "nav-frontend-skjema";
 import classNames from "classnames";
@@ -10,24 +11,35 @@ import "../../stilark/TabellHead.less";
 import FiltrerbarHeader, { settFilter } from "./FiltrerbarHeader";
 import { valgtOppgaveType } from "../types";
 import { genererTabellRader } from "./tabellfunksjoner";
-import { useParams } from "react-router-dom";
 import Paginering from "../Paginering/Paginering";
+
+function initState(filter: any) {
+  if ("undefined" === typeof filter) {
+    return [];
+  }
+  if (!Array.isArray(filter)) return [{ label: filter }];
+  return filter.map(function (f: string) {
+    return { label: f };
+  });
+}
 
 const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
+  const sortering = useSelector(velgSortering);
+  const filtrering = useSelector(velgFiltrering);
 
   const [sortToggle, setSortToggle] = useState(0);
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
-  const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>([]);
+  const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemmel));
 
   const [ytelseFilter, settYtelseFilter] = useState<ytelseType>(undefined);
-  const [aktiveYtelser, settAktiveYtelser] = useState<Filter[]>([]);
+  const [aktiveYtelser, settAktiveYtelser] = useState<Filter[]>(initState(filtrering.ytelse));
 
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
-  const [aktiveTyper, settAktiveTyper] = useState<Filter[]>([]);
+  const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.type));
 
-  const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">("synkende");
+  const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
   const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
   const [antall, settAntall] = useState<number>(15);
