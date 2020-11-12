@@ -7,6 +7,8 @@ import { eqNumber } from "fp-ts/lib/Eq";
 import JSONStream from "jsonstream";
 import es from "event-stream";
 import chalk from "chalk";
+import { filtrerOppgaver } from "./oppgaver";
+import { OppgaveQuery } from "./types";
 
 const app = express();
 app.use(cors());
@@ -16,49 +18,12 @@ const port = 3000; // default port to listen
 const speedLimiter = slowDown({
   windowMs: 15 * 60 * 1000, // 15 minutes
   delayAfter: 10, // allow 100 requests per 15 minutes, then...
-  delayMs: 500, // begin adding 500ms of delay per request above 100:
+  delayMs: 500, // begin adding 500ms of delay per requpest above 100:
 });
 app.use(speedLimiter);
 
 app.get("/ansatte/:id/oppgaver", (req, res) => {
-  const { type, antall, start, rekkefoelge } = req.query;
-  console.log(chalk.yellow("type", type));
-  console.log(chalk.red("antall", antall));
-  console.log(chalk.red("start", start));
-  console.log(chalk.red("slutt", Number(start) + Number(antall)));
-  console.log(chalk.cyan("rekkefølge", rekkefoelge));
-  const buffer = fs.readFileSync("./fixtures/oppgaver.json");
-  const antallTreffTotalt = JSON.parse(buffer.toString("utf8"))
-    .antallTreffTotalt;
-  let oppgaver = JSON.parse(buffer.toString("utf8")).oppgaver;
-
-  if (rekkefoelge === "SYNKENDE")
-    oppgaver = oppgaver.slice().sort(function (a: any, b: any) {
-      return new Date(a.frist).getTime() - new Date(b.frist).getTime();
-    });
-  else
-    oppgaver = oppgaver.slice().sort(function (a: any, b: any) {
-      return new Date(b.frist).getTime() - new Date(a.frist).getTime();
-    });
-
-  let filtrerteOppgaver: any = [];
-  oppgaver.forEach((oppgave: any) => {
-    if ("undefined" !== typeof type) {
-      const typer = (type as string).split(",");
-      typer.forEach((t) => {
-        if (oppgave.type.toLocaleLowerCase() === t.toLocaleLowerCase()) {
-          filtrerteOppgaver.push(oppgave);
-        }
-      });
-    } else {
-      filtrerteOppgaver = oppgaver;
-    }
-  });
-
-  res.send({
-    antallTreffTotalt,
-    oppgaver: filtrerteOppgaver.slice(start, Number(start) + Number(antall)),
-  });
+  res.send(filtrerOppgaver((req.query as unknown) as OppgaveQuery));
 });
 
 app.get("/ansatte/:id/tildelteoppgaver", (req, res) => {

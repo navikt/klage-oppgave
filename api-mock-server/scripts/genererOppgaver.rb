@@ -6,13 +6,13 @@ require 'faker'
 def tilfeldigYtelse()
   r = rand(3)
   if r == 0
-    return "SYK"
+    return "Sykepenger"
   end
   if r == 1
-    return "DAG"
+    return "Dagpenger"
   end
   if r == 2
-    return "FOR"
+    return "Foreldrepenger"
   end
 end
 
@@ -30,7 +30,7 @@ def lagData()
     "type": rand(2) == 1 ? "klage" : "anke",
     "ytelse": tilfeldigYtelse(),
     "versjon": Faker::Number.number(digits: 1),
-    "hjemmel": "8-" << Faker::Number.number(digits: 2).to_s,
+    "hjemmel": "8-6" << Faker::Number.number(digits: 1).to_s,
     "frist": Faker::Date.between(from: "2018-01-01", to: Date.today),
     "saksbehandler": {
       "ident": nestenTilfeldigSaksbehandler(), 

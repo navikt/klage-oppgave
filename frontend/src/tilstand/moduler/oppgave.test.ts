@@ -44,13 +44,13 @@ describe("Oppgave epos", () => {
           frist: "synkende" as "synkende",
         },
         filtrering: {
-          ytelse: ["Sykepenger", "Dagpenger"],
+          ytelser: ["Sykepenger", "Dagpenger"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?ytelse=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
     );
   });
 
@@ -64,14 +64,14 @@ describe("Oppgave epos", () => {
           frist: "synkende" as "synkende",
         },
         filtrering: {
-          type: ["klage"],
-          ytelse: ["Sykepenger", "Dagpenger"],
+          typer: ["klage"],
+          ytelser: ["Sykepenger", "Dagpenger"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?type=klage&ytelse=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
+      "/ansatte/ZATHRAS/oppgaver?typer=klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
     );
   });
 
@@ -86,14 +86,14 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           type: undefined,
-          ytelse: ["Sykepenger", "Dagpenger"],
-          hjemmel: ["8-12", "9-31"],
+          ytelser: ["Sykepenger", "Dagpenger"],
+          hjemler: ["8-12", "9-31"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?ytelse=Sykepenger%2CDagpenger&hjemmel=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE"
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE"
     );
   });
 
@@ -239,7 +239,7 @@ describe("Oppgave epos", () => {
                 frist: "synkende",
               },
               filtrering: {
-                ytelse: ["Sykepenger"],
+                ytelser: ["Sykepenger"],
               },
             },
           }),
@@ -252,6 +252,14 @@ describe("Oppgave epos", () => {
             { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" },
             { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
           ],
+          transformasjoner: {
+            sortering: {
+              frist: "synkende",
+            },
+            filtrering: {
+              ytelser: ["Sykepenger"],
+            },
+          },
         };
 
         const dependencies = {

@@ -60,9 +60,9 @@ export interface OppgaveRader {
 
 export interface Transformasjoner {
   filtrering?: {
-    type?: undefined | string[] | Filter[];
-    ytelse?: undefined | string[] | Filter[];
-    hjemmel?: undefined | string[] | Filter[];
+    typer?: undefined | string[] | Filter[];
+    ytelser?: undefined | string[] | Filter[];
+    hjemler?: undefined | string[] | Filter[];
   };
   sortering: {
     frist: "synkende" | "stigende";
@@ -91,7 +91,6 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 //==========
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
   const { antallTreffTotalt, start, antall } = payload;
-  console.log({ antallTreffTotalt, start, antall });
   state.rader = payload.oppgaver;
   state.meta.antall = antall;
   if (start === 0) {
@@ -120,9 +119,9 @@ export const oppgaveSlice = createSlice({
     },
     transformasjoner: {
       filtrering: {
-        type: undefined,
-        ytelse: undefined,
-        hjemmel: undefined,
+        typer: undefined,
+        ytelser: undefined,
+        hjemler: undefined,
       },
       sortering: {
         frist: "synkende",
