@@ -44,8 +44,7 @@ const App = (): JSX.Element => {
           start: tolketSide === 1 ? 0 : (tolketSide - 1) * antall,
           transformasjoner: {
             filtrering: {
-              typer: ["Anke"],
-              hjemler: ["8-65", "8-66"],
+              typer: ["Anke", "Klage"],
             },
             sortering: {
               frist: "stigende",

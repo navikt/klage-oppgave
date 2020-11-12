@@ -2,7 +2,7 @@ import chalk from "chalk";
 import fs from "fs";
 import { OppgaveQuery } from "./types";
 import R from "ramda";
-const { filter, propSatisfies, lte, propEq, allPass } = R;
+const { filter, propSatisfies, lte, propEq, allPass, anyPass } = R;
 
 export function filtrerOppgaver(query: OppgaveQuery) {
   const { typer, ytelser, hjemler, antall, start, rekkefoelge } = query;
@@ -41,7 +41,7 @@ export function filtrerOppgaver(query: OppgaveQuery) {
     filterYtelser?.forEach((t) => predikater.push(propEq("ytelse", t)));
     filterHjemler?.forEach((t) => predikater.push(propEq("hjemmel", t)));
 
-    filtrerteOppgaver = filter(allPass(predikater), oppgaver);
+    filtrerteOppgaver = filter(anyPass(predikater), oppgaver);
   });
 
   return {

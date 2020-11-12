@@ -5,7 +5,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      type: "Klage",
+      typer: "Klage",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
     };
     let result = filtrerOppgaver(query);
@@ -19,7 +19,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      type: "Anke",
+      typer: "Anke",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
     };
     let result = filtrerOppgaver(query);
@@ -34,7 +34,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      ytelse: "Sykepenger",
+      ytelser: "Sykepenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
     };
     let result = filtrerOppgaver(query);
@@ -48,7 +48,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      ytelse: "Dagpenger",
+      ytelser: "Dagpenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
     };
     let result = filtrerOppgaver(query);
@@ -62,7 +62,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      ytelse: "Foreldrepenger",
+      ytelser: "Foreldrepenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
     };
     let result = filtrerOppgaver(query);
@@ -76,7 +76,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 15,
       start: 0,
-      hjemmel: "8-61",
+      hjemler: "8-61",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
     };
     let result = filtrerOppgaver(query);
@@ -86,11 +86,11 @@ describe("tester oppgavehenting", () => {
     while (++i < result.oppgaver.length)
       expect(result.oppgaver[i].hjemmel).toEqual("8-61");
   });
-  xit("filtrer etter hjemmel 8-61 og 8-62", () => {
+  it("filtrer etter hjemmel 8-65 og 8-62", () => {
     let query = {
       antall: 15,
       start: 0,
-      hjemmel: "8-61,8-62",
+      hjemler: "8-65,8-62",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
     };
     let result = filtrerOppgaver(query);
@@ -99,7 +99,7 @@ describe("tester oppgavehenting", () => {
     let i = 0;
     while (++i < result.oppgaver.length) {
       expect(
-        result.oppgaver[i].hjemmel === "8-61" ||
+        result.oppgaver[i].hjemmel === "8-65" ||
           result.oppgaver[i].hjemmel === "8-62"
       ).toBe(true);
     }

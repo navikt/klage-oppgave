@@ -1,7 +1,7 @@
 export type OppgaveQuery = {
-  type?: string;
-  hjemmel?: string;
-  ytelse?: string;
+  typer?: string;
+  hjemler?: string;
+  ytelser?: string;
   antall: number;
   start: number;
   rekkefoelge: "SYNKENDE" | "STIGENDE";
