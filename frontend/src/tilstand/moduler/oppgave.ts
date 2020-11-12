@@ -131,7 +131,6 @@ export const oppgaveSlice = createSlice({
   reducers: {
     MOTTATT: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
       if (action.payload) {
-        console.log("MOTTATT", action.payload);
         state = MottatteRader(action.payload, state);
       }
       return state;

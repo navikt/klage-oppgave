@@ -93,7 +93,6 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
       let typer = filtre.reduce((a, b) => {
         return { label: `${a.label},${b.label}` };
       });
-      console.log("dispatch typer:", typer.label);
       settTypeFilter([typer.label as string]);
     }
   };
@@ -120,7 +119,6 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
       let hjemler = filtre.reduce((a, b) => {
         return { label: `${a.label},${b.label}` };
       });
-      console.log("dispatch hjemler:", hjemler.label);
       settHjemmelFilter([hjemler.label as string]);
     }
   };
@@ -131,7 +129,6 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
       let ytelser = filtre.reduce((a, b) => {
         return { label: `${a.label},${b.label}` };
       });
-      console.log("dispatch ytelser:", ytelser.label);
       settYtelseFilter(ytelser.label as ytelseType);
     }
   };
