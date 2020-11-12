@@ -5,7 +5,6 @@ import "./stilark/App.less";
 import "./stilark/Lists.less";
 import "nav-frontend-tabell-style";
 
-import { Checkbox } from "nav-frontend-skjema";
 import { useDispatch, useSelector } from "react-redux";
 
 import { oppgaveRequest } from "./tilstand/moduler/oppgave";
@@ -45,8 +44,8 @@ const App = (): JSX.Element => {
           start: tolketSide === 1 ? 0 : (tolketSide - 1) * antall,
           transformasjoner: {
             filtrering: {
-              type: ["Anke"],
-              hjemmel: ["8-65", "8-66"],
+              typer: ["Anke"],
+              hjemler: ["8-65", "8-66"],
             },
             sortering: {
               frist: "stigende",

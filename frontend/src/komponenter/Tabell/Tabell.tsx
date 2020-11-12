@@ -31,13 +31,13 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
 
   const [sortToggle, setSortToggle] = useState(0);
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
-  const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemmel));
+  const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
 
   const [ytelseFilter, settYtelseFilter] = useState<ytelseType>(undefined);
-  const [aktiveYtelser, settAktiveYtelser] = useState<Filter[]>(initState(filtrering.ytelse));
+  const [aktiveYtelser, settAktiveYtelser] = useState<Filter[]>(initState(filtrering.ytelser));
 
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
-  const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.type));
+  const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
 
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
   const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
@@ -75,9 +75,9 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
         start: side,
         transformasjoner: {
           filtrering: {
-            hjemmel: hjemmelFilter,
-            type: typeFilter,
-            ytelse: ytelseFilter,
+            hjemler: hjemmelFilter,
+            typer: typeFilter,
+            ytelser: ytelseFilter,
           },
           sortering: {
             frist: sorteringFilter,

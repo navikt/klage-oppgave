@@ -5,7 +5,7 @@ import R from "ramda";
 const { filter, propSatisfies, lte, propEq, allPass } = R;
 
 export function filtrerOppgaver(query: OppgaveQuery) {
-  const { type, ytelse, hjemmel, antall, start, rekkefoelge } = query;
+  const { typer, ytelser, hjemler, antall, start, rekkefoelge } = query;
   const buffer = fs.readFileSync("./fixtures/oppgaver.json");
   const antallTreffTotalt = JSON.parse(buffer.toString("utf8"))
     .antallTreffTotalt;
@@ -24,20 +24,22 @@ export function filtrerOppgaver(query: OppgaveQuery) {
   oppgaver.forEach((oppgave: any) => {
     let predikater: R.Pred[] = [];
 
-    const typer =
-      "undefined" !== typeof type
-        ? (type as string).toLocaleLowerCase().split(",")
+    const filterTyper =
+      "undefined" !== typeof typer
+        ? (typer as string).toLocaleLowerCase().split(",")
         : undefined;
-    const ytelser =
-      "undefined" !== typeof ytelse ? (ytelse as string).split(",") : undefined;
-    const hjemler =
-      "undefined" !== typeof hjemmel
-        ? (hjemmel as string).split(",")
+    const filterYtelser =
+      "undefined" !== typeof ytelser
+        ? (ytelser as string).split(",")
+        : undefined;
+    const filterHjemler =
+      "undefined" !== typeof hjemler
+        ? (hjemler as string).split(",")
         : undefined;
 
-    typer?.forEach((t) => predikater.push(propEq("type", t)));
-    ytelser?.forEach((t) => predikater.push(propEq("ytelse", t)));
-    hjemler?.forEach((t) => predikater.push(propEq("hjemmel", t)));
+    filterTyper?.forEach((t) => predikater.push(propEq("type", t)));
+    filterYtelser?.forEach((t) => predikater.push(propEq("ytelse", t)));
+    filterHjemler?.forEach((t) => predikater.push(propEq("hjemmel", t)));
 
     filtrerteOppgaver = filter(allPass(predikater), oppgaver);
   });
