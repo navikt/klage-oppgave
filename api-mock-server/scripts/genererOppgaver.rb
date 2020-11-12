@@ -2,6 +2,46 @@
 
 require 'json'
 require 'faker'
+require 'sqlite3'
+
+def init_oppgaver()
+    begin
+        db = SQLite3::Database.open "../oppgaver.db"
+        db.execute "DROP TABLE IF EXISTS Oppgaver"
+        db.execute "CREATE TABLE Oppgaver
+            (
+            	Id INTEGER PRIMARY KEY,
+		        type TEXT,
+                ytelse TEXT,
+                hjemmel TEXT,
+                frist TEXT
+            )
+            "
+  rescue SQLite3::Exception => e
+
+      puts "Exception occurred"
+      puts e
+
+  ensure
+      db.close if db
+  end
+end
+
+def insert_oppgave(id, type, ytelse, hjemmel, frist)
+  begin
+	  db = SQLite3::Database.open "../oppgaver.db"
+      db.execute("INSERT INTO Oppgaver (Id, type, ytelse, hjemmel, frist) VALUES (?, ?, ?, ?, ?)",
+                                        [id, type, ytelse, hjemmel, frist.to_s])
+
+  rescue SQLite3::Exception => e
+    puts "Exception occurred"
+    puts e
+    exit
+  ensure
+    db.close if db
+  end
+end
+
 
 def tilfeldigYtelse()
   r = rand(3)
@@ -20,40 +60,29 @@ def nestenTilfeldigSaksbehandler()
   return rand(15) <= 1 ?  "Z994488" : Faker::Internet.username(specifier: 6..8)
 end
 
-def lagData()
-  data = {
-    'id' => Faker::Number.number(digits: 7),
-    'bruker': {
-      'fnr': Faker::Number.number(digits: 11),
-      'navn': Faker::Name.name
-    },
-    "type": rand(2) == 1 ? "klage" : "anke",
-    "ytelse": tilfeldigYtelse(),
-    "versjon": Faker::Number.number(digits: 1),
-    "hjemmel": "8-6" << Faker::Number.number(digits: 1).to_s,
-    "frist": Faker::Date.between(from: "2018-01-01", to: Date.today),
-    "saksbehandler": {
-      "ident": nestenTilfeldigSaksbehandler(), 
-      "navn:": Faker::Movies::PrincessBride.character 
-    }
-  }
-  return JSON[data]
+def nestenTilfeldigHjemmel()
+  return rand(2) <= 1 ?  "8-61" : "8-62"
 end
 
+def lagData()
+  id = Faker::Number.number(digits: 7)
+  type = rand(2) == 1 ? "klage" : "anke"
+  ytelse = tilfeldigYtelse()
+  frist = Faker::Date.backward(days: 14)
+  hjemmel = nestenTilfeldigHjemmel()
+  insert_oppgave(id, type, ytelse, hjemmel, frist)
+end
 
-file = File.open("../fixtures/oppgaver.json", "w")
+init_oppgaver()
+
+
 i=0
-file.write("{ ")
-file.write("\"antallTreffTotalt\": " + 51.to_s + ",")
-file.write("\"oppgaver\": [")
 loop do
-  file.write(lagData())
-  file.write(",");
+  lagData()
   i += 1;
-  if i == 50
-    file.write(lagData())
+  if i == 500
     break
   end
 end
-file.write("]}")
+
 
