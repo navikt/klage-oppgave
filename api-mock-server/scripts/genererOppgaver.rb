@@ -61,7 +61,7 @@ def nestenTilfeldigSaksbehandler()
 end
 
 def nestenTilfeldigHjemmel()
-  return rand(2) <= 1 ?  "8-61" : "8-62"
+  return "8-" + Faker::Number.number(digits: 2).to_s
 end
 
 def lagData()
