@@ -145,11 +145,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
 
   return (
     <>
-      <table
-        className={`Tabell tabell tabell--stripet ${sideLaster ? "skjult" : "synlig"}`}
-        cellSpacing={0}
-        cellPadding={10}
-      >
+      <table className={`Tabell tabell tabell--stripet`} cellSpacing={0} cellPadding={10}>
         <thead>
           <tr>
             <FiltrerbarHeader
