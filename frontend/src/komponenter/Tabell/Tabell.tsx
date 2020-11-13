@@ -119,6 +119,8 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   };
 
   const filtrerHjemmel = (filtre: Filter[]) => {
+    console.log(filtre);
+
     if (!filtre.length) {
       settHjemmelFilter(undefined);
     } else {
@@ -178,7 +180,11 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
               onFilter={(filter, velgAlleEllerIngen) =>
                 settFilter(settAktiveHjemler, filter, aktiveHjemler, velgAlleEllerIngen)
               }
-              filtre={[{ label: "8-65" }, { label: "8-66" }, { label: "8-67" }]}
+              filtre={[
+                { label: "8-2, 8-15, 8-47 og 8-49" },
+                { label: "8-3 og 8-13" },
+                { label: "8-4, 8-7, og 8,8" },
+              ]}
               dispatchFunc={filtrerHjemmel}
               aktiveFiltere={aktiveHjemler}
             >

@@ -19,12 +19,12 @@ function generiskTypeQuery(
 ) {
   if (filter && !where) {
     return `${filter?.map(
-      (_, it) => `${it === 0 ? "WHERE" : "OR"} ${felt} LIKE ?`
+      (_, it) => `${it === 0 ? "WHERE" : " OR"} ${felt} LIKE ?`
     )}`;
   }
   if (filter) {
     return `${filter?.map(
-      (_, it) => `${it === 0 ? "AND" : "OR"} ${felt} LIKE ?`
+      (_, it) => `${it === 0 ? "AND" : " OR"} ${felt} LIKE ?`
     )}`;
   }
   return "";
@@ -33,7 +33,7 @@ function generiskTypeQuery(
 function typeQuery(filter: Array<string> | undefined) {
   if (filter) {
     return `${filter?.map(
-      (_, it) => `${it === 0 ? "WHERE" : "OR"} type LIKE ?`
+      (_, it) => `${it === 0 ? "WHERE" : " OR"} type LIKE ?`
     )}`;
   }
   return "";
@@ -43,29 +43,29 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
   const { typer, ytelser, hjemler, antall, start, rekkefoelge } = query;
   let filterTyper = typer?.split(",");
   let filterYtelser = ytelser?.split(",");
-  let filterHjemler = hjemler?.split(",");
+  let filterHjemler = hjemler?.replace(/ og /, ",").split(",");
   let db = new sqlite3.Database(path.join(__dirname, "../oppgaver.db"));
-  let totaltAntall = null;
+  let params: any = [];
+
   let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, hjemmel, ytelse, frist
                  FROM Oppgaver 
-                 ${typeQuery(filterTyper).replace(",", " ")}
+                 ${typeQuery(filterTyper).replace(/,/g, "")}
                  ${generiskTypeQuery(
                    (typer?.length as unknown) as boolean,
                    filterYtelser,
                    "ytelse"
-                 ).replace(",", " ")}
+                 ).replace(/,/g, "")}
                  ${generiskTypeQuery(
                    ((typer?.length as unknown) as boolean) ||
                      ((ytelser?.length as unknown) as boolean),
                    filterHjemler,
                    "hjemmel"
-                 ).replace(",", " ")}
-                 ORDER BY frist ${rekkefoelge === "STIGENDE" ? "DESC" : "ASC"}
+                 ).replace(/,/g, "")}
+                 ORDER BY frist ${rekkefoelge === "STIGENDE" ? "ASC" : "DESC"}
                  LIMIT ?,? 
                  `;
 
   const oppgaver = await new Promise((resolve, reject) => {
-    let params: any = [];
     filterTyper?.forEach((filter: string) => {
       params.push(filter);
     });
@@ -98,6 +98,8 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     antallTreffTotalt = (oppgaver as Oppgave)[0].totaltAntall;
   } catch (e) {
     console.error(e);
+    console.log(sql);
+    console.log(params);
   }
 
   return {
