@@ -11,18 +11,11 @@ jest.mock("./paginering.less", () => jest.fn());
 
 describe("Paginering", () => {
   it("CheckboxWithLabel changes the text after click", async () => {
-    /*          const {queryAllByTestId, queryByText,queryByTestId,queryByLabelText, getByLabelText} = render(
-                          <Router>
-                              <Paginering antallSider={4} startSide={1}/>
-                          </Router>
-                      );
-          */
     let rendered = render(
       <Router>
         <Paginering antallSider={4} startSide={1} />
       </Router>
     );
-
     await waitFor(() => screen.queryAllByTestId("forrige"));
     expect(screen.getByTestId("forrige")).toHaveTextContent("Forrige");
   });

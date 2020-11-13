@@ -2,9 +2,12 @@ import { Filter, OppgaveRader, oppgaveRequest, ytelseType } from "../../tilstand
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useRef, useState } from "react";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
-import { velgFiltrering, velgSortering } from "../../tilstand/moduler/oppgave.velgere";
+import {
+  velgFiltrering,
+  velgSideLaster,
+  velgSortering,
+} from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
-import { Select } from "nav-frontend-skjema";
 import classNames from "classnames";
 import "../../stilark/Tabell.less";
 import "../../stilark/TabellHead.less";
@@ -12,6 +15,8 @@ import FiltrerbarHeader, { settFilter } from "./FiltrerbarHeader";
 import { valgtOppgaveType } from "../types";
 import { genererTabellRader } from "./tabellfunksjoner";
 import Paginering from "../Paginering/Paginering";
+import { useParams } from "react-router-dom";
+import NavFrontendSpinner from "nav-frontend-spinner";
 
 function initState(filter: any) {
   if ("undefined" === typeof filter) {
@@ -28,6 +33,14 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const meg = useSelector(velgMeg);
   const sortering = useSelector(velgSortering);
   const filtrering = useSelector(velgFiltrering);
+  const sideLaster = useSelector(velgSideLaster);
+
+  interface ParamTypes {
+    side: string | undefined;
+  }
+
+  let { side } = useParams<ParamTypes>();
+  let tolketSide = parseInt(side as string, 10) || 1;
 
   const [sortToggle, setSortToggle] = useState(0);
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
@@ -42,10 +55,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
   const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
-  const [antall, settAntall] = useState<number>(15);
-  const [side, settSide] = useState<number>(0);
-
-  const isFirstRun = useRef(true);
+  const [antall, settAntall] = useState<number>(5);
 
   useEffect(() => {
     if (valgtOppgave.id) {
@@ -60,19 +70,15 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   }, [valgtOppgave.id]);
 
   useEffect(() => {
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
-    dispatchTransformering();
-  }, [hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter, side]);
+    if (meg.id) dispatchTransformering();
+  }, [hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter, tolketSide, meg]);
 
   const dispatchTransformering = () =>
     dispatch(
       oppgaveRequest({
         ident: meg.id,
         antall: antall,
-        start: side,
+        start: tolketSide,
         transformasjoner: {
           filtrering: {
             hjemler: hjemmelFilter,
@@ -133,10 +139,14 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
     }
   };
 
+  if (sideLaster) {
+    return <NavFrontendSpinner />;
+  }
+
   return (
     <>
       <table
-        className={classNames("Tabell", "tabell tabell--stripet")}
+        className={`Tabell tabell tabell--stripet ${sideLaster ? "skjult" : "synlig"}`}
         cellSpacing={0}
         cellPadding={10}
       >
@@ -190,13 +200,19 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
             <th />
           </tr>
         </thead>
-        <tbody>{genererTabellRader(settValgOppgave, oppgaver)}</tbody>
+        <tbody>
+          {genererTabellRader(settValgOppgave, oppgaver)}
+          <tr>
+            <td colSpan={6}>
+              <div className="table-lbl">
+                <div className={"paginering"}>
+                  <Paginering startSide={tolketSide} antallSider={oppgaver.meta.sider} />
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
       </table>
-      <div className="table-lbl">
-        <div className={"paginering"}>
-          <Paginering startSide={oppgaver.meta.side} antallSider={oppgaver.meta.sider} />
-        </div>
-      </div>
     </>
   );
 };

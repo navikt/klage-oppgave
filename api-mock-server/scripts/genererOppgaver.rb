@@ -68,7 +68,7 @@ def lagData()
   id = Faker::Number.number(digits: 7)
   type = rand(2) == 1 ? "klage" : "anke"
   ytelse = tilfeldigYtelse()
-  frist = Faker::Date.backward(days: 14)
+  frist = Faker::Date.backward(days: 365)
   hjemmel = nestenTilfeldigHjemmel()
   insert_oppgave(id, type, ytelse, hjemmel, frist)
 end

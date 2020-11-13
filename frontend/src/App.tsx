@@ -7,53 +7,18 @@ import "nav-frontend-tabell-style";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { oppgaveRequest } from "./tilstand/moduler/oppgave";
-
 import { hentMegHandling } from "./tilstand/moduler/meg";
 
-import { velgOppgaver, velgSideLaster } from "./tilstand/moduler/oppgave.velgere";
-import { useParams } from "react-router-dom";
-import Paginering from "./komponenter/Paginering/Paginering";
+import { velgOppgaver } from "./tilstand/moduler/oppgave.velgere";
 import OppgaveTabell from "./komponenter/Tabell/Tabell";
-import { velgMeg } from "./tilstand/moduler/meg.velgere";
 
 const App = (): JSX.Element => {
   const oppgaver = useSelector(velgOppgaver);
-  const meg = useSelector(velgMeg);
-  const sideLaster = useSelector(velgSideLaster);
   const dispatch = useDispatch();
-
-  interface ParamTypes {
-    side: string | undefined;
-  }
-
-  let { side } = useParams<ParamTypes>();
-  let tolketSide = parseInt(side as string, 10) || 1;
-  let antall = 15;
 
   useEffect(() => {
     dispatch(hentMegHandling());
   }, []);
-
-  useEffect(() => {
-    if (meg.id) {
-      dispatch(
-        oppgaveRequest({
-          ident: meg.id,
-          antall: antall,
-          start: tolketSide === 1 ? 0 : (tolketSide - 1) * antall,
-          transformasjoner: {
-            filtrering: {
-              typer: ["Anke", "Klage"],
-            },
-            sortering: {
-              frist: "stigende",
-            },
-          },
-        })
-      );
-    }
-  }, [meg.id, tolketSide]);
 
   if (oppgaver.meta.feilmelding) {
     return (
@@ -67,7 +32,7 @@ const App = (): JSX.Element => {
   }
 
   return (
-    <Oppsett isFetching={sideLaster}>
+    <Oppsett isFetching={false}>
       <OppgaveTabell {...oppgaver} />
     </Oppsett>
   );
