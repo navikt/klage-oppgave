@@ -54,7 +54,7 @@ export function settFilter(
       if (finnesIListe) {
         f = f.filter((r: Filter) => r.label !== filter[0].label);
       } else {
-        f.push({ label: filter[0].label });
+        f.push({ label: filter[0].label, value: filter[0].value });
       }
       updateFunc(f);
     }

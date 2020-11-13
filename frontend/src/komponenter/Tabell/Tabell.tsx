@@ -24,7 +24,7 @@ function initState(filter: any) {
   }
   if (!Array.isArray(filter)) return [{ label: filter }];
   return filter.map(function (f: string) {
-    return { label: f };
+    return { label: f, value: f };
   });
 }
 
@@ -99,7 +99,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
       let typer = filtre.reduce((a, b) => {
         return { label: `${a.label},${b.label}` };
       });
-      settTypeFilter([typer.label as string]);
+      settTypeFilter([typer.value as string]);
     }
   };
   const skiftSortering = (
@@ -119,15 +119,14 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   };
 
   const filtrerHjemmel = (filtre: Filter[]) => {
-    console.log(filtre);
-
     if (!filtre.length) {
       settHjemmelFilter(undefined);
     } else {
+      console.log({ filtre });
       let hjemler = filtre.reduce((a, b) => {
-        return { label: `${a.label},${b.label}` };
+        return { label: `${a.value},${b.value}` };
       });
-      settHjemmelFilter([hjemler.label as string]);
+      settHjemmelFilter([hjemler.value as string]);
     }
   };
   const filtrerYtelse = (filtre: Filter[]) => {
@@ -135,9 +134,9 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
       settYtelseFilter(undefined);
     } else {
       let ytelser = filtre.reduce((a, b) => {
-        return { label: `${a.label},${b.label}` };
+        return { label: `${a.value},${b.value}` };
       });
-      settYtelseFilter(ytelser.label as ytelseType);
+      settYtelseFilter(ytelser.value as ytelseType);
     }
   };
 
@@ -154,7 +153,10 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
               onFilter={(filter, velgAlleEllerIngen) =>
                 settFilter(settAktiveTyper, filter, aktiveTyper, velgAlleEllerIngen)
               }
-              filtre={[{ label: "Klage" }, { label: "Anke" }]}
+              filtre={[
+                { label: "Klage", value: "Klage" },
+                { label: "Anke", value: "Anke" },
+              ]}
               dispatchFunc={filtrerType}
               aktiveFiltere={aktiveTyper}
             >
@@ -166,9 +168,9 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
                 settFilter(settAktiveYtelser, filter, aktiveYtelser, velgAlleEllerIngen)
               }
               filtre={[
-                { label: "Foreldrepenger" },
-                { label: "Sykepenger" },
-                { label: "Dagpenger" },
+                { label: "Foreldrepenger", value: "Foreldrepenger" },
+                { label: "Sykepenger", value: "Sykepenger" },
+                { label: "Dagpenger", value: "Dagpenger" },
               ]}
               dispatchFunc={filtrerYtelse}
               aktiveFiltere={aktiveYtelser}
@@ -181,9 +183,17 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
                 settFilter(settAktiveHjemler, filter, aktiveHjemler, velgAlleEllerIngen)
               }
               filtre={[
-                { label: "8-2, 8-15, 8-47 og 8-49" },
-                { label: "8-3 og 8-13" },
-                { label: "8-4, 8-7, og 8,8" },
+                { label: "8-2, 8-15, 8-47 og 8-49", value: "8-2, 8-15, 8-47, 8-49" },
+                { label: "8-3 og 8-13", value: "8-3, 8-13" },
+                { label: "8-4, 8-7, og 8,8", value: "8-4, 8-7, 8-8" },
+                { label: "8-9", value: "8-9" },
+                { label: "8-12", value: "8-12" },
+                { label: "8-20", value: "8-20" },
+                { label: "8-28 - 8-30", value: "8-28, 8-29, 8-30" },
+                { label: "8-34 - 8-39", value: "8-34, 8-35, 8-36, 8-37, 8-38, 8-39" },
+                { label: "8-40 - 8-43", value: "8-40, 8-41, 8-42, 8-43" },
+                { label: "22-3 og 22-12", value: "22-3, 22-12" },
+                { label: "Annet", value: "?" },
               ]}
               dispatchFunc={filtrerHjemmel}
               aktiveFiltere={aktiveHjemler}

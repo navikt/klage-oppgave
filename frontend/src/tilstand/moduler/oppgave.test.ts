@@ -97,6 +97,28 @@ describe("Oppgave epos", () => {
     );
   });
 
+  test("+++ QUERYBUILDER type", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 2,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "stigende" as "stigende",
+        },
+        filtrering: {
+          type: undefined,
+          ytelser: ["Sykepenger", "Dagpenger"],
+          hjemler: ["8-2, 8-13 og 8-49", "8-19"],
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19&antall=2&start=0&rekkefoelge=STIGENDE"
+    );
+  });
+
   test("+++ QUERYBUILDER sideantall", () => {
     const inputValues = {
       ident: "ZATHRAS",
@@ -270,6 +292,77 @@ describe("Oppgave epos", () => {
           oppgaver: {
             rader: [
               { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
+              { frist: "2018-12-21", ytelse: "FOR", hjemmel: "9-11" },
+              { frist: "2019-11-13", ytelse: "SYK", hjemmel: "10-1" },
+              { frist: "2018-12-21", ytelse: "DAG", hjemmel: "mangler" },
+            ],
+          },
+        };
+        const resultPayload = MOTTATT(mockedResponse);
+
+        const observableValues = {
+          a: initState,
+          c: {
+            payload: resultPayload.payload,
+            type: "oppgaver/MOTTATT",
+          },
+        };
+
+        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
+        const actual$ = hentOppgaverEpos(action$, state$, <AjaxCreationMethod>dependencies);
+        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
+      });
+    })
+  );
+
+  test(
+    "+++ FILTRER ETTER HJEMMEL",
+    marbles(() => {
+      ts.run((m) => {
+        const inputMarble = "a-";
+        const expectedMarble = "c-";
+
+        const inputValues = {
+          a: oppgaveRequest({
+            ident: "ZATHRAS",
+            antall: 5,
+            start: 0,
+            transformasjoner: {
+              sortering: {
+                frist: "synkende",
+              },
+              filtrering: {
+                hjemler: ["8-2, 8-13 og 8-49", "8-19"],
+              },
+            },
+          }),
+        };
+        const mockedResponse = <RaderMedMetadataUtvidet>{
+          antallTreffTotalt: 4,
+          start: 0,
+          antall: 5,
+          oppgaver: [
+            { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-2" },
+            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-13" },
+            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-49" },
+            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-19" },
+          ],
+          transformasjoner: inputValues.a.payload.transformasjoner,
+        };
+
+        const dependencies = {
+          getJSON: (url: string) => of(mockedResponse),
+        };
+
+        const initState = {
+          oppgaver: {
+            rader: [
+              { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-2" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-13" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-49" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-19" },
               { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
               { frist: "2018-12-21", ytelse: "FOR", hjemmel: "9-11" },
               { frist: "2019-11-13", ytelse: "SYK", hjemmel: "10-1" },

@@ -32,6 +32,7 @@ export interface Filter {
    * filtere i samme kolonne.
    */
   label: ReactNode;
+  value?: string;
 }
 
 export interface Filtrering {
@@ -176,11 +177,18 @@ export function buildQuery(url: string, data: OppgaveParams) {
     if (data.transformasjoner?.filtrering.hasOwnProperty(key)) {
       if (Array.isArray(data.transformasjoner.filtrering[key])) {
         if ("undefined" !== typeof data.transformasjoner.filtrering[key]) {
-          query.push(
-            encodeURIComponent(key) +
-              "=" +
-              encodeURIComponent(data.transformasjoner.filtrering[key].join(","))
-          );
+          if (key === "hjemler") {
+            let hjemler = data.transformasjoner.filtrering[key]!.join(",")
+              .replace(/ /g, "")
+              .replace(/og/g, ",");
+            query.push(encodeURIComponent(key) + "=" + encodeURIComponent(hjemler));
+          } else {
+            query.push(
+              encodeURIComponent(key) +
+                "=" +
+                encodeURIComponent(data.transformasjoner.filtrering[key].join(","))
+            );
+          }
         }
       } else if ("undefined" !== typeof data.transformasjoner.filtrering[key])
         query.push(
