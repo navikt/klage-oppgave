@@ -23,7 +23,7 @@ export interface OppgaveRad {
 }
 
 export interface OppgaveRader {
-  utsnitt: [OppgaveRad];
+  rader: [OppgaveRad];
   meta: Metadata;
 }
 
@@ -42,13 +42,12 @@ export interface Transformasjoner {
     hjemmel?: undefined | string;
   };
   sortering: {
-    frist: "ASC" | "DESC";
+    frist: "synkende" | "stigende";
   };
 }
 
 type OppgaveState = {
   rader?: [OppgaveRad?];
-  utsnitt?: [OppgaveRad?];
   transformasjoner: Transformasjoner;
   meta: Metadata;
   lasterData: boolean;
@@ -61,7 +60,6 @@ export const filteringSlice = createSlice({
   name: "filtrering",
   initialState: {
     rader: [],
-    utsnitt: [],
     lasterData: true,
     meta: {
       antall: 0,
@@ -76,7 +74,7 @@ export const filteringSlice = createSlice({
         hjemmel: undefined,
       },
       sortering: {
-        frist: "ASC",
+        frist: "synkende",
       },
     },
   } as OppgaveState,
@@ -86,7 +84,6 @@ export const filteringSlice = createSlice({
         const antall = action.payload.length;
         const t = state.meta.treffPerSide;
         state.rader = action.payload;
-        state.utsnitt = action.payload;
         state.meta.antall = antall;
         state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
         state.lasterData = false;
@@ -96,7 +93,7 @@ export const filteringSlice = createSlice({
     },
     UTSNITT: (state, action: PayloadAction<RadMedTransformasjoner>) => {
       state.transformasjoner = action.payload.transformasjoner;
-      state.utsnitt = action.payload.utsnitt;
+      state.rader = action.payload.rader;
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
@@ -107,7 +104,7 @@ export const filteringSlice = createSlice({
     SETT_SIDE: (state, action: PayloadAction<number>) => {
       state.meta.side = action.payload;
       const t = state.meta.treffPerSide;
-      const antall = state.utsnitt?.length;
+      const antall = state.rader?.length;
       if (antall) {
         state.meta.antall = antall;
         state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
@@ -122,7 +119,7 @@ export const filteringSlice = createSlice({
 
 interface RadMedTransformasjoner {
   transformasjoner: Transformasjoner;
-  utsnitt: [OppgaveRad];
+  rader: [OppgaveRad];
 }
 
 export default filteringSlice.reducer;
@@ -139,20 +136,20 @@ export const transformerRader = createAction<Transformasjoner>("filtrering/TRANS
 //==========
 // Sortering og filtrering
 //==========
-function sorterASC(utsnitt: Array<OppgaveRad> | any) {
-  return utsnitt.slice().sort(function (a: any, b: any) {
+function sorterASC(rader: Array<OppgaveRad> | any) {
+  return rader.slice().sort(function (a: any, b: any) {
     return new Date(a.frist).getTime() - new Date(b.frist).getTime();
   });
 }
 
-function sorterDESC(utsnitt: Array<OppgaveRad> | any) {
-  return utsnitt.slice().sort(function (a: any, b: any) {
+function sorterDESC(rader: Array<OppgaveRad> | any) {
+  return rader.slice().sort(function (a: any, b: any) {
     return new Date(b.frist).getTime() - new Date(a.frist).getTime();
   });
 }
 
-function filtrerHjemmel(utsnitt: Array<OppgaveRad> | any, hjemmel: string | undefined) {
-  return utsnitt.slice().filter((rad: OppgaveRad) => {
+function filtrerHjemmel(rader: Array<OppgaveRad> | any, hjemmel: string | undefined) {
+  return rader.slice().filter((rad: OppgaveRad) => {
     if (hjemmel === undefined) {
       return rad;
     } else {
@@ -161,8 +158,8 @@ function filtrerHjemmel(utsnitt: Array<OppgaveRad> | any, hjemmel: string | unde
   });
 }
 
-function filtrerType(utsnitt: Array<OppgaveRad> | any, type: string | undefined) {
-  return utsnitt.slice().filter((rad: OppgaveRad) => {
+function filtrerType(rader: Array<OppgaveRad> | any, type: string | undefined) {
+  return rader.slice().filter((rad: OppgaveRad) => {
     if (type === undefined) {
       return rad;
     } else {
@@ -171,8 +168,8 @@ function filtrerType(utsnitt: Array<OppgaveRad> | any, type: string | undefined)
   });
 }
 
-function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: string | undefined) {
-  return utsnitt.slice().filter((rad: OppgaveRad) => {
+function filtrerYtelse(rader: Array<OppgaveRad> | any, ytelse: string | undefined) {
+  return rader.slice().filter((rad: OppgaveRad) => {
     if (ytelse === undefined) {
       return rad;
     } else {
@@ -210,13 +207,13 @@ export function transformerEpos(
       } else if (action.payload.filtrering?.ytelse === undefined) {
         rader = filtrerYtelse(rader, undefined);
       }
-      if (action.payload.sortering?.frist === "ASC") {
+      if (action.payload.sortering?.frist === "synkende") {
         rader = sorterASC(rader);
       } else {
         rader = sorterDESC(rader);
       }
 
-      return of(UTSNITT({ transformasjoner: action.payload, utsnitt: rader }));
+      return of(UTSNITT({ transformasjoner: action.payload, rader: rader }));
     })
   );
 }

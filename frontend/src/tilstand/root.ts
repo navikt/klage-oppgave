@@ -6,7 +6,6 @@ import { combineReducers } from "redux";
 import oppgaver, { OPPGAVER_EPICS } from "./moduler/oppgave";
 import meg, { MEG_EPICS } from "./moduler/meg";
 import saksbehandler, { TILDEL_EPICS } from "./moduler/saksbehandler";
-import mineSaker, { MINESAKER_EPICS } from "./moduler/mine_saker";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 
 const epics: Array<(
@@ -14,18 +13,12 @@ const epics: Array<(
   $state: StateObservable<RootStateOrAny>,
   getJSON: AjaxCreationMethod,
   put: AjaxCreationMethod
-) => Observable<PayloadAction<any>>> = [
-  ...OPPGAVER_EPICS,
-  ...MEG_EPICS,
-  ...TILDEL_EPICS,
-  ...MINESAKER_EPICS,
-];
+) => Observable<PayloadAction<any>>> = [...OPPGAVER_EPICS, ...MEG_EPICS, ...TILDEL_EPICS];
 export const rootEpic = combineEpics.apply(combineEpics, epics);
 
 const rootReducer = combineReducers({
   oppgaver,
   meg,
-  mineSaker,
   saksbehandler,
 });
 

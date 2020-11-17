@@ -1,86 +1,42 @@
 import express from "express";
 import cors from "cors";
-import slowDown from "express-slow-down";
 import * as fs from "fs";
 import bodyParser from "body-parser";
 import { eqNumber } from "fp-ts/lib/Eq";
 import JSONStream from "jsonstream";
 import es from "event-stream";
 import chalk from "chalk";
+import { filtrerOppgaver } from "./oppgaver";
+import { OppgaveQuery } from "./types";
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-
 const port = 3000; // default port to listen
-const speedLimiter = slowDown({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  delayAfter: 10, // allow 100 requests per 15 minutes, then...
-  delayMs: 500, // begin adding 500ms of delay per request above 100:
-});
-app.use(speedLimiter);
 
-app.get("/ansatte/:id/ikketildelteoppgaver", (req, res) => {
-  return fs
-    .createReadStream("./fixtures/oppgaver.json")
-    .on("data", (data: string) => {
-      res.write(data);
-    })
-    .on("end", () => {
-      res.end();
+async function hentOppgaver() {
+  const sqlite3 = require("sqlite3");
+  let db = new sqlite3.Database("./oppgaver.db");
+  let sql = `SELECT Id, frist FROM Oppgaver LIMIT 10`;
+  return new Promise((resolve, reject) => {
+    db.all(sql, (err: any, rad: any) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(rad);
     });
-});
-
-app.get("/ansatte/:id/tildelteoppgaver", (req, res) => {
-  const saksbehandler = req.params.id;
-  console.log(req.params, saksbehandler);
-
-  let first = true;
-  let written = false;
-  return fs
-    .createReadStream("./fixtures/oppgaver.json")
-    .pipe(JSONStream.parse("*"))
-    .pipe(
-      es.map(function (data: any, cb: Function) {
-        if (first) {
-          cb(
-            null,
-            data.oppgaver.saksbehandler.ident === saksbehandler
-              ? "[" + JSON.stringify(data)
-              : "["
-          );
-          first = false;
-          if (data.oppgaver.saksbehandler.ident === saksbehandler)
-            written = true;
-        } else {
-          if (written) {
-            cb(
-              null,
-              data.oppgaver.saksbehandler.ident == saksbehandler
-                ? "," + JSON.stringify(data)
-                : ""
-            );
-          } else {
-            cb(
-              null,
-              data.oppgaver.saksbehandler.ident == saksbehandler
-                ? JSON.stringify(data)
-                : ""
-            );
-          }
-          if (!written && data.oppgaver.saksbehandler.ident === saksbehandler)
-            written = true;
-        }
-      })
-    )
-    .on("data", (data: string) => {
-      res.write(data);
-      res.flushHeaders();
-    })
-    .on("end", () => {
-      res.write("]");
-      res.end();
+    db.close((err: { message: string }) => {
+      if (err) {
+        console.error(err.message);
+      }
+      console.log("Close the database connection.");
     });
+  });
+}
+
+app.get("/ansatte/:id/oppgaver", async (req, res) => {
+  const result = await filtrerOppgaver((req.query as unknown) as OppgaveQuery);
+  res.send(result);
 });
 
 interface OppgaveModell {

@@ -8,6 +8,7 @@ type PagineringType = {
 };
 
 export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
+  startSide = Math.floor(startSide);
   let n = startSide;
   let out = [];
   let temp = [];

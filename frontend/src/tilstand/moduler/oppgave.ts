@@ -6,6 +6,7 @@ import { of } from "rxjs";
 import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
+import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 
 //==========
 // Type defs
@@ -31,6 +32,7 @@ export interface Filter {
    * filtere i samme kolonne.
    */
   label: ReactNode;
+  value?: string;
 }
 
 export interface Filtrering {
@@ -53,77 +55,90 @@ interface Metadata {
 }
 
 export interface OppgaveRader {
-  utsnitt: [OppgaveRad];
+  rader: [OppgaveRad];
   meta: Metadata;
 }
 
 export interface Transformasjoner {
   filtrering?: {
-    type?: undefined | string | Filter[];
-    ytelse?: undefined | string | Filter[];
-    hjemmel?: undefined | string | Filter[];
+    typer?: undefined | string[] | Filter[];
+    ytelser?: undefined | ytelseType[] | Filter[];
+    hjemler?: undefined | string[] | Filter[];
   };
   sortering: {
-    frist: "ASC" | "DESC" | undefined;
+    frist: "synkende" | "stigende";
   };
 }
 
-type OppgaveState = {
-  rader?: [OppgaveRad?];
-  utsnitt?: [OppgaveRad?];
+export type OppgaveState = {
+  rader?: OppgaveRad[];
   transformasjoner: Transformasjoner;
   meta: Metadata;
   lasterData: boolean;
 };
 
-interface RaderMedMetadata {
+export interface RaderMedMetadata {
   antallTreffTotalt: number;
-  oppgaver: [OppgaveRad];
+  oppgaver: OppgaveRad[];
+}
+export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
+  start: number;
+  antall: number;
+  transformasjoner: Transformasjoner;
 }
 
 //==========
 // Reducer
 //==========
+export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
+  const { antallTreffTotalt, start, antall } = payload;
+  state.rader = payload.oppgaver;
+  state.lasterData = false;
+  state.meta.antall = antall;
+  if (start === 0) {
+    state.meta.side = 1;
+  } else {
+    state.meta.side = start / antall + 1;
+  }
+  state.meta.sider =
+    Math.floor(antallTreffTotalt / antall) + (antallTreffTotalt % antall !== 0 ? 1 : 0);
+  state.lasterData = false;
+  state.meta.feilmelding = undefined;
+  state.transformasjoner = payload.transformasjoner;
+  return state;
+}
+
 export const oppgaveSlice = createSlice({
   name: "oppgaver",
   initialState: {
     rader: [],
-    utsnitt: [],
-    lasterData: true,
+    lasterData: false,
     meta: {
       antall: 0,
       sider: 1,
-      treffPerSide: 10,
+      treffPerSide: 15,
       side: 1,
     },
     transformasjoner: {
       filtrering: {
-        type: undefined,
-        ytelse: undefined,
-        hjemmel: undefined,
+        typer: undefined,
+        ytelser: undefined,
+        hjemler: undefined,
       },
       sortering: {
-        frist: undefined,
+        frist: "synkende",
       },
     },
   } as OppgaveState,
   reducers: {
-    MOTTATT: (state, action: PayloadAction<RaderMedMetadata>) => {
-      if (action.payload) {
-        const antall = action.payload.antallTreffTotalt;
-        const t = state.meta.treffPerSide;
-        state.rader = action.payload.oppgaver;
-        state.utsnitt = action.payload.oppgaver;
-        state.meta.antall = antall;
-        state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
-        state.lasterData = false;
-        state.meta.feilmelding = undefined;
-      }
+    HENT: (state) => {
+      state.lasterData = true;
       return state;
     },
-    UTSNITT: (state, action: PayloadAction<RadMedTransformasjoner>) => {
-      state.transformasjoner = action.payload.transformasjoner;
-      state.utsnitt = action.payload.utsnitt;
+    MOTTATT: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
+      if (action.payload) {
+        state = MottatteRader(action.payload, state);
+      }
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
@@ -131,161 +146,96 @@ export const oppgaveSlice = createSlice({
       state.lasterData = false;
       return state;
     },
-    SETT_SIDE: (state, action: PayloadAction<number>) => {
-      state.meta.side = action.payload;
-      const t = state.meta.treffPerSide;
-      const antall = state.utsnitt?.length;
-      if (antall) {
-        state.meta.antall = antall;
-        state.meta.sider = Math.floor(antall / t) + (antall % t !== 0 ? 1 : 0);
-      } else {
-        state.meta.antall = 0;
-        state.meta.sider = 1;
-      }
-      return state;
-    },
   },
 });
 
 interface RadMedTransformasjoner {
   transformasjoner: Transformasjoner;
-  utsnitt: [OppgaveRad];
+  rader: [OppgaveRad];
 }
 
 export interface OppgaveParams {
   ident: string;
-  offset: number;
-  limit: number;
-  hjemler?: string[];
-  order?: "ASC" | "DESC";
-  orderBy?: string;
-  typer?: string[];
-  ytelser?: string[];
+  start: number;
+  antall: number;
+  tildeltSaksbehandler?: string;
+  projeksjon?: "UTVIDET";
+  transformasjoner: Transformasjoner;
 }
 
-export type ytelseType = "Foreldrepenger" | "Dagpenger" | "Sykepenger" | undefined;
+export type ytelseType = ["Foreldrepenger"] | ["Dagpenger"] | ["Sykepenger"] | undefined;
 
 export default oppgaveSlice.reducer;
 
 //==========
 // Actions
 //==========
-export const { MOTTATT, UTSNITT, SETT_SIDE, FEILET } = oppgaveSlice.actions;
+export const { MOTTATT, FEILET } = oppgaveSlice.actions;
 export const oppgaveRequest = createAction<OppgaveParams>("oppgaver/HENT");
-export const settSide = createAction<number>("oppgaver/SETT_SIDE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
-
-export const oppgaveTransformerRader = createAction<Transformasjoner>("oppgaver/TRANSFORMER_RADER");
 
 //==========
 // Sortering og filtrering
 //==========
-function sorterASC(utsnitt: Array<OppgaveRad> | any) {
-  return utsnitt.slice().sort(function (a: any, b: any) {
-    return new Date(a.frist).getTime() - new Date(b.frist).getTime();
-  });
-}
-
-function sorterDESC(utsnitt: Array<OppgaveRad> | any) {
-  return utsnitt.slice().sort(function (a: any, b: any) {
-    return new Date(b.frist).getTime() - new Date(a.frist).getTime();
-  });
-}
-
-function filtrerHjemmel(utsnitt: Array<OppgaveRad> | any, hjemmel: string | undefined) {
-  return utsnitt.slice().filter((rad: OppgaveRad) => {
-    if (hjemmel === undefined) {
-      return rad;
-    } else {
-      return rad.hjemmel.split(" ").includes(hjemmel);
+export function buildQuery(url: string, data: OppgaveParams) {
+  let query = [];
+  for (let key in data.transformasjoner?.filtrering) {
+    if (data.transformasjoner?.filtrering.hasOwnProperty(key)) {
+      if (Array.isArray(data.transformasjoner.filtrering[key])) {
+        if ("undefined" !== typeof data.transformasjoner.filtrering[key]) {
+          if (key === "hjemler") {
+            let hjemler = data.transformasjoner.filtrering[key]!.join(",")
+              .replace(/ /g, "")
+              .replace(/og/g, ",");
+            query.push(encodeURIComponent(key) + "=" + encodeURIComponent(hjemler));
+          } else {
+            query.push(
+              encodeURIComponent(key) +
+                "=" +
+                encodeURIComponent(data.transformasjoner.filtrering[key].join(","))
+            );
+          }
+        }
+      } else if ("undefined" !== typeof data.transformasjoner.filtrering[key])
+        query.push(
+          encodeURIComponent(key) + "=" + encodeURIComponent(data.transformasjoner.filtrering[key])
+        );
     }
-  });
-}
+  }
+  query.push(`antall=${data.antall}`);
+  query.push(`start=${data.start}`);
+  query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
+  if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
+  if (data.tildeltSaksbehandler) query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
 
-function filtrerType(utsnitt: Array<OppgaveRad> | any, type: string | undefined) {
-  return utsnitt.slice().filter((rad: OppgaveRad) => {
-    if (type === undefined) {
-      return rad;
-    } else {
-      return rad.type.toLocaleLowerCase() === type.toLocaleLowerCase();
-    }
-  });
-}
-
-function filtrerYtelse(utsnitt: Array<OppgaveRad> | any, ytelse: ytelseType) {
-  return utsnitt.slice().filter((rad: OppgaveRad) => {
-    if (ytelse === undefined) {
-      return rad;
-    } else {
-      let ytelseKode;
-      switch (ytelse) {
-        case "Foreldrepenger":
-          ytelseKode = "FOR";
-          break;
-        case "Dagpenger":
-          ytelseKode = "DAG";
-          break;
-        case "Sykepenger":
-          ytelseKode = "SYK";
-      }
-      return rad.ytelse === ytelseKode;
-    }
-  });
+  return `${url}?${query.join("&")}`;
 }
 
 //==========
 // Epos
 //==========
-export function oppgaveTransformerEpos(
-  action$: ActionsObservable<PayloadAction<Transformasjoner>>,
-  state$: StateObservable<RootStateOrAny>
-) {
-  return action$.pipe(
-    ofType(oppgaveTransformerRader.type),
-    withLatestFrom(state$),
-    switchMap(([action, state]) => {
-      let rader = state.oppgaver.rader.slice();
-
-      if (action.payload.filtrering?.hjemmel) {
-        rader = filtrerHjemmel(rader, action.payload.filtrering.hjemmel as string);
-      } else if (!action.payload.filtrering?.hjemmel) {
-        rader = filtrerHjemmel(rader, undefined);
-      }
-
-      if (action.payload.filtrering?.type) {
-        rader = filtrerType(rader, action.payload.filtrering.type as string);
-      } else if (action.payload.filtrering?.type === undefined) {
-        rader = filtrerType(rader, undefined);
-      }
-      if (action.payload.filtrering?.ytelse) {
-        rader = filtrerYtelse(rader, action.payload.filtrering.ytelse as ytelseType);
-      } else if (action.payload.filtrering?.ytelse === undefined) {
-        rader = filtrerYtelse(rader, undefined);
-      }
-      if (action.payload.sortering?.frist === "ASC") {
-        rader = sorterASC(rader);
-      } else {
-        rader = sorterDESC(rader);
-      }
-
-      return of(UTSNITT({ transformasjoner: action.payload, utsnitt: rader }));
-    })
-  );
-}
-
-function hentOppgaverEpos(
+export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
-    switchMap(([action]) => {
-      let oppgaveUrl = `/api/ansatte/${action.payload.ident}/ikketildelteoppgaver?antall=${action.payload.limit}&start=${action.payload.offset}`;
-      const hentOppgaver = axios
-        .get<RaderMedMetadata>(oppgaveUrl)
-        .pipe(map((oppgaver) => MOTTATT(oppgaver)));
+    switchMap(([action, state]) => {
+      let rader = state.oppgaver.rader.slice();
+      let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
+      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
+        map((oppgaver) =>
+          MOTTATT({
+            start: action.payload.start,
+            antall: action.payload.antall,
+            transformasjoner: action.payload.transformasjoner,
+            ...oppgaver,
+          })
+        )
+      );
       return hentOppgaver.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => of(FEILET(error)))
@@ -294,4 +244,4 @@ function hentOppgaverEpos(
   );
 }
 
-export const OPPGAVER_EPICS = [oppgaveTransformerEpos, hentOppgaverEpos];
+export const OPPGAVER_EPICS = [hentOppgaverEpos];

@@ -1,10 +1,27 @@
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
-import { oppgaveTransformerRader, oppgaveTransformerEpos } from "./oppgave";
+import {
+  buildQuery,
+  hentOppgaverEpos,
+  oppgaveRequest,
+  MOTTATT,
+  RaderMedMetadata,
+  RaderMedMetadataUtvidet,
+  oppgaveSlice,
+  MottatteRader,
+  OppgaveState,
+  OppgaveRad,
+  Transformasjoner,
+  ytelseType,
+} from "./oppgave";
+import { ajax } from "rxjs/ajax";
+import { of } from "rxjs";
+import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
+  const originalAjaxGet = ajax.get;
 
   beforeEach(() => {
     ts = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
@@ -12,6 +29,228 @@ describe("Oppgave epos", () => {
 
   afterEach(() => {
     ts.flush();
+    ajax.get = originalAjaxGet;
+  });
+
+  /**
+   * Test queryBuilder
+   */
+  test("+++ QUERYBUILDER ytelse", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 2,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "synkende" as "synkende",
+        },
+        filtrering: {
+          ytelser: [
+            ("Sykepenger" as unknown) as ytelseType,
+            ("Dagpenger" as unknown) as ytelseType,
+          ],
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
+    );
+  });
+
+  test("+++ QUERYBUILDER type", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 2,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "synkende" as "synkende",
+        },
+        filtrering: {
+          typer: ["klage"],
+          ytelser: [
+            ("Sykepenger" as unknown) as ytelseType,
+            ("Dagpenger" as unknown) as ytelseType,
+          ],
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/oppgaver?typer=klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE"
+    );
+  });
+
+  test("+++ QUERYBUILDER type", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 2,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "stigende" as "stigende",
+        },
+        filtrering: {
+          type: undefined,
+          ytelser: [
+            ("Sykepenger" as unknown) as ytelseType,
+            ("Dagpenger" as unknown) as ytelseType,
+          ],
+          hjemler: ["8-12", "9-31"],
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE"
+    );
+  });
+
+  test("+++ QUERYBUILDER type", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 2,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "stigende" as "stigende",
+        },
+        filtrering: {
+          type: undefined,
+          ytelser: [
+            ("Sykepenger" as unknown) as ytelseType,
+            ("Dagpenger" as unknown) as ytelseType,
+          ],
+          hjemler: ["8-2, 8-13 og 8-49", "8-19", "8-16"],
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&rekkefoelge=STIGENDE"
+    );
+  });
+
+  test("+++ QUERYBUILDER sideantall", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 25,
+      start: 100,
+      transformasjoner: {
+        sortering: {
+          frist: "stigende" as "stigende",
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual("/ansatte/ZATHRAS/oppgaver?antall=25&start=100&rekkefoelge=STIGENDE");
+  });
+
+  test("+++ APP sideantall meta", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      antall: 15,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "stigende" as "stigende",
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual("/ansatte/ZATHRAS/oppgaver?antall=15&start=0&rekkefoelge=STIGENDE");
+  });
+
+  test("+++ APP sideantall meta for side 1", () => {
+    const mockedResponse = <RaderMedMetadataUtvidet>{
+      antallTreffTotalt: 72,
+      start: 0,
+      antall: 15,
+      oppgaver: [],
+      transformasjoner: {
+        filtrering: {},
+        sortering: {
+          frist: "stigende",
+        },
+      },
+    };
+    const initState = ({
+      rader: [],
+      transformasjoner: {},
+      meta: {},
+      lasterData: false,
+    } as unknown) as OppgaveState;
+    const resultState = MottatteRader(mockedResponse, initState);
+    expect(resultState.meta.side).toStrictEqual(1);
+  });
+
+  test("+++ APP sideantall meta for side 2", () => {
+    const mockedResponse = <RaderMedMetadataUtvidet>{
+      antallTreffTotalt: 72,
+      start: 15,
+      antall: 15,
+      oppgaver: [],
+      transformasjoner: {
+        filtrering: {},
+        sortering: {
+          frist: "stigende",
+        },
+      },
+    };
+    const initState = ({
+      rader: [],
+      transformasjoner: {},
+      meta: {},
+      lasterData: false,
+    } as unknown) as OppgaveState;
+    const resultState = MottatteRader(mockedResponse, initState);
+    expect(resultState.meta.side).toStrictEqual(2);
+  });
+  test("+++ APP sideantall meta for side 3", () => {
+    const mockedResponse = <RaderMedMetadataUtvidet>{
+      antallTreffTotalt: 72,
+      start: 30,
+      antall: 15,
+      oppgaver: [],
+      transformasjoner: {
+        filtrering: {},
+        sortering: {
+          frist: "stigende",
+        },
+      },
+    };
+    const initState = ({
+      rader: [],
+      transformasjoner: {},
+      meta: {},
+      lasterData: false,
+    } as unknown) as OppgaveState;
+    const resultState = MottatteRader(mockedResponse, initState);
+    expect(resultState.meta.side).toStrictEqual(3);
+    expect(resultState.meta.sider).toStrictEqual(5);
+  });
+  test("+++ APP sideantall meta for side 5", () => {
+    const mockedResponse = <RaderMedMetadataUtvidet>{
+      antallTreffTotalt: 72,
+      start: 60,
+      antall: 15,
+      oppgaver: [],
+      transformasjoner: {
+        filtrering: {},
+        sortering: {
+          frist: "stigende",
+        },
+      },
+    };
+    const initState = ({
+      rader: [],
+      transformasjoner: {},
+      meta: {},
+      lasterData: false,
+    } as unknown) as OppgaveState;
+    const resultState = MottatteRader(mockedResponse, initState);
+    expect(resultState.meta.side).toStrictEqual(5);
   });
 
   /**
@@ -26,165 +265,67 @@ describe("Oppgave epos", () => {
         const expectedMarble = "c-";
 
         const inputValues = {
-          a: oppgaveTransformerRader({
-            sortering: {
-              frist: "ASC",
-            },
-            filtrering: {
-              ytelse: "Sykepenger",
+          a: oppgaveRequest({
+            ident: "ZATHRAS",
+            antall: 2,
+            start: 0,
+            transformasjoner: {
+              sortering: {
+                frist: "synkende",
+              },
+              filtrering: {
+                ytelser: [("Sykepenger" as unknown) as ytelseType],
+              },
             },
           }),
         };
+        const mockedResponse = <RaderMedMetadataUtvidet>{
+          antallTreffTotalt: 2,
+          start: 0,
+          antall: 2,
+          oppgaver: [
+            { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" },
+            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
+          ],
+          transformasjoner: {
+            sortering: {
+              frist: "synkende",
+            },
+            filtrering: {
+              ytelser: [("Sykepenger" as unknown) as ytelseType],
+            },
+          },
+        };
+
+        const dependencies = {
+          getJSON: (url: string) => of(mockedResponse),
+        };
+
         const initState = {
           oppgaver: {
             rader: [
               { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" },
-              { frist: "2020-12-15", ytelse: "FOR", hjemmel: "10-12" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
+              { frist: "2018-12-21", ytelse: "FOR", hjemmel: "9-11" },
+              { frist: "2019-11-13", ytelse: "SYK", hjemmel: "10-1" },
               { frist: "2018-12-21", ytelse: "DAG", hjemmel: "mangler" },
             ],
           },
         };
-        const resultPayload = {
-          utsnitt: [{ frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" }],
-          transformasjoner: {
-            sortering: {
-              frist: "ASC",
-            },
-            filtrering: {
-              ytelse: "Sykepenger",
-            },
-          },
-        };
+        const resultPayload = MOTTATT(mockedResponse);
 
         const observableValues = {
           a: initState,
           c: {
-            payload: resultPayload,
-            type: "oppgaver/UTSNITT",
+            payload: resultPayload.payload,
+            type: "oppgaver/MOTTATT",
           },
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = oppgaveTransformerEpos(action$, state$);
+        const actual$ = hentOppgaverEpos(action$, state$, <AjaxCreationMethod>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
-        //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
-      });
-    })
-  );
-
-  test(
-    "+++ FILTRER ETTER TYPE (KLAGE)",
-    marbles(() => {
-      ts.run((m) => {
-        const inputMarble = "a-";
-        const expectedMarble = "c-";
-
-        const inputValues = {
-          a: oppgaveTransformerRader({
-            sortering: {
-              frist: "ASC",
-            },
-            filtrering: {
-              type: "KLAGE",
-            },
-          }),
-        };
-        const initState = {
-          oppgaver: {
-            rader: [
-              { frist: "2019-09-12", type: "Klage", ytelse: "SYK", hjemmel: "8-4" },
-              { frist: "2020-12-15", type: "klage", ytelse: "FOR", hjemmel: "10-12" },
-              { frist: "2018-12-21", type: "anke", ytelse: "DAG", hjemmel: "mangler" },
-            ],
-          },
-        };
-        const resultPayload = {
-          utsnitt: [
-            { frist: "2019-09-12", type: "Klage", ytelse: "SYK", hjemmel: "8-4" },
-            { frist: "2020-12-15", type: "klage", ytelse: "FOR", hjemmel: "10-12" },
-          ],
-          transformasjoner: {
-            sortering: {
-              frist: "ASC",
-            },
-            filtrering: {
-              type: "KLAGE",
-            },
-          },
-        };
-
-        const observableValues = {
-          a: initState,
-          c: {
-            payload: resultPayload,
-            type: "oppgaver/UTSNITT",
-          },
-        };
-
-        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = oppgaveTransformerEpos(action$, state$);
-        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
-        //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
-      });
-    })
-  );
-
-  test(
-    "+++ FILTRER ETTER TYPE (KLAGE) VIS ALLE",
-    marbles(() => {
-      ts.run((m) => {
-        const inputMarble = "a-";
-        const expectedMarble = "c-";
-
-        const inputValues = {
-          a: oppgaveTransformerRader({
-            sortering: {
-              frist: "ASC",
-            },
-            filtrering: {
-              type: undefined,
-            },
-          }),
-        };
-        const initState = {
-          oppgaver: {
-            rader: [
-              { frist: "2018-12-21", type: "anke", ytelse: "DAG", hjemmel: "mangler" },
-              { frist: "2019-09-12", type: "Klage", ytelse: "SYK", hjemmel: "8-4" },
-              { frist: "2020-12-15", type: "klage", ytelse: "FOR", hjemmel: "10-12" },
-            ],
-          },
-        };
-        const resultPayload = {
-          utsnitt: initState.oppgaver.rader,
-          transformasjoner: {
-            sortering: {
-              frist: "ASC",
-            },
-            filtrering: {
-              type: undefined,
-            },
-          },
-        };
-
-        const observableValues = {
-          a: initState,
-          c: {
-            payload: resultPayload,
-            type: "oppgaver/UTSNITT",
-          },
-        };
-
-        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = oppgaveTransformerEpos(action$, state$);
-        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
-        //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
       });
     })
   );
@@ -197,231 +338,65 @@ describe("Oppgave epos", () => {
         const expectedMarble = "c-";
 
         const inputValues = {
-          a: oppgaveTransformerRader({
-            sortering: {
-              frist: "ASC",
-            },
-            filtrering: {
-              hjemmel: "8-4",
-            },
-          }),
-        };
-        const initState = {
-          oppgaver: {
-            rader: [
-              { frist: "2019-09-12", hjemmel: "8-4" },
-              { frist: "2020-12-15", hjemmel: "10-12" },
-              { frist: "2018-12-21", hjemmel: "mangler" },
-            ],
+          a: oppgaveRequest({
+            ident: "ZATHRAS",
+            antall: 5,
+            start: 0,
             transformasjoner: {
-              filtrering: {
-                type: undefined,
-                ytelse: undefined,
-                hjemmel: undefined,
-              },
               sortering: {
-                frist: "ASC",
+                frist: "synkende",
               },
-            },
-          },
-        };
-        const resultPayload = {
-          utsnitt: [{ frist: "2019-09-12", hjemmel: "8-4" }],
-          transformasjoner: {
-            ...initState.oppgaver.transformasjoner,
-            filtrering: {
-              ...initState.oppgaver.transformasjoner.filtrering,
-              hjemmel: "8-4",
-            },
-          },
-        };
-
-        const observableValues = {
-          a: initState,
-          c: {
-            payload: resultPayload,
-            type: "oppgaver/UTSNITT",
-          },
-        };
-
-        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = oppgaveTransformerEpos(action$, state$);
-        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
-        //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
-      });
-    })
-  );
-
-  test(
-    "+++ FILTRER ETTER HJEMMEL, VIS ALLE",
-    marbles(() => {
-      ts.run((m) => {
-        const inputMarble = "a-";
-        const expectedMarble = "c-";
-
-        const inputValues = {
-          a: oppgaveTransformerRader({
-            sortering: {
-              frist: "ASC",
-            },
-            filtrering: {
-              hjemmel: undefined,
-            },
-          }),
-        };
-        const initState = {
-          oppgaver: {
-            rader: [
-              { frist: "2018-12-21", hjemmel: "mangler" },
-              { frist: "2019-09-12", hjemmel: "8-4" },
-              { frist: "2020-12-15", hjemmel: "10-12" },
-            ],
-            transformasjoner: {
               filtrering: {
-                hjemmel: undefined,
+                hjemler: ["8-2, 8-13 og 8-49", "8-19"],
               },
-              sortering: {
-                frist: "ASC",
-              },
-            },
-          },
-        };
-        const resultPayload = {
-          utsnitt: [
-            { frist: "2018-12-21", hjemmel: "mangler" },
-            { frist: "2019-09-12", hjemmel: "8-4" },
-            { frist: "2020-12-15", hjemmel: "10-12" },
-          ],
-          transformasjoner: initState.oppgaver.transformasjoner,
-        };
-
-        const observableValues = {
-          a: initState,
-          c: {
-            payload: resultPayload,
-            type: "oppgaver/UTSNITT",
-          },
-        };
-
-        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = oppgaveTransformerEpos(action$, state$);
-        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
-        //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
-      });
-    })
-  );
-
-  /**
-   * Tester sortering
-   */
-  test(
-    "+++ SORTER ETTER FRIST - NYESTE FØRST (DESC)",
-    marbles(() => {
-      ts.run((m) => {
-        const inputMarble = "a-";
-        const expectedMarble = "c-";
-
-        const inputValues = {
-          a: oppgaveTransformerRader({
-            sortering: {
-              frist: "DESC",
             },
           }),
         };
+        const mockedResponse = <RaderMedMetadataUtvidet>{
+          antallTreffTotalt: 4,
+          start: 0,
+          antall: 5,
+          oppgaver: [
+            { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-2" },
+            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-13" },
+            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-49" },
+            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-19" },
+          ],
+          transformasjoner: inputValues.a.payload.transformasjoner,
+        };
+
+        const dependencies = {
+          getJSON: (url: string) => of(mockedResponse),
+        };
+
         const initState = {
           oppgaver: {
             rader: [
-              { frist: "2019-09-12", hjemmel: "8-4" },
-              { frist: "2020-12-15", hjemmel: "10-12" },
-              { frist: "2018-12-21", hjemmel: "mangler" },
+              { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-2" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-13" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-49" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-19" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
+              { frist: "2018-12-21", ytelse: "FOR", hjemmel: "9-11" },
+              { frist: "2019-11-13", ytelse: "SYK", hjemmel: "10-1" },
+              { frist: "2018-12-21", ytelse: "DAG", hjemmel: "mangler" },
             ],
           },
         };
-        const resultPayload = {
-          utsnitt: [
-            { frist: "2020-12-15", hjemmel: "10-12" },
-            { frist: "2019-09-12", hjemmel: "8-4" },
-            { frist: "2018-12-21", hjemmel: "mangler" },
-          ],
-          transformasjoner: {
-            sortering: {
-              frist: "DESC",
-            },
-          },
-        };
+        const resultPayload = MOTTATT(mockedResponse);
 
         const observableValues = {
           a: initState,
           c: {
-            payload: resultPayload,
-            type: "oppgaver/UTSNITT",
+            payload: resultPayload.payload,
+            type: "oppgaver/MOTTATT",
           },
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = oppgaveTransformerEpos(action$, state$);
+        const actual$ = hentOppgaverEpos(action$, state$, <AjaxCreationMethod>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
-        //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
-      });
-    })
-  );
-
-  test(
-    "+++ SORTER ETTER FRIST - ELDST FØRST (ASC)",
-    marbles(() => {
-      ts.run((m) => {
-        const inputMarble = "a-";
-        const expectedMarble = "c-";
-
-        const inputValues = {
-          a: oppgaveTransformerRader({
-            sortering: {
-              frist: "ASC",
-            },
-          }),
-        };
-        const initState = {
-          oppgaver: {
-            rader: [
-              { frist: "2019-09-12", hjemmel: "8-4" },
-              { frist: "2020-12-15", hjemmel: "10-12" },
-              { frist: "2018-12-21", hjemmel: "mangler" },
-            ],
-          },
-        };
-        const resultPayload = {
-          utsnitt: [
-            { frist: "2018-12-21", hjemmel: "mangler" },
-            { frist: "2019-09-12", hjemmel: "8-4" },
-            { frist: "2020-12-15", hjemmel: "10-12" },
-          ],
-          transformasjoner: {
-            sortering: {
-              frist: "ASC",
-            },
-          },
-        };
-
-        const observableValues = {
-          a: initState,
-          c: {
-            payload: resultPayload,
-            type: "oppgaver/UTSNITT",
-          },
-        };
-
-        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = oppgaveTransformerEpos(action$, state$);
-        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
-        //@ts-ignore
-        expect(state$.value.oppgaver.rader).toStrictEqual(initState.oppgaver.rader);
       });
     })
   );

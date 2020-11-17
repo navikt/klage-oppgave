@@ -1,4 +1,5 @@
 node_modules
+oppgaver.db
 secrets/*
 .env.development
 dist
