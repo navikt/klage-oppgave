@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 import {
   velgFiltrering,
+  velgOppgaver,
   velgSideLaster,
   velgSortering,
 } from "../../tilstand/moduler/oppgave.velgere";
@@ -16,6 +17,7 @@ import { genererTabellRader } from "./tabellfunksjoner";
 import Paginering from "../Paginering/Paginering";
 import { useHistory, useParams } from "react-router-dom";
 import NavFrontendSpinner from "nav-frontend-spinner";
+import Oppsett from "../Oppsett";
 
 function initState(filter: any) {
   if ("undefined" === typeof filter) {
@@ -27,12 +29,13 @@ function initState(filter: any) {
   });
 }
 
-const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
+const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
   const sortering = useSelector(velgSortering);
   const filtrering = useSelector(velgFiltrering);
   const sideLaster = useSelector(velgSideLaster);
+  const oppgaver = useSelector(velgOppgaver);
 
   interface ParamTypes {
     side: string | undefined;
@@ -72,15 +75,26 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
 
   useEffect(() => {
     settStart((tolketSide - 1) * antall);
-    if (meg.id) dispatchTransformering();
-  }, [hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter, tolketSide, meg, antall]);
+    if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/minesaker"));
+  }, [
+    hjemmelFilter,
+    ytelseFilter,
+    typeFilter,
+    sorteringFilter,
+    tolketSide,
+    meg,
+    antall,
+    history.location.pathname,
+  ]);
 
-  const dispatchTransformering = () =>
+  const dispatchTransformering = (utvidet: boolean) =>
     dispatch(
       oppgaveRequest({
         ident: meg.id,
         antall: antall,
         start: start,
+        projeksjon: utvidet ? "UTVIDET" : undefined,
+        tildeltSaksbehandler: utvidet ? meg.id : undefined,
         transformasjoner: {
           filtrering: {
             hjemler: hjemmelFilter,
@@ -137,6 +151,17 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
     settStart(0);
     history.push(history.location.pathname.replace(/\d+$/, "1"));
   };
+
+  if (oppgaver.meta.feilmelding) {
+    return (
+      <Oppsett isFetching={false}>
+        <div className={"feil"}>
+          <h1>{oppgaver.meta.feilmelding}</h1>
+          <div>Vennligst forsøk igjen litt senere...</div>
+        </div>
+      </Oppsett>
+    );
+  }
 
   if (sideLaster) {
     return <NavFrontendSpinner />;

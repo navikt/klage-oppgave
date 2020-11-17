@@ -34,66 +34,9 @@ async function hentOppgaver() {
   });
 }
 
-app.get("/oppgaver", async (req, res) => {
-  const rad = await hentOppgaver();
-  res.send(rad);
-});
-
 app.get("/ansatte/:id/oppgaver", async (req, res) => {
   const result = await filtrerOppgaver((req.query as unknown) as OppgaveQuery);
   res.send(result);
-});
-
-app.get("/ansatte/:id/tildelteoppgaver", (req, res) => {
-  const saksbehandler = req.params.id;
-  console.log(req.params, saksbehandler);
-
-  let first = true;
-  let written = false;
-  return fs
-    .createReadStream("./fixtures/oppgaver.json")
-    .pipe(JSONStream.parse("*"))
-    .pipe(
-      es.map(function (data: any, cb: Function) {
-        if (first) {
-          cb(
-            null,
-            data.oppgaver.saksbehandler.ident === saksbehandler
-              ? "[" + JSON.stringify(data)
-              : "["
-          );
-          first = false;
-          if (data.oppgaver.saksbehandler.ident === saksbehandler)
-            written = true;
-        } else {
-          if (written) {
-            cb(
-              null,
-              data.oppgaver.saksbehandler.ident == saksbehandler
-                ? "," + JSON.stringify(data)
-                : ""
-            );
-          } else {
-            cb(
-              null,
-              data.oppgaver.saksbehandler.ident == saksbehandler
-                ? JSON.stringify(data)
-                : ""
-            );
-          }
-          if (!written && data.oppgaver.saksbehandler.ident === saksbehandler)
-            written = true;
-        }
-      })
-    )
-    .on("data", (data: string) => {
-      res.write(data);
-      res.flushHeaders();
-    })
-    .on("end", () => {
-      res.write("]");
-      res.end();
-    });
 });
 
 interface OppgaveModell {
