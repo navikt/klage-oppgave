@@ -14,7 +14,10 @@ def init_oppgaver()
 		        type TEXT,
                 ytelse TEXT,
                 hjemmel TEXT,
-                frist TEXT
+                frist TEXT,
+                saksbehandler TEXT,
+                fnr TEXT,
+                navn TEXT
             )
             "
   rescue SQLite3::Exception => e
@@ -27,11 +30,11 @@ def init_oppgaver()
   end
 end
 
-def insert_oppgave(id, type, ytelse, hjemmel, frist)
+def insert_oppgave(id, type, ytelse, hjemmel, frist, saksbehandler, fnr, navn)
   begin
 	  db = SQLite3::Database.open "../oppgaver.db"
-      db.execute("INSERT INTO Oppgaver (Id, type, ytelse, hjemmel, frist) VALUES (?, ?, ?, ?, ?)",
-                                        [id, type, ytelse, hjemmel, frist.to_s])
+      db.execute("INSERT INTO Oppgaver (Id, type, ytelse, hjemmel, frist, saksbehandler, fnr, navn) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                                        [id, type, ytelse, hjemmel, frist.to_s, saksbehandler, fnr, navn])
 
   rescue SQLite3::Exception => e
     puts "Exception occurred"
@@ -70,7 +73,9 @@ def lagData()
   ytelse = tilfeldigYtelse()
   frist = Faker::Date.backward(days: 365)
   hjemmel = nestenTilfeldigHjemmel()
-  insert_oppgave(id, type, ytelse, hjemmel, frist)
+  fnr = Faker::Number.number(digits: 11)
+  navn = Faker::Movies::PrincessBride.character
+  insert_oppgave(id, type, ytelse, hjemmel, frist, nestenTilfeldigSaksbehandler(), fnr, navn)
 end
 
 init_oppgaver()
