@@ -64,16 +64,16 @@ export const feiletHandling = createAction("saksbehandler/FEILET");
 export function tildelEpos(
   action$: ActionsObservable<PayloadAction<PayloadType>>,
   state$: StateObservable<RootStateOrAny>,
-  { put }: AjaxCreationMethod
+  { post }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(tildelMegHandling.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
-      const tildelMegUrl = `/api/oppgaver/${action.payload.oppgaveId}/saksbehandler`;
-      return put(
+      const tildelMegUrl = `/api/ansatte/${action.payload.ident}/oppgaver/${action.payload.oppgaveId}/saksbehandlertildeling`;
+      return post(
         tildelMegUrl,
-        { ident: action.payload.ident, versjon: action.payload.versjon },
+        { navIdent: action.payload.ident, oppgaveversjon: action.payload.versjon },
         { "Content-Type": "application/json" }
       )
         .pipe(

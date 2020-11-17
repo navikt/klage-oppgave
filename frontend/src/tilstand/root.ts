@@ -12,7 +12,8 @@ const epics: Array<(
   $action: ActionsObservable<PayloadAction<any>>,
   $state: StateObservable<RootStateOrAny>,
   getJSON: AjaxCreationMethod,
-  put: AjaxCreationMethod
+  put: AjaxCreationMethod,
+  post: AjaxCreationMethod
 ) => Observable<PayloadAction<any>>> = [...OPPGAVER_EPICS, ...MEG_EPICS, ...TILDEL_EPICS];
 export const rootEpic = combineEpics.apply(combineEpics, epics);
 

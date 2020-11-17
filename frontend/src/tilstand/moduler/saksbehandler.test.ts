@@ -8,7 +8,7 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 
 describe("TILDEL 'Meg' epos", () => {
   let ts: TestScheduler;
-  const originalAjaxPut = ajax.put;
+  const originalAjaxPut = ajax.post;
 
   beforeEach(() => {
     ts = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
@@ -16,7 +16,7 @@ describe("TILDEL 'Meg' epos", () => {
 
   afterEach(() => {
     ts.flush();
-    ajax.put = originalAjaxPut;
+    ajax.post = originalAjaxPut;
   });
 
   /**
@@ -54,7 +54,7 @@ describe("TILDEL 'Meg' epos", () => {
           },
         };
         const dependencies = {
-          put: (url: string) => of(mockedResponse),
+          post: (url: string) => of(mockedResponse),
         };
 
         const observableValues = {
