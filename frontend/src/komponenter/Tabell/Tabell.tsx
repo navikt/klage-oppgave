@@ -1,6 +1,6 @@
 import { Filter, OppgaveRader, oppgaveRequest, ytelseType } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 import {
   velgFiltrering,
@@ -8,14 +8,13 @@ import {
   velgSortering,
 } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
-import classNames from "classnames";
 import "../../stilark/Tabell.less";
 import "../../stilark/TabellHead.less";
 import FiltrerbarHeader, { settFilter } from "./FiltrerbarHeader";
 import { valgtOppgaveType } from "../types";
 import { genererTabellRader } from "./tabellfunksjoner";
 import Paginering from "../Paginering/Paginering";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import NavFrontendSpinner from "nav-frontend-spinner";
 
 function initState(filter: any) {
@@ -56,6 +55,8 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
   const [antall, settAntall] = useState<number>(5);
+  const [start, settStart] = useState<number>(5);
+  const history = useHistory();
 
   useEffect(() => {
     if (valgtOppgave.id) {
@@ -70,15 +71,16 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   }, [valgtOppgave.id]);
 
   useEffect(() => {
+    settStart((tolketSide - 1) * antall);
     if (meg.id) dispatchTransformering();
-  }, [hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter, tolketSide, meg]);
+  }, [hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter, tolketSide, meg, antall]);
 
   const dispatchTransformering = () =>
     dispatch(
       oppgaveRequest({
         ident: meg.id,
         antall: antall,
-        start: tolketSide,
+        start: start,
         transformasjoner: {
           filtrering: {
             hjemler: hjemmelFilter,
@@ -96,9 +98,10 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
     if (!filtre.length) {
       settTypeFilter(undefined);
     } else {
-      let value = filtre.map((f) => f.value as string);
-      settTypeFilter(value);
+      settTypeFilter(filtre.map((f) => f.value as string));
     }
+    settStart(0);
+    history.push(history.location.pathname.replace(/\d+$/, "1"));
   };
   const skiftSortering = (
     event: React.MouseEvent<HTMLElement | HTMLButtonElement>,
@@ -120,17 +123,19 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
     if (!filtre.length) {
       settHjemmelFilter(undefined);
     } else {
-      let value = filtre.map((f) => f.value as string);
-      settHjemmelFilter(value);
+      settHjemmelFilter(filtre.map((f) => f.value as string));
     }
+    settStart(0);
+    history.push(history.location.pathname.replace(/\d+$/, "1"));
   };
   const filtrerYtelse = (filtre: Filter[]) => {
     if (!filtre.length) {
       settYtelseFilter(undefined);
     } else {
-      let value = filtre.map((f) => f.value as ytelseType);
-      settYtelseFilter(value);
+      settYtelseFilter(filtre.map((f) => f.value as ytelseType));
     }
+    settStart(0);
+    history.push(history.location.pathname.replace(/\d+$/, "1"));
   };
 
   if (sideLaster) {
