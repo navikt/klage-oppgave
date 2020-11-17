@@ -67,27 +67,28 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
   let filterHjemler = hjemler?.replace(/ og /, ",").split(",");
   let db = new sqlite3.Database(path.join(__dirname, "../oppgaver.db"));
   let params: any = [];
+  let harTyper = "undefined" !== typeof typer;
+  let harYtelser = "undefined" !== typeof ytelser;
+  let harHjemler = "undefined" !== typeof hjemler;
 
-  let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, hjemmel, ytelse, frist,
-                                        saksbehandler, fnr, navn
+  let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, 
+                 hjemmel, ytelse, frist, saksbehandler, fnr, navn
                  FROM Oppgaver 
                  ${typeQuery(filterTyper).replace(/,/g, "")}
                  ${generiskFilterSpoerring(
-                   (typer?.length as unknown) as boolean,
+                   harTyper,
                    filterYtelser,
                    "ytelse"
                  ).replace(/,/g, "")}
-                             ${generiskFilterSpoerring(
-                               ((typer?.length as unknown) as boolean) ||
-                                 ((ytelser?.length as unknown) as boolean),
-                               filterHjemler,
-                               "hjemmel"
-                             ).replace(/,/g, "")}
-                      ${saksbehandlerFiltrering(
-                        ((typer?.length as unknown) as boolean) ||
-                          ((ytelser?.length as unknown) as boolean),
-                        tildeltSaksbehandler
-                      )}
+                  ${generiskFilterSpoerring(
+                    harTyper || harYtelser,
+                    filterHjemler,
+                    "hjemmel"
+                  ).replace(/,/g, "")}
+                  ${saksbehandlerFiltrering(
+                    harTyper || harYtelser,
+                    tildeltSaksbehandler
+                  )}
                  ORDER BY frist ${rekkefoelge === "STIGENDE" ? "ASC" : "DESC"}
                  LIMIT ?,? 
                  `;
