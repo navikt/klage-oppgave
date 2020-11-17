@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import slowDown from "express-slow-down";
 import * as fs from "fs";
 import bodyParser from "body-parser";
 import { eqNumber } from "fp-ts/lib/Eq";
@@ -13,14 +12,7 @@ import { OppgaveQuery } from "./types";
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-
 const port = 3000; // default port to listen
-const speedLimiter = slowDown({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  delayAfter: 10, // allow 100 requests per 15 minutes, then...
-  delayMs: 500, // begin adding 500ms of delay per requpest above 100:
-});
-app.use(speedLimiter);
 
 async function hentOppgaver() {
   const sqlite3 = require("sqlite3");
@@ -31,11 +23,6 @@ async function hentOppgaver() {
       if (err) {
         reject(err);
       }
-      /*
-            rad.forEach((row: any) => {
-                console.log(row)
-            })
-            */
       resolve(rad);
     });
     db.close((err: { message: string }) => {

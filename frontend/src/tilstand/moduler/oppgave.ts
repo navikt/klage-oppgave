@@ -62,7 +62,7 @@ export interface OppgaveRader {
 export interface Transformasjoner {
   filtrering?: {
     typer?: undefined | string[] | Filter[];
-    ytelser?: undefined | string[] | Filter[];
+    ytelser?: undefined | ytelseType[] | Filter[];
     hjemler?: undefined | string[] | Filter[];
   };
   sortering: {

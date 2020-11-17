@@ -13,6 +13,7 @@ import {
   OppgaveState,
   OppgaveRad,
   Transformasjoner,
+  ytelseType,
 } from "./oppgave";
 import { ajax } from "rxjs/ajax";
 import { of } from "rxjs";
@@ -44,7 +45,10 @@ describe("Oppgave epos", () => {
           frist: "synkende" as "synkende",
         },
         filtrering: {
-          ytelser: ["Sykepenger", "Dagpenger"],
+          ytelser: [
+            ("Sykepenger" as unknown) as ytelseType,
+            ("Dagpenger" as unknown) as ytelseType,
+          ],
         },
       },
     };
@@ -65,7 +69,10 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: ["klage"],
-          ytelser: ["Sykepenger", "Dagpenger"],
+          ytelser: [
+            ("Sykepenger" as unknown) as ytelseType,
+            ("Dagpenger" as unknown) as ytelseType,
+          ],
         },
       },
     };
@@ -86,7 +93,10 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           type: undefined,
-          ytelser: ["Sykepenger", "Dagpenger"],
+          ytelser: [
+            ("Sykepenger" as unknown) as ytelseType,
+            ("Dagpenger" as unknown) as ytelseType,
+          ],
           hjemler: ["8-12", "9-31"],
         },
       },
@@ -108,14 +118,17 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           type: undefined,
-          ytelser: ["Sykepenger", "Dagpenger"],
-          hjemler: ["8-2, 8-13 og 8-49", "8-19"],
+          ytelser: [
+            ("Sykepenger" as unknown) as ytelseType,
+            ("Dagpenger" as unknown) as ytelseType,
+          ],
+          hjemler: ["8-2, 8-13 og 8-49", "8-19", "8-16"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19&antall=2&start=0&rekkefoelge=STIGENDE"
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&rekkefoelge=STIGENDE"
     );
   });
 
@@ -261,7 +274,7 @@ describe("Oppgave epos", () => {
                 frist: "synkende",
               },
               filtrering: {
-                ytelser: ["Sykepenger"],
+                ytelser: [("Sykepenger" as unknown) as ytelseType],
               },
             },
           }),
@@ -279,7 +292,7 @@ describe("Oppgave epos", () => {
               frist: "synkende",
             },
             filtrering: {
-              ytelser: ["Sykepenger"],
+              ytelser: [("Sykepenger" as unknown) as ytelseType],
             },
           },
         };

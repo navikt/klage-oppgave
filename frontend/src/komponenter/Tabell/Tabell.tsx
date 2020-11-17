@@ -46,7 +46,7 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
 
-  const [ytelseFilter, settYtelseFilter] = useState<ytelseType>(undefined);
+  const [ytelseFilter, settYtelseFilter] = useState<ytelseType[] | undefined>(undefined);
   const [aktiveYtelser, settAktiveYtelser] = useState<Filter[]>(initState(filtrering.ytelser));
 
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
@@ -96,10 +96,8 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
     if (!filtre.length) {
       settTypeFilter(undefined);
     } else {
-      let typer = filtre.reduce((a, b) => {
-        return { label: `${a.label},${b.label}` };
-      });
-      settTypeFilter([typer.value as string]);
+      let value = filtre.map((f) => f.value as string);
+      settTypeFilter(value);
     }
   };
   const skiftSortering = (
@@ -122,21 +120,16 @@ const OppgaveTabell: any = (oppgaver: OppgaveRader) => {
     if (!filtre.length) {
       settHjemmelFilter(undefined);
     } else {
-      console.log({ filtre });
-      let hjemler = filtre.reduce((a, b) => {
-        return { label: `${a.value},${b.value}` };
-      });
-      settHjemmelFilter([hjemler.value as string]);
+      let value = filtre.map((f) => f.value as string);
+      settHjemmelFilter(value);
     }
   };
   const filtrerYtelse = (filtre: Filter[]) => {
     if (!filtre.length) {
       settYtelseFilter(undefined);
     } else {
-      let ytelser = filtre.reduce((a, b) => {
-        return { label: `${a.value},${b.value}` };
-      });
-      settYtelseFilter(ytelser.value as ytelseType);
+      let value = filtre.map((f) => f.value as ytelseType);
+      settYtelseFilter(value);
     }
   };
 

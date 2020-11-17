@@ -69,7 +69,6 @@ const setup = (authClient) => {
       );
       req.headers["Authorization"] = `Bearer ${token}`;
       req.headers["Accept"] = `application/json`;
-      console.log({ token });
       next();
     } else {
       next();
