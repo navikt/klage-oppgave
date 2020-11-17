@@ -1,18 +1,18 @@
 import { OppgaveQuery } from "./types";
 const sqlite3 = require("sqlite3");
 const path = require("path");
-type Oppgave = {
+interface Oppgave {
   frist: string;
   type: string;
   ytelse: string;
   hjemmel: string;
-};
-type Oppgaver = {
+}
+interface Oppgaver {
   antallTreffTotalt: number;
   oppgaver: [Oppgave];
-};
+}
 
-function generiskTypeQuery(
+function generiskFilterSpoerring(
   where: boolean,
   filter: Array<string> | undefined,
   felt: string
@@ -50,12 +50,12 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
   let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, hjemmel, ytelse, frist
                  FROM Oppgaver 
                  ${typeQuery(filterTyper).replace(/,/g, "")}
-                 ${generiskTypeQuery(
+                 ${generiskFilterSpoerring(
                    (typer?.length as unknown) as boolean,
                    filterYtelser,
                    "ytelse"
                  ).replace(/,/g, "")}
-                 ${generiskTypeQuery(
+                 ${generiskFilterSpoerring(
                    ((typer?.length as unknown) as boolean) ||
                      ((ytelser?.length as unknown) as boolean),
                    filterHjemler,

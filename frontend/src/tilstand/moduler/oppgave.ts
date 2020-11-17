@@ -93,6 +93,7 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
   const { antallTreffTotalt, start, antall } = payload;
   state.rader = payload.oppgaver;
+  state.lasterData = false;
   state.meta.antall = antall;
   if (start === 0) {
     state.meta.side = 1;
@@ -111,7 +112,7 @@ export const oppgaveSlice = createSlice({
   name: "oppgaver",
   initialState: {
     rader: [],
-    lasterData: true,
+    lasterData: false,
     meta: {
       antall: 0,
       sider: 1,
@@ -130,6 +131,10 @@ export const oppgaveSlice = createSlice({
     },
   } as OppgaveState,
   reducers: {
+    HENT: (state) => {
+      state.lasterData = true;
+      return state;
+    },
     MOTTATT: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
       if (action.payload) {
         state = MottatteRader(action.payload, state);
