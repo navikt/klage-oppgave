@@ -181,15 +181,14 @@ export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 //==========
 
 export function buildQuery(url: string, data: OppgaveParams) {
-  const R = require("ramda");
-  const { filter, reject, isNil, identity, compose, join, map, toPairs } = R;
+  const { filter, replace, identity, compose, join, map, toPairs } = require("ramda");
   const filters = compose(
     join("&"), // Join each segment of the query with '&'
     map(join("=")), // Join the key-value pairs with '='
     map(map(encodeURIComponent)), // encode keys and values
     toPairs, // convert the object to pairs like `['limit', 5]`
-    map(map(R.replace(/og/g, ","))),
-    map(map(R.replace(/ /g, ""))),
+    map(map(replace(/og/g, ","))),
+    map(map(replace(/ /g, ""))),
     filter(identity)
   )(data.transformasjoner.filtrering || []);
 
@@ -200,40 +199,6 @@ export function buildQuery(url: string, data: OppgaveParams) {
   if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
   if (data.tildeltSaksbehandler) query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
   return `${url}?${filters}&${compose(join("&"))(query)}`;
-}
-
-export function _buildQuery(url: string, data: OppgaveParams) {
-  let query = [];
-  for (let key in data.transformasjoner?.filtrering) {
-    if (data.transformasjoner?.filtrering.hasOwnProperty(key)) {
-      if (Array.isArray(data.transformasjoner.filtrering[key])) {
-        if ("undefined" !== typeof data.transformasjoner.filtrering[key]) {
-          if (key === "hjemler") {
-            let hjemler = data.transformasjoner.filtrering[key]!.join(",")
-              .replace(/ /g, "")
-              .replace(/og/g, ",");
-            query.push(encodeURIComponent(key) + "=" + encodeURIComponent(hjemler));
-          } else {
-            query.push(
-              encodeURIComponent(key) +
-                "=" +
-                encodeURIComponent(data.transformasjoner.filtrering[key].join(","))
-            );
-          }
-        }
-      } else if ("undefined" !== typeof data.transformasjoner.filtrering[key])
-        query.push(
-          encodeURIComponent(key) + "=" + encodeURIComponent(data.transformasjoner.filtrering[key])
-        );
-    }
-  }
-  query.push(`antall=${data.antall}`);
-  query.push(`start=${data.start}`);
-  query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
-  if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
-  if (data.tildeltSaksbehandler) query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
-
-  return `${url}?${query.join("&")}`;
 }
 
 //==========
