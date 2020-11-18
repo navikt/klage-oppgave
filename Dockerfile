@@ -6,7 +6,7 @@ COPY server server/
 COPY frontend frontend
 
 WORKDIR server
-RUN yarn install
+RUN npm install
 
 CMD ["node", "main.js"]
 EXPOSE 8080
