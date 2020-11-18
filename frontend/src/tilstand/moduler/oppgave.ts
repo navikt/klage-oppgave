@@ -7,6 +7,7 @@ import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/oper
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+const R = require("ramda");
 
 //==========
 // Type defs
@@ -181,15 +182,14 @@ export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 //==========
 
 export function buildQuery(url: string, data: OppgaveParams) {
-  const { filter, replace, identity, compose, join, map, toPairs } = require("ramda");
-  const filters = compose(
-    join("&"),
-    map(join("=")),
-    map(map(encodeURIComponent)),
-    toPairs,
-    map(map(replace(/og/g, ","))),
-    map(map(replace(/ /g, ""))),
-    filter(identity)
+  const filters = R.compose(
+    R.join("&"),
+    R.map(R.join("=")),
+    R.map(R.map(encodeURIComponent)),
+    R.toPairs,
+    R.map(R.map(R.replace(/og/g, ","))),
+    R.map(R.map(R.replace(/ /g, ""))),
+    R.filter(R.identity)
   )(data.transformasjoner.filtrering || []);
 
   let query = [];
@@ -198,7 +198,7 @@ export function buildQuery(url: string, data: OppgaveParams) {
   query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
   if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
   if (data.tildeltSaksbehandler) query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
-  return `${url}?${filters}&${compose(join("&"))(query)}`;
+  return `${url}?${filters}&${R.compose(R.join("&"))(query)}`;
 }
 
 //==========
