@@ -94,7 +94,7 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
   const { antallTreffTotalt, start, antall } = payload;
   state.rader = payload.oppgaver;
-  state.lasterData = false;
+  state.lasterData = true;
   state.meta.antall = antall;
   if (start === 0) {
     state.meta.side = 1;
@@ -183,10 +183,10 @@ export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 export function buildQuery(url: string, data: OppgaveParams) {
   const { filter, replace, identity, compose, join, map, toPairs } = require("ramda");
   const filters = compose(
-    join("&"), // Join each segment of the query with '&'
-    map(join("=")), // Join the key-value pairs with '='
-    map(map(encodeURIComponent)), // encode keys and values
-    toPairs, // convert the object to pairs like `['limit', 5]`
+    join("&"),
+    map(join("=")),
+    map(map(encodeURIComponent)),
+    toPairs,
     map(map(replace(/og/g, ","))),
     map(map(replace(/ /g, ""))),
     filter(identity)
