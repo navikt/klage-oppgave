@@ -48,7 +48,8 @@
     "openid-client": "^4.0.2",
     "passport": "^0.4.0",
     "redis": "^3.0.2",
-    "snyk": "^1.400.0"
+    "snyk": "^1.400.0",
+    "ws": "^7.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",

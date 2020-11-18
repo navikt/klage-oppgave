@@ -144,7 +144,9 @@ describe("Oppgave epos", () => {
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
-    expect(url).toStrictEqual("/ansatte/ZATHRAS/oppgaver?antall=25&start=100&rekkefoelge=STIGENDE");
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/oppgaver?&antall=25&start=100&rekkefoelge=STIGENDE"
+    );
   });
 
   test("+++ APP sideantall meta", () => {
@@ -159,7 +161,7 @@ describe("Oppgave epos", () => {
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
-    expect(url).toStrictEqual("/ansatte/ZATHRAS/oppgaver?antall=15&start=0&rekkefoelge=STIGENDE");
+    expect(url).toStrictEqual("/ansatte/ZATHRAS/oppgaver?&antall=15&start=0&rekkefoelge=STIGENDE");
   });
 
   test("+++ APP sideantall meta for side 1", () => {

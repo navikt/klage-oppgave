@@ -81,6 +81,7 @@ export interface RaderMedMetadata {
   antallTreffTotalt: number;
   oppgaver: OppgaveRad[];
 }
+
 export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
   start: number;
   antall: number;
@@ -178,7 +179,30 @@ export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 //==========
 // Sortering og filtrering
 //==========
+
 export function buildQuery(url: string, data: OppgaveParams) {
+  const R = require("ramda");
+  const { filter, reject, isNil, identity, compose, join, map, toPairs } = R;
+  const filters = compose(
+    join("&"), // Join each segment of the query with '&'
+    map(join("=")), // Join the key-value pairs with '='
+    map(map(encodeURIComponent)), // encode keys and values
+    toPairs, // convert the object to pairs like `['limit', 5]`
+    map(map(R.replace(/og/g, ","))),
+    map(map(R.replace(/ /g, ""))),
+    filter(identity)
+  )(data.transformasjoner.filtrering || []);
+
+  let query = [];
+  query.push(`antall=${data.antall}`);
+  query.push(`start=${data.start}`);
+  query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
+  if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
+  if (data.tildeltSaksbehandler) query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
+  return `${url}?${filters}&${compose(join("&"))(query)}`;
+}
+
+export function _buildQuery(url: string, data: OppgaveParams) {
   let query = [];
   for (let key in data.transformasjoner?.filtrering) {
     if (data.transformasjoner?.filtrering.hasOwnProperty(key)) {
