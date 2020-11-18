@@ -5,9 +5,10 @@ import "./paginering.less";
 type PagineringType = {
   startSide: number;
   antallSider: number;
+  pathname: string;
 };
 
-export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
+export default ({ startSide, antallSider, pathname }: PagineringType): JSX.Element => {
   startSide = Math.floor(startSide);
   let n = startSide;
   let out = [];
@@ -21,7 +22,7 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
   );
   while (n-- > 1 && j++ < it) {
     temp.push(
-      <NavLink className={"paginering_padding"} key={`n${n}`} to={`/saker/${n}`}>
+      <NavLink className={"paginering_padding"} key={`n${n}`} to={`/${pathname}/${n}`}>
         {n}
       </NavLink>
     );
@@ -33,7 +34,7 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
       </span>
     );
     temp.push(
-      <NavLink className={"paginering_padding"} key={`side${1}`} to={`/saker/${1}`}>
+      <NavLink className={"paginering_padding"} key={`side${1}`} to={`/${pathname}/${1}`}>
         {1}
       </NavLink>
     );
@@ -43,7 +44,7 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
   n = startSide;
   while (n++ < antallSider && j++ < it) {
     out.push(
-      <NavLink className={"paginering_padding"} key={`side${n}`} to={`/saker/${n}`}>
+      <NavLink className={"paginering_padding"} key={`side${n}`} to={`/${pathname}/${n}`}>
         {n}
       </NavLink>
     );
@@ -58,7 +59,7 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
       <NavLink
         className={"paginering_padding active"}
         key={`side${antallSider}`}
-        to={`/saker/${antallSider}`}
+        to={`/${pathname}/${antallSider}`}
       >
         {antallSider}
       </NavLink>
@@ -70,7 +71,7 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
         <NavLink
           data-testid={"forrige"}
           className={"pagineringslenke paginering_padding"}
-          to={`/saker/${startSide - 1}`}
+          to={`/${pathname}/${startSide - 1}`}
         >
           Forrige
         </NavLink>
@@ -85,7 +86,7 @@ export default ({ startSide, antallSider }: PagineringType): JSX.Element => {
         <NavLink
           data-testid={"neste"}
           className={"pagineringslenke paginering_padding"}
-          to={`/saker/${startSide + 1}`}
+          to={`/${pathname}/${startSide + 1}`}
         >
           Neste
         </NavLink>

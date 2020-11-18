@@ -7,7 +7,7 @@ import OppgaveTabell from "../komponenter/Tabell/Tabell";
 
 const App = (): JSX.Element => {
   return (
-    <Oppsett isFetching={false}>
+    <Oppsett>
       <OppgaveTabell />
     </Oppsett>
   );

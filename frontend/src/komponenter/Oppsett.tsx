@@ -4,7 +4,6 @@ import { Header } from "./Header/Header";
 
 interface LayoutType {
   children: JSX.Element;
-  isFetching: boolean;
 }
 
 import PropTypes from "prop-types";
@@ -13,7 +12,7 @@ import { useSelector } from "react-redux";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import { Sok } from "./Header/Sok";
 
-export default function Oppsett({ children, isFetching }: LayoutType) {
+export default function Oppsett({ children }: LayoutType) {
   const person = useSelector(velgMeg);
   return (
     <main className="container">
@@ -39,7 +38,7 @@ export default function Oppsett({ children, isFetching }: LayoutType) {
           </li>
         </ul>
       </nav>
-      <article className="content">{isFetching ? <NavFrontendSpinner /> : children}</article>
+      <article className="content">{children}</article>
       <footer className="main-footer"></footer>
     </main>
   );
@@ -50,5 +49,4 @@ Oppsett.propTypes = {
     PropTypes.arrayOf(PropTypes.element),
     PropTypes.element.isRequired,
   ]),
-  isFetching: PropTypes.bool.isRequired,
 };
