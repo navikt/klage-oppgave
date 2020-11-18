@@ -171,6 +171,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     );
   }
 
+  console.log({ oppgaver });
   if (sideLaster) {
     return <NavFrontendSpinner />;
   }
