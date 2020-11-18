@@ -61,7 +61,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
   const [antall, settAntall] = useState<number>(5);
-  const [start, settStart] = useState<number>(5);
+  const [start, settStart] = useState<number>(0);
   const history = useHistory();
   const pathname = history.location.pathname.split("/")[1];
 
