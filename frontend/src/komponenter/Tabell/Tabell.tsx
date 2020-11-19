@@ -83,7 +83,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [start, meg, hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter]);
 
   useEffect(() => {
-    //console.log({tolketSide, start: (tolketSide - 1) * antall})
     settStart((tolketSide - 1) * antall);
     if (forrigeSti.split("/")[1] !== history.location.pathname.split("/")[1]) {
       settHjemmelFilter(undefined);
@@ -163,12 +162,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   if (oppgaver.meta.feilmelding) {
     return (
-      <Oppsett>
-        <div className={"feil"}>
-          <h1>{oppgaver.meta.feilmelding}</h1>
-          <div>Vennligst forsøk igjen litt senere...</div>
-        </div>
-      </Oppsett>
+      <div className={"feil"}>
+        <h1>{oppgaver.meta.feilmelding}</h1>
+        <div>Vennligst forsøk igjen litt senere...</div>
+      </div>
     );
   }
 
