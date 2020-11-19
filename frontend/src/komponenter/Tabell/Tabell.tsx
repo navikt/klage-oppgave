@@ -83,6 +83,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [tolketSide, meg, hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter]);
 
   useEffect(() => {
+    //console.log({tolketSide, start: (tolketSide - 1) * antall})
     settStart((tolketSide - 1) * antall);
     if (forrigeSti.split("/")[1] !== history.location.pathname.split("/")[1]) {
       settHjemmelFilter(undefined);
@@ -93,7 +94,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settAktiveHjemler([]);
       dispatch(routingRequest(history.location.pathname));
     }
-  }, [antall, forrigeSti, history.location.pathname]);
+  }, [antall, tolketSide, forrigeSti, history.location.pathname]);
 
   const dispatchTransformering = (utvidet: boolean) =>
     dispatch(
