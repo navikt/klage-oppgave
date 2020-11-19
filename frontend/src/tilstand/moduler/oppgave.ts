@@ -196,6 +196,7 @@ export function buildQuery(url: string, data: OppgaveParams) {
   query.push(`antall=${data.antall}`);
   query.push(`start=${data.start}`);
   query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
+  if (!data.projeksjon) query.push(`erTildeltSaksbehandler=true`);
   if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
   if (data.tildeltSaksbehandler) query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
   return `${url}?${filters}&${R.compose(R.join("&"))(query)}`;

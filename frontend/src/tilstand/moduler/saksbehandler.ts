@@ -1,9 +1,10 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { of } from "rxjs";
-import { catchError, map, switchMap, withLatestFrom } from "rxjs/operators";
+import { concat, from, of } from "rxjs";
+import { catchError, concatMap, map, mergeMap, switchMap, withLatestFrom } from "rxjs/operators";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { toasterSett, toasterSkjul } from "./toaster";
 
 //==========
 // Type defs
@@ -81,9 +82,24 @@ export function tildelEpos(
             return tildeltHandling(response);
           })
         )
-        .pipe(catchError((error) => of(FEILET(JSON.stringify(error)))));
+        .pipe(
+          catchError((error) => {
+            return concat([displayToast(), logError(error), skjulToaster()]);
+          })
+        );
     })
   );
+}
+
+function logError(error: string) {
+  return FEILET(JSON.stringify(error));
+}
+
+function displayToast() {
+  return toasterSett();
+}
+function skjulToaster() {
+  return toasterSkjul();
 }
 
 export const TILDEL_EPICS = [tildelEpos];

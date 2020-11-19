@@ -1,6 +1,6 @@
-import NavFrontendSpinner from "nav-frontend-spinner";
 import React from "react";
 import { Header } from "./Header/Header";
+import Alertstripe from "nav-frontend-alertstriper";
 
 interface LayoutType {
   children: JSX.Element;
@@ -10,10 +10,13 @@ import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
+
 import { Sok } from "./Header/Sok";
+import { velgToaster } from "../tilstand/moduler/toaster.velgere";
 
 export default function Oppsett({ children }: LayoutType) {
   const person = useSelector(velgMeg);
+  const visFeilmelding = useSelector(velgToaster);
   return (
     <main className="container">
       <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
@@ -38,6 +41,13 @@ export default function Oppsett({ children }: LayoutType) {
           </li>
         </ul>
       </nav>
+      <div className="toaster">
+        {visFeilmelding && (
+          <Alertstripe type="feil">
+            Oppgaven kan ikke tildeles da den allerede er tildelt en annen saksbehandler
+          </Alertstripe>
+        )}
+      </div>
       <article className="content">{children}</article>
       <footer className="main-footer"></footer>
     </main>

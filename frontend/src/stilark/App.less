@@ -22,6 +22,7 @@ body {
   grid-template-columns: 1fr;
   grid-template-areas:
     "header"
+    "toaster"
     "nav"
     "content"
     "footer";
@@ -53,13 +54,19 @@ body {
   }
 }
 
+.toaster {
+  grid-area: toaster;
+  margin: 0 1.25em;
+}
+
 @media (min-width: 500px) {
   .container {
     grid-template-columns: 3fr auto;
-    grid-template-rows: min-content min-content 1fr min-content;
+    grid-template-rows: min-content min-content min-content 1fr min-content;
     grid-template-areas:
       "header  header"
       "nav     nav"
+      "toaster toaster"
       "content content"
       "footer  footer";
   }

@@ -9,7 +9,7 @@ import { map } from "rxjs/operators";
 //==========
 // Reducer
 //==========
-export const oppgaveSlice = createSlice({
+export const routerSlice = createSlice({
   name: "oppgaver",
   initialState: {
     prevRoute: "",
@@ -21,12 +21,12 @@ export const oppgaveSlice = createSlice({
   },
 });
 
-export default oppgaveSlice.reducer;
+export default routerSlice.reducer;
 
 //==========
 // Actions
 //==========
-export const { SETT } = oppgaveSlice.actions;
+export const { SETT } = routerSlice.actions;
 export const routingRequest = createAction<string>("routing/SETT");
 
 //==========
