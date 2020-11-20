@@ -1,4 +1,4 @@
-import { OppgaveRad, OppgaveRader } from "../../tilstand/moduler/oppgave";
+import { OppgaveRad, OppgaveRader, OppgaveRadMedFunksjoner } from "../../tilstand/moduler/oppgave";
 import React from "react";
 import EtikettBase from "nav-frontend-etiketter";
 import { typeOversettelse, ytelseOversettelse } from "../../domene/forkortelser";
@@ -11,8 +11,10 @@ const OppgaveTabellRad = ({
   hjemmel,
   frist,
   versjon,
+  person,
+  utvidetProjeksjon,
   settValgOppgave,
-}: OppgaveRad) => {
+}: OppgaveRadMedFunksjoner) => {
   return (
     <tr className="table-filter">
       <td>
@@ -30,6 +32,9 @@ const OppgaveTabellRad = ({
           {hjemmel}
         </EtikettBase>
       </td>
+
+      {utvidetProjeksjon && <td>{person?.navn}</td>}
+      {utvidetProjeksjon && <td>{person?.fnr}</td>}
       <td>{frist}</td>
       <td>
         <Knapp className={"knapp"} onClick={(e) => settValgOppgave({ id, versjon })}>
@@ -42,8 +47,14 @@ const OppgaveTabellRad = ({
 
 export const genererTabellRader = (
   settValgOppgaveId: Function,
-  oppgaver: OppgaveRader
+  oppgaver: OppgaveRader,
+  utvidetProjeksjon: "UTVIDET" | undefined
 ): JSX.Element[] =>
   oppgaver.rader.map((rad: any) => (
-    <OppgaveTabellRad key={rad.id} {...rad} settValgOppgave={settValgOppgaveId} />
+    <OppgaveTabellRad
+      key={rad.id}
+      {...rad}
+      utvidetProjeksjon={utvidetProjeksjon}
+      settValgOppgave={settValgOppgaveId}
+    />
   ));

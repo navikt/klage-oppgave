@@ -14,9 +14,9 @@ const R = require("ramda");
 //==========
 export interface OppgaveRad {
   id: string;
-  bruker: {
-    fnr: string;
-    navn: string;
+  person?: {
+    fnr?: string;
+    navn?: string;
   };
   type: string;
   versjon: number;
@@ -24,7 +24,10 @@ export interface OppgaveRad {
   hjemmel: string;
   frist: string;
   saksbehandler: string;
+}
+export interface OppgaveRadMedFunksjoner extends OppgaveRad {
   settValgOppgave: Function;
+  utvidetProjeksjon: "UTVIDET" | undefined;
 }
 
 export interface Filter {

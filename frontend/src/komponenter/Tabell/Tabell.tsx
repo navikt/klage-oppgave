@@ -7,6 +7,7 @@ import {
   velgOppgaver,
   velgSideLaster,
   velgSortering,
+  velgProjeksjon,
 } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import "../../stilark/Tabell.less";
@@ -17,7 +18,6 @@ import { genererTabellRader } from "./tabellfunksjoner";
 import Paginering from "../Paginering/Paginering";
 import { useHistory, useParams } from "react-router-dom";
 import NavFrontendSpinner from "nav-frontend-spinner";
-import Oppsett from "../Oppsett";
 import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
 
@@ -39,6 +39,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const sideLaster = useSelector(velgSideLaster);
   const oppgaver = useSelector(velgOppgaver);
   const forrigeSti = useSelector(velgForrigeSti);
+  const utvidetProjeksjon = useSelector(velgProjeksjon);
 
   interface ParamTypes {
     side: string | undefined;
@@ -230,6 +231,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
               Hjemmel
             </FiltrerbarHeader>
 
+            {utvidetProjeksjon && <th>&nbsp;</th>}
+            {utvidetProjeksjon && <th>&nbsp;</th>}
+
             <th role="columnheader" aria-sort={sortToggle === 0 ? "ascending" : "descending"}>
               <div
                 className={`sortHeader ${sortToggle === 0 ? "ascending" : "descending"}`}
@@ -242,7 +246,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {genererTabellRader(settValgOppgave, oppgaver)}
+          {genererTabellRader(settValgOppgave, oppgaver, utvidetProjeksjon)}
           <tr>
             <td colSpan={6}>
               <div className="table-lbl">
