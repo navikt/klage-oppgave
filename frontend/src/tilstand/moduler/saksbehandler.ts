@@ -93,7 +93,11 @@ export function tildelEpos(
         )
         .pipe(
           catchError((error) => {
-            console.log(error);
+            try {
+              console.log(error.response.detail);
+            } catch (e) {
+              console.log(e);
+            }
             return concat([displayToast(error), logError(error), skjulToaster()]);
           })
         );

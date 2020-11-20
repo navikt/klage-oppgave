@@ -3,8 +3,7 @@ import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
 import { tildelMegHandling, tildelEpos, TildelType } from "./saksbehandler";
 import { ajax } from "rxjs/ajax";
-import { of } from "rxjs";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { from, of } from "rxjs";
 import { OppgaveParams } from "./oppgave";
 
 describe("TILDEL 'Meg' epos", () => {
@@ -35,22 +34,20 @@ describe("TILDEL 'Meg' epos", () => {
         };
         const initState = {};
         const mockedResponse = {
-          response: {
-            feilmelding: "tesst",
-          },
+          message: "oops",
         };
         const dependencies = {
-          post: (url: string) => of(Error("crash")),
+          post: (url: string) => from(Promise.reject(mockedResponse)),
         };
 
         const observableValues = {
           a: initState,
           c: {
-            payload: { display: true, feilmelding: mockedResponse },
+            payload: { display: true, feilmelding: "oops" },
             type: "toaster/SETT",
           },
           d: {
-            payload: "{}",
+            payload: JSON.stringify(mockedResponse),
             type: "saksbehandler/FEILET",
           },
           e: {
