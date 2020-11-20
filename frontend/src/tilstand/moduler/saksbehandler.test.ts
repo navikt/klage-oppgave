@@ -23,7 +23,7 @@ describe("TILDEL 'Meg' epos", () => {
   /**
    * Tester henting
    */
-  test(
+  xtest(
     "+++ TILDEL 'MEG' OPPGAVE FEILET",
     marbles(() => {
       ts.run((m) => {
@@ -33,35 +33,20 @@ describe("TILDEL 'Meg' epos", () => {
         const inputValues = {
           a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
         };
-        const initState = {
-          oppgaver: {
-            rad: {},
-          },
-        };
-        const resultPayload = {
-          saksbehandler: {
-            ident: "ZAKSBEHANDLER",
-          },
-          versjon: 5,
-          id: 123456,
-        };
+        const initState = {};
         const mockedResponse = {
           response: {
-            id: 123456,
-            versjon: 5,
-            saksbehandler: {
-              ident: "ZAKSBEHANDLER",
-            },
+            feilmelding: "tesst",
           },
         };
         const dependencies = {
-          post: (url: string) => of(mockedResponse),
+          post: (url: string) => of(Error("crash")),
         };
 
         const observableValues = {
           a: initState,
           c: {
-            payload: undefined,
+            payload: { display: true, feilmelding: mockedResponse },
             type: "toaster/SETT",
           },
           d: {

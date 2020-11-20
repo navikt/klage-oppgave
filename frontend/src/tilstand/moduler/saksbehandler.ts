@@ -93,7 +93,7 @@ export function tildelEpos(
         )
         .pipe(
           catchError((error) => {
-            return concat([displayToast(), logError(error), skjulToaster()]);
+            return concat([displayToast(error), logError(error), skjulToaster()]);
           })
         );
     })
@@ -104,9 +104,13 @@ function logError(error: string) {
   return FEILET(JSON.stringify(error));
 }
 
-function displayToast() {
-  return toasterSett();
+function displayToast(error: any) {
+  return toasterSett({
+    display: true,
+    feilmelding: error?.response?.feilmelding || error?.message || "generisk feilmelding",
+  });
 }
+
 function skjulToaster() {
   return toasterSkjul();
 }

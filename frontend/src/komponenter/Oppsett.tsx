@@ -12,11 +12,12 @@ import { useSelector } from "react-redux";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 
 import { Sok } from "./Header/Sok";
-import { velgToaster } from "../tilstand/moduler/toaster.velgere";
+import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
 
 export default function Oppsett({ children }: LayoutType) {
   const person = useSelector(velgMeg);
   const visFeilmelding = useSelector(velgToaster);
+  const feilmelding = useSelector(velgToasterMelding);
   return (
     <main className="container">
       <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
@@ -44,7 +45,7 @@ export default function Oppsett({ children }: LayoutType) {
       <div className="toaster">
         {visFeilmelding && (
           <Alertstripe type="feil">
-            Oppgaven kan ikke tildeles da den allerede er tildelt en annen saksbehandler
+            <span>{feilmelding}</span>
           </Alertstripe>
         )}
       </div>

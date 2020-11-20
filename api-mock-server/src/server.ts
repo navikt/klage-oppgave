@@ -42,7 +42,7 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
 app.post(
   "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlertildeling",
   async (req, res) => {
-    res.send({ status: "OK" });
+    res.status(500).send({ status: "OK" });
   }
 );
 
