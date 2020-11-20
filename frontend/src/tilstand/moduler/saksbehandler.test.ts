@@ -5,6 +5,7 @@ import { tildelMegHandling, tildelEpos, TildelType } from "./saksbehandler";
 import { ajax } from "rxjs/ajax";
 import { from, of } from "rxjs";
 import { OppgaveParams } from "./oppgave";
+import { fromPromise } from "rxjs/internal-compatibility";
 
 describe("TILDEL 'Meg' epos", () => {
   let ts: TestScheduler;
@@ -37,7 +38,7 @@ describe("TILDEL 'Meg' epos", () => {
           message: "oops",
         };
         const dependencies = {
-          post: (url: string) => from(Promise.reject(mockedResponse)),
+          post: (url: string) => of(Promise.reject(mockedResponse)),
         };
 
         const observableValues = {
@@ -47,7 +48,7 @@ describe("TILDEL 'Meg' epos", () => {
             type: "toaster/SETT",
           },
           d: {
-            payload: JSON.stringify(mockedResponse),
+            payload: "{}",
             type: "saksbehandler/FEILET",
           },
           e: {
