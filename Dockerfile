@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM navikt/node-express:14-common
 ENV NODE_ENV production
 
 WORKDIR usr/src/app
