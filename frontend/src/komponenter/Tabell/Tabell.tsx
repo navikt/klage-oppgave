@@ -248,7 +248,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
         <tbody>
           {genererTabellRader(settValgOppgave, oppgaver, utvidetProjeksjon)}
           <tr>
-            <td colSpan={6}>
+            <td colSpan={utvidetProjeksjon ? 8 : 6}>
               <div className="table-lbl">
                 <div className={"paginering"}>
                   <Paginering
