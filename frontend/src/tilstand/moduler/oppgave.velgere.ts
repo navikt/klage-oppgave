@@ -16,3 +16,6 @@ export function velgFiltrering(state: RootStateOrAny) {
 export function velgSortering(state: RootStateOrAny) {
   return state.oppgaver.transformasjoner.sortering;
 }
+export function velgProjeksjon(state: RootStateOrAny) {
+  return state.oppgaver.meta.projeksjon;
+}

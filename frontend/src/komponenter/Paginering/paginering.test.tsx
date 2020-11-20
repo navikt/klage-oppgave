@@ -13,7 +13,7 @@ describe("Paginering", () => {
   it("CheckboxWithLabel changes the text after click", async () => {
     let rendered = render(
       <Router>
-        <Paginering antallSider={4} startSide={1} />
+        <Paginering antallSider={4} startSide={1} pathname={"saker"} />
       </Router>
     );
     await waitFor(() => screen.queryAllByTestId("forrige"));

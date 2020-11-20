@@ -39,31 +39,16 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
   res.send(result);
 });
 
+app.post(
+  "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlertildeling",
+  async (req, res) => {
+    res.status(500).send({ status: "OK" });
+  }
+);
+
 interface OppgaveModell {
   ident: String;
 }
-
-app.put("/oppgaver/:id/saksbehandler", async (req, res) => {
-  const id = parseInt(req.params.id, 10) as number;
-  const body = req.body as OppgaveModell;
-  console.log(chalk.greenBright(id));
-  console.log(chalk.green(JSON.stringify(body)));
-  const data = require("../fixtures/oppgaver.json");
-  const oppgave = await data.oppgaver.filter((rad: { id: number }) =>
-    eqNumber.equals(rad.id, id)
-  )[0];
-  if (!oppgave) {
-    res.send({});
-  } else {
-    res.send({
-      ...oppgave,
-      saksbehandler: {
-        ident: body.ident,
-        navn: oppgave.saksbehandler.navn,
-      },
-    });
-  }
-});
 
 // define a route handler for the default home page
 app.get("/token", (req, res) => {

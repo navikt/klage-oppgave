@@ -7,15 +7,16 @@ import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/oper
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+const R = require("ramda");
 
 //==========
 // Type defs
 //==========
 export interface OppgaveRad {
   id: string;
-  bruker: {
-    fnr: string;
-    navn: string;
+  person?: {
+    fnr?: string;
+    navn?: string;
   };
   type: string;
   versjon: number;
@@ -23,7 +24,10 @@ export interface OppgaveRad {
   hjemmel: string;
   frist: string;
   saksbehandler: string;
+}
+export interface OppgaveRadMedFunksjoner extends OppgaveRad {
   settValgOppgave: Function;
+  utvidetProjeksjon: "UTVIDET" | undefined;
 }
 
 export interface Filter {
@@ -49,8 +53,10 @@ export interface Filtrering {
 interface Metadata {
   antall: number;
   sider: number;
-  treffPerSide: number;
+  start: number;
   side: number;
+  tildeltSaksbehandler?: string | undefined;
+  projeksjon?: string;
   feilmelding?: string | undefined;
 }
 
@@ -81,9 +87,12 @@ export interface RaderMedMetadata {
   antallTreffTotalt: number;
   oppgaver: OppgaveRad[];
 }
+
 export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
   start: number;
   antall: number;
+  tildeltSaksbehandler?: string;
+  projeksjon?: string;
   transformasjoner: Transformasjoner;
 }
 
@@ -91,9 +100,12 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 // Reducer
 //==========
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
-  const { antallTreffTotalt, start, antall } = payload;
+  const { antallTreffTotalt, start, antall, projeksjon, tildeltSaksbehandler } = payload;
   state.rader = payload.oppgaver;
-  state.lasterData = false;
+  state.lasterData = true;
+  state.meta.start = start;
+  state.meta.projeksjon = projeksjon;
+  state.meta.tildeltSaksbehandler = tildeltSaksbehandler;
   state.meta.antall = antall;
   if (start === 0) {
     state.meta.side = 1;
@@ -116,7 +128,7 @@ export const oppgaveSlice = createSlice({
     meta: {
       antall: 0,
       sider: 1,
-      treffPerSide: 15,
+      start: 0,
       side: 1,
     },
     transformasjoner: {
@@ -178,38 +190,26 @@ export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 //==========
 // Sortering og filtrering
 //==========
+
 export function buildQuery(url: string, data: OppgaveParams) {
+  const filters = R.compose(
+    R.join("&"),
+    R.map(R.join("=")),
+    R.map(R.map(encodeURIComponent)),
+    R.toPairs,
+    R.map(R.map(R.replace(/og/g, ","))),
+    R.map(R.map(R.replace(/ /g, ""))),
+    R.filter(R.identity)
+  )(data.transformasjoner.filtrering || []);
+
   let query = [];
-  for (let key in data.transformasjoner?.filtrering) {
-    if (data.transformasjoner?.filtrering.hasOwnProperty(key)) {
-      if (Array.isArray(data.transformasjoner.filtrering[key])) {
-        if ("undefined" !== typeof data.transformasjoner.filtrering[key]) {
-          if (key === "hjemler") {
-            let hjemler = data.transformasjoner.filtrering[key]!.join(",")
-              .replace(/ /g, "")
-              .replace(/og/g, ",");
-            query.push(encodeURIComponent(key) + "=" + encodeURIComponent(hjemler));
-          } else {
-            query.push(
-              encodeURIComponent(key) +
-                "=" +
-                encodeURIComponent(data.transformasjoner.filtrering[key].join(","))
-            );
-          }
-        }
-      } else if ("undefined" !== typeof data.transformasjoner.filtrering[key])
-        query.push(
-          encodeURIComponent(key) + "=" + encodeURIComponent(data.transformasjoner.filtrering[key])
-        );
-    }
-  }
   query.push(`antall=${data.antall}`);
   query.push(`start=${data.start}`);
   query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
+  if (!data.projeksjon) query.push(`erTildeltSaksbehandler=false`);
   if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
   if (data.tildeltSaksbehandler) query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
-
-  return `${url}?${query.join("&")}`;
+  return `${url}?${filters}&${R.compose(R.join("&"))(query)}`;
 }
 
 //==========
@@ -231,9 +231,11 @@ export function hentOppgaverEpos(
           MOTTATT({
             start: action.payload.start,
             antall: action.payload.antall,
+            tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
+            projeksjon: action.payload.projeksjon,
             transformasjoner: action.payload.transformasjoner,
             ...oppgaver,
-          })
+          } as RaderMedMetadataUtvidet)
         )
       );
       return hentOppgaver.pipe(

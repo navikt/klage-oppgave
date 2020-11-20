@@ -3,7 +3,7 @@ import Oppsett from "./Oppsett";
 
 const Innstillinger = (): JSX.Element => {
   return (
-    <Oppsett isFetching={false}>
+    <Oppsett>
       <h1>Innstillinger</h1>
     </Oppsett>
   );

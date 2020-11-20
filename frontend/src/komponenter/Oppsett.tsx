@@ -1,20 +1,23 @@
-import NavFrontendSpinner from "nav-frontend-spinner";
 import React from "react";
 import { Header } from "./Header/Header";
+import Alertstripe from "nav-frontend-alertstriper";
 
 interface LayoutType {
   children: JSX.Element;
-  isFetching: boolean;
 }
 
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
-import { Sok } from "./Header/Sok";
 
-export default function Oppsett({ children, isFetching }: LayoutType) {
+import { Sok } from "./Header/Sok";
+import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
+
+export default function Oppsett({ children }: LayoutType) {
   const person = useSelector(velgMeg);
+  const visFeilmelding = useSelector(velgToaster);
+  const feilmelding = useSelector(velgToasterMelding);
   return (
     <main className="container">
       <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
@@ -39,7 +42,14 @@ export default function Oppsett({ children, isFetching }: LayoutType) {
           </li>
         </ul>
       </nav>
-      <article className="content">{isFetching ? <NavFrontendSpinner /> : children}</article>
+      <div className="toaster">
+        {visFeilmelding && (
+          <Alertstripe type="feil">
+            <span>{feilmelding}</span>
+          </Alertstripe>
+        )}
+      </div>
+      <article className="content">{children}</article>
       <footer className="main-footer"></footer>
     </main>
   );
@@ -50,5 +60,4 @@ Oppsett.propTypes = {
     PropTypes.arrayOf(PropTypes.element),
     PropTypes.element.isRequired,
   ]),
-  isFetching: PropTypes.bool.isRequired,
 };

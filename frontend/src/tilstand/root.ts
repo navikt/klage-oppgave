@@ -7,18 +7,29 @@ import oppgaver, { OPPGAVER_EPICS } from "./moduler/oppgave";
 import meg, { MEG_EPICS } from "./moduler/meg";
 import saksbehandler, { TILDEL_EPICS } from "./moduler/saksbehandler";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import routing, { ROUTING_EPICS } from "./moduler/router";
+import toaster, { TOASTER_EPICS } from "./moduler/toaster";
 
 const epics: Array<(
   $action: ActionsObservable<PayloadAction<any>>,
   $state: StateObservable<RootStateOrAny>,
   getJSON: AjaxCreationMethod,
-  put: AjaxCreationMethod
-) => Observable<PayloadAction<any>>> = [...OPPGAVER_EPICS, ...MEG_EPICS, ...TILDEL_EPICS];
+  put: AjaxCreationMethod,
+  post: AjaxCreationMethod
+) => Observable<PayloadAction<any>>> = [
+  ...OPPGAVER_EPICS,
+  ...MEG_EPICS,
+  ...TILDEL_EPICS,
+  ...TOASTER_EPICS,
+  ...ROUTING_EPICS,
+];
 export const rootEpic = combineEpics.apply(combineEpics, epics);
 
 const rootReducer = combineReducers({
   oppgaver,
   meg,
+  routing,
+  toaster,
   saksbehandler,
 });
 

@@ -1,4 +1,4 @@
-import { Filter, OppgaveRader, oppgaveRequest, ytelseType } from "../../tilstand/moduler/oppgave";
+import { Filter, oppgaveRequest, ytelseType } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
@@ -7,6 +7,7 @@ import {
   velgOppgaver,
   velgSideLaster,
   velgSortering,
+  velgProjeksjon,
 } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import "../../stilark/Tabell.less";
@@ -17,7 +18,8 @@ import { genererTabellRader } from "./tabellfunksjoner";
 import Paginering from "../Paginering/Paginering";
 import { useHistory, useParams } from "react-router-dom";
 import NavFrontendSpinner from "nav-frontend-spinner";
-import Oppsett from "../Oppsett";
+import { routingRequest } from "../../tilstand/moduler/router";
+import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
 
 function initState(filter: any) {
   if ("undefined" === typeof filter) {
@@ -36,6 +38,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const filtrering = useSelector(velgFiltrering);
   const sideLaster = useSelector(velgSideLaster);
   const oppgaver = useSelector(velgOppgaver);
+  const forrigeSti = useSelector(velgForrigeSti);
+  const utvidetProjeksjon = useSelector(velgProjeksjon);
 
   interface ParamTypes {
     side: string | undefined;
@@ -58,8 +62,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
   const [antall, settAntall] = useState<number>(5);
-  const [start, settStart] = useState<number>(5);
+  const [start, settStart] = useState<number>(0);
   const history = useHistory();
+  const pathname = history.location.pathname.split("/")[1];
 
   useEffect(() => {
     if (valgtOppgave.id) {
@@ -70,22 +75,26 @@ const OppgaveTabell: React.FunctionComponent = () => {
           versjon: valgtOppgave.versjon,
         })
       );
+      //dispatchTransformering(history.location.pathname.startsWith("/minesaker"));
     }
   }, [valgtOppgave.id]);
 
   useEffect(() => {
-    settStart((tolketSide - 1) * antall);
     if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/minesaker"));
-  }, [
-    hjemmelFilter,
-    ytelseFilter,
-    typeFilter,
-    sorteringFilter,
-    tolketSide,
-    meg,
-    antall,
-    history.location.pathname,
-  ]);
+  }, [start, meg, hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter]);
+
+  useEffect(() => {
+    settStart((tolketSide - 1) * antall);
+    if (forrigeSti.split("/")[1] !== history.location.pathname.split("/")[1]) {
+      settHjemmelFilter(undefined);
+      settYtelseFilter(undefined);
+      settTypeFilter(undefined);
+      settAktiveTyper([]);
+      settAktiveYtelser([]);
+      settAktiveHjemler([]);
+      dispatch(routingRequest(history.location.pathname));
+    }
+  }, [antall, tolketSide, forrigeSti, history.location.pathname]);
 
   const dispatchTransformering = (utvidet: boolean) =>
     dispatch(
@@ -154,12 +163,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   if (oppgaver.meta.feilmelding) {
     return (
-      <Oppsett isFetching={false}>
-        <div className={"feil"}>
-          <h1>{oppgaver.meta.feilmelding}</h1>
-          <div>Vennligst forsøk igjen litt senere...</div>
-        </div>
-      </Oppsett>
+      <div className={"feil"}>
+        <h1>{oppgaver.meta.feilmelding}</h1>
+        <div>Vennligst forsøk igjen litt senere...</div>
+      </div>
     );
   }
 
@@ -224,6 +231,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
               Hjemmel
             </FiltrerbarHeader>
 
+            {utvidetProjeksjon && <th>&nbsp;</th>}
+            {utvidetProjeksjon && <th>&nbsp;</th>}
+
             <th role="columnheader" aria-sort={sortToggle === 0 ? "ascending" : "descending"}>
               <div
                 className={`sortHeader ${sortToggle === 0 ? "ascending" : "descending"}`}
@@ -236,12 +246,16 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {genererTabellRader(settValgOppgave, oppgaver)}
+          {genererTabellRader(settValgOppgave, oppgaver, utvidetProjeksjon)}
           <tr>
             <td colSpan={6}>
               <div className="table-lbl">
                 <div className={"paginering"}>
-                  <Paginering startSide={tolketSide} antallSider={oppgaver.meta.sider} />
+                  <Paginering
+                    startSide={tolketSide}
+                    antallSider={oppgaver.meta.sider}
+                    pathname={pathname}
+                  />
                 </div>
               </div>
             </td>

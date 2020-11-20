@@ -86,7 +86,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
                     "hjemmel"
                   ).replace(/,/g, "")}
                   ${saksbehandlerFiltrering(
-                    harTyper || harYtelser,
+                    harTyper || harYtelser || harHjemler,
                     tildeltSaksbehandler
                   )}
                  ORDER BY frist ${rekkefoelge === "STIGENDE" ? "ASC" : "DESC"}
