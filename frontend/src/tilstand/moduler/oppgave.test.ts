@@ -219,6 +219,7 @@ describe("Oppgave epos", () => {
       antallTreffTotalt: 72,
       start: 15,
       antall: 15,
+      projeksjon: "UTVIDET",
       oppgaver: [],
       transformasjoner: {
         filtrering: {},
@@ -230,7 +231,9 @@ describe("Oppgave epos", () => {
     const initState = ({
       rader: [],
       transformasjoner: {},
-      meta: {},
+      meta: {
+        projeksjon: "UTVIDET",
+      },
       lasterData: false,
     } as unknown) as OppgaveState;
     const resultState = MottatteRader(mockedResponse, initState);

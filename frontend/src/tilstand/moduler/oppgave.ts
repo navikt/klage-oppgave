@@ -50,8 +50,10 @@ export interface Filtrering {
 interface Metadata {
   antall: number;
   sider: number;
-  treffPerSide: number;
+  start: number;
   side: number;
+  tildeltSaksbehandler?: string | undefined;
+  projeksjon?: string;
   feilmelding?: string | undefined;
 }
 
@@ -86,6 +88,8 @@ export interface RaderMedMetadata {
 export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
   start: number;
   antall: number;
+  tildeltSaksbehandler?: string;
+  projeksjon?: string;
   transformasjoner: Transformasjoner;
 }
 
@@ -93,9 +97,12 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 // Reducer
 //==========
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
-  const { antallTreffTotalt, start, antall } = payload;
+  const { antallTreffTotalt, start, antall, projeksjon, tildeltSaksbehandler } = payload;
   state.rader = payload.oppgaver;
   state.lasterData = true;
+  state.meta.start = start;
+  state.meta.projeksjon = projeksjon;
+  state.meta.tildeltSaksbehandler = tildeltSaksbehandler;
   state.meta.antall = antall;
   if (start === 0) {
     state.meta.side = 1;
@@ -118,7 +125,7 @@ export const oppgaveSlice = createSlice({
     meta: {
       antall: 0,
       sider: 1,
-      treffPerSide: 15,
+      start: 0,
       side: 1,
     },
     transformasjoner: {
@@ -221,9 +228,11 @@ export function hentOppgaverEpos(
           MOTTATT({
             start: action.payload.start,
             antall: action.payload.antall,
+            tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
+            projeksjon: action.payload.projeksjon,
             transformasjoner: action.payload.transformasjoner,
             ...oppgaver,
-          })
+          } as RaderMedMetadataUtvidet)
         )
       );
       return hentOppgaver.pipe(

@@ -39,6 +39,13 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
   res.send(result);
 });
 
+app.post(
+  "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlertildeling",
+  async (req, res) => {
+    res.send({ status: "OK" });
+  }
+);
+
 interface OppgaveModell {
   ident: String;
 }

@@ -74,7 +74,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           versjon: valgtOppgave.versjon,
         })
       );
-      dispatchTransformering(history.location.pathname.startsWith("/minesaker"));
+      //dispatchTransformering(history.location.pathname.startsWith("/minesaker"));
     }
   }, [valgtOppgave.id]);
 

@@ -5,6 +5,7 @@ import { concat, from, of } from "rxjs";
 import { catchError, concatMap, map, mergeMap, switchMap, withLatestFrom } from "rxjs/operators";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
+import { OppgaveParams, oppgaveRequest } from "./oppgave";
 
 //==========
 // Type defs
@@ -78,8 +79,16 @@ export function tildelEpos(
         { "Content-Type": "application/json" }
       )
         .pipe(
-          map(({ response }) => {
-            return tildeltHandling(response);
+          switchMap(({ response }) => {
+            let params = {
+              start: state$.value.oppgaver.meta.start,
+              antall: state$.value.oppgaver.meta.antall,
+              transformasjoner: state$.value.oppgaver.transformasjoner,
+              ident: state$.value.meg.id,
+              projeksjon: state$.value.oppgaver.meta.projeksjon,
+              tildeltSaksbehandler: state$.value.oppgaver.meta.tildeltSaksbehandler,
+            } as OppgaveParams;
+            return concat([tildeltHandling(response), oppgaveRequest(params)]);
           })
         )
         .pipe(
