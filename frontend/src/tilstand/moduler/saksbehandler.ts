@@ -119,7 +119,7 @@ export function fradelEpos(
     ofType(fradelMegHandling.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
-      const url = `/api/ansatte/${action.payload.ident}/oppgaver/${action.payload.oppgaveId}/saksbehandlerfjerning`;
+      const url = `/api/ansatte/${action.payload.ident}/oppgaver/${action.payload.oppgaveId}/saksbehandlerfradeling`;
       return post(
         url,
         { navIdent: action.payload.ident, oppgaveversjon: action.payload.versjon },

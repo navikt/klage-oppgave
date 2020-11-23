@@ -60,7 +60,7 @@ app.post(
   }
 );
 app.post(
-  "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlerfjerning",
+  "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlerfradeling",
   async (req, res) => {
     return await fradelSaksbehandler({
       oppgaveId: req.params.oppgaveid,
