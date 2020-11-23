@@ -26,12 +26,7 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
     >
       <div className={classNames("header__brukerinfo", "header__rad", "header__gap")}>
         <p className={"header__tekstNormal"}>{navn}</p>
-        {/*<p className={"header__tekstLiten"}>{ident}</p>*/}
-        {/*<p className={"header__tekstLiten"}>
-                {enhet}
-                {rolle ? `, ${rolle}` : ''}
-            </p>*/}
-        <div className="header__knapp">
+        <div className="header__knapp skjult">
           <div className={classNames(aapen ? "header__lukket" : "header__aapen")} />
         </div>
       </div>
@@ -44,14 +39,14 @@ export const Header = ({ tittel, children, brukerinfo }: HeaderProps) => {
     <header className={"header__container"}>
       <div className={"header__rad"}>
         <h1 className={"header__tittel"}>{tittel}</h1>
-        <div className={"header__avdeler"} />
-        {children}
+        <div className={"header__avdeler skjult"} />
+        {/*children*/}
       </div>
       <div className={"header__rad"}>
-        <button className={"header__systemknapp"}>
+        <button className={"header__systemknapp skjult"}>
           <IkonSystem />
         </button>
-        <div className={"header__avdeler"} />
+        <div className={"header__avdeler skjult"} />
         <Bruker {...brukerinfo}>
           <IkonSystem />
         </Bruker>

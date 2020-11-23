@@ -101,7 +101,7 @@ function visHandlinger(fradelOppgave: any, id: string, versjon: number) {
       <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
         <div>
           <Knapp className={"knapp"} onClick={(e) => fradelOppgave(id, versjon)}>
-            Legg tilbake {versjon}
+            Legg tilbake
           </Knapp>
         </div>
       </div>

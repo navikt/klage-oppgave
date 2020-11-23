@@ -5,5 +5,6 @@ export interface OppgaveQuery {
   antall: number;
   start: number;
   rekkefoelge: "SYNKENDE" | "STIGENDE";
+  navIdent?: string;
   tildeltSaksbehandler?: string;
 }

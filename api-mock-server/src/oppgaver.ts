@@ -38,7 +38,7 @@ function saksbehandlerFiltrering(
   saksbehandler: string | undefined
 ) {
   if (!saksbehandler) {
-    return "";
+    return `${!where ? "WHERE" : " AND"} saksbehandler != ?`;
   }
   return `${!where ? "WHERE" : " AND"} saksbehandler = ?`;
 }
@@ -130,6 +130,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     antall,
     start,
     rekkefoelge,
+    navIdent,
     tildeltSaksbehandler,
   } = query;
   let filterTyper = typer?.split(",");
@@ -174,6 +175,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
       params.push(filter);
     });
     if (tildeltSaksbehandler) params.push(tildeltSaksbehandler);
+    if (!tildeltSaksbehandler) params.push(navIdent);
     params = params.filter((f: any) => f !== undefined);
     params.push(start);
     params.push(antall);

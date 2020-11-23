@@ -40,7 +40,10 @@ async function hentOppgaver() {
 }
 
 app.get("/ansatte/:id/oppgaver", async (req, res) => {
-  const result = await filtrerOppgaver((req.query as unknown) as OppgaveQuery);
+  const result = await filtrerOppgaver({
+    navIdent: req.params.id,
+    ...req.query,
+  } as OppgaveQuery);
   res.send(result);
 });
 
