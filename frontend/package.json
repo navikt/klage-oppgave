@@ -10,7 +10,15 @@
     "build": "npm run clean && npm run build:js && npm run build:html",
     "start": "better-npm-run start",
     "test": "jest",
+    "testcov": "jest --coverage --no-cache",
     "lint": "npx eslint src --ext .js,.jsx --color"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "html"
+    ]
   },
   "betterScripts": {
     "start": {

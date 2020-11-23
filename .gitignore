@@ -1,4 +1,5 @@
 node_modules
+coverage
 oppgaver.db
 secrets/*
 .env.development
