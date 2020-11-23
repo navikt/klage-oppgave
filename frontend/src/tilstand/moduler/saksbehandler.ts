@@ -47,6 +47,9 @@ export const saksbehandlerSlice = createSlice({
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
     },
+    FRADELT: (state, action: PayloadAction<string>) => {
+      console.log(action.payload);
+    },
   },
 });
 
@@ -57,7 +60,9 @@ export default saksbehandlerSlice.reducer;
 //==========
 export const { HENTET, FEILET } = saksbehandlerSlice.actions;
 export const tildelMegHandling = createAction<PayloadType>("saksbehandler/TILDEL_MEG");
-export const tildeltHandling = createAction<TildelType>("saksbehandler/TILDELT");
+export const fradelMegHandling = createAction<PayloadType>("saksbehandler/FRADEL_MEG");
+const fradeltHandling = createAction<string>("saksbehandler/FRADELT");
+const tildeltHandling = createAction<TildelType>("saksbehandler/TILDELT");
 export const feiletHandling = createAction("saksbehandler/FEILET");
 
 //==========
@@ -105,6 +110,48 @@ export function tildelEpos(
   );
 }
 
+export function fradelEpos(
+  action$: ActionsObservable<PayloadAction<PayloadType>>,
+  state$: StateObservable<RootStateOrAny>,
+  { post }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(fradelMegHandling.type),
+    withLatestFrom(state$),
+    switchMap(([action]) => {
+      const url = `/api/ansatte/${action.payload.ident}/oppgaver/${action.payload.oppgaveId}/saksbehandlerfjerning`;
+      return post(
+        url,
+        { navIdent: action.payload.ident, oppgaveversjon: action.payload.versjon },
+        { "Content-Type": "application/json" }
+      )
+        .pipe(
+          switchMap(({ response }) => {
+            let params = {
+              start: state$.value.oppgaver.meta.start,
+              antall: state$.value.oppgaver.meta.antall,
+              transformasjoner: state$.value.oppgaver.transformasjoner,
+              ident: state$.value.meg.id,
+              projeksjon: state$.value.oppgaver.meta.projeksjon,
+              tildeltSaksbehandler: state$.value.oppgaver.meta.tildeltSaksbehandler,
+            } as OppgaveParams;
+            return concat([fradeltHandling(response), oppgaveRequest(params)]);
+          })
+        )
+        .pipe(
+          catchError((error) => {
+            const message =
+              error?.response?.detail?.feilmelding ||
+              error?.response?.detail ||
+              error?.message ||
+              "generisk feilmelding";
+            return concat([displayToast(message), logError(message), skjulToaster()]);
+          })
+        );
+    })
+  );
+}
+
 function logError(error: string) {
   return FEILET(JSON.stringify(error));
 }
@@ -120,4 +167,4 @@ function skjulToaster() {
   return toasterSkjul();
 }
 
-export const TILDEL_EPICS = [tildelEpos];
+export const TILDEL_EPICS = [tildelEpos, fradelEpos];

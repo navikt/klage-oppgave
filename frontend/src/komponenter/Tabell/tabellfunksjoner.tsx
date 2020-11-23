@@ -1,8 +1,32 @@
 import { OppgaveRad, OppgaveRader, OppgaveRadMedFunksjoner } from "../../tilstand/moduler/oppgave";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import EtikettBase from "nav-frontend-etiketter";
 import { typeOversettelse, ytelseOversettelse } from "../../domene/forkortelser";
 import { Knapp } from "nav-frontend-knapper";
+import classNames from "classnames";
+import { useOnInteractOutside } from "./FiltrerbarHeader";
+import { useDispatch, useSelector } from "react-redux";
+import { fradelMegHandling } from "../../tilstand/moduler/saksbehandler";
+import { velgMeg } from "../../tilstand/moduler/meg.velgere";
+
+const R = require("ramda");
+const velgOppgave = R.curry((settValgOppgave: any, id: string, versjon: number) =>
+  tildelOppgave(settValgOppgave, id, versjon)
+);
+const leggTilbakeOppgave = R.curry(
+  (dispatch: React.Dispatch<any>, ident: string, oppgaveId: string, versjon: number) =>
+    dispatch(
+      fradelMegHandling({
+        oppgaveId: oppgaveId,
+        ident: ident,
+        versjon: versjon,
+      })
+    )
+);
+const velgHandlinger = R.curry(
+  (leggTilbakeOppgave: React.Dispatch<any>, oppgaveId: string, versjon: number) =>
+    visHandlinger(leggTilbakeOppgave, oppgaveId, versjon)
+);
 
 const OppgaveTabellRad = ({
   id,
@@ -15,6 +39,10 @@ const OppgaveTabellRad = ({
   utvidetProjeksjon,
   settValgOppgave,
 }: OppgaveRadMedFunksjoner) => {
+  const dispatch = useDispatch();
+  const meg = useSelector(velgMeg);
+  const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id);
+
   return (
     <tr className="table-filter">
       <td>
@@ -36,14 +64,50 @@ const OppgaveTabellRad = ({
       {utvidetProjeksjon && <td>{person?.navn}</td>}
       {utvidetProjeksjon && <td>{person?.fnr}</td>}
       <td>{frist}</td>
-      <td>
-        <Knapp className={"knapp"} onClick={(e) => settValgOppgave({ id, versjon })}>
-          Tildel meg
-        </Knapp>
-      </td>
+      {!utvidetProjeksjon && velgOppgave(settValgOppgave)(id)(versjon)}
+      {utvidetProjeksjon && visHandlinger(fradelOppgave, id, versjon)}
     </tr>
   );
 };
+
+function tildelOppgave(settValgtOppgave: any, id: string, versjon: number) {
+  return (
+    <td>
+      <Knapp className={"knapp"} onClick={(e) => settValgtOppgave({ id, versjon })}>
+        Tildel meg
+      </Knapp>
+    </td>
+  );
+}
+
+function visHandlinger(fradelOppgave: any, id: string, versjon: number) {
+  const [viserHandlinger, settVisHandlinger] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useOnInteractOutside({
+    ref,
+    onInteractOutside: () => settVisHandlinger(false),
+    active: viserHandlinger,
+  });
+
+  return (
+    <td className="knapp-med-handlingsoverlegg">
+      <a
+        href="#"
+        onClick={() => settVisHandlinger(!viserHandlinger)}
+        className={classNames({ skjult: viserHandlinger })}
+      >
+        Endre
+      </a>
+      <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
+        <div>
+          <Knapp className={"knapp"} onClick={(e) => fradelOppgave(id, versjon)}>
+            Legg tilbake {versjon}
+          </Knapp>
+        </div>
+      </div>
+    </td>
+  );
+}
 
 export const genererTabellRader = (
   settValgOppgaveId: Function,

@@ -1,11 +1,8 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { catchError, delay, switchMap, withLatestFrom } from "rxjs/operators";
-import { concat, of } from "rxjs";
-import { hentMegHandling } from "./meg";
+import { of } from "rxjs";
 import { RootStateOrAny } from "react-redux";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { PayloadType, tildelMegHandling } from "./saksbehandler";
 
 //==========
 // Type defs

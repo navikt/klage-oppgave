@@ -6,7 +6,12 @@ import { eqNumber } from "fp-ts/lib/Eq";
 import JSONStream from "jsonstream";
 import es from "event-stream";
 import chalk from "chalk";
-import { filtrerOppgaver } from "./oppgaver";
+import {
+  filtrerOppgaver,
+  fradelSaksbehandler,
+  ISaksbehandler,
+  tildelSaksbehandler,
+} from "./oppgaver";
 import { OppgaveQuery } from "./types";
 
 const app = express();
@@ -42,7 +47,25 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
 app.post(
   "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlertildeling",
   async (req, res) => {
-    res.status(500).send({ status: "OK" });
+    const result = await tildelSaksbehandler({
+      oppgaveId: req.params.oppgaveid,
+      navIdent: req.params.id,
+      oppgaveVersjon: req.body.oppgaveversjon,
+    } as ISaksbehandler)
+      .then((result) => res.status(200).send({ status: "OK" }))
+      .catch((err) => res.status(err.status).send(err.body));
+  }
+);
+app.post(
+  "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlerfjerning",
+  async (req, res) => {
+    return await fradelSaksbehandler({
+      oppgaveId: req.params.oppgaveid,
+      navIdent: req.params.id,
+      oppgaveVersjon: req.body.oppgaveversjon,
+    } as ISaksbehandler)
+      .then((result) => res.status(200).send({ status: "OK" }))
+      .catch((err) => res.status(err.status).send(err.body));
   }
 );
 
