@@ -19,6 +19,7 @@ describe("tester oppgavehenting", () => {
       start: 0,
       typer: "Klage",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
@@ -33,6 +34,7 @@ describe("tester oppgavehenting", () => {
       start: 0,
       typer: "Anke",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
@@ -47,6 +49,7 @@ describe("tester oppgavehenting", () => {
       start: 0,
       typer: "Anke,Klage",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
@@ -64,6 +67,7 @@ describe("tester oppgavehenting", () => {
       start: 0,
       ytelser: "Sykepenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
@@ -78,6 +82,7 @@ describe("tester oppgavehenting", () => {
       start: 0,
       ytelser: "Dagpenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
@@ -93,6 +98,7 @@ describe("tester oppgavehenting", () => {
       start: 0,
       ytelser: "Dagpenger,Foreldrepenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
@@ -111,6 +117,7 @@ describe("tester oppgavehenting", () => {
       start: 0,
       ytelser: "Dagpenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
@@ -126,6 +133,7 @@ describe("tester oppgavehenting", () => {
       start: 0,
       hjemler: "8-61",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let result = await filtrerOppgaver(query);
     expect(result.oppgaver.length).toBeGreaterThan(1);
@@ -139,6 +147,7 @@ describe("tester oppgavehenting", () => {
       start: 0,
       hjemler: "8-61,8-62",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let result = await filtrerOppgaver(query);
     expect(result.oppgaver.length).toBeGreaterThan(1);
@@ -157,6 +166,7 @@ describe("tester oppgavehenting", () => {
       hjemler: "8-61,8-62",
       ytelser: "Foreldrepenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
+      navIdent: "ZATHRAS",
     };
     let result = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
