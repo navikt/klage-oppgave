@@ -10,11 +10,13 @@ import { fradelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 
 const R = require("ramda");
-const velgOppgave = R.curry((settValgOppgave: any, id: string, versjon: number) =>
-  tildelOppgave(settValgOppgave, id, versjon)
+
+const velgOppgave = R.curry((settValgtOppgave: Function, id: string, versjon: number) =>
+  tildelOppgave(settValgtOppgave, id, versjon)
 );
+
 const leggTilbakeOppgave = R.curry(
-  (dispatch: React.Dispatch<any>, ident: string, oppgaveId: string, versjon: number) =>
+  (dispatch: Function, ident: string, oppgaveId: string, versjon: number) =>
     dispatch(
       fradelMegHandling({
         oppgaveId: oppgaveId,
@@ -22,10 +24,6 @@ const leggTilbakeOppgave = R.curry(
         versjon: versjon,
       })
     )
-);
-const velgHandlinger = R.curry(
-  (leggTilbakeOppgave: React.Dispatch<any>, oppgaveId: string, versjon: number) =>
-    visHandlinger(leggTilbakeOppgave, oppgaveId, versjon)
 );
 
 const OppgaveTabellRad = ({
@@ -37,7 +35,7 @@ const OppgaveTabellRad = ({
   versjon,
   person,
   utvidetProjeksjon,
-  settValgOppgave,
+  settValgtOppgave,
 }: OppgaveRadMedFunksjoner) => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
@@ -64,13 +62,13 @@ const OppgaveTabellRad = ({
       {utvidetProjeksjon && <td>{person?.navn}</td>}
       {utvidetProjeksjon && <td>{person?.fnr}</td>}
       <td>{frist}</td>
-      {!utvidetProjeksjon && velgOppgave(settValgOppgave)(id)(versjon)}
+      {!utvidetProjeksjon && velgOppgave(settValgtOppgave, id, versjon)}
       {utvidetProjeksjon && visHandlinger(fradelOppgave, id, versjon)}
     </tr>
   );
 };
 
-function tildelOppgave(settValgtOppgave: any, id: string, versjon: number) {
+function tildelOppgave(settValgtOppgave: Function, id: string, versjon: number) {
   return (
     <td>
       <Knapp className={"knapp"} onClick={(e) => settValgtOppgave({ id, versjon })}>
@@ -80,7 +78,7 @@ function tildelOppgave(settValgtOppgave: any, id: string, versjon: number) {
   );
 }
 
-function visHandlinger(fradelOppgave: any, id: string, versjon: number) {
+function visHandlinger(fradelOppgave: Function, id: string, versjon: number) {
   const [viserHandlinger, settVisHandlinger] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useOnInteractOutside({
@@ -114,11 +112,11 @@ export const genererTabellRader = (
   oppgaver: OppgaveRader,
   utvidetProjeksjon: "UTVIDET" | undefined
 ): JSX.Element[] =>
-  oppgaver.rader.map((rad: any) => (
+  oppgaver.rader.map((rad: OppgaveRad) => (
     <OppgaveTabellRad
       key={rad.id}
       {...rad}
       utvidetProjeksjon={utvidetProjeksjon}
-      settValgOppgave={settValgOppgaveId}
+      settValgtOppgave={settValgOppgaveId}
     />
   ));

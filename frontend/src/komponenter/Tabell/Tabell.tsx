@@ -59,7 +59,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
 
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
-  const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
+  const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
   const [antall, settAntall] = useState<number>(5);
   const [start, settStart] = useState<number>(0);
@@ -246,7 +246,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {genererTabellRader(settValgOppgave, oppgaver, utvidetProjeksjon)}
+          {genererTabellRader(settValgtOppgave, oppgaver, utvidetProjeksjon)}
           <tr>
             <td colSpan={utvidetProjeksjon ? 8 : 6}>
               <div className="table-lbl">
