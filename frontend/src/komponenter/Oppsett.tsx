@@ -35,7 +35,7 @@ export default function Oppsett({ children }: LayoutType) {
               Mine&nbsp;Saker
             </NavLink>
           </li>
-          <li>
+          <li className={"skjult"}>
             <NavLink className="link" to="/innstillinger">
               Innstillinger
             </NavLink>

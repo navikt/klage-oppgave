@@ -71,3 +71,22 @@ table {
   width: 1px;
   overflow: hidden;
 }
+.knapp-med-handlingsoverlegg {
+  position: relative;
+
+  a {
+    display: block;
+  }
+  a.skjult {
+    display: none;
+  }
+  .handlinger {
+    position: absolute;
+    top: 0.25em;
+    right: 0;
+    padding: 1em;
+    background: white;
+    border: 1px solid @greyLight;
+    border-radius: 0.25em;
+  }
+}

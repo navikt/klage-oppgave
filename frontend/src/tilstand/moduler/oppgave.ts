@@ -26,7 +26,7 @@ export interface OppgaveRad {
   saksbehandler: string;
 }
 export interface OppgaveRadMedFunksjoner extends OppgaveRad {
-  settValgOppgave: Function;
+  settValgtOppgave: Function;
   utvidetProjeksjon: "UTVIDET" | undefined;
 }
 

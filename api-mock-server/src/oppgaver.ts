@@ -38,7 +38,7 @@ function saksbehandlerFiltrering(
   saksbehandler: string | undefined
 ) {
   if (!saksbehandler) {
-    return "";
+    return `${!where ? "WHERE" : " AND"} saksbehandler != ?`;
   }
   return `${!where ? "WHERE" : " AND"} saksbehandler = ?`;
 }
@@ -52,6 +52,76 @@ function typeQuery(filter: Array<string> | undefined) {
   return "";
 }
 
+export interface ISaksbehandler {
+  oppgaveId: string;
+  navIdent: string;
+  oppgaveVersjon: number;
+}
+
+export async function tildelSaksbehandler(params: ISaksbehandler) {
+  let db = new sqlite3.Database(path.join(__dirname, "../oppgaver.db"));
+  let sql =
+    "UPDATE Oppgaver SET saksbehandler = ? WHERE Id = ? AND versjon = ?";
+  return await new Promise((resolve, reject) => {
+    db.all(
+      sql,
+      [params.navIdent, params.oppgaveId, params.oppgaveVersjon],
+      (err: any, rader: any) => {
+        if (err) {
+          console.log(sql);
+          console.log(params);
+          reject(err);
+        }
+        resolve(rader);
+      }
+    );
+  })
+    .then((result) => ({
+      status: 200,
+      body: {
+        result,
+      },
+    }))
+    .catch((err) => ({
+      status: 500,
+      body: {
+        err,
+      },
+    }));
+}
+
+export async function fradelSaksbehandler(params: ISaksbehandler) {
+  let db = new sqlite3.Database(path.join(__dirname, "../oppgaver.db"));
+  let sql =
+    "UPDATE Oppgaver SET saksbehandler = '' WHERE Id = ? AND versjon = ?";
+  return await new Promise((resolve, reject) => {
+    db.all(
+      sql,
+      [params.oppgaveId, params.oppgaveVersjon],
+      (err: any, rader: any) => {
+        if (err) {
+          console.log(sql);
+          console.log(params);
+          reject(err);
+        }
+        resolve(rader);
+      }
+    );
+  })
+    .then((result) => ({
+      status: 200,
+      body: {
+        result,
+      },
+    }))
+    .catch((err) => ({
+      status: 500,
+      body: {
+        err,
+      },
+    }));
+}
+
 export async function filtrerOppgaver(query: OppgaveQuery) {
   const {
     typer,
@@ -60,6 +130,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     antall,
     start,
     rekkefoelge,
+    navIdent,
     tildeltSaksbehandler,
   } = query;
   let filterTyper = typer?.split(",");
@@ -72,7 +143,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
   let harHjemler = "undefined" !== typeof hjemler;
 
   let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, 
-                 hjemmel, ytelse, frist, saksbehandler, fnr, navn
+                 hjemmel, ytelse, frist, saksbehandler, fnr, navn, versjon
                  FROM Oppgaver 
                  ${typeQuery(filterTyper).replace(/,/g, "")}
                  ${generiskFilterSpoerring(
@@ -104,6 +175,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
       params.push(filter);
     });
     if (tildeltSaksbehandler) params.push(tildeltSaksbehandler);
+    if (!tildeltSaksbehandler) params.push(navIdent);
     params = params.filter((f: any) => f !== undefined);
     params.push(start);
     params.push(antall);
@@ -122,6 +194,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             hjemmel: rad.hjemmel,
             ytelse: rad.ytelse,
             frist: rad.frist,
+            versjon: rad.versjon,
           }))
         );
       else
@@ -134,6 +207,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             ytelse: rad.ytelse,
             frist: rad.frist,
             person: { fnr: rad.fnr, navn: rad.navn },
+            versjon: rad.versjon,
           }))
         );
     });

@@ -34,7 +34,7 @@ export interface TabellHeader {
   /**
    * Funksjon som kalles når bruker klikker på headeren.
    */
-  onClick?: (val?: any) => void;
+  onClick?: (val: any) => void;
   /**
    * Angir antall kolonner headeren strekker seg over
    */

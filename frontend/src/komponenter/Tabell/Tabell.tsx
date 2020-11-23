@@ -21,7 +21,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
 
-function initState(filter: any) {
+function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
     return [];
   }
@@ -59,9 +59,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
 
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
-  const [valgtOppgave, settValgOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
+  const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
-  const [antall, settAntall] = useState<number>(5);
+  const [antall] = useState<number>(5);
   const [start, settStart] = useState<number>(0);
   const history = useHistory();
   const pathname = history.location.pathname.split("/")[1];
@@ -246,9 +246,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {genererTabellRader(settValgOppgave, oppgaver, utvidetProjeksjon)}
+          {genererTabellRader(settValgtOppgave, oppgaver, utvidetProjeksjon)}
           <tr>
-            <td colSpan={6}>
+            <td colSpan={utvidetProjeksjon ? 8 : 6}>
               <div className="table-lbl">
                 <div className={"paginering"}>
                   <Paginering
