@@ -21,7 +21,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
 
-function initState(filter: any) {
+function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
     return [];
   }
@@ -61,7 +61,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
   const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
-  const [antall, settAntall] = useState<number>(5);
+  const [antall] = useState<number>(5);
   const [start, settStart] = useState<number>(0);
   const history = useHistory();
   const pathname = history.location.pathname.split("/")[1];

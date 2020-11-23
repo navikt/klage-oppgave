@@ -156,7 +156,7 @@ function logError(error: string) {
   return FEILET(JSON.stringify(error));
 }
 
-function displayToast(error: any) {
+function displayToast(error: string) {
   return toasterSett({
     display: true,
     feilmelding: error,
