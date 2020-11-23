@@ -15,6 +15,35 @@ const velgOppgave = R.curry((settValgtOppgave: Function, id: string, versjon: nu
   tildelOppgave(settValgtOppgave, id, versjon)
 );
 
+const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: number) => {
+  const [viserHandlinger, settVisHandlinger] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useOnInteractOutside({
+    ref,
+    onInteractOutside: () => settVisHandlinger(false),
+    active: viserHandlinger,
+  });
+
+  return (
+    <td className="knapp-med-handlingsoverlegg">
+      <a
+        href="#"
+        onClick={() => settVisHandlinger(!viserHandlinger)}
+        className={classNames({ skjult: viserHandlinger })}
+      >
+        Endre
+      </a>
+      <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
+        <div>
+          <Knapp className={"knapp"} onClick={(e) => fradelOppgave(id, versjon)}>
+            Legg tilbake
+          </Knapp>
+        </div>
+      </div>
+    </td>
+  );
+});
+
 const leggTilbakeOppgave = R.curry(
   (dispatch: Function, ident: string, oppgaveId: string, versjon: number) =>
     dispatch(
@@ -40,6 +69,8 @@ const OppgaveTabellRad = ({
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
   const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id);
+  const curriedVisHandlinger = visHandlinger(fradelOppgave)(id)(versjon);
+  const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id)(versjon);
 
   return (
     <tr className="table-filter">
@@ -62,8 +93,8 @@ const OppgaveTabellRad = ({
       {utvidetProjeksjon && <td>{person?.navn}</td>}
       {utvidetProjeksjon && <td>{person?.fnr}</td>}
       <td>{frist}</td>
-      {!utvidetProjeksjon && velgOppgave(settValgtOppgave, id, versjon)}
-      {utvidetProjeksjon && visHandlinger(fradelOppgave, id, versjon)}
+      {!utvidetProjeksjon && curriedVelgOppgave}
+      {utvidetProjeksjon && curriedVisHandlinger}
     </tr>
   );
 };
@@ -74,35 +105,6 @@ function tildelOppgave(settValgtOppgave: Function, id: string, versjon: number) 
       <Knapp className={"knapp"} onClick={(e) => settValgtOppgave({ id, versjon })}>
         Tildel meg
       </Knapp>
-    </td>
-  );
-}
-
-function visHandlinger(fradelOppgave: Function, id: string, versjon: number) {
-  const [viserHandlinger, settVisHandlinger] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  useOnInteractOutside({
-    ref,
-    onInteractOutside: () => settVisHandlinger(false),
-    active: viserHandlinger,
-  });
-
-  return (
-    <td className="knapp-med-handlingsoverlegg">
-      <a
-        href="#"
-        onClick={() => settVisHandlinger(!viserHandlinger)}
-        className={classNames({ skjult: viserHandlinger })}
-      >
-        Endre
-      </a>
-      <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
-        <div>
-          <Knapp className={"knapp"} onClick={(e) => fradelOppgave(id, versjon)}>
-            Legg tilbake
-          </Knapp>
-        </div>
-      </div>
     </td>
   );
 }
