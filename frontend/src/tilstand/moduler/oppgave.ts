@@ -124,7 +124,7 @@ export const oppgaveSlice = createSlice({
   name: "oppgaver",
   initialState: {
     rader: [],
-    lasterData: false,
+    lasterData: true,
     meta: {
       antall: 0,
       sider: 1,
