@@ -15,20 +15,14 @@ interface IToaster {
 //==========
 // Reducer
 //==========
-const initialState = {
+export const toasterInitialState = {
   display: false,
   feilmelding: "Oppgaven kan ikke tildeles da den allerede er tildelt en annen saksbehandler",
 };
 export const toasterSlice = createSlice({
   name: "toaster",
-  initialState,
+  initialState: toasterInitialState,
   reducers: {
-    SETT: (state, action: PayloadAction<IToaster>) => {
-      state.display = action.payload.display;
-      state.feilmelding = action.payload.feilmelding;
-      return state;
-    },
-    SKJUL: (state) => state,
     SATT: (state, action: PayloadAction<IToaster>) => ({
       display: action.payload.display,
       feilmelding: action.payload.feilmelding,
@@ -41,9 +35,8 @@ export default toasterSlice.reducer;
 //==========
 // Actions
 //==========
-export const { SETT, SKJUL } = toasterSlice.actions;
 export const toasterSett = createAction<IToaster>("toaster/SETT");
-const toasterSatt = createAction<IToaster>("toaster/SATT");
+export const toasterSatt = createAction<IToaster>("toaster/SATT");
 export const toasterSkjul = createAction("toaster/SKJUL");
 
 //==========
@@ -57,20 +50,16 @@ export function visToasterEpos(
     ofType(toasterSett.type),
     withLatestFrom(state$),
     switchMap(([action]) =>
-      of(toasterSatt({ display: true, feilmelding: action.payload.feilmelding })).pipe(
-        catchError((error) => {
-          return of(toasterSatt({ display: true, feilmelding: error.message }));
-        })
-      )
+      of(toasterSatt({ display: true, feilmelding: action.payload.feilmelding }))
     )
   );
 }
 
-export function skjulToasterEpos(action$: ActionsObservable<PayloadAction<IToaster>>) {
+export function skjulToasterEpos(action$: ActionsObservable<PayloadAction>) {
   return action$.pipe(
     ofType(toasterSkjul.type),
     delay(15 * 1000),
-    switchMap(() => of(toasterSatt(initialState)))
+    switchMap(() => of(toasterSatt(toasterInitialState)))
   );
 }
 
