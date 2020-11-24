@@ -226,6 +226,7 @@ export function hentOppgaverEpos(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
+      console.log("Henter oppgaver");
       let rader = state.oppgaver.rader.slice();
       let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
