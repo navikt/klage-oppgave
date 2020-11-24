@@ -85,7 +85,7 @@ export function hentMegEpos(
         )
         .pipe(
           retryWhen(provIgjenStrategi()),
-          catchError((error) => of(FEILET(error)))
+          catchError((error) => of(FEILET(error.message)))
         );
     })
   );

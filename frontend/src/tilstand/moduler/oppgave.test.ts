@@ -16,12 +16,15 @@ import {
   ytelseType,
 } from "./oppgave";
 import { ajax } from "rxjs/ajax";
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { hentMegEpos, hentMegHandling } from "./meg";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
   const originalAjaxGet = ajax.get;
+
+  const mockApi = jest.fn();
 
   beforeEach(() => {
     ts = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
@@ -429,6 +432,64 @@ describe("Oppgave epos", () => {
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
         const actual$ = hentOppgaverEpos(action$, state$, <AjaxCreationMethod>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
+      });
+    })
+  );
+
+  test(
+    "+++ HENT 'OPPGAVER' RETRY 3 ganger og så returner FEIL",
+    marbles(() => {
+      ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
+        const inputValues = {
+          a: oppgaveRequest({
+            ident: "ZATHRAS",
+            antall: 5,
+            start: 0,
+            transformasjoner: {
+              sortering: {
+                frist: "synkende",
+              },
+              filtrering: {
+                hjemler: ["8-2, 8-13 og 8-49", "8-19"],
+              },
+            },
+          }),
+        };
+        const action$ = new ActionsObservable(hot("-a", inputValues));
+
+        const dependencies = {
+          getJSON: (url: string) => of({}),
+        };
+        const initState = {
+          oppgaver: {
+            rader: [
+              { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-2" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-13" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-49" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-19" },
+              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
+              { frist: "2018-12-21", ytelse: "FOR", hjemmel: "9-11" },
+              { frist: "2019-11-13", ytelse: "SYK", hjemmel: "10-1" },
+              { frist: "2018-12-21", ytelse: "DAG", hjemmel: "mangler" },
+            ],
+          },
+        };
+        const observableValues = {
+          a: initState,
+          s: {
+            payload: {
+              status: 503,
+            },
+            type: "oppgaver/FEILET",
+          },
+        };
+
+        const state$ = new StateObservable(hot("-a", observableValues), initState);
+        spyOn(dependencies, "getJSON").and.returnValue(throwError({ status: 503 }));
+        expectObservable(hentOppgaverEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+          "12001ms s",
+          observableValues
+        );
       });
     })
   );

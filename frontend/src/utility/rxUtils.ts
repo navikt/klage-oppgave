@@ -17,9 +17,11 @@ export const provIgjenStrategi = ({
       if (forsok > maksForsok || ekskluderteStatuskoder.find((e) => e === error.status)) {
         return throwError(error);
       }
-      console.log(`Forsøk ${forsok}: prøver igjen (${forsok * ventetidMillisekunder}ms)`);
+      //console.log(`Forsøk ${forsok}: prøver igjen (${forsok * ventetidMillisekunder}ms)`);
       return timer(forsok * ventetidMillisekunder);
     }),
-    finalize(() => console.log("Ferdig"))
+    finalize(() => {
+      // console.log("Ferdig")
+    })
   );
 };

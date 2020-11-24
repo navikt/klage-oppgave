@@ -1,12 +1,13 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "../konfigurerAxios";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { of } from "rxjs";
+import { of, timer } from "rxjs";
 import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { HotObservable } from "rxjs/internal/testing/HotObservable";
+
 const R = require("ramda");
 
 //==========
@@ -25,6 +26,7 @@ export interface OppgaveRad {
   frist: string;
   saksbehandler: string;
 }
+
 export interface OppgaveRadMedFunksjoner extends OppgaveRad {
   settValgtOppgave: Function;
   utvidetProjeksjon: "UTVIDET" | undefined;
