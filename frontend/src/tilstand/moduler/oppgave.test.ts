@@ -449,9 +449,6 @@ describe("Oppgave epos", () => {
               sortering: {
                 frist: "synkende",
               },
-              filtrering: {
-                hjemler: ["8-2, 8-13 og 8-49", "8-19"],
-              },
             },
           }),
         };
@@ -460,20 +457,13 @@ describe("Oppgave epos", () => {
         const dependencies = {
           getJSON: (url: string) => of({}),
         };
+
         const initState = {
           oppgaver: {
-            rader: [
-              { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-2" },
-              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-13" },
-              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-49" },
-              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-19" },
-              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
-              { frist: "2018-12-21", ytelse: "FOR", hjemmel: "9-11" },
-              { frist: "2019-11-13", ytelse: "SYK", hjemmel: "10-1" },
-              { frist: "2018-12-21", ytelse: "DAG", hjemmel: "mangler" },
-            ],
+            rader: [],
           },
         };
+
         const observableValues = {
           a: initState,
           s: {
