@@ -1,17 +1,17 @@
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
-import {
-  tildelMegHandling,
-  tildelEpos,
-  TildelType,
-  fradelMegHandling,
+import saksbehandlerTilstand, {
   fradelEpos,
+  fradelMegHandling,
+  tildelEpos,
+  tildelMegHandling,
 } from "./saksbehandler";
 import { ajax } from "rxjs/ajax";
-import { from, of } from "rxjs";
+import { of, throwError } from "rxjs";
 import { OppgaveParams } from "./oppgave";
-import { fromPromise } from "rxjs/internal-compatibility";
+import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { hentetHandling } from "./meg";
 
 describe("TILDEL 'Meg' epos", () => {
   let ts: TestScheduler;
@@ -45,51 +45,6 @@ describe("TILDEL 'Meg' epos", () => {
     ts.flush();
     ajax.post = originalAjaxPost;
   });
-
-  /**
-   * Tester henting
-   */
-  xtest(
-    "+++ TILDEL 'MEG' OPPGAVE FEILET",
-    marbles(() => {
-      ts.run((m) => {
-        const inputMarble = "a-";
-        const expectedMarble = "(cde)-";
-
-        const inputValues = {
-          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
-        };
-        const initState = {};
-        const mockedResponse = {
-          message: "oops",
-        };
-        const dependencies = {
-          post: (url: string) => of(Promise.reject(mockedResponse)),
-        };
-
-        const observableValues = {
-          a: initState,
-          c: {
-            payload: { display: true, feilmelding: "oops" },
-            type: "toaster/SETT",
-          },
-          d: {
-            payload: "{}",
-            type: "saksbehandler/FEILET",
-          },
-          e: {
-            payload: undefined,
-            type: "toaster/SKJUL",
-          },
-        };
-
-        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = tildelEpos(action$, state$, <any>dependencies);
-        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
-      });
-    })
-  );
 
   test(
     "+++ TILDEL 'MEG' OPPGAVE SUKSESS",
@@ -189,6 +144,218 @@ describe("TILDEL 'Meg' epos", () => {
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
         const actual$ = fradelEpos(action$, state$, <any>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
+      });
+    })
+  );
+
+  test(
+    "+++ FRADEL 'MEG' OPPGAVE FEIL",
+    marbles(() => {
+      ts.run((m) => {
+        const inputMarble = "a-";
+        const expectedMarble = "(tu)";
+
+        const inputValues = {
+          a: fradelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+        };
+        const resultPayload = {};
+        const mockedResponse = {
+          response: {},
+        };
+        const dependencies = {
+          post: (url: string) => of(mockedResponse),
+        };
+
+        const observableValues = {
+          a: initState,
+          t: {
+            payload: {
+              display: true,
+              feilmelding: "fradeling feilet",
+            },
+            type: "toaster/SETT",
+          },
+          u: {
+            payload: undefined,
+            type: "toaster/SKJUL",
+          },
+        };
+        spyOn(dependencies, "post").and.returnValue(
+          throwError({ message: "fradeling feilet", status: 503 })
+        );
+
+        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
+        const actual$ = fradelEpos(action$, state$, <any>dependencies);
+        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
+      });
+    })
+  );
+
+  test(
+    "+++ HENT SAKSBEHANDLER FEIL error:message",
+    marbles(() => {
+      ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
+        const inputValues = {
+          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+        };
+        const action$ = new ActionsObservable(hot("-a", inputValues));
+
+        const dependencies = {
+          post: (url: string) => of({}),
+        };
+
+        const observableValues = {
+          a: {},
+          t: {
+            payload: {
+              display: true,
+              feilmelding: "tildeling feilet",
+            },
+            type: "toaster/SETT",
+          },
+          u: {
+            payload: undefined,
+            type: "toaster/SKJUL",
+          },
+        };
+
+        const state$ = new StateObservable(hot("-a", observableValues), {});
+        spyOn(dependencies, "post").and.returnValue(
+          throwError({ message: "tildeling feilet", status: 503 })
+        );
+        expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+          "-(tu)",
+          observableValues
+        );
+      });
+    })
+  );
+
+  test(
+    "+++ HENT SAKSBEHANDLER FEIL error: response.detail.feilmelding",
+    marbles(() => {
+      ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
+        const inputValues = {
+          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+        };
+        const action$ = new ActionsObservable(hot("-a", inputValues));
+
+        const dependencies = {
+          post: (url: string) => of({}),
+        };
+
+        const observableValues = {
+          a: {},
+          t: {
+            payload: {
+              display: true,
+              feilmelding: "tildeling feilet",
+            },
+            type: "toaster/SETT",
+          },
+          u: {
+            payload: undefined,
+            type: "toaster/SKJUL",
+          },
+        };
+
+        const state$ = new StateObservable(hot("-a", observableValues), {});
+        spyOn(dependencies, "post").and.returnValue(
+          throwError({
+            response: { detail: { feilmelding: "tildeling feilet" } },
+            status: 503,
+          })
+        );
+        expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+          "-(tu)",
+          observableValues
+        );
+      });
+    })
+  );
+
+  test(
+    "+++ HENT SAKSBEHANDLER FEIL error: response.detail",
+    marbles(() => {
+      ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
+        const inputValues = {
+          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+        };
+        const action$ = new ActionsObservable(hot("-a", inputValues));
+
+        const dependencies = {
+          post: (url: string) => of({}),
+        };
+
+        const observableValues = {
+          a: {},
+          t: {
+            payload: {
+              display: true,
+              feilmelding: "tildeling feilet",
+            },
+            type: "toaster/SETT",
+          },
+          u: {
+            payload: undefined,
+            type: "toaster/SKJUL",
+          },
+        };
+
+        const state$ = new StateObservable(hot("-a", observableValues), {});
+        spyOn(dependencies, "post").and.returnValue(
+          throwError({
+            response: { detail: "tildeling feilet" },
+            status: 503,
+          })
+        );
+        expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+          "-(tu)",
+          observableValues
+        );
+      });
+    })
+  );
+
+  test(
+    "+++ HENT SAKSBEHANDLER FEIL error: generisk",
+    marbles(() => {
+      ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
+        const inputValues = {
+          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+        };
+        const action$ = new ActionsObservable(hot("-a", inputValues));
+
+        const dependencies = {
+          post: (url: string) => of({}),
+        };
+
+        const observableValues = {
+          a: {},
+          t: {
+            payload: {
+              display: true,
+              feilmelding: "generisk feilmelding",
+            },
+            type: "toaster/SETT",
+          },
+          u: {
+            payload: undefined,
+            type: "toaster/SKJUL",
+          },
+        };
+
+        const state$ = new StateObservable(hot("-a", observableValues), {});
+        spyOn(dependencies, "post").and.returnValue(
+          throwError({
+            status: 503,
+          })
+        );
+        expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+          "-(tu)",
+          observableValues
+        );
       });
     })
   );

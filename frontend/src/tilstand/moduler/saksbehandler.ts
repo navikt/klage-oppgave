@@ -37,20 +37,7 @@ export const saksbehandlerSlice = createSlice({
       ident: "",
     },
   },
-  reducers: {
-    HENTET: (state, action: PayloadAction<TildelType>) => {
-      state.id = action.payload.id;
-      state.versjon = action.payload.versjon;
-      state.saksbehandler = action.payload.saksbehandler;
-      return state;
-    },
-    FEILET: (state, action: PayloadAction<string>) => {
-      console.error(action.payload);
-    },
-    FRADELT: (state, action: PayloadAction<string>) => {
-      console.log(action.payload);
-    },
-  },
+  reducers: {},
 });
 
 export default saksbehandlerSlice.reducer;
@@ -58,12 +45,10 @@ export default saksbehandlerSlice.reducer;
 //==========
 // Actions
 //==========
-export const { HENTET, FEILET } = saksbehandlerSlice.actions;
 export const tildelMegHandling = createAction<PayloadType>("saksbehandler/TILDEL_MEG");
 export const fradelMegHandling = createAction<PayloadType>("saksbehandler/FRADEL_MEG");
 const fradeltHandling = createAction<string>("saksbehandler/FRADELT");
 const tildeltHandling = createAction<TildelType>("saksbehandler/TILDELT");
-export const feiletHandling = createAction("saksbehandler/FEILET");
 
 //==========
 // Epos
@@ -96,16 +81,7 @@ export function tildelEpos(
             return concat([tildeltHandling(response), oppgaveRequest(params)]);
           })
         )
-        .pipe(
-          catchError((error) => {
-            const message =
-              error?.response?.detail?.feilmelding ||
-              error?.response?.detail ||
-              error?.message ||
-              "generisk feilmelding";
-            return concat([displayToast(message), logError(message), skjulToaster()]);
-          })
-        );
+        .pipe(catchError((error) => concat([displayToast(error), skjulToaster()])));
     })
   );
 }
@@ -138,28 +114,29 @@ export function fradelEpos(
             return concat([fradeltHandling(response), oppgaveRequest(params)]);
           })
         )
-        .pipe(
-          catchError((error) => {
-            const message =
-              error?.response?.detail?.feilmelding ||
-              error?.response?.detail ||
-              error?.message ||
-              "generisk feilmelding";
-            return concat([displayToast(message), logError(message), skjulToaster()]);
-          })
-        );
+        .pipe(catchError((error) => concat([displayToast(error), skjulToaster()])));
     })
   );
 }
 
-function logError(error: string) {
-  return FEILET(JSON.stringify(error));
+interface IError {
+  message?: string;
+  response?: {
+    detail?: {
+      feilmelding?: string;
+    };
+  };
 }
 
-function displayToast(error: string) {
+function displayToast(error: IError) {
+  const message =
+    error?.response?.detail?.feilmelding ||
+    error?.response?.detail ||
+    error?.message ||
+    "generisk feilmelding";
   return toasterSett({
     display: true,
-    feilmelding: error,
+    feilmelding: message as string,
   });
 }
 

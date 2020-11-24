@@ -37,10 +37,7 @@ export const megSlice = createSlice({
     etternavn: "",
   } as MegType,
   reducers: {
-    HENTET: (state, action: PayloadAction<MegType>) => {
-      state = { ...action.payload };
-      return state;
-    },
+    HENTET: (state, action: PayloadAction<MegType>) => action.payload,
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
     },
@@ -84,7 +81,7 @@ export function hentMegEpos(
           })
         )
         .pipe(
-          retryWhen(provIgjenStrategi({ maksForsok: 5 })),
+          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
             return concat([feiletHandling(error.message), oppgaveFeiletHandling()]);
           })

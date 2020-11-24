@@ -251,7 +251,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
             <td colSpan={utvidetProjeksjon ? 8 : 6}>
               <div className="table-lbl">
                 <div className="antall-saker">
-                  Viser {oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1} -{" "}
+                  Viser {oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1}{" "}
+                  {" til "}
                   {oppgaver.meta.side * oppgaver.meta.antall} av{" "}
                   {oppgaver.meta.sider * oppgaver.meta.antall} oppgaver
                 </div>
