@@ -8,6 +8,8 @@ import { useOnInteractOutside } from "./FiltrerbarHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { fradelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
+// @ts-ignore
+import PilOppHoeyre from "../../komponenter/arrow.svg";
 
 const R = require("ramda");
 
@@ -91,7 +93,19 @@ const OppgaveTabellRad = ({
       </td>
 
       {utvidetProjeksjon && <td>{person?.navn}</td>}
-      {utvidetProjeksjon && <td>{person?.fnr}</td>}
+      {utvidetProjeksjon && (
+        <td>
+          {person?.fnr}
+          <a
+            target="_blank"
+            aria-label={"Ekstern lenke til Gosys for denne personen"}
+            href={`https://gosys-nais.nais.adeo.no/gosys/personoversikt/fnr=${person?.fnr}`}
+            className="gosys-lenke"
+          >
+            GS <img alt="Ekstern lenke" src={PilOppHoeyre} />
+          </a>
+        </td>
+      )}
       <td>{frist}</td>
       {!utvidetProjeksjon && curriedVelgOppgave}
       {utvidetProjeksjon && curriedVisHandlinger}

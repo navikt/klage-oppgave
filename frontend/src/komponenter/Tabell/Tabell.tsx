@@ -275,3 +275,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
 };
 
 export default OppgaveTabell;
+//https://gosys-nais.nais.adeo.no/gosys/
+//https://gosys-nais.nais.preprod.local/gosys/
+//person: /personoversikt/fnr=
