@@ -95,15 +95,17 @@ const OppgaveTabellRad = ({
       {utvidetProjeksjon && <td>{person?.navn}</td>}
       {utvidetProjeksjon && (
         <td>
-          {person?.fnr}
-          <a
-            target="_blank"
-            aria-label={"Ekstern lenke til Gosys for denne personen"}
-            href={`https://gosys-nais.nais.adeo.no/gosys/personoversikt/fnr=${person?.fnr}`}
-            className="gosys-lenke"
-          >
-            GS <img alt="Ekstern lenke" src={PilOppHoeyre} />
-          </a>
+          <div className="fnr-lenke-wrap">
+            {person?.fnr}
+            <a
+              target="_blank"
+              aria-label={"Ekstern lenke til Gosys for denne personen"}
+              href={`https://gosys-nais.nais.adeo.no/gosys/personoversikt/fnr=${person?.fnr}`}
+              className="gosys-lenke"
+            >
+              GS <img alt="Ekstern lenke" src={PilOppHoeyre} />
+            </a>
+          </div>
         </td>
       )}
       <td>{frist}</td>
