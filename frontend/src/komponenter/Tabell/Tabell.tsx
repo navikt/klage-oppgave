@@ -253,8 +253,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
                 <div className="antall-saker">
                   Viser {oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1}{" "}
                   {" til "}
-                  {oppgaver.meta.side * oppgaver.meta.antall} av {oppgaver.meta.totalAntall}{" "}
-                  oppgaver
+                  {oppgaver.meta.side * oppgaver.meta.antall < oppgaver.meta.totalAntall
+                    ? oppgaver.meta.side * oppgaver.meta.antall
+                    : oppgaver.meta.totalAntall}{" "}
+                  av {oppgaver.meta.totalAntall} oppgaver
                 </div>
                 <div className={"paginering"}>
                   <Paginering
