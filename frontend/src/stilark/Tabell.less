@@ -115,6 +115,16 @@ table {
     overflow: hidden;
     height: 1.4em;
 
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.02);
+      transition: transform 0.2s ease;
+    }
+    &:active {
+      transform: scale(0.95);
+      transition: transform 0.2s ease;
+    }
+
     > img {
       height: 6px;
       position: absolute;
