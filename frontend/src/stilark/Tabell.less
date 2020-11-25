@@ -2,6 +2,7 @@ table {
   width: calc(5 * 14em);
   animation: 0.2s ease-in-out;
 }
+
 @greyDark: #3e3832;
 @greyNormal: #59514b;
 @greyLight: #c6c2bf;
@@ -9,11 +10,14 @@ table {
 .skjult {
   display: none;
 }
+
 .synlig {
 }
+
 .tabell {
   width: 100%;
 }
+
 .table {
   position: relative;
   font-family: "Source Sans Pro", Arial, sans-serif;
@@ -61,6 +65,7 @@ table {
     width: 100%;
   }
 }
+
 .tabell thead th {
   border: none;
 }
@@ -71,15 +76,18 @@ table {
   width: 1px;
   overflow: hidden;
 }
+
 .knapp-med-handlingsoverlegg {
   position: relative;
 
   a {
     display: block;
   }
+
   a.skjult {
     display: none;
   }
+
   .handlinger {
     position: absolute;
     top: 0.25em;
@@ -88,5 +96,40 @@ table {
     background: white;
     border: 1px solid @greyLight;
     border-radius: 0.25em;
+  }
+}
+
+.fnr-lenke-wrap {
+  display: inline-flex;
+
+  .gosys-lenke {
+    border: 1px solid #78706a;
+    border-radius: 5px;
+    text-decoration: none;
+    color: black;
+    font-size: 0.7em;
+    padding: 0 12px 0 3px;
+    position: relative;
+    top: -1px;
+    right: -6px;
+    overflow: hidden;
+    height: 1.4em;
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.02);
+      transition: transform 0.2s ease;
+    }
+    &:active {
+      transform: scale(0.95);
+      transition: transform 0.2s ease;
+    }
+
+    > img {
+      height: 6px;
+      position: absolute;
+      top: 3px;
+      right: 4px;
+    }
   }
 }

@@ -6,7 +6,6 @@ import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/oper
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { HotObservable } from "rxjs/internal/testing/HotObservable";
 
 const R = require("ramda");
 
@@ -57,6 +56,7 @@ interface Metadata {
   sider: number;
   start: number;
   side: number;
+  totalAntall: number;
   tildeltSaksbehandler?: string | undefined;
   projeksjon?: string;
   feilmelding?: string | undefined;
@@ -106,6 +106,7 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
   state.rader = payload.oppgaver;
   state.lasterData = true;
   state.meta.start = start;
+  state.meta.totalAntall = antallTreffTotalt;
   state.meta.projeksjon = projeksjon;
   state.meta.tildeltSaksbehandler = tildeltSaksbehandler;
   state.meta.antall = antall;
@@ -129,6 +130,7 @@ export const oppgaveSlice = createSlice({
     lasterData: true,
     meta: {
       antall: 0,
+      totalAntall: 0,
       sider: 1,
       start: 0,
       side: 1,
@@ -226,7 +228,6 @@ export function hentOppgaverEpos(
     ofType(oppgaveRequest.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      console.log("Henter oppgaver");
       let rader = state.oppgaver.rader.slice();
       let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(

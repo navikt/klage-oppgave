@@ -251,9 +251,12 @@ const OppgaveTabell: React.FunctionComponent = () => {
             <td colSpan={utvidetProjeksjon ? 8 : 6}>
               <div className="table-lbl">
                 <div className="antall-saker">
-                  Viser {oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1} -{" "}
-                  {oppgaver.meta.side * oppgaver.meta.antall} av{" "}
-                  {oppgaver.meta.sider * oppgaver.meta.antall} oppgaver
+                  Viser {oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1}{" "}
+                  {" til "}
+                  {oppgaver.meta.side * oppgaver.meta.antall < oppgaver.meta.totalAntall
+                    ? oppgaver.meta.side * oppgaver.meta.antall
+                    : oppgaver.meta.totalAntall}{" "}
+                  av {oppgaver.meta.totalAntall} oppgaver
                 </div>
                 <div className={"paginering"}>
                   <Paginering
@@ -272,3 +275,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
 };
 
 export default OppgaveTabell;
+//https://gosys-nais.nais.adeo.no/gosys/
+//https://gosys-nais.nais.preprod.local/gosys/
+//person: /personoversikt/fnr=
