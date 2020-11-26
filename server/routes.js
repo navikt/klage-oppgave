@@ -56,6 +56,9 @@ const setup = (authClient) => {
   router.use(async (req, res, next) => {
     if (req.path.startsWith("/api")) {
       const params = {
+        clientId: "0bc199ef-35dd-4aa3-87e6-01506da3dd90",
+        path: "api",
+        url: "https://klage-oppgave-api.dev.nav.no/",
         scopes: [],
       };
       const token = await new Promise((resolve, reject) =>
