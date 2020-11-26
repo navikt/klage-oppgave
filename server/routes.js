@@ -53,6 +53,10 @@ const setup = (authClient) => {
 
   router.use(ensureAuthenticated);
 
+  router.get("/usertoken", (req, res) => {
+    res.json(req.user);
+  });
+
   router.use(async (req, res, next) => {
     if (req.path.startsWith("/api")) {
       const params = {
@@ -67,6 +71,7 @@ const setup = (authClient) => {
           .then((userinfo) => resolve(userinfo))
           .catch((err) => reject(err))
       );
+      console.log("onbehalfof token", token);
       req.headers["Authorization"] = `Bearer ${token}`;
       req.headers["Accept"] = `application/json`;
       next();
