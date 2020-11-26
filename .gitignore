@@ -1,3 +1,4 @@
+e2e/auth
 node_modules
 coverage
 oppgaver.db
