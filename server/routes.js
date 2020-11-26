@@ -87,9 +87,6 @@ const setup = (authClient) => {
         res.status(500);
         res.json({ error: "Kunne ikke koble til API" });
       },
-      /* async onProxyRes(proxyRes, req, res) {
-        await handleProxyRes(proxyRes, req, res);
-      },*/
       logLevel: "debug",
       changeOrigin: true,
     })

@@ -10,15 +10,18 @@ const getOnBehalfOfAccessToken = (authClient, req, api) => {
       const tokenSets = getTokenSetsFromSession(req);
       resolve(tokenSets[api.clientId].access_token);
     } else {
+      const params = {
+        grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        client_assertion_type:
+          "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+        requested_token_use: "on_behalf_of",
+        scope: createOnBehalfOfScope(api),
+        assertion: req.user.tokenSets[tokenSetSelfId].access_token,
+      };
+      console.log(params);
+
       authClient
-        .grant({
-          grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-          client_assertion_type:
-            "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-          requested_token_use: "on_behalf_of",
-          scope: createOnBehalfOfScope(api),
-          assertion: req.user.tokenSets[tokenSetSelfId].access_token,
-        })
+        .grant(params)
         .then((tokenSet) => {
           req.user.tokenSets[api.clientId] = tokenSet;
           resolve(tokenSet.access_token);
