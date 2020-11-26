@@ -27,12 +27,12 @@ export default function Oppsett({ children }: LayoutType) {
         <ul>
           <li>
             <NavLink className="link" to="/saker">
-              Saker
+              Oppgaver
             </NavLink>
           </li>
           <li>
             <NavLink className="link" to="/minesaker">
-              Mine&nbsp;Saker
+              Mine&nbsp;Oppgaver
             </NavLink>
           </li>
           <li className={"skjult"}>

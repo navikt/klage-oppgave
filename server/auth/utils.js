@@ -18,8 +18,6 @@ const getOnBehalfOfAccessToken = (authClient, req, api) => {
         scope: createOnBehalfOfScope(api),
         assertion: req.user.tokenSets[tokenSetSelfId].access_token,
       };
-      console.log(params);
-
       authClient
         .grant(params)
         .then((tokenSet) => {
