@@ -39,6 +39,7 @@ const strategy = (client) => {
     passReqToCallback: false,
     usePKCE: "S256",
   };
+  console.log(options);
   return new Strategy(options, verify);
 };
 
