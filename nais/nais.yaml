@@ -16,6 +16,9 @@ spec:
       tenant: trygdeetaten.no
 
   accessPolicy:
+    inbound:
+      rules:
+        - application: klage-oppgave-e2e
     outbound:
       rules:
         - application: klage-redis
