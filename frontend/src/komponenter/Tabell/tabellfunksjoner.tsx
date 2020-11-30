@@ -31,7 +31,7 @@ const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: num
     <td className="knapp-med-handlingsoverlegg">
       <a
         href="#"
-        id={`Endreknapp${it++}`}
+        data-testid={`endreknapp${it++}`}
         onClick={() => settVisHandlinger(!viserHandlinger)}
         className={classNames({ skjult: viserHandlinger })}
       >
@@ -39,7 +39,11 @@ const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: num
       </a>
       <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
         <div>
-          <Knapp className={"knapp"} onClick={(e) => fradelOppgave(id, versjon)}>
+          <Knapp
+            data-testid="leggtilbake"
+            className={"knapp"}
+            onClick={(e) => fradelOppgave(id, versjon)}
+          >
             Legg tilbake
           </Knapp>
         </div>
@@ -122,7 +126,7 @@ function tildelOppgave(settValgtOppgave: Function, id: string, versjon: number) 
   return (
     <td>
       <Knapp
-        id={`Tildelknapp${it++}`}
+        data-testid={`tildelknapp${it++}`}
         className={"knapp"}
         onClick={(e) => settValgtOppgave({ id, versjon })}
       >
