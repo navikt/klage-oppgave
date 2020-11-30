@@ -19,6 +19,7 @@ const velgOppgave = R.curry((settValgtOppgave: Function, id: string, versjon: nu
 
 const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: number) => {
   const [viserHandlinger, settVisHandlinger] = useState(false);
+  let [it] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   useOnInteractOutside({
     ref,
@@ -30,6 +31,7 @@ const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: num
     <td className="knapp-med-handlingsoverlegg">
       <a
         href="#"
+        id={`Endreknapp${it++}`}
         onClick={() => settVisHandlinger(!viserHandlinger)}
         className={classNames({ skjult: viserHandlinger })}
       >
@@ -116,9 +118,14 @@ const OppgaveTabellRad = ({
 };
 
 function tildelOppgave(settValgtOppgave: Function, id: string, versjon: number) {
+  let [it] = useState(0);
   return (
     <td>
-      <Knapp className={"knapp"} onClick={(e) => settValgtOppgave({ id, versjon })}>
+      <Knapp
+        id={`Tildelknapp${it++}`}
+        className={"knapp"}
+        onClick={(e) => settValgtOppgave({ id, versjon })}
+      >
         Tildel meg
       </Knapp>
     </td>
