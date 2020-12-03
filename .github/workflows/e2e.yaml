@@ -16,7 +16,7 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:6a121ed0847aace5a6d9f264747af20534cd89f1
-          CLUSTER: klage
+          CLUSTER: dev
           VAR: app=klage-oppgave-e2e
           RESOURCE: nais/e2ejob.yaml
         timeout-minutes: 5
