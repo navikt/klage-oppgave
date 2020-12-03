@@ -6,9 +6,6 @@ on:
     branches:
       - e2e
 
-env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
-  LATEST: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:latest  
 jobs:
   acceptance-tests:
     name: Run acceptance tests
@@ -18,7 +15,7 @@ jobs:
         name: Run tests
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:latest
+          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:6a121ed0847aace5a6d9f264747af20534cd89f1
           CLUSTER: klage
           VAR: app=klage-oppgave-e2e
           RESOURCE: nais/e2ejob.yaml
