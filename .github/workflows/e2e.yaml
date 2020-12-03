@@ -1,0 +1,29 @@
+name: Kjør akseptansetest
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
+  LATEST: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:latest  
+jobs:
+  acceptance-tests:
+    name: Run acceptance tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: navikt/klage-oppgave-e2e
+      - uses: nais/deploy/actions/deploy@v1
+        name: Run tests
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_API_KEY }}
+          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:latest
+          CLUSTER: klage-oppgave
+          VAR: app=klage-oppgave
+          RESOURCE: nais/tests.yml
+        timeout-minutes: 5
