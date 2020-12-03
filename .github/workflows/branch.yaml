@@ -61,3 +61,21 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: nais/nais.yaml
           VARS: nais/vars.yaml
+  acceptance-tests:
+    name: Run acceptance tests
+    needs: deploypreprod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: navikt/klage-oppgave-e2e
+      - uses: nais/deploy/actions/deploy@v1
+        name: Run tests
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_API_KEY }}
+          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:latest
+          CLUSTER: klage-oppgave
+          VAR: app=klage-oppgave
+          RESOURCE: nais/tests.yml
+        timeout-minutes: 5

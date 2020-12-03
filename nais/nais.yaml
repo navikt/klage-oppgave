@@ -25,8 +25,8 @@ spec:
         - application: klage-oppgave-api
       external:
         - host: login.microsoftonline.com
-        - application: klage-oppgave.dev.nav.no
-        - application: klage-oppgave-api.dev.nav.no
+        - host: klage-oppgave.dev.nav.no
+        - host: klage-oppgave-api.dev.nav.no
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
