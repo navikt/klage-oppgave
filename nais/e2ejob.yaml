@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: klage-oppgave-e2e
+spec:
+  template:
+    spec:
+      containers:
+        - name: e2e
+          image: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:latest
+          command: ["npm",  "test"]
+      restartPolicy: Never
+  backoffLimit: 4
