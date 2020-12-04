@@ -19,7 +19,7 @@ export default function Oppsett({ children }: LayoutType) {
   const visFeilmelding = useSelector(velgToaster);
   const feilmelding = useSelector(velgToasterMelding);
   return (
-    <main className="container">
+    <main className="container" data-testid="klagesiden">
       <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
         <Sok onSok={() => Promise.resolve("test")} />
       </Header>
