@@ -47,6 +47,13 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
   res.send(result);
 });
 
+app.get("/ansatte/:id/enheter", async (req, res) => {
+  res.send({
+    navn: "test-enhet",
+    id: "42",
+  });
+});
+
 app.post(
   "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlertildeling",
   async (req, res) => {

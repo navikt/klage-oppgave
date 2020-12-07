@@ -175,6 +175,7 @@ export interface OppgaveParams {
   start: number;
   antall: number;
   tildeltSaksbehandler?: string;
+  enhetId: string;
   projeksjon?: "UTVIDET";
   transformasjoner: Transformasjoner;
 }
@@ -213,7 +214,7 @@ export function buildQuery(url: string, data: OppgaveParams) {
   if (!data.projeksjon) query.push(`erTildeltSaksbehandler=false`);
   if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
   if (data.tildeltSaksbehandler) query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
-  query.push(`enhetId=42`);
+  query.push(`enhetId=${data.enhetId}`);
   return `${url}?${filters}&${R.compose(R.join("&"))(query)}`;
 }
 

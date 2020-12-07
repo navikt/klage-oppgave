@@ -102,6 +102,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
         ident: meg.id,
         antall: antall,
         start: start,
+        enhetId: meg.enhetId,
         projeksjon: utvidet ? "UTVIDET" : undefined,
         tildeltSaksbehandler: utvidet ? meg.id : undefined,
         transformasjoner: {
