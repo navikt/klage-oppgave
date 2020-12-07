@@ -4,6 +4,7 @@ import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { concat, from, of } from "rxjs";
 import {
   catchError,
+  concatAll,
   concatMap,
   map,
   mergeMap,
@@ -43,7 +44,7 @@ interface EnhetData {
 
 interface GraphOgEnhet extends Graphdata, EnhetData {}
 
-interface MegOgEnhet extends MegType {
+export interface MegOgEnhet extends MegType {
   enhetId: string;
   enhetNavn: string;
 }
@@ -85,6 +86,7 @@ export const feiletHandling = createAction<string>("meg/FEILET");
 //==========
 const megUrl = `/me`;
 var resultData: any;
+
 export function hentMegEpos(
   action$: ActionsObservable<PayloadAction>,
   state$: StateObservable<RootStateOrAny>,
@@ -107,8 +109,8 @@ export function hentMegEpos(
           })
         )
         .pipe(
-          map((graphData) =>
-            getJSON<EnhetData>(`/ansatte/${graphData.id}/enheter`).pipe(
+          map((graphData) => {
+            return getJSON<EnhetData>(`/api/ansatte/${graphData.id}/enheter`).pipe(
               map((response: EnhetData) => {
                 return <any>{
                   ...graphData,
@@ -116,10 +118,11 @@ export function hentMegEpos(
                   enhetNavn: response.navn,
                 };
               })
-            )
-          )
+            );
+          })
         )
         .pipe(
+          concatAll(),
           map((data) => {
             return hentetHandling(data);
           })

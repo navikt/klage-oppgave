@@ -50,6 +50,8 @@ describe("'Meg' epos", () => {
           mail: "rbo@de.ninro",
           etternavn: "dENiro",
           id: "Z994488",
+          enhetNavn: "test",
+          enhetId: "42",
         };
         const mockedResponse = {
           displayName: "Rboert dEniro",
@@ -57,6 +59,8 @@ describe("'Meg' epos", () => {
           onPremisesSamAccountName: "Z994488",
           mail: "rbo@de.ninro",
           surname: "dENiro",
+          navn: "test",
+          id: "42",
         };
         const reducerResponse = hentetHandling({
           fornavn: mockedResponse.givenName,
