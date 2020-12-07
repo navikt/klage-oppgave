@@ -213,6 +213,7 @@ export function buildQuery(url: string, data: OppgaveParams) {
   if (!data.projeksjon) query.push(`erTildeltSaksbehandler=false`);
   if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
   if (data.tildeltSaksbehandler) query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
+  query.push(`enhetId=42`);
   return `${url}?${filters}&${R.compose(R.join("&"))(query)}`;
 }
 

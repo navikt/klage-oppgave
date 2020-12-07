@@ -11,20 +11,12 @@ jobs:
     name: Run acceptance tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          repository: navikt/klage-oppgave-e2e
-      - id: get-sha
-        run: |
-          echo ::set-output name=sha::$( curl -u "u:${{secrets.GITHUB_TOKEN}}" https://api.github.com/repos/navikt/klage-oppgave-e2e/git/ref/heads/master | jq .object.sha | tr -d '"' )
       - uses: nais/deploy/actions/deploy@v1
         name: Run tests
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          #IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:${{ steps.get-sha.outputs.sha }}
-          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:6a121ed0847aace5a6d9f264747af20534cd89f1
+          APIKEY: ${{ secrets.NAIS_DEPLOY_API_KEY }}
+          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e
           CLUSTER: dev-gcp
-          VAR: app=klage-oppgave-e2e
-          RESOURCE: nais/e2ejob.yaml
+          VAR: app=medlemskap-oppslag
+          RESOURCE: nais/job.yml
         timeout-minutes: 5

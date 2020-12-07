@@ -57,7 +57,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false"
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -81,7 +81,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false"
+      "/ansatte/ZATHRAS/oppgaver?typer=klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -106,7 +106,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&projeksjon=UTVIDET"
+      "/ansatte/ZATHRAS/oppgaver?typer=klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&enhetId=42"
     );
   });
 
@@ -131,7 +131,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false"
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -156,7 +156,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false"
+      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -173,7 +173,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?&antall=25&start=100&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false"
+      "/ansatte/ZATHRAS/oppgaver?&antall=25&start=100&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -190,7 +190,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?&antall=15&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false"
+      "/ansatte/ZATHRAS/oppgaver?&antall=15&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
