@@ -41,6 +41,7 @@ describe("Oppgave epos", () => {
   test("+++ QUERYBUILDER ytelse", () => {
     const inputValues = {
       ident: "ZATHRAS",
+      enhetId: "42",
       antall: 2,
       start: 0,
       transformasjoner: {
@@ -64,6 +65,7 @@ describe("Oppgave epos", () => {
   test("+++ QUERYBUILDER type", () => {
     const inputValues = {
       ident: "ZATHRAS",
+      enhetId: "42",
       antall: 2,
       start: 0,
       transformasjoner: {
@@ -88,6 +90,7 @@ describe("Oppgave epos", () => {
   test("+++ QUERYBUILDER minesaker", () => {
     const inputValues = {
       ident: "ZATHRAS",
+      enhetId: "42",
       antall: 2,
       start: 0,
       projeksjon: "UTVIDET" as "UTVIDET",
@@ -113,6 +116,7 @@ describe("Oppgave epos", () => {
   test("+++ QUERYBUILDER type", () => {
     const inputValues = {
       ident: "ZATHRAS",
+      enhetId: "42",
       antall: 2,
       start: 0,
       transformasjoner: {
@@ -138,6 +142,7 @@ describe("Oppgave epos", () => {
   test("+++ QUERYBUILDER type", () => {
     const inputValues = {
       ident: "ZATHRAS",
+      enhetId: "42",
       antall: 2,
       start: 0,
       transformasjoner: {
@@ -163,6 +168,7 @@ describe("Oppgave epos", () => {
   test("+++ QUERYBUILDER sideantall", () => {
     const inputValues = {
       ident: "ZATHRAS",
+      enhetId: "42",
       antall: 25,
       start: 100,
       transformasjoner: {
@@ -180,6 +186,7 @@ describe("Oppgave epos", () => {
   test("+++ APP sideantall meta", () => {
     const inputValues = {
       ident: "ZATHRAS",
+      enhetId: "42",
       antall: 15,
       start: 0,
       transformasjoner: {
@@ -302,6 +309,7 @@ describe("Oppgave epos", () => {
         const inputValues = {
           a: oppgaveRequest({
             ident: "ZATHRAS",
+            enhetId: "42",
             antall: 2,
             start: 0,
             transformasjoner: {
@@ -375,6 +383,7 @@ describe("Oppgave epos", () => {
         const inputValues = {
           a: oppgaveRequest({
             ident: "ZATHRAS",
+            enhetId: "42",
             antall: 5,
             start: 0,
             transformasjoner: {
@@ -443,6 +452,7 @@ describe("Oppgave epos", () => {
         const inputValues = {
           a: oppgaveRequest({
             ident: "ZATHRAS",
+            enhetId: "42",
             antall: 5,
             start: 0,
             transformasjoner: {

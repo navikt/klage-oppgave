@@ -64,6 +64,8 @@ describe("'Meg' epos", () => {
           etternavn: mockedResponse.surname,
           navn: mockedResponse.displayName,
           mail: mockedResponse.mail,
+          enhetId: "42",
+          enhetNavn: "test",
         });
 
         const dependencies = {
@@ -94,6 +96,8 @@ describe("'Meg' epos", () => {
           fornavn: "",
           mail: "",
           etternavn: "",
+          enhetId: "",
+          enhetNavn: "",
         },
         {
           type: hentetHandling.type,
@@ -124,6 +128,8 @@ describe("'Meg' epos", () => {
         fornavn: "",
         mail: "",
         etternavn: "",
+        enhetId: "",
+        enhetNavn: "",
       },
       {
         type: feiletHandling.type,
