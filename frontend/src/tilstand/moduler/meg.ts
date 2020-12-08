@@ -100,36 +100,13 @@ export function hentMegEpos(
         )
         .pipe(
           map((graphData) => {
-            return getJSON<[EnhetData]>(`/api/ansatte/${graphData.id}/enheter`)
-              .pipe(
-                map((response: [EnhetData]) => {
-                  return {
-                    ...graphData,
-                    enhetId: response[0].id,
-                    enhetNavn: response[0].navn,
-                  };
-                })
-              )
-              .pipe(
-                retryWhen(provIgjenStrategi({ maksForsok: 3 })),
-                catchError((error) => {
-                  return concat([feiletHandling(error.message), oppgaveFeiletHandling()]);
-                })
-              );
-          })
-        )
-
-        .pipe(
-          concatAll(),
-          map((data: any) => {
-            return hentetHandling(data);
-          })
-        )
-        .pipe(
-          map((graphData) => {
-            return getJSON<[EnhetData]>(`/api/ansatte/${graphData.payload.enhetId}/enheter`).pipe(
+            return getJSON<[EnhetData]>(`/api/ansatte/${graphData.id}/enheter`).pipe(
               map((response: [EnhetData]) => {
-                return graphData.payload;
+                return <MegOgEnhet>{
+                  ...graphData,
+                  enhetId: response[0].id,
+                  enhetNavn: response[0].navn,
+                };
               })
             );
           })
@@ -137,10 +114,9 @@ export function hentMegEpos(
         .pipe(
           concatAll(),
           map((data) => {
-            return hentetHandling(data);
+            return hentetHandling(<MegOgEnhet>data);
           })
         )
-
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
