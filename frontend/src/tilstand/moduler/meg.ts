@@ -2,21 +2,10 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { concat, from, of } from "rxjs";
-import {
-  catchError,
-  concatAll,
-  concatMap,
-  map,
-  mergeMap,
-  retryWhen,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from "rxjs/operators";
+import { catchError, concatAll, map, mergeMap, retryWhen, withLatestFrom } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod, AjaxObservable } from "rxjs/internal-compatibility";
 import { oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
-import { flatMap } from "rxjs/internal/operators";
 
 //==========
 // Type defs
@@ -35,18 +24,6 @@ interface Graphdata {
   onPremisesSamAccountName: string;
   displayName: string;
   mail: string;
-}
-
-interface EnhetData {
-  id: string;
-  navn: string;
-}
-
-interface GraphOgEnhet extends Graphdata, EnhetData {}
-
-export interface MegOgEnhet extends MegType {
-  enhetId: string;
-  enhetNavn: string;
 }
 
 interface EnhetData {
@@ -149,13 +126,9 @@ export function hentMegEpos(
         )
         .pipe(
           map((graphData) => {
-            return getJSON<EnhetData>(`/api/ansatte/${graphData.id}/enheter`).pipe(
-              map((response: EnhetData) => {
-                return <any>{
-                  ...graphData,
-                  enhetId: response.id,
-                  enhetNavn: response.navn,
-                };
+            return getJSON<[EnhetData]>(`/api/ansatte/${graphData.payload.enhetId}/enheter`).pipe(
+              map((response: [EnhetData]) => {
+                return graphData.payload;
               })
             );
           })
