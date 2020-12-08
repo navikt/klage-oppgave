@@ -22,12 +22,7 @@ ReactDOM.render(
           <Route exact path="/mineoppgaver" render={() => <MineSaker />} />
           <Route exact path="/mineoppgaver/:side" render={() => <MineSaker />} />
           <Route path="/innstillinger" render={() => <Innstillinger />} />
-          <Route exact path="/">
-            <Redirect to="/saker" />
-          </Route>
-          <Route exact path="/metrics">
-            <Redirect to="/oppgaver" />
-          </Route>
+          <Redirect to="/oppgaver" />
         </Switch>
       </BrowserRouter>
     </Provider>
