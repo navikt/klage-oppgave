@@ -49,6 +49,18 @@ export interface MegOgEnhet extends MegType {
   enhetNavn: string;
 }
 
+interface EnhetData {
+  id: string;
+  navn: string;
+}
+
+interface GraphOgEnhet extends Graphdata, Array<EnhetData> {}
+
+export interface MegOgEnhet extends MegType {
+  enhetId: string;
+  enhetNavn: string;
+}
+
 //==========
 // Reducer
 //==========
@@ -106,6 +118,33 @@ export function hentMegEpos(
               navn: response.displayName,
               mail: response.mail,
             };
+          })
+        )
+        .pipe(
+          map((graphData) => {
+            return getJSON<[EnhetData]>(`/api/ansatte/${graphData.id}/enheter`)
+              .pipe(
+                map((response: [EnhetData]) => {
+                  return <any>{
+                    ...graphData,
+                    enhetId: response[0].id,
+                    enhetNavn: response[0].navn,
+                  };
+                })
+              )
+              .pipe(
+                retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+                catchError((error) => {
+                  return concat([feiletHandling(error.message), oppgaveFeiletHandling()]);
+                })
+              );
+          })
+        )
+
+        .pipe(
+          concatAll(),
+          map((data) => {
+            return hentetHandling(data);
           })
         )
         .pipe(

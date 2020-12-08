@@ -48,10 +48,16 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
 });
 
 app.get("/ansatte/:id/enheter", async (req, res) => {
-  res.send({
-    navn: "test-enhet",
-    id: "42",
-  });
+  res.send([
+    {
+      navn: "test-enhet",
+      id: "42",
+    },
+    {
+      navn: "test-enhet 2",
+      id: "43",
+    },
+  ]);
 });
 
 app.post(
