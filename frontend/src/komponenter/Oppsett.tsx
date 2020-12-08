@@ -26,12 +26,12 @@ export default function Oppsett({ children }: LayoutType) {
       <nav className="main-nav" role="navigation" aria-label="Meny">
         <ul>
           <li>
-            <NavLink className="link" to="/saker">
+            <NavLink className="link" to="/oppgaver">
               Oppgaver
             </NavLink>
           </li>
           <li>
-            <NavLink className="link" to="/minesaker">
+            <NavLink className="link" to="/mineoppgaver">
               Mine&nbsp;Oppgaver
             </NavLink>
           </li>

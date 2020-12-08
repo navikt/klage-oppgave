@@ -17,13 +17,16 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/saker" render={() => <AlleSaker />} />
-          <Route exact path="/saker/:side" render={() => <AlleSaker />} />
-          <Route exact path="/minesaker" render={() => <MineSaker />} />
-          <Route exact path="/minesaker/:side" render={() => <MineSaker />} />
+          <Route exact path="/oppgaver" render={() => <AlleSaker />} />
+          <Route exact path="/oppgaver/:side" render={() => <AlleSaker />} />
+          <Route exact path="/mineoppgaver" render={() => <MineSaker />} />
+          <Route exact path="/mineoppgaver/:side" render={() => <MineSaker />} />
           <Route path="/innstillinger" render={() => <Innstillinger />} />
           <Route exact path="/">
             <Redirect to="/saker" />
+          </Route>
+          <Route exact path="/metrics">
+            <Redirect to="/oppgaver" />
           </Route>
         </Switch>
       </BrowserRouter>
