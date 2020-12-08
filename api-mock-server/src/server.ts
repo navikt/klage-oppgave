@@ -1,11 +1,7 @@
-import express from "express";
-import cors from "cors";
-import * as fs from "fs";
+import { App } from "@tinyhttp/app";
+import { logger } from "@tinyhttp/logger";
 import bodyParser from "body-parser";
-import { eqNumber } from "fp-ts/lib/Eq";
-import JSONStream from "jsonstream";
-import es from "event-stream";
-import chalk from "chalk";
+
 import {
   filtrerOppgaver,
   fradelSaksbehandler,
@@ -14,9 +10,7 @@ import {
 } from "./oppgaver";
 import { OppgaveQuery } from "./types";
 
-const app = express();
-app.use(cors());
-app.use(bodyParser.json());
+const app = new App().use(logger()).use(bodyParser.json());
 const port = 3000; // default port to listen
 
 async function hentOppgaver() {
@@ -41,7 +35,7 @@ async function hentOppgaver() {
 
 app.get("/ansatte/:id/oppgaver", async (req, res) => {
   const result = await filtrerOppgaver({
-    navIdent: req.params.id,
+    navIdent: req.params?.id,
     ...req.query,
   } as OppgaveQuery);
   res.send(result);
@@ -64,8 +58,8 @@ app.post(
   "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlertildeling",
   async (req, res) => {
     const result = await tildelSaksbehandler({
-      oppgaveId: req.params.oppgaveid,
-      navIdent: req.params.id,
+      oppgaveId: req.params?.oppgaveid,
+      navIdent: req.params?.id,
       oppgaveVersjon: req.body.oppgaveversjon,
     } as ISaksbehandler)
       .then((result) => res.status(200).send({ status: "OK" }))
@@ -76,8 +70,8 @@ app.post(
   "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlerfradeling",
   async (req, res) => {
     return await fradelSaksbehandler({
-      oppgaveId: req.params.oppgaveid,
-      navIdent: req.params.id,
+      oppgaveId: req.params?.oppgaveid,
+      navIdent: req.params?.id,
       oppgaveVersjon: req.body.oppgaveversjon,
     } as ISaksbehandler)
       .then((result) => res.status(200).send({ status: "OK" }))

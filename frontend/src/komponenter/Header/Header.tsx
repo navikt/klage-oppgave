@@ -40,7 +40,7 @@ export const Header = ({ tittel, children, brukerinfo }: HeaderProps) => {
       <div className={"header__rad"}>
         <h1 className={"header__tittel"}>{tittel}</h1>
         <div className={"header__avdeler skjult"} />
-        {/*children*/}
+        {children}
       </div>
       <div className={"header__rad"}>
         <button className={"header__systemknapp skjult"}>
