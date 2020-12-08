@@ -63,6 +63,8 @@ describe("'Meg' epos", () => {
           onPremisesSamAccountName: "Z994488",
           mail: "rbo@de.ninro",
           surname: "dENiro",
+          navn: "test",
+          id: "42",
         };
         const reducerResponse = hentetHandling({
           fornavn: mockedResponse.givenName,
