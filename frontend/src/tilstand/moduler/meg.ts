@@ -32,6 +32,7 @@ interface EnhetData {
 }
 
 interface GraphOgEnhet extends Graphdata, Array<EnhetData> {}
+interface GraphEnhet extends Graphdata, EnhetData {}
 
 export interface MegOgEnhet extends MegType {
   enhetId: string;
@@ -102,7 +103,7 @@ export function hentMegEpos(
             return getJSON<[EnhetData]>(`/api/ansatte/${graphData.id}/enheter`)
               .pipe(
                 map((response: [EnhetData]) => {
-                  return <any>{
+                  return {
                     ...graphData,
                     enhetId: response[0].id,
                     enhetNavn: response[0].navn,
@@ -120,7 +121,7 @@ export function hentMegEpos(
 
         .pipe(
           concatAll(),
-          map((data) => {
+          map((data: any) => {
             return hentetHandling(data);
           })
         )

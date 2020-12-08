@@ -29,7 +29,7 @@ describe("'Meg' epos", () => {
   /**
    * Tester henting
    */
-  xtest(
+  test(
     "+++ HENT 'MEG'",
     marbles(() => {
       ts.run((m) => {
@@ -44,27 +44,12 @@ describe("'Meg' epos", () => {
             meg: {},
           },
         };
-        const resultPayload = {
-          navn: "Rboert dEniro",
-          fornavn: "rBot",
-          mail: "rbo@de.ninro",
-          etternavn: "dENiro",
-          id: "Z994488",
-          enheter: [
-            {
-              navn: "test",
-              id: "42",
-            },
-          ],
-        };
         const mockedResponse = {
           displayName: "Rboert dEniro",
           givenName: "rBot",
           onPremisesSamAccountName: "Z994488",
           mail: "rbo@de.ninro",
           surname: "dENiro",
-          navn: "test",
-          id: "42",
         };
         const reducerResponse = hentetHandling({
           fornavn: mockedResponse.givenName,
@@ -77,7 +62,18 @@ describe("'Meg' epos", () => {
         });
 
         const dependencies = {
-          getJSON: (url: string) => of(mockedResponse),
+          getJSON: (url: string) => {
+            if (url.endsWith("enheter")) {
+              return of([
+                {
+                  navn: "test",
+                  id: "42",
+                },
+              ]);
+            } else {
+              return of(mockedResponse);
+            }
+          },
         };
 
         const observableValues = {
