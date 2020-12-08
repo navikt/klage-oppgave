@@ -42,7 +42,7 @@ interface EnhetData {
   navn: string;
 }
 
-interface GraphOgEnhet extends Graphdata, EnhetData {}
+interface GraphOgEnhet extends Graphdata, Array<EnhetData> {}
 
 export interface MegOgEnhet extends MegType {
   enhetId: string;
@@ -110,24 +110,31 @@ export function hentMegEpos(
         )
         .pipe(
           map((graphData) => {
-            return getJSON<EnhetData>(`/api/ansatte/${graphData.id}/enheter`).pipe(
-              map((response: EnhetData) => {
-                return <any>{
-                  ...graphData,
-                  enhetId: response.id,
-                  enhetNavn: response.navn,
-                };
-              })
-            );
+            return getJSON<[EnhetData]>(`/api/ansatte/${graphData.id}/enheter`)
+              .pipe(
+                map((response: [EnhetData]) => {
+                  return <any>{
+                    ...graphData,
+                    enhetId: response[0].id,
+                    enhetNavn: response[0].navn,
+                  };
+                })
+              )
+              .pipe(
+                retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+                catchError((error) => {
+                  return concat([feiletHandling(error.message), oppgaveFeiletHandling()]);
+                })
+              );
           })
         )
+
         .pipe(
           concatAll(),
           map((data) => {
             return hentetHandling(data);
           })
         )
-
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
