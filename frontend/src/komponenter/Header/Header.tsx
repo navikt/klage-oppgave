@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import "./Header.less";
 import { useDispatch, useSelector } from "react-redux";
-import { velgEnheter } from "../../tilstand/moduler/meg.velgere";
+import { velgEnheter, velgMeg } from "../../tilstand/moduler/meg.velgere";
 import { settEnhetHandling } from "../../tilstand/moduler/meg";
 import { useOnInteractOutside } from "../Tabell/FiltrerbarHeader";
 
@@ -24,6 +24,7 @@ export interface HeaderProps {
 export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   const [aapen, setAapen] = useState(false);
   const enheter = useSelector(velgEnheter);
+  const person = useSelector(velgMeg);
   const dispatch = useDispatch();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -56,9 +57,11 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
         <div className={"enheter"}>
           {enheter.map((enhet) => {
             return (
-              <div className={"enhet"} key={enhet.id}>
+              <div
+                className={classNames({ enhet: true, active: person.enhetId == enhet.id })}
+                key={enhet.id}
+              >
                 <NavLink to={"#"} onClick={(e) => settEnhet(e, enhet.id)}>
-                  {" "}
                   {enhet.id} {enhet.navn}
                 </NavLink>
               </div>
