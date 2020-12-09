@@ -21,7 +21,7 @@ export default function Oppsett({ children }: LayoutType) {
   return (
     <main className="container" data-testid="klagesiden">
       <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
-        <Sok onSok={() => Promise.resolve("test")} />
+        {/* <Sok onSok={() => Promise.resolve("test")} /> */}
       </Header>
       <nav className="main-nav" role="navigation" aria-label="Meny">
         <ul>

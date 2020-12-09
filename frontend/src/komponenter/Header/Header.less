@@ -71,6 +71,7 @@
   margin: 0 0 0 1em;
   width: 1.5em;
 }
+
 .header__brukerinfo {
   display: flex;
   width: 15em;
@@ -158,5 +159,48 @@
     text-decoration: none;
     color: inherit;
     font-size: inherit;
+  }
+}
+
+.minimert {
+  transform: scaleY(0);
+  transition: transform 0.05s ease;
+}
+
+.maksimert {
+  transform: scaleY(1);
+  transition: transform 0.05s ease;
+}
+
+.bruker-boks {
+  position: relative;
+
+  .enheter {
+    width: 10em;
+    position: absolute;
+    top: 0.3em;
+    background: white;
+    left: 0.5em;
+    border: 1px solid gray;
+    padding: 0.1em;
+    box-shadow: lightgray -2px 2px 2px;
+
+    .enheter {
+      display: flex;
+      flex-flow: column;
+    }
+
+    .enhet {
+      padding: 10px;
+      a {
+        text-decoration: none;
+        color: black;
+      }
+      &:hover {
+        background: lightgray;
+        color: white;
+        cursor: pointer;
+      }
+    }
   }
 }

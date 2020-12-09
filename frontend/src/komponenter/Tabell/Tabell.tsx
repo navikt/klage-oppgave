@@ -80,7 +80,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [valgtOppgave.id]);
 
   useEffect(() => {
-    if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/minesaker"));
+    if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
   }, [start, meg, hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter]);
 
   useEffect(() => {

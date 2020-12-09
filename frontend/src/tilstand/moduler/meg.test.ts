@@ -3,6 +3,7 @@ import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
 import megTilstand, {
   feiletHandling,
+  hentetEnhetHandling,
   hentetHandling,
   hentMegEpos,
   hentMegHandling,
@@ -34,7 +35,7 @@ describe("'Meg' epos", () => {
     marbles(() => {
       ts.run((m) => {
         const inputMarble = "a-";
-        const expectedMarble = "c-";
+        const expectedMarble = "(cd)-";
 
         const inputValues = {
           a: hentMegHandling(),
@@ -61,6 +62,13 @@ describe("'Meg' epos", () => {
           enhetNavn: "test",
         });
 
+        const enhetResponse = hentetEnhetHandling([
+          {
+            navn: "test",
+            id: "42",
+          },
+        ]);
+
         const dependencies = {
           getJSON: (url: string) => {
             if (url.endsWith("enheter")) {
@@ -79,6 +87,10 @@ describe("'Meg' epos", () => {
         const observableValues = {
           a: initState,
           c: {
+            payload: enhetResponse.payload,
+            type: hentetEnhetHandling.type,
+          },
+          d: {
             payload: reducerResponse.payload,
             type: hentetHandling.type,
           },

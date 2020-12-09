@@ -8,7 +8,7 @@ import { AjaxCreationMethod, AjaxObservable } from "rxjs/internal-compatibility"
 import { oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
 
 //==========
-// Type defs
+// Interfaces
 //==========
 export interface MegType {
   navn: string;
@@ -16,6 +16,7 @@ export interface MegType {
   mail: string;
   id: string;
   etternavn: string;
+  enheter?: Array<EnhetData>;
 }
 
 interface Graphdata {
@@ -26,13 +27,12 @@ interface Graphdata {
   mail: string;
 }
 
-interface EnhetData {
+export interface EnhetData {
   id: string;
   navn: string;
 }
 
 interface GraphOgEnhet extends Graphdata, Array<EnhetData> {}
-interface GraphEnhet extends Graphdata, EnhetData {}
 
 export interface MegOgEnhet extends MegType {
   enhetId: string;
@@ -52,9 +52,27 @@ export const megSlice = createSlice({
     etternavn: "",
     enhetId: "",
     enhetNavn: "",
+    enheter: [],
   } as MegOgEnhet,
   reducers: {
-    HENTET: (state, action: PayloadAction<MegOgEnhet>) => action.payload,
+    SETT_ENHET: (state, action: PayloadAction<string>) => {
+      state.enhetId = action.payload;
+      return state;
+    },
+    ENHETER: (state, action: PayloadAction<Array<EnhetData>>) => {
+      state.enheter = action.payload;
+      return state;
+    },
+    HENTET: (state, action: PayloadAction<MegOgEnhet>) => {
+      state.fornavn = action.payload.fornavn;
+      state.etternavn = action.payload.etternavn;
+      state.navn = action.payload.navn;
+      state.enhetId = action.payload.enhetId;
+      state.enhetNavn = action.payload.enhetNavn;
+      state.id = action.payload.id;
+      state.mail = action.payload.mail;
+      return state;
+    },
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
     },
@@ -69,6 +87,8 @@ export default megSlice.reducer;
 export const { HENTET, FEILET } = megSlice.actions;
 export const hentMegHandling = createAction("meg/HENT_MEG");
 export const hentetHandling = createAction<MegOgEnhet>("meg/HENTET");
+export const settEnhetHandling = createAction<string>("meg/SETT_ENHET");
+export const hentetEnhetHandling = createAction<Array<EnhetData>>("meg/ENHETER");
 export const feiletHandling = createAction<string>("meg/FEILET");
 
 //==========
@@ -102,19 +122,27 @@ export function hentMegEpos(
           map((graphData) => {
             return getJSON<[EnhetData]>(`/api/ansatte/${graphData.id}/enheter`).pipe(
               map((response: [EnhetData]) => {
-                return <MegOgEnhet>{
-                  ...graphData,
-                  enhetId: response[0].id,
-                  enhetNavn: response[0].navn,
-                };
+                return concat([
+                  <Array<EnhetData>>response,
+                  <MegOgEnhet>{
+                    ...graphData,
+                    enhetId: response[0].id,
+                    enhetNavn: response[0].navn,
+                  },
+                ]);
               })
             );
           })
         )
         .pipe(
           concatAll(),
+          concatAll(),
           map((data) => {
-            return hentetHandling(<MegOgEnhet>data);
+            if (Array.isArray(data)) {
+              return hentetEnhetHandling(data as Array<EnhetData>);
+            } else {
+              return hentetHandling(data as MegOgEnhet);
+            }
           })
         )
         .pipe(

@@ -6,6 +6,7 @@ import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/oper
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { settEnhetHandling } from "./meg";
 
 const R = require("ramda");
 
@@ -227,7 +228,7 @@ export function hentOppgaverEpos(
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
-    ofType(oppgaveRequest.type),
+    ofType(oppgaveRequest.type || settEnhetHandling.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let rader = state.oppgaver.rader.slice();
