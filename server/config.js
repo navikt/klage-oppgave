@@ -35,7 +35,7 @@ let azureAd = {};
 
 let host = "https://klage-oppgave.intern.nav.no";
 if (server.cluster === "dev-gcp") {
-  host = "http://klage-oppgave.dev.nav.no";
+  host = "https://klage-oppgave.dev.nav.no";
 }
 
 if (process.env.NODE_ENV === "production") {
