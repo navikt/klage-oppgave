@@ -39,7 +39,6 @@ async function startApp() {
     server.use(cors);
 
     if (process.env.NODE_ENV === "production") {
-      // initialize passport and restore authentication state, if any, = require(the session
       server.use(passport.initialize());
       server.use(passport.session());
       const azureAuthClient = await azure.client();
@@ -51,7 +50,6 @@ async function startApp() {
     } else {
       server.use("/", routesDev.setup());
     }
-    // setup routes
     server.listen(port, () => console.log(`Listening on port ${port}`));
   } catch (error) {
     console.error("Error during start-up", error);
