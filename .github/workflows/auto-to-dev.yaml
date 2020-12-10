@@ -48,4 +48,4 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: nais/dev.yaml
-          VARS: nais/dev-vars.yaml
+          VARS: nais/vars.yaml
