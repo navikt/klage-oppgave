@@ -7,6 +7,7 @@ let session = require("express-session");
 const { cacheMiddleWare, handleProxyRes } = require("./cache");
 const router = express.Router();
 const { createProxyMiddleware } = require("http-proxy-middleware");
+let { api_client_id, downstream_api, envVar } = require("./config");
 
 const ensureAuthenticated = async (req, res, next) => {
   if (req.isAuthenticated() && authUtils.hasValidAccessToken(req)) {
@@ -15,14 +16,6 @@ const ensureAuthenticated = async (req, res, next) => {
     session.redirectTo = req.url;
     res.redirect("/login");
   }
-};
-
-const envVar = ({ name, required = true }) => {
-  if (!process.env[name] && required) {
-    console.error(`Missing required environment variable '${name}'`);
-    process.exit(1);
-  }
-  return process.env[name];
 };
 
 const setup = (authClient) => {
@@ -56,9 +49,9 @@ const setup = (authClient) => {
   router.use(async (req, res, next) => {
     if (req.path.startsWith("/api")) {
       const params = {
-        clientId: "0bc199ef-35dd-4aa3-87e6-01506da3dd90",
+        clientId: api_client_id,
         path: "api",
-        url: "https://klage-oppgave-api.dev.nav.no/",
+        url: downstream_api,
         scopes: [],
       };
       const token = await new Promise((resolve, reject) =>

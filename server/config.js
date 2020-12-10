@@ -139,7 +139,6 @@ const loadReverseProxyConfig = () => {
           required: false,
         });
       }
-      console.log("config", api_client_id, downstream_api);
 
       config = {
         apis: [
@@ -163,4 +162,7 @@ module.exports = {
   azureAd,
   reverseProxy: reverseProxyConfig(),
   redis,
+  envVar,
+  api_client_id,
+  downstream_api,
 };
