@@ -139,6 +139,7 @@ const loadReverseProxyConfig = () => {
           required: false,
         });
       }
+      console.log("config", api_client_id, downstream_api);
 
       config = {
         apis: [
