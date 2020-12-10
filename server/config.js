@@ -15,6 +15,8 @@ const server = {
   // should be equivalent to the URL this application is hosted on for correct CORS origin header
   host: envVar({ name: "HOST", required: false }) || "localhost",
 
+  cluster: envVar({ name: "NAIS_CLUSTER_NAME", required: true }),
+
   // port for your application
   port: envVar({ name: "PORT", required: false }) || 3000,
 
@@ -31,6 +33,11 @@ const server = {
 
 let azureAd = {};
 
+let host = "https://klage-oppgave.intern.nav.no";
+if (server.cluster === "dev-gcp") {
+  host = "http://klage-oppgave.dev.nav.no";
+}
+
 if (process.env.NODE_ENV === "production") {
   azureAd = {
     // these are provided by nais at runtime
@@ -40,13 +47,16 @@ if (process.env.NODE_ENV === "production") {
 
     // where the user should be redirected after authenticating at the third party
     // should be "$host + /oauth2/callback", e.g. http://localhost:3000/oauth2/callback
-    redirectUri: envVar({ name: "AZURE_APP_REDIRECT_URL", required: true }),
+    redirectUri:
+      host + envVar({ name: "AZURE_APP_REDIRECT_URL", required: true }),
 
     // where your application should redirect after logout
-    logoutRedirectUri: envVar({
-      name: "AZURE_APP_LOGOUT_REDIRECT_URL",
-      required: true,
-    }),
+    logoutRedirectUri:
+      host +
+      envVar({
+        name: "AZURE_APP_LOGOUT_REDIRECT_URL",
+        required: true,
+      }),
 
     // leave at default
     tokenEndpointAuthMethod: "private_key_jwt",
