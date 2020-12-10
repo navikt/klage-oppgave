@@ -15,12 +15,12 @@ jobs:
       - name: Lag tag for image
         run: echo "TAG=$(git log -1 --pretty='%ad_%h' --date=format:'%Y%m%d%H%M%S')" >> $GITHUB_ENV
       - name: Lag full image referanse
-        run: echo "IMAGE=$BASEIMAGE:9175f2ecc9f5709639304c9879162e1937011e48" >> $GITHUB_ENV
+        run: echo "IMAGE=$BASEIMAGE:$TAG" >> $GITHUB_ENV
       - uses: nais/deploy/actions/deploy@master
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
-          RESOURCE: nais/nais.yaml
+          RESOURCE: nais/prod.yaml
           VARS: nais/prod.json
           SESSION_KEY: ${{ secrets.klage-session-key }}
       - name: Generate release version
