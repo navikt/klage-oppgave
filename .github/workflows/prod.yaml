@@ -46,8 +46,8 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_API_KEY }}
           SESSION_KEY: ${{ secrets.klage-session-key }}
           CLUSTER: prod-gcp
-          RESOURCE: deploy/nais.yaml
-          VARS: deploy/prod.yaml
+          RESOURCE: nais/nais.yaml
+          VARS: nais/prod.yaml
       - name: Generate release version
         run: |
           TIME=$(TZ="Europe/Oslo" date +%Y.%m.%d-%H.%M)
@@ -60,11 +60,4 @@ jobs:
         with:
           tag_name: ${{ env.VERSION }}
           release_name: ${{ env.VERSION }}
-      - name: Post failures to Slack
-        if: failure()
-        run: |
-          curl -X POST --data-urlencode "payload={\"channel\": \"$CHANNEL\", \"text\": \"$MESSAGE\", \"icon_emoji\": \":ghost:\"}" $WEBHOOK_URL
-        env:
-          MESSAGE: "Deploy til prod frontend klage-oppgave feilet"
-          CHANNEL: "#klage-notifications"
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+  
