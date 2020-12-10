@@ -1,0 +1,35 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: klage-oppgave
+  namespace: klage
+  labels:
+    team: klage
+spec:
+  image: {{image}}
+  replicas:
+    min: 1
+    max: 1
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+
+  accessPolicy:
+    inbound:
+      rules:
+        - application: klage-oppgave-e2e
+    outbound:
+      rules:
+        - application: klage-redis
+        - application: klage-oppgave-api
+      external:
+        - host: login.microsoftonline.com
+        - host: klage-oppgave.intern.nav.no
+        - host: klage-oppgave-api.intern.nav.no
+  ingresses:
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}
+  envFrom:
+    - secret: klagesessionkey
