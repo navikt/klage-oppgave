@@ -129,13 +129,21 @@ const loadReverseProxyConfig = () => {
         downstream_api = "https://klage-oppgave-api.dev.nav.no/";
       }
 
+      let api_client_id = envVar({
+        name: "DOWNSTREAM_API_CLIENT_ID_PROD",
+        required: false,
+      });
+      if (server.cluster === "dev-gcp") {
+        api_client_id = envVar({
+          name: "DOWNSTREAM_API_CLIENT_ID_DEV",
+          required: false,
+        });
+      }
+
       config = {
         apis: [
           {
-            clientId: envVar({
-              name: "DOWNSTREAM_API_CLIENT_ID",
-              required: false,
-            }),
+            clientId: api_client_id,
             path:
               envVar({ name: "DOWNSTREAM_API_PATH", required: false }) ||
               "downstream",
