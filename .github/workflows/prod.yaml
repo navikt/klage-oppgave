@@ -4,22 +4,25 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
+  BASEIMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave
 jobs:
-  deploytoprod:
-    name: Deploy to prod
-    if: github.ref == 'refs/heads/main'
+  deployprod:
+    name: Deploy to prod-gcp
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
         name: Checkout code
+      - name: Lag tag for image
+        run: echo "TAG=$(git log -1 --pretty='%ad_%h' --date=format:'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+      - name: Lag full image referanse
+        run: echo "IMAGE=$BASEIMAGE:$TAG" >> $GITHUB_ENV
       - uses: nais/deploy/actions/deploy@master
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_API_KEY }}
-          SESSION_KEY: ${{ secrets.klage-session-key }}
           CLUSTER: prod-gcp
           RESOURCE: nais/nais.yaml
-          VARS: nais/prod.yaml
+          VARS: nais/prod.json
+          SESSION_KEY: ${{ secrets.klage-session-key }}
       - name: Generate release version
         run: |
           TIME=$(TZ="Europe/Oslo" date +%Y.%m.%d-%H.%M)
@@ -32,4 +35,4 @@ jobs:
         with:
           tag_name: ${{ env.VERSION }}
           release_name: ${{ env.VERSION }}
-
+      
