@@ -1,0 +1,68 @@
+name: Prod-deploy
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Build
+        run: |
+          cd frontend
+          npm ci 
+          npm run clean
+          npm run build
+      - name: Build and publish Docker image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SESSION_KEY: ${{ secrets.klage-session-key }}
+        run: |
+          docker build --tag ${IMAGE} .
+          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+          docker push ${IMAGE}
+  deployprod:
+    name: Deploy to prod-gcp
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        name: Checkout code
+    - name: Generate release version
+        run: |
+          TIME=$(TZ="Europe/Oslo" date +%Y.%m.%d-%H.%M)
+          COMMIT=$(git rev-parse --short=7 HEAD)
+          VERSION=$TIME-$COMMIT
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        - uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            SESSION_KEY: ${{ secrets.klage-session-key }}
+            APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+            CLUSTER: prod-gcp
+            RESOURCE: nais/nais.yaml
+            VARS: nais/vars.yaml
+          with:
+            tag_name: ${{ env.VERSION }}
+            release_name: ${{ env.VERSION }}
+        - name: Post failures to Slack
+          if: failure()
+          run: |
+            curl -X POST --data-urlencode "payload={\"channel\": \"$CHANNEL\", \"text\": \"$MESSAGE\", \"icon_emoji\": \":ghost:\"}" $WEBHOOK_URL
+          env:
+            MESSAGE: "Deploy til prod frontend klage-oppgave feilet"
+            CHANNEL: "#klage-notifications"
+            WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
