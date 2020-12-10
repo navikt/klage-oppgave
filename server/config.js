@@ -118,6 +118,17 @@ const loadReverseProxyConfig = () => {
         `Loading reverse proxy config from DOWNSTREAM_API_* [CLIENT_ID, PATH, URL]`
       );
       const scopes = envVar({ name: "DOWNSTREAM_API_SCOPES", required: false });
+
+      let downstream_api = envVar({
+        name: "DOWNSTREAM_API_URL",
+        required: false,
+      });
+      if (downstream_api)
+        downstream_api = "https://klage-oppgave-api.intern.nav.no/";
+      if (server.cluster === "dev-gcp") {
+        downstream_api = "https://klage-oppgave-api.dev.nav.no/";
+      }
+
       config = {
         apis: [
           {
@@ -128,7 +139,7 @@ const loadReverseProxyConfig = () => {
             path:
               envVar({ name: "DOWNSTREAM_API_PATH", required: false }) ||
               "downstream",
-            url: envVar({ name: "DOWNSTREAM_API_URL" }),
+            url: downstream_api,
             scopes: scopes ? scopes.split(",") : [],
           },
         ],
