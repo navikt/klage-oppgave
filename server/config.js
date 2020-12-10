@@ -123,7 +123,7 @@ const loadReverseProxyConfig = () => {
         name: "DOWNSTREAM_API_URL",
         required: false,
       });
-      if (downstream_api)
+      if (!downstream_api)
         downstream_api = "https://klage-oppgave-api.intern.nav.no/";
       if (server.cluster === "dev-gcp") {
         downstream_api = "https://klage-oppgave-api.dev.nav.no/";
