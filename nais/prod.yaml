@@ -13,6 +13,8 @@ spec:
   azure:
     application:
       enabled: true
+      replyURLs:
+        - "https://klage-oppgave.intern.nav.no/oauth2/callback"
 
   accessPolicy:
     inbound:

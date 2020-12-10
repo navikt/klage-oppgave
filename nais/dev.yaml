@@ -28,8 +28,8 @@ spec:
         - host: klage-oppgave.dev.nav.no
         - host: klage-oppgave-api.dev.nav.no
   ingresses:
-  {{#each ingresses as |url|}}
-    - {{url}}
+  { { #each ingresses as |url|}}
+      - {{url } }
   {{/each}}
   envFrom:
     - secret: klagesessionkey

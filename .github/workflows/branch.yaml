@@ -59,5 +59,5 @@ jobs:
           SESSION_KEY: ${{ secrets.klage-session-key }}
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: nais/nais.yaml
-          VARS: nais/vars.yaml
+          RESOURCE: nais/dev.yaml
+          VARS: nais/dev-vars.yaml
