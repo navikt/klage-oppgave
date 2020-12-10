@@ -31,6 +31,27 @@ const server = {
   cookieName: "klage-oppgave-frontend",
 };
 
+let downstream_api = envVar({
+  name: "DOWNSTREAM_API_URL",
+  required: false,
+});
+if (!downstream_api)
+  downstream_api = "https://klage-oppgave-api.intern.nav.no/";
+if (server.cluster === "dev-gcp") {
+  downstream_api = "https://klage-oppgave-api.dev.nav.no/";
+}
+
+let api_client_id = envVar({
+  name: "DOWNSTREAM_API_CLIENT_ID_PROD",
+  required: false,
+});
+if (server.cluster === "dev-gcp") {
+  api_client_id = envVar({
+    name: "DOWNSTREAM_API_CLIENT_ID_DEV",
+    required: false,
+  });
+}
+
 let azureAd = {};
 
 let host = "https://klage-oppgave.intern.nav.no";
@@ -118,27 +139,6 @@ const loadReverseProxyConfig = () => {
         `Loading reverse proxy config from DOWNSTREAM_API_* [CLIENT_ID, PATH, URL]`
       );
       const scopes = envVar({ name: "DOWNSTREAM_API_SCOPES", required: false });
-
-      let downstream_api = envVar({
-        name: "DOWNSTREAM_API_URL",
-        required: false,
-      });
-      if (!downstream_api)
-        downstream_api = "https://klage-oppgave-api.intern.nav.no/";
-      if (server.cluster === "dev-gcp") {
-        downstream_api = "https://klage-oppgave-api.dev.nav.no/";
-      }
-
-      let api_client_id = envVar({
-        name: "DOWNSTREAM_API_CLIENT_ID_PROD",
-        required: false,
-      });
-      if (server.cluster === "dev-gcp") {
-        api_client_id = envVar({
-          name: "DOWNSTREAM_API_CLIENT_ID_DEV",
-          required: false,
-        });
-      }
 
       config = {
         apis: [
