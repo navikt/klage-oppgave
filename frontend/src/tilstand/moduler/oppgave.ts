@@ -2,7 +2,7 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { of, timer } from "rxjs";
-import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
+import { catchError, map, retryWhen, switchMap, timeout, withLatestFrom } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
@@ -234,6 +234,7 @@ export function hentOppgaverEpos(
       let rader = state.oppgaver.rader.slice();
       let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
+        timeout(5000),
         map((oppgaver) =>
           MOTTATT({
             start: action.payload.start,
