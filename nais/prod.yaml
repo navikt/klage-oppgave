@@ -13,19 +13,14 @@ spec:
   azure:
     application:
       enabled: true
-      replyURLs:
-        - "https://klage-oppgave.intern.nav.no/oauth2/callback"
 
   accessPolicy:
-    inbound:
-      rules:
-        - application: klage-oppgave-e2e
-          cluster: prod-gcp
     outbound:
       rules:
         - application: klage-redis
         - application: klage-oppgave-api
           cluster: prod-gcp
+          namespace: klage
       external:
         - host: login.microsoftonline.com
         - host: klage-oppgave.intern.nav.no
