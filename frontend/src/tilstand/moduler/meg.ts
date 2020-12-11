@@ -2,7 +2,15 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { concat, from, of } from "rxjs";
-import { catchError, concatAll, map, mergeMap, retryWhen, withLatestFrom } from "rxjs/operators";
+import {
+  catchError,
+  concatAll,
+  map,
+  mergeMap,
+  retryWhen,
+  timeout,
+  withLatestFrom,
+} from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod, AjaxObservable } from "rxjs/internal-compatibility";
 import { oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
@@ -108,6 +116,7 @@ export function hentMegEpos(
     mergeMap(([action, state]) => {
       return getJSON<GraphOgEnhet>(megUrl)
         .pipe(
+          timeout(5000),
           map((response: Graphdata) => {
             return {
               fornavn: response.givenName,
@@ -121,6 +130,7 @@ export function hentMegEpos(
         .pipe(
           map((graphData) => {
             return getJSON<[EnhetData]>(`/api/ansatte/${graphData.id}/enheter`).pipe(
+              timeout(5000),
               map((response: [EnhetData]) => {
                 return concat([
                   <Array<EnhetData>>response,
