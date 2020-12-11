@@ -20,10 +20,12 @@ spec:
     inbound:
       rules:
         - application: klage-oppgave-e2e
+          cluster: prod-gcp
     outbound:
       rules:
         - application: klage-redis
         - application: klage-oppgave-api
+          cluster: prod-gcp
       external:
         - host: login.microsoftonline.com
         - host: klage-oppgave.intern.nav.no
