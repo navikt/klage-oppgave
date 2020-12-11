@@ -24,8 +24,20 @@ const speedLimiter = slowDown({
 
 async function startApp() {
   try {
-    morganBody(server);
-    const logger = morgan("combined");
+    //morganBody(server);
+    server.use(
+      morgan("combined", {
+        skip: (req, res) => {
+          if (req.originalUrl === "/metrics") {
+            return true;
+          }
+          if (req.originalUrl === "/login") {
+            return true;
+          }
+          return false;
+        },
+      })
+    );
     session.setup(server);
 
     server.use(speedLimiter);
