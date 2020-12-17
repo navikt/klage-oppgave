@@ -18,7 +18,7 @@ jobs:
         name: Run tests
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e:e9cc8959c42964bd9392c3341319039f42f73557
+          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e:9597a900c07b5c684f707b2e9ca8af271a71da80
           CLUSTER: dev-gcp
           VARS: nais/jobvars.yml
           RESOURCE: nais/e2ejob.yml
