@@ -13,7 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          repository: navikt/klage-oppgave-e2e
+          repository: navikt/klage-oppgave
+          token: "
       - uses: nais/deploy/actions/deploy@v1
         name: Run tests
         env:
@@ -21,5 +22,5 @@ jobs:
           IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e
           CLUSTER: dev-gcp
           VAR: app=medlemskap-oppslag
-          RESOURCE: nais/job.yml
+          RESOURCE: nais/e2ejob.yml
         timeout-minutes: 5
