@@ -7,7 +7,7 @@ metadata:
   namespace: klage
 spec:
   backoffLimit: 4
-  activeDeadlineSeconds: 360
+  activeDeadlineSeconds: 180
   completions: 1
   parallelism: 1
   template:
@@ -24,7 +24,7 @@ spec:
         - command:
             - sh
             - tests.sh
-          image: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:e9cc8959c42964bd9392c3341319039f42f73557
+          image: docker.pkg.github.com/navikt/klage-oppgave-e2e/klage-oppgave-e2e:latest
           imagePullPolicy: IfNotPresent
           name: klage-oppgave-e2e
       dnsPolicy: ClusterFirst
