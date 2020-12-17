@@ -11,6 +11,9 @@ jobs:
     name: Run acceptance tests
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      with:
+        repository: navikt/klage-oppgave-e2e
       - uses: nais/deploy/actions/deploy@v1
         name: Run tests
         env:
