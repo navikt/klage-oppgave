@@ -8,8 +8,8 @@ metadata:
 spec:
   backoffLimit: 4
   activeDeadlineSeconds: 240
-  ttlSecondsAfterFinished: 100
-  completions: 1
+  ttlSecondsAfterFinished: 60
+  completions: 5
   parallelism: 1
   template:
     metadata:
