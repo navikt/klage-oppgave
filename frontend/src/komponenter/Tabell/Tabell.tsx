@@ -187,6 +187,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
               filtre={[
                 { label: "Klage", value: "Klage" },
                 { label: "Anke", value: "Anke" },
+                { label: "Feilutbetaling", value: "Feilutbetaling" },
               ]}
               dispatchFunc={filtrerType}
               aktiveFiltere={aktiveTyper}

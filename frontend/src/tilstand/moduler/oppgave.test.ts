@@ -73,7 +73,7 @@ describe("Oppgave epos", () => {
           frist: "synkende" as "synkende",
         },
         filtrering: {
-          typer: ["klage"],
+          typer: ["Klage"],
           ytelser: [
             ("Sykepenger" as unknown) as ytelseType,
             ("Dagpenger" as unknown) as ytelseType,
@@ -83,7 +83,32 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=Klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+    );
+  });
+
+  test("+++ QUERYBUILDER type", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      enhetId: "42",
+      antall: 2,
+      start: 0,
+      transformasjoner: {
+        sortering: {
+          frist: "synkende" as "synkende",
+        },
+        filtrering: {
+          typer: ["Feilutbetaling"],
+          ytelser: [
+            ("Sykepenger" as unknown) as ytelseType,
+            ("Dagpenger" as unknown) as ytelseType,
+          ],
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/oppgaver?typer=Feilutbetaling&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
