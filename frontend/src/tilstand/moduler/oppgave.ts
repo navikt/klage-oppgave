@@ -105,6 +105,14 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
   const { antallTreffTotalt, start, antall, projeksjon, tildeltSaksbehandler } = payload;
   state.rader = payload.oppgaver;
+  if (state.transformasjoner.sortering.frist == "synkende")
+    state.rader.slice().sort(function (a, b) {
+      return new Date(b.frist).getTime() - new Date(a.frist).getTime();
+    });
+  else
+    state.rader.slice().sort(function (a, b) {
+      return new Date(a.frist).getTime() - new Date(b.frist).getTime();
+    });
   state.lasterData = true;
   state.meta.start = start;
   state.meta.totalAntall = antallTreffTotalt;
