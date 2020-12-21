@@ -241,7 +241,11 @@ describe("Oppgave epos", () => {
     };
     const initState = ({
       rader: [],
-      transformasjoner: {},
+      transformasjoner: {
+        sortering: {
+          frist: "stigende",
+        },
+      },
       meta: {},
       lasterData: false,
     } as unknown) as OppgaveState;
@@ -265,7 +269,11 @@ describe("Oppgave epos", () => {
     };
     const initState = ({
       rader: [],
-      transformasjoner: {},
+      transformasjoner: {
+        sortering: {
+          frist: "stigende",
+        },
+      },
       meta: {
         projeksjon: "UTVIDET",
       },
@@ -289,7 +297,11 @@ describe("Oppgave epos", () => {
     };
     const initState = ({
       rader: [],
-      transformasjoner: {},
+      transformasjoner: {
+        sortering: {
+          frist: "stigende",
+        },
+      },
       meta: {},
       lasterData: false,
     } as unknown) as OppgaveState;
@@ -312,7 +324,11 @@ describe("Oppgave epos", () => {
     };
     const initState = ({
       rader: [],
-      transformasjoner: {},
+      transformasjoner: {
+        sortering: {
+          frist: "stigende",
+        },
+      },
       meta: {},
       lasterData: false,
     } as unknown) as OppgaveState;

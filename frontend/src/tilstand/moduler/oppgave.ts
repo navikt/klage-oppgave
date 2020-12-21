@@ -151,7 +151,7 @@ export const oppgaveSlice = createSlice({
         hjemler: undefined,
       },
       sortering: {
-        frist: "synkende",
+        frist: "stigende",
       },
     },
   } as OppgaveState,
