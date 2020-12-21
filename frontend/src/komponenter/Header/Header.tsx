@@ -47,10 +47,10 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
         onClick={() => setAapen((a) => !a)}
       >
         <div className={classNames("header__brukerinfo", "header__rad", "header__gap")}>
-          <p className={"header__tekstNormal"}>
+          <div className={"header__tekstNormal"}>
             <div>{navn}</div>
             <div>{person.enhetNavn}</div>
-          </p>
+          </div>
           <div className="header__knapp ">
             <div className={classNames(aapen ? "header__aapen" : "header__lukket")} />
           </div>

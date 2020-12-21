@@ -17,6 +17,16 @@ const velgOppgave = R.curry((settValgtOppgave: Function, id: string, versjon: nu
   tildelOppgave(settValgtOppgave, id, versjon)
 );
 
+const gosysEnvironment = (hostname: string) => {
+  if (hostname === "localhost") {
+    //muligens sette opp en local mock?
+    return "http://localhost:3000";
+  } else if (hostname.indexOf("dev.nav.no") !== -1) {
+    return "https://gosys.nais.preprod.local";
+  }
+  return "https://gosys-nais.nais.adeo.no";
+};
+
 const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: number) => {
   const [viserHandlinger, settVisHandlinger] = useState(false);
   let [it] = useState(0);
@@ -106,7 +116,9 @@ const OppgaveTabellRad = ({
             <a
               target="_blank"
               aria-label={"Ekstern lenke til Gosys for denne personen"}
-              href={`https://gosys-nais.nais.adeo.no/gosys/personoversikt/fnr=${person?.fnr}`}
+              href={`${gosysEnvironment(window.location.hostname)}/gosys/personoversikt/fnr=${
+                person?.fnr
+              }`}
               className="gosys-lenke"
             >
               GS <img alt="Ekstern lenke" src={PilOppHoeyre} />
