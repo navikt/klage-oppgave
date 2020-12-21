@@ -61,7 +61,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
   const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
-  const [antall] = useState<number>(5);
+  const [antall] = useState<number>(10);
   const [start, settStart] = useState<number>(0);
   const history = useHistory();
   const pathname = history.location.pathname.split("/")[1];
