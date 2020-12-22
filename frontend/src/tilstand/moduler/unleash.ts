@@ -61,7 +61,7 @@ export const feiletHandling = createAction<string>("unleash/FEILET");
 //==========
 // Epos
 //==========
-const featureUrl = (toggleName: string) => `/api/featuretoggle/${toggleName}`;
+const featureUrl = (toggleName: string) => `/api/aapenfeaturetoggle/${toggleName}`;
 var resultData: IFeatureToggle;
 
 export function unleashEpos(
