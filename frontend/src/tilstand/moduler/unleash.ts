@@ -24,7 +24,7 @@ export interface IFeatureToggle {
 }
 
 export interface IFeatureToggles {
-  features: [IFeatureToggle];
+  features: [IFeatureToggle?];
 }
 
 //==========
@@ -33,7 +33,7 @@ export interface IFeatureToggles {
 export const unleashSlice = createSlice({
   name: "unleash",
   initialState: {
-    features: [{}],
+    features: [],
   } as IFeatureToggles,
   reducers: {
     HENTET: (state, action: PayloadAction<IFeatureToggle>) => {
