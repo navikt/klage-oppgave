@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "./Header/Header";
 import Alertstripe from "nav-frontend-alertstriper";
 
@@ -15,16 +15,29 @@ import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
 import { Sok } from "./Header/Sok";
 import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
+import NavFrontendSpinner from "nav-frontend-spinner";
 
 export default function Oppsett({ children }: LayoutType) {
   const person = useSelector(velgMeg);
   const visFeilmelding = useSelector(velgToaster);
   const feilmelding = useSelector(velgToasterMelding);
+  const featureToggles = useSelector(velgFeatureToggles);
   const dispatch = useDispatch();
+  const [generellTilgang, settTilgang] = useState(false);
+
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
   }, []);
+  useEffect(() => {
+    const tilgangEnabled = featureToggles.features.find((f) => f.navn === "klage.generellTilgang");
+    if (tilgangEnabled?.isEnabled !== undefined) {
+      settTilgang(tilgangEnabled.isEnabled);
+    }
+  }, [featureToggles]);
 
+  if (!generellTilgang) {
+    return <NavFrontendSpinner />;
+  }
   return (
     <main className="container" data-testid="klagesiden">
       <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>

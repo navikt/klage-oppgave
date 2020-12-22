@@ -39,6 +39,11 @@ export const unleashSlice = createSlice({
     HENTET: (state, action: PayloadAction<IFeatureToggle>) => {
       if (state.features[action.payload.navn]) {
         state.features[action.payload.navn].isEnabled = action.payload.isEnabled;
+      } else {
+        state.features.push({
+          navn: action.payload.navn,
+          isEnabled: action.payload.isEnabled,
+        });
       }
       return state;
     },
@@ -73,14 +78,13 @@ export function unleashEpos(
     ofType(hentFeatureToggleHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
-      return getJSON<IFeatureToggle>(featureUrl(action.payload))
+      return getJSON<boolean>(featureUrl(action.payload))
         .pipe(
           timeout(5000),
-          map((response: IFeatureToggle) => {
-            console.log({ response });
+          map((response: boolean) => {
             return {
-              navn: response.navn,
-              isEnabled: response.isEnabled,
+              navn: action.payload,
+              isEnabled: response,
             };
           })
         )

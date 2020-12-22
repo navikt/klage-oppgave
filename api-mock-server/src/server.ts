@@ -54,6 +54,10 @@ app.get("/ansatte/:id/enheter", async (req, res) => {
   ]);
 });
 
+app.get("/aapenfeaturetoggle/:feature", (req, res) => {
+  res.status(200).send("true");
+});
+
 app.post(
   "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlertildeling",
   async (req, res) => {
