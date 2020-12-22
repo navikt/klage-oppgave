@@ -12,7 +12,6 @@ import { NavLink } from "react-router-dom";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
 
-import { Sok } from "./Header/Sok";
 import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
 import NavFrontendSpinner from "nav-frontend-spinner";
@@ -29,7 +28,7 @@ export default function Oppsett({ children }: LayoutType) {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
   }, []);
   useEffect(() => {
-    const tilgangEnabled = featureToggles.features.find((f) => f.navn === "klage.generellTilgang");
+    const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.generellTilgang");
     if (tilgangEnabled?.isEnabled !== undefined) {
       settTilgang(tilgangEnabled.isEnabled);
     }
