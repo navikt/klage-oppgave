@@ -23,7 +23,7 @@ export default function Oppsett({ children }: LayoutType) {
   const feilmelding = useSelector(velgToasterMelding);
   const featureToggles = useSelector(velgFeatureToggles);
   const dispatch = useDispatch();
-  const [generellTilgang, settTilgang] = useState(false);
+  const [generellTilgang, settTilgang] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
@@ -35,8 +35,10 @@ export default function Oppsett({ children }: LayoutType) {
     }
   }, [featureToggles]);
 
-  if (!generellTilgang) {
+  if (generellTilgang === undefined) {
     return <NavFrontendSpinner />;
+  } else if (!generellTilgang) {
+    return <div>Beklager, men din bruker har ikke tilgang til denne siden</div>;
   }
   return (
     <main className="container" data-testid="klagesiden">
