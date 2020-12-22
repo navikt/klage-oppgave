@@ -77,6 +77,7 @@ export function unleashEpos(
         .pipe(
           timeout(5000),
           map((response: IFeatureToggle) => {
+            console.log({ response });
             return {
               navn: response.navn,
               isEnabled: response.isEnabled,
