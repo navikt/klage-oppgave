@@ -9,6 +9,7 @@ import saksbehandler, { TILDEL_EPICS } from "./moduler/saksbehandler";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import routing, { ROUTING_EPICS } from "./moduler/router";
 import toaster, { TOASTER_EPICS } from "./moduler/toaster";
+import featureToggles, { UNLEASH_EPICS } from "./moduler/unleash";
 
 const epics: Array<(
   $action: ActionsObservable<PayloadAction<any>>,
@@ -20,6 +21,7 @@ const epics: Array<(
   ...OPPGAVER_EPICS,
   ...MEG_EPICS,
   ...TILDEL_EPICS,
+  ...UNLEASH_EPICS,
   ...TOASTER_EPICS,
   ...ROUTING_EPICS,
 ];
@@ -30,6 +32,7 @@ const rootReducer = combineReducers({
   meg,
   routing,
   toaster,
+  featureToggles,
   saksbehandler,
 });
 
