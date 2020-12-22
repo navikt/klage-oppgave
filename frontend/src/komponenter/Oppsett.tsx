@@ -23,7 +23,7 @@ export default function Oppsett({ children }: LayoutType) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
-  });
+  }, []);
 
   return (
     <main className="container" data-testid="klagesiden">
