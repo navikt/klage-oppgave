@@ -8,7 +8,7 @@
     "build:js": "webpack --config ./webpack.config.js --mode production",
     "build:html": "copyfiles -f ./public/index.html dist",
     "build": "npm run clean && npm run build:js && npm run build:html",
-    "start": "better-npm-run start",
+    "start": "env-cmd -f .env.development webpack-dev-server --config ./webpack.config.js --mode development",
     "test": "jest",
     "testcov": "jest --coverage --no-cache",
     "lint": "npx eslint src --ext .js,.jsx --color"
@@ -19,14 +19,6 @@
       "json",
       "html"
     ]
-  },
-  "betterScripts": {
-    "start": {
-      "command": "webpack-dev-server --config ./webpack.config.js --mode development",
-      "env": {
-        "NODE_ENV": "development"
-      }
-    }
   },
   "prettier": {
     "printWidth": 100
@@ -84,8 +76,8 @@
     "@navikt/fnrvalidator": "^1.1.3",
     "@reduxjs/toolkit": "^1.4.0",
     "axios": "^0.20.0",
-    "better-npm-run": "^0.1.1",
     "classnames": "^2.2.6",
+    "env-cmd": "^10.1.0",
     "lodash.throttle": "^4.1.1",
     "nav-frontend-alertstriper": "^3.0.38",
     "nav-frontend-alertstriper-style": "^2.0.30",
