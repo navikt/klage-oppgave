@@ -75,7 +75,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
           versjon: valgtOppgave.versjon,
         })
       );
-      //dispatchTransformering(history.location.pathname.startsWith("/minesaker"));
     }
   }, [valgtOppgave.id]);
 
@@ -170,6 +169,15 @@ const OppgaveTabell: React.FunctionComponent = () => {
       </div>
     );
   }
+
+  /*
+     hardkodet SYK ihht Trello-oppgave https://trello.com/c/xuV6WDJb/51-hardkode-syk-i-oppgave-query-inntil-videre-i-gui
+     todo fjern denne snutten når det ikkke lenger er behov for den
+    */
+  useEffect(() => {
+    filtrerYtelse([{ label: "Sykepenger", value: "Sykepenger" }]);
+    settAktiveYtelser([{ label: "Sykepenger", value: "Sykepenger" }]);
+  }, [meg]);
 
   if (sideLaster) {
     return <NavFrontendSpinner />;
