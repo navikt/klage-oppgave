@@ -23,10 +23,10 @@ export interface HeaderProps {
 
 export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   const [aapen, setAapen] = useState(false);
+  const [valgtEnhet, settValgtEnhet] = useState("");
   const enheter = useSelector(velgEnheter);
   const person = useSelector(velgMeg);
   const dispatch = useDispatch();
-
   const ref = useRef<HTMLDivElement>(null);
 
   useOnInteractOutside({
@@ -36,8 +36,14 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   });
 
   const settEnhet = (event: React.MouseEvent<HTMLElement | HTMLButtonElement>, id: string) => {
+    settValgtEnhet(id);
     dispatch(settEnhetHandling(id));
     setAapen(false);
+  };
+
+  const visValgtEnhet = () => {
+    if (valgtEnhet === "") return person.enhetNavn;
+    else return enheter.filter((enhet) => enhet.id === valgtEnhet)[0].navn;
   };
 
   return (
@@ -49,7 +55,7 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
         <div className={classNames("header__brukerinfo", "header__rad", "header__gap")}>
           <div className={"header__tekstNormal"}>
             <div>{navn}</div>
-            <div>{person.enhetNavn}</div>
+            <div>{visValgtEnhet()}</div>
           </div>
           <div className="header__knapp ">
             <div className={classNames(aapen ? "header__aapen" : "header__lukket")} />
