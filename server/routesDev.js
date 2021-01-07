@@ -20,6 +20,14 @@ const envVar = ({ name, required = true }) => {
 };
 
 const setup = (authClient) => {
+  router.post("/internal/innstillinger", async (req, res) => {
+    const { innstillinger } = req.body;
+    const { navIdent } = req.body;
+    await lagreIRedis(`innstillinger${navIdent}`, innstillinger);
+    const value = await hentFraRedis("innstillinger");
+    res.status(200).json(JSON.parse(value));
+  });
+
   router.use(
     "/api",
     cacheMiddleWare,

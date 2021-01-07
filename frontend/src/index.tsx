@@ -21,7 +21,7 @@ ReactDOM.render(
           <Route exact path="/oppgaver/:side" render={() => <AlleSaker />} />
           <Route exact path="/mineoppgaver" render={() => <MineSaker />} />
           <Route exact path="/mineoppgaver/:side" render={() => <MineSaker />} />
-          <Route path="/innstillinger" render={() => <Innstillinger />} />
+          <Route exact path="/innstillinger" render={() => <Innstillinger />} />
           <Redirect to="/oppgaver" />
         </Switch>
       </BrowserRouter>

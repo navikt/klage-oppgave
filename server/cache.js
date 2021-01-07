@@ -18,14 +18,31 @@ function lagreIRedis(key, value) {
     console.error(error);
   });
   const bufferData = Buffer.from(value);
-  client.set(key, bufferData);
-  client.expire(key, process.env.CACHE_EXP || 600);
+
+  client.select(1, function (err, res) {
+    if (err) {
+      console.error("REDIS ERR", err);
+      return err;
+    }
+    client.set(key, bufferData);
+    client.expire(key, process.env.CACHE_EXP || 600);
+  });
 }
 
 async function hentFraRedis(key) {
   const client = redis.createClient(REDIS_URL);
   const getAsync = promisify(client.get).bind(client);
-  return getAsync(key);
+  const selectAsync = promisify(client.select).bind(client);
+
+  return new Promise((resolve, reject) => {
+    client.select(1, function (err, res) {
+      if (err) {
+        console.error("REDIS ERR", err);
+        reject(err);
+      }
+      resolve(getAsync(key));
+    });
+  });
 }
 
 function cacheMiddleWare(req, res, next) {

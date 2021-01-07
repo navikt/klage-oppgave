@@ -7,6 +7,7 @@ let express = require("express");
 let helmet = require("helmet");
 let passport = require("passport");
 let session = require("./session");
+let bodyParser = require("body-parser");
 let slowDown = require("express-slow-down");
 
 // for debugging during development
@@ -25,6 +26,9 @@ const speedLimiter = slowDown({
 async function startApp() {
   try {
     //morganBody(server);
+    server.use(bodyParser.urlencoded({ extended: true }));
+    server.use(bodyParser.json());
+    server.use(bodyParser.raw());
     server.use(
       morgan("combined", {
         skip: (req, res) => {
@@ -62,6 +66,7 @@ async function startApp() {
     } else {
       server.use("/", routesDev.setup());
     }
+
     server.listen(port, () => console.log(`Listening on port ${port}`));
   } catch (error) {
     console.error("Error during start-up", error);
