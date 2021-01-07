@@ -24,7 +24,7 @@ const setup = (authClient) => {
     const { innstillinger } = req.body;
     const { navIdent } = req.body;
     await lagreIRedis(`innstillinger${navIdent}`, innstillinger);
-    const value = await hentFraRedis("innstillinger");
+    const value = await hentFraRedis(`innstillinger${navIdent}`);
     res.status(200).json(JSON.parse(value));
   });
 
