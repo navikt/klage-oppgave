@@ -2,7 +2,31 @@ table.oppgaver {
   width: calc(5 * 14em);
   animation: 0.2s ease-in-out;
 }
-
+table.innstillinger {
+  animation: 0.2s ease-in-out;
+  width: 35em;
+}
+table.innstillinger > thead > tr > th:first-child {
+  width: 13em;
+}
+table.innstillinger > thead > tr > th:nth-child(2) {
+  width: 22em;
+}
+table.innstillinger > tbody > tr > td:first-child {
+  width: 13em;
+}
+table.innstillinger > tbody > tr > td:nth-child(2) {
+  width: 22em;
+}
+table.innstillinger > thead > tr > *,
+table.innstillinger > tbody > tr > * {
+  padding: 0.25em 2em 0 0;
+  text-align: left;
+  vertical-align: baseline;
+}
+table.innstillinger > tbody > tr > td > div {
+  padding: 0.25em 2em 0 0;
+}
 @greyDark: #3e3832;
 @greyNormal: #59514b;
 @greyLight: #c6c2bf;
@@ -131,4 +155,13 @@ table.oppgaver {
       right: 4px;
     }
   }
+}
+
+.etikett--hjemmel {
+  background-color: #f1d8d4 !important;
+  border: 1px solid #ba3a26 !important;
+}
+.etikett--type {
+  background-color: #e0dae7 !important;
+  border: 1px solid #634689 !important;
 }
