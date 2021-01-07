@@ -60,12 +60,14 @@ describe("'Meg' epos", () => {
           mail: mockedResponse.mail,
           enhetId: "42",
           enhetNavn: "test",
+          lovligeTemaer: ["test"],
         });
 
         const enhetResponse = hentetEnhetHandling([
           {
             navn: "test",
             id: "42",
+            lovligeTemaer: ["test"],
           },
         ]);
 
@@ -76,6 +78,7 @@ describe("'Meg' epos", () => {
                 {
                   navn: "test",
                   id: "42",
+                  lovligeTemaer: ["test"],
                 },
               ]);
             } else {

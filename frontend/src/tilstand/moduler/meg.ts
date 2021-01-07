@@ -38,6 +38,7 @@ interface Graphdata {
 export interface EnhetData {
   id: string;
   navn: string;
+  lovligeTemaer: [string];
 }
 
 interface GraphOgEnhet extends Graphdata, Array<EnhetData> {}
@@ -45,6 +46,7 @@ interface GraphOgEnhet extends Graphdata, Array<EnhetData> {}
 export interface MegOgEnhet extends MegType {
   enhetId: string;
   enhetNavn: string;
+  lovligeTemaer?: [string];
 }
 
 //==========
@@ -60,6 +62,7 @@ export const megSlice = createSlice({
     etternavn: "",
     enhetId: "",
     enhetNavn: "",
+    lovligeTemaer: undefined,
     enheter: [],
   } as MegOgEnhet,
   reducers: {
@@ -77,6 +80,7 @@ export const megSlice = createSlice({
       state.navn = action.payload.navn;
       state.enhetId = action.payload.enhetId;
       state.enhetNavn = action.payload.enhetNavn;
+      state.lovligeTemaer = action.payload.lovligeTemaer;
       state.id = action.payload.id;
       state.mail = action.payload.mail;
       return state;
@@ -138,6 +142,7 @@ export function hentMegEpos(
                     ...graphData,
                     enhetId: response[0].id,
                     enhetNavn: response[0].navn,
+                    lovligeTemaer: response[0].lovligeTemaer,
                   },
                 ]);
               })

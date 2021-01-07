@@ -185,7 +185,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   return (
     <>
-      <table className={`Tabell tabell tabell--stripet`} cellSpacing={0} cellPadding={10}>
+      <table className={`Tabell tabell oppgaver tabell--stripet`} cellSpacing={0} cellPadding={10}>
         <thead>
           <tr>
             <FiltrerbarHeader
