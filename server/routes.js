@@ -8,6 +8,12 @@ const { cacheMiddleWare, handleProxyRes } = require("./cache");
 const router = express.Router();
 const { createProxyMiddleware } = require("http-proxy-middleware");
 let { api_client_id, downstream_api, envVar } = require("./config");
+const {
+  lagreIRedis,
+  hentFraRedis,
+  cacheMiddleWare,
+  handleProxyRes,
+} = require("./cache");
 
 const ensureAuthenticated = async (req, res, next) => {
   if (req.isAuthenticated() && authUtils.hasValidAccessToken(req)) {
