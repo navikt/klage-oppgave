@@ -44,6 +44,11 @@ const setup = (authClient) => {
     const value = await hentFraRedis(`innstillinger${navIdent}`);
     res.status(200).json(JSON.parse(value));
   });
+  router.get("/internal/innstillinger/:navIdent", async (req, res) => {
+    const { navIdent } = req.params;
+    const value = await hentFraRedis(`innstillinger${navIdent}`);
+    res.status(200).json(JSON.parse(value));
+  });
 
   router.use(
     "/oauth2/callback",
