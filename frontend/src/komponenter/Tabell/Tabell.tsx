@@ -77,6 +77,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
       if (hjemler.length) {
         settAktiveHjemler(innstillinger.aktiveHjemler);
         settHjemmelFilter(hjemler);
+      } else {
+        settAktiveHjemler(initState(filtrering.hjemler));
+        settHjemmelFilter(undefined);
       }
     }
     if (innstillinger?.aktiveTyper) {
@@ -84,9 +87,14 @@ const OppgaveTabell: React.FunctionComponent = () => {
       if (typer.length) {
         settAktiveTyper(innstillinger.aktiveTyper);
         settTypeFilter(typer);
+      } else {
+        settAktiveTyper(initState(filtrering.hjemler));
+        settTypeFilter(undefined);
       }
     }
-    dispatch(routingRequest(history.location.pathname));
+    dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
+
+    //dispatch(routingRequest(history.location.pathname));
   }, [innstillinger]);
 
   useEffect(() => {
