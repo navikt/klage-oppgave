@@ -5,6 +5,9 @@ import megTilstand, {
   feiletHandling,
   hentetEnhetHandling,
   hentetHandling,
+  hentetInnstillingerHandling,
+  hentInnstillingerEpos,
+  hentInnstillingerHandling,
   hentMegEpos,
   hentMegHandling,
   MegType,
@@ -106,6 +109,51 @@ describe("'Meg' epos", () => {
       });
     })
   );
+
+  /** Test henting av innstillinger */
+  test(
+    "+++ HENT 'INNSTILLINGER'",
+    marbles(() => {
+      ts.run((m) => {
+        const inputMarble = "a-";
+        const expectedMarble = "c-";
+
+        const inputValues = {
+          a: hentInnstillingerHandling("en_navIdent"),
+        };
+        const initState = {
+          meg: {
+            innstillinger: undefined,
+          },
+        };
+        const mockedResponse = {
+          aktiveHjemler: [{ navn: "8-1", label: "8-1" }],
+          aktiveTyper: [{ navn: "test-enhet", label: "42" }],
+        };
+        const reducerResponse = hentetInnstillingerHandling(mockedResponse);
+
+        const dependencies = {
+          getJSON: (navIdent: string) => {
+            return of(mockedResponse);
+          },
+        };
+
+        const observableValues = {
+          a: initState,
+          c: {
+            payload: reducerResponse.payload,
+            type: hentetInnstillingerHandling.type,
+          },
+        };
+
+        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
+        const actual$ = hentInnstillingerEpos(action$, state$, <AjaxCreationMethod>dependencies);
+        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
+      });
+    })
+  );
+
   it("test meg slice suksess", () => {
     expect(
       megTilstand(

@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Oppsett from "./Oppsett";
 import FiltrerbarHeader, { settFilter } from "./Tabell/FiltrerbarHeader";
 import { Filter } from "../tilstand/moduler/oppgave";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { velgFiltrering } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
 import { typeOversettelse } from "../domene/forkortelser";
 import { Knapp } from "nav-frontend-knapper";
 import axios from "axios";
-import { velgMeg } from "../tilstand/moduler/meg.velgere";
+import { velgInnstillinger, velgMeg } from "../tilstand/moduler/meg.velgere";
+import { hentInnstillingerHandling, settInnstillingerHandling } from "../tilstand/moduler/meg";
 
 function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
@@ -21,28 +22,34 @@ function initState(filter: Array<string> | undefined) {
 }
 
 const Innstillinger = (): JSX.Element => {
+  const dispatch = useDispatch();
   const filtrering = useSelector(velgFiltrering);
   const meg = useSelector(velgMeg);
+  const innstillinger = useSelector(velgInnstillinger);
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
 
+  useEffect(() => {
+    if (meg.id) dispatch(hentInnstillingerHandling(meg.id));
+  }, [meg.id]);
+
+  useEffect(() => {
+    settAktiveHjemler(innstillinger?.aktiveHjemler ? innstillinger.aktiveHjemler : []);
+    settAktiveTyper(innstillinger?.aktiveTyper ? innstillinger.aktiveTyper : []);
+  }, [innstillinger, meg.id]);
+
   const lagreInnstillinger = () => {
-    axios
-      .post("/internal/innstillinger", {
+    dispatch(
+      settInnstillingerHandling({
         navIdent: meg.id,
-        innstillinger: JSON.stringify({
+        innstillinger: {
           aktiveHjemler,
           aktiveTyper,
-        }),
+        },
       })
-      .then((res) => {
-        console.log("result", res);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    );
   };
 
   const filtrerType = (filtre: Filter[]) => {

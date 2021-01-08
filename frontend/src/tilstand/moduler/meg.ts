@@ -8,12 +8,14 @@ import {
   map,
   mergeMap,
   retryWhen,
+  switchMap,
   timeout,
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { AjaxCreationMethod, AjaxObservable } from "rxjs/internal-compatibility";
+import { AjaxCreationMethod, AjaxObservable, ajaxPost } from "rxjs/internal-compatibility";
 import { oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
+import { Filter } from "../../komponenter/Tabell/filtrering";
 
 //==========
 // Interfaces
@@ -25,6 +27,7 @@ export interface MegType {
   id: string;
   etternavn: string;
   enheter?: Array<EnhetData>;
+  innstillinger?: IInnstillinger;
 }
 
 interface Graphdata {
@@ -49,6 +52,17 @@ export interface MegOgEnhet extends MegType {
   lovligeTemaer?: [string];
 }
 
+export interface IInnstillinger {
+  aktiveHjemler: Array<Filter>;
+  aktiveTyper: Array<Filter>;
+}
+export interface IInnstillingerPayload {
+  navIdent: string;
+  innstillinger: {
+    aktiveHjemler?: Array<Filter>;
+    aktiveTyper?: Array<Filter>;
+  };
+}
 //==========
 // Reducer
 //==========
@@ -64,6 +78,7 @@ export const megSlice = createSlice({
     enhetNavn: "",
     lovligeTemaer: undefined,
     enheter: [],
+    innstillinger: undefined,
   } as MegOgEnhet,
   reducers: {
     SETT_ENHET: (state, action: PayloadAction<string>) => {
@@ -85,6 +100,14 @@ export const megSlice = createSlice({
       state.mail = action.payload.mail;
       return state;
     },
+    INNSTILLINGER_HENTET: (state, action: PayloadAction<IInnstillinger>) => {
+      state.innstillinger = action.payload;
+      return state;
+    },
+    INNSTILLINGER_SATTT: (state, action: PayloadAction<IInnstillinger>) => {
+      state.innstillinger = action.payload;
+      return state;
+    },
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
     },
@@ -101,12 +124,20 @@ export const hentMegHandling = createAction("meg/HENT_MEG");
 export const hentetHandling = createAction<MegOgEnhet>("meg/HENTET");
 export const settEnhetHandling = createAction<string>("meg/SETT_ENHET");
 export const hentetEnhetHandling = createAction<Array<EnhetData>>("meg/ENHETER");
+export const sattInnstillinger = createAction<IInnstillinger>("meg/INNSTILLINGER_SATT");
+export const hentInnstillingerHandling = createAction<string>("meg/INNSTILLINGER_HENT");
+export const hentetInnstillingerHandling = createAction<IInnstillinger>("meg/INNSTILLINGER_HENTET");
+export const settInnstillingerHandling = createAction<IInnstillingerPayload>(
+  "meg/INNSTILLINGER_SETT"
+);
 export const feiletHandling = createAction<string>("meg/FEILET");
 
 //==========
 // Epos
 //==========
 const megUrl = `/me`;
+const innstillingerUrl = `/internal/innstillinger`;
+
 var resultData: any;
 
 export function hentMegEpos(
@@ -170,4 +201,59 @@ export function hentMegEpos(
   );
 }
 
-export const MEG_EPICS = [hentMegEpos];
+export function hentInnstillingerEpos(
+  action$: ActionsObservable<PayloadAction<string>>,
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(hentInnstillingerHandling.type),
+    withLatestFrom(state$),
+    mergeMap(([action]) => {
+      console.log("url", `${innstillingerUrl}/${action.payload}`);
+      return getJSON<IInnstillinger>(`${innstillingerUrl}/${action.payload}`)
+        .pipe(
+          timeout(5000),
+          map((response: IInnstillinger) => {
+            console.log(response);
+            return hentetInnstillingerHandling(response);
+          })
+        )
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+          catchError((error) => {
+            return concat([feiletHandling(error.message)]);
+          })
+        );
+    })
+  );
+}
+
+export function settInnstillingerEpos(
+  action$: ActionsObservable<PayloadAction<IInnstillingerPayload>>,
+  state$: StateObservable<RootStateOrAny>,
+  { post }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(settInnstillingerHandling.type),
+    switchMap((action) => {
+      return post(
+        innstillingerUrl,
+        {
+          navIdent: action.payload.navIdent,
+          innstillinger: JSON.stringify(action.payload.innstillinger),
+        },
+        { "Content-Type": "application/json" }
+      )
+        .pipe(map((response) => sattInnstillinger((response as unknown) as IInnstillinger)))
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+          catchError((error) => {
+            return concat([feiletHandling(error.message)]);
+          })
+        );
+    })
+  );
+}
+
+export const MEG_EPICS = [hentMegEpos, hentInnstillingerEpos, settInnstillingerEpos];
