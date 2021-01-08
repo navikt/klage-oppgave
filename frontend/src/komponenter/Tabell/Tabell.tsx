@@ -98,6 +98,13 @@ const OppgaveTabell: React.FunctionComponent = () => {
         settTypeFilter(undefined);
       }
     }
+
+    /*
+           hardkodet SYK ihht Trello-oppgave https://trello.com/c/xuV6WDJb/51-hardkode-syk-i-oppgave-query-inntil-videre-i-gui
+           todo fjern denne snutten når det ikkke lenger er behov for den
+          */
+    filtrerYtelse([{ label: "Sykepenger", value: "Sykepenger" }]);
+    settAktiveYtelser([{ label: "Sykepenger", value: "Sykepenger" }]);
     dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
 
     //dispatch(routingRequest(history.location.pathname));
@@ -210,7 +217,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const visAntallTreff = (oppgaver: OppgaveRader) => {
     const antall = oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1;
     if (oppgaver.meta.totalAntall === 0) {
-      return "Ingen treff i oppgavesøk";
+      return "Ingen treff i oppgavesøket";
     }
     const antallIListe =
       oppgaver.meta.side * oppgaver.meta.antall < oppgaver.meta.totalAntall
@@ -219,15 +226,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
     const s_oppgave = oppgaver.meta.totalAntall === 1 ? "oppgave" : "oppgaver";
     return `Viser ${antall} til ${antallIListe} av ${oppgaver.meta.totalAntall} ${s_oppgave}`;
   };
-
-  /*
-         hardkodet SYK ihht Trello-oppgave https://trello.com/c/xuV6WDJb/51-hardkode-syk-i-oppgave-query-inntil-videre-i-gui
-         todo fjern denne snutten når det ikkke lenger er behov for den
-        */
-  useEffect(() => {
-    filtrerYtelse([{ label: "Sykepenger", value: "Sykepenger" }]);
-    settAktiveYtelser([{ label: "Sykepenger", value: "Sykepenger" }]);
-  }, [meg]);
 
   if (sideLaster) {
     return <NavFrontendSpinner />;
