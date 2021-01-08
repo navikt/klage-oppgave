@@ -36,8 +36,8 @@ const Innstillinger = (): JSX.Element => {
   }, [meg.id]);
 
   useEffect(() => {
-    settAktiveHjemler(innstillinger?.aktiveHjemler ? innstillinger.aktiveHjemler : []);
-    settAktiveTyper(innstillinger?.aktiveTyper ? innstillinger.aktiveTyper : []);
+    settAktiveHjemler(innstillinger?.aktiveHjemler ?? []);
+    settAktiveTyper(innstillinger?.aktiveTyper ?? []);
   }, [innstillinger, meg.id]);
 
   const lagreInnstillinger = () => {

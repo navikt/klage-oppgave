@@ -1,7 +1,7 @@
 import { Filter, oppgaveRequest, ytelseType } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { velgMeg } from "../../tilstand/moduler/meg.velgere";
+import { velgInnstillinger, velgMeg } from "../../tilstand/moduler/meg.velgere";
 import {
   velgFiltrering,
   velgOppgaver,
@@ -20,6 +20,7 @@ import { useHistory, useParams } from "react-router-dom";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
+import { hentInnstillingerHandling } from "../../tilstand/moduler/meg";
 
 function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
@@ -65,6 +66,28 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [start, settStart] = useState<number>(0);
   const history = useHistory();
   const pathname = history.location.pathname.split("/")[1];
+  const innstillinger = useSelector(velgInnstillinger);
+
+  useEffect(() => {
+    if (meg.id) dispatch(hentInnstillingerHandling(meg.id));
+  }, [meg.id]);
+  useEffect(() => {
+    if (innstillinger?.aktiveHjemler) {
+      const hjemler = innstillinger.aktiveHjemler.map((hjemmel) => hjemmel.value as string);
+      if (hjemler.length) {
+        settAktiveHjemler(innstillinger.aktiveHjemler);
+        settHjemmelFilter(hjemler);
+      }
+    }
+    if (innstillinger?.aktiveTyper) {
+      const typer = innstillinger.aktiveTyper.map((type) => type.value as string);
+      if (typer.length) {
+        settAktiveTyper(innstillinger.aktiveTyper);
+        settTypeFilter(typer);
+      }
+    }
+    dispatch(routingRequest(history.location.pathname));
+  }, [innstillinger]);
 
   useEffect(() => {
     if (valgtOppgave.id) {
@@ -171,9 +194,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }
 
   /*
-     hardkodet SYK ihht Trello-oppgave https://trello.com/c/xuV6WDJb/51-hardkode-syk-i-oppgave-query-inntil-videre-i-gui
-     todo fjern denne snutten når det ikkke lenger er behov for den
-    */
+       hardkodet SYK ihht Trello-oppgave https://trello.com/c/xuV6WDJb/51-hardkode-syk-i-oppgave-query-inntil-videre-i-gui
+       todo fjern denne snutten når det ikkke lenger er behov for den
+      */
   useEffect(() => {
     filtrerYtelse([{ label: "Sykepenger", value: "Sykepenger" }]);
     settAktiveYtelser([{ label: "Sykepenger", value: "Sykepenger" }]);

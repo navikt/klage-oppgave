@@ -44,9 +44,7 @@ describe("'Meg' epos", () => {
           a: hentMegHandling(),
         };
         const initState = {
-          oppgaver: {
-            meg: {},
-          },
+          meg: {},
         };
         const mockedResponse = {
           displayName: "Rboert dEniro",

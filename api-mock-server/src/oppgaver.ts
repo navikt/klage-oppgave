@@ -163,7 +163,6 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
                  ORDER BY frist ${rekkefoelge === "STIGENDE" ? "ASC" : "DESC"}
                  LIMIT ?,? 
                  `;
-
   const oppgaver = await new Promise((resolve, reject) => {
     filterTyper?.forEach((filter: string) => {
       params.push(filter);

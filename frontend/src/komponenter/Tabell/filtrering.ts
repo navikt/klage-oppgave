@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 export interface Filter {
   /**
-   * Navnet p� filteret. Rendres i en liste av alle filtere som kan velges for kolonnen. M� v�re unik for alle
+   * Navnet paa filteret. Rendres i en liste av alle filtere som kan velges for kolonnen. Maa vaere unik for alle
    * filtere i samme kolonne.
    */
   label: ReactNode;
