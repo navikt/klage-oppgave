@@ -1,4 +1,10 @@
-import { Filter, oppgaveRequest, ytelseType } from "../../tilstand/moduler/oppgave";
+import {
+  Filter,
+  OppgaveRad,
+  OppgaveRader,
+  oppgaveRequest,
+  ytelseType,
+} from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { velgInnstillinger, velgMeg } from "../../tilstand/moduler/meg.velgere";
@@ -201,10 +207,23 @@ const OppgaveTabell: React.FunctionComponent = () => {
     );
   }
 
+  const visAntallTreff = (oppgaver: OppgaveRader) => {
+    const antall = oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1;
+    if (oppgaver.meta.totalAntall === 0) {
+      return "Ingen treff i oppgavesøk";
+    }
+    const antallIListe =
+      oppgaver.meta.side * oppgaver.meta.antall < oppgaver.meta.totalAntall
+        ? oppgaver.meta.side * oppgaver.meta.antall
+        : oppgaver.meta.totalAntall;
+    const s_oppgave = oppgaver.meta.totalAntall === 1 ? "oppgave" : "oppgaver";
+    return `Viser ${antall} til ${antallIListe} av ${oppgaver.meta.totalAntall} ${s_oppgave}`;
+  };
+
   /*
-       hardkodet SYK ihht Trello-oppgave https://trello.com/c/xuV6WDJb/51-hardkode-syk-i-oppgave-query-inntil-videre-i-gui
-       todo fjern denne snutten når det ikkke lenger er behov for den
-      */
+         hardkodet SYK ihht Trello-oppgave https://trello.com/c/xuV6WDJb/51-hardkode-syk-i-oppgave-query-inntil-videre-i-gui
+         todo fjern denne snutten når det ikkke lenger er behov for den
+        */
   useEffect(() => {
     filtrerYtelse([{ label: "Sykepenger", value: "Sykepenger" }]);
     settAktiveYtelser([{ label: "Sykepenger", value: "Sykepenger" }]);
@@ -291,14 +310,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           <tr>
             <td colSpan={utvidetProjeksjon ? 8 : 6}>
               <div className="table-lbl">
-                <div className="antall-saker">
-                  Viser {oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1}{" "}
-                  {" til "}
-                  {oppgaver.meta.side * oppgaver.meta.antall < oppgaver.meta.totalAntall
-                    ? oppgaver.meta.side * oppgaver.meta.antall
-                    : oppgaver.meta.totalAntall}{" "}
-                  av {oppgaver.meta.totalAntall} oppgaver
-                </div>
+                <div className="antall-saker">{visAntallTreff(oppgaver)}</div>
                 <div className={"paginering"}>
                   <Paginering
                     startSide={tolketSide}
