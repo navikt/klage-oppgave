@@ -100,12 +100,12 @@ const OppgaveTabell: React.FunctionComponent = () => {
       }
     }
     if (innstillinger?.aktiveTemaer) {
-      const temaer = innstillinger.aktiveTemaer.map((type) => type.value as string);
+      const temaer = innstillinger.aktiveTemaer.map((type) => type.value as temaType);
       if (temaer.length) {
         settAktiveTemaer(
           innstillinger.aktiveTemaer.concat([{ label: "Sykepenger", value: "Sykepenger" }])
         );
-        settTypeFilter(temaer);
+        settTemaFilter(temaer);
       } else {
         settAktiveTemaer(initState(filtrering.temaer));
         settTemaFilter(undefined);
