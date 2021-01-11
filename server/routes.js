@@ -40,14 +40,24 @@ const setup = (authClient) => {
   router.post("/internal/innstillinger", async (req, res) => {
     const { innstillinger } = req.body;
     const { navIdent } = req.body;
-    await lagreIRedis(`innstillinger${navIdent}`, innstillinger);
-    const value = await hentFraRedis(`innstillinger${navIdent}`);
-    res.status(200).json(JSON.parse(value));
+    let value = "";
+    try {
+      await lagreIRedis(`innstillinger${navIdent}`, innstillinger);
+      value = await hentFraRedis(`innstillinger${navIdent}`);
+      res.status(200).json(JSON.parse(value));
+    } catch (e) {
+      res.status(500).json({ err: e });
+    }
   });
   router.get("/internal/innstillinger/:navIdent", async (req, res) => {
     const { navIdent } = req.params;
-    const value = await hentFraRedis(`innstillinger${navIdent}`);
-    res.status(200).json(JSON.parse(value));
+    let value = "";
+    try {
+      value = await hentFraRedis(`innstillinger${navIdent}`);
+      res.status(200).json(JSON.parse(value));
+    } catch (e) {
+      res.status(500).json({ err: e });
+    }
   });
 
   router.use(

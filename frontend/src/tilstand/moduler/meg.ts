@@ -15,6 +15,7 @@ import {
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod, AjaxObservable, ajaxPost } from "rxjs/internal-compatibility";
 import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
+import { toasterSett, toasterSkjul } from "./toaster";
 
 //==========
 // Interfaces
@@ -132,6 +133,20 @@ export const settInnstillingerHandling = createAction<IInnstillingerPayload>(
 export const feiletHandling = createAction<string>("meg/FEILET");
 
 //==========
+// Vis feilmeldinger ved feil
+//==========
+function displayToast(error: string) {
+  const message = error || "Kunne ikke lagre innstillinger";
+  return toasterSett({
+    display: true,
+    feilmelding: message,
+  });
+}
+function skjulToaster() {
+  return toasterSkjul();
+}
+
+//==========
 // Epos
 //==========
 const megUrl = `/me`;
@@ -193,7 +208,12 @@ export function hentMegEpos(
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
-            return concat([feiletHandling(error.message), oppgaveFeiletHandling()]);
+            return concat([
+              feiletHandling(error.message),
+              oppgaveFeiletHandling(),
+              displayToast(error.message),
+              skjulToaster(),
+            ]);
           })
         );
     })
@@ -217,9 +237,13 @@ export function hentInnstillingerEpos(
           })
         )
         .pipe(
-          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
-            return concat([feiletHandling(error.message)]);
+            return concat([
+              feiletHandling(error.message),
+              displayToast("Kunne ikke hente innstillinger"),
+              skjulToaster(),
+            ]);
           })
         );
     })
@@ -244,9 +268,9 @@ export function settInnstillingerEpos(
       )
         .pipe(map((payload: { response: IInnstillinger }) => sattInnstillinger(payload.response)))
         .pipe(
-          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
-            return concat([feiletHandling(error.message)]);
+            return concat([feiletHandling(error.message), displayToast(error), skjulToaster()]);
           })
         );
     })
