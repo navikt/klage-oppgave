@@ -1,5 +1,5 @@
-export const ytelseOversettelse = (ytelse: string): string => {
-  switch (ytelse) {
+export const temaOversettelse = (tema: string): string => {
+  switch (tema) {
     case "SYK":
       return "Sykepenger";
     case "DAG":
@@ -7,7 +7,7 @@ export const ytelseOversettelse = (ytelse: string): string => {
     case "FOR":
       return "Foreldrepenger";
     default:
-      return ytelse;
+      return tema;
   }
 };
 export const typeOversettelse = (type: string): string => {

@@ -1,7 +1,7 @@
 export interface OppgaveQuery {
   typer?: string;
   hjemler?: string;
-  ytelser?: string;
+  temaer?: string;
   antall: number;
   start: number;
   rekkefoelge: "SYNKENDE" | "STIGENDE";

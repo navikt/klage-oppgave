@@ -1,7 +1,7 @@
 import { OppgaveRad, OppgaveRader, OppgaveRadMedFunksjoner } from "../../tilstand/moduler/oppgave";
 import React, { useEffect, useRef, useState } from "react";
 import EtikettBase from "nav-frontend-etiketter";
-import { typeOversettelse, ytelseOversettelse } from "../../domene/forkortelser";
+import { typeOversettelse, temaOversettelse } from "../../domene/forkortelser";
 import { Knapp } from "nav-frontend-knapper";
 import classNames from "classnames";
 import { useOnInteractOutside } from "./FiltrerbarHeader";
@@ -84,7 +84,7 @@ const formattedDate = (frist: string) => {
 const OppgaveTabellRad = ({
   id,
   type,
-  ytelse,
+  tema,
   hjemmel,
   frist,
   versjon,
@@ -106,8 +106,8 @@ const OppgaveTabellRad = ({
         </EtikettBase>
       </td>
       <td>
-        <EtikettBase type="info" className={`etikett-${ytelse}`}>
-          {ytelseOversettelse(ytelse)}
+        <EtikettBase type="info" className={`etikett-${tema}`}>
+          {temaOversettelse(tema)}
         </EtikettBase>
       </td>
       <td>

@@ -3,7 +3,7 @@ import {
   OppgaveRad,
   OppgaveRader,
   oppgaveRequest,
-  ytelseType,
+  temaType,
 } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
@@ -27,7 +27,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
 import { hentInnstillingerHandling } from "../../tilstand/moduler/meg";
-import { GyldigeFiltre } from "../../domene/filtre";
+import { GyldigeFiltre, GyldigeTemaer } from "../../domene/filtre";
 
 function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
@@ -60,8 +60,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
 
-  const [ytelseFilter, settYtelseFilter] = useState<ytelseType[] | undefined>(undefined);
-  const [aktiveYtelser, settAktiveYtelser] = useState<Filter[]>(initState(filtrering.ytelser));
+  const [temaFilter, settTemaFilter] = useState<temaType[] | undefined>(undefined);
+  const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
 
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
@@ -95,20 +95,24 @@ const OppgaveTabell: React.FunctionComponent = () => {
         settAktiveTyper(innstillinger.aktiveTyper);
         settTypeFilter(typer);
       } else {
-        settAktiveTyper(initState(filtrering.hjemler));
+        settAktiveTyper(initState(filtrering.typer));
         settTypeFilter(undefined);
       }
     }
+    if (innstillinger?.aktiveTemaer) {
+      const temaer = innstillinger.aktiveTemaer.map((type) => type.value as string);
+      if (temaer.length) {
+        settAktiveTemaer(
+          innstillinger.aktiveTemaer.concat([{ label: "Sykepenger", value: "Sykepenger" }])
+        );
+        settTypeFilter(temaer);
+      } else {
+        settAktiveTemaer(initState(filtrering.temaer));
+        settTemaFilter(undefined);
+      }
+    }
 
-    /*
-           hardkodet SYK ihht Trello-oppgave https://trello.com/c/xuV6WDJb/51-hardkode-syk-i-oppgave-query-inntil-videre-i-gui
-           todo fjern denne snutten når det ikkke lenger er behov for den
-          */
-    filtrerYtelse([{ label: "Sykepenger", value: "Sykepenger" }]);
-    settAktiveYtelser([{ label: "Sykepenger", value: "Sykepenger" }]);
     dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
-
-    //dispatch(routingRequest(history.location.pathname));
   }, [innstillinger]);
 
   useEffect(() => {
@@ -125,16 +129,16 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   useEffect(() => {
     if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
-  }, [start, meg, hjemmelFilter, ytelseFilter, typeFilter, sorteringFilter]);
+  }, [start, meg, hjemmelFilter, temaFilter, typeFilter, sorteringFilter]);
 
   useEffect(() => {
     settStart((tolketSide - 1) * antall);
     if (forrigeSti.split("/")[1] !== history.location.pathname.split("/")[1]) {
       settHjemmelFilter(undefined);
-      settYtelseFilter(undefined);
+      settTemaFilter(undefined);
       settTypeFilter(undefined);
       settAktiveTyper([]);
-      settAktiveYtelser([]);
+      settAktiveTemaer([]);
       settAktiveHjemler([]);
       dispatch(routingRequest(history.location.pathname));
     }
@@ -153,7 +157,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           filtrering: {
             hjemler: hjemmelFilter,
             typer: typeFilter,
-            ytelser: ytelseFilter,
+            temaer: temaFilter,
           },
           sortering: {
             frist: sorteringFilter,
@@ -196,11 +200,11 @@ const OppgaveTabell: React.FunctionComponent = () => {
     settStart(0);
     history.push(history.location.pathname.replace(/\d+$/, "1"));
   };
-  const filtrerYtelse = (filtre: Filter[]) => {
+  const filtrerTema = (filtre: Filter[]) => {
     if (!filtre.length) {
-      settYtelseFilter(undefined);
+      settTemaFilter(undefined);
     } else {
-      settYtelseFilter(filtre.map((f) => f.value as ytelseType));
+      settTemaFilter(filtre.map((f) => f.value as temaType));
     }
     settStart(0);
     history.push(history.location.pathname.replace(/\d+$/, "1"));
@@ -254,17 +258,13 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
             <FiltrerbarHeader
               onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(settAktiveYtelser, filter, aktiveYtelser, velgAlleEllerIngen)
+                settFilter(settAktiveTemaer, filter, aktiveTemaer, velgAlleEllerIngen)
               }
-              filtre={[
-                { label: "Foreldrepenger", value: "Foreldrepenger" },
-                { label: "Sykepenger", value: "Sykepenger" },
-                { label: "Dagpenger", value: "Dagpenger" },
-              ]}
-              dispatchFunc={filtrerYtelse}
-              aktiveFiltere={aktiveYtelser}
+              filtre={GyldigeTemaer}
+              dispatchFunc={filtrerTema}
+              aktiveFiltere={aktiveTemaer}
             >
-              Ytelse
+              Tema
             </FiltrerbarHeader>
 
             <FiltrerbarHeader

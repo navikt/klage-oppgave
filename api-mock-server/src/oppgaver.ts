@@ -6,7 +6,7 @@ const path = require("path");
 interface Oppgave {
   frist: string;
   type: string;
-  ytelse: string;
+  tema: string;
   hjemmel: string;
 }
 
@@ -125,7 +125,7 @@ export async function fradelSaksbehandler(params: ISaksbehandler) {
 export async function filtrerOppgaver(query: OppgaveQuery) {
   const {
     typer,
-    ytelser,
+    temaer,
     hjemler,
     antall,
     start,
@@ -134,30 +134,30 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     tildeltSaksbehandler,
   } = query;
   let filterTyper = typer?.split(",");
-  let filterYtelser = ytelser?.split(",");
+  let filterTemaer = temaer?.split(",");
   let filterHjemler = hjemler?.replace(/ og /, ",").split(",");
   let db = new sqlite3.Database(path.join(__dirname, "../oppgaver.db"));
   let params: any = [];
   let harTyper = "undefined" !== typeof typer;
-  let harYtelser = "undefined" !== typeof ytelser;
+  let harTemaer = "undefined" !== typeof temaer;
   let harHjemler = "undefined" !== typeof hjemler;
 
   let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, 
-                 hjemmel, ytelse, frist, saksbehandler, fnr, navn, versjon
+                 hjemmel, tema, frist, saksbehandler, fnr, navn, versjon
                  FROM Oppgaver 
                  ${typeQuery(filterTyper).replace(/,/g, "")}
                  ${generiskFilterSpoerring(
                    harTyper,
-                   filterYtelser,
-                   "ytelse"
+                   filterTemaer,
+                   "tema"
                  ).replace(/,/g, "")}
                   ${generiskFilterSpoerring(
-                    harTyper || harYtelser,
+                    harTyper || harTemaer,
                     filterHjemler,
                     "hjemmel"
                   ).replace(/,/g, "")}
                   ${saksbehandlerFiltrering(
-                    harTyper || harYtelser || harHjemler,
+                    harTyper || harTemaer || harHjemler,
                     tildeltSaksbehandler
                   )}
                  ORDER BY frist ${rekkefoelge === "STIGENDE" ? "ASC" : "DESC"}
@@ -167,7 +167,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     filterTyper?.forEach((filter: string) => {
       params.push(filter);
     });
-    filterYtelser?.forEach((filter: string) => {
+    filterTemaer?.forEach((filter: string) => {
       params.push(filter);
     });
     filterHjemler?.forEach((filter: string) => {
@@ -191,7 +191,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             id: rad.id,
             type: rad.type,
             hjemmel: rad.hjemmel,
-            ytelse: rad.ytelse,
+            tema: rad.tema,
             frist: rad.frist,
             versjon: rad.versjon,
           }))
@@ -203,7 +203,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             id: rad.id,
             type: rad.type,
             hjemmel: rad.hjemmel,
-            ytelse: rad.ytelse,
+            tema: rad.tema,
             frist: rad.frist,
             person: { fnr: rad.fnr, navn: rad.navn },
             versjon: rad.versjon,

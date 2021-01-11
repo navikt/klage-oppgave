@@ -65,7 +65,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      ytelser: "Sykepenger",
+      temaer: "Sykepenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };
@@ -80,7 +80,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      ytelser: "Dagpenger",
+      temaer: "Dagpenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };
@@ -96,7 +96,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      ytelser: "Dagpenger,Foreldrepenger",
+      temaer: "Dagpenger,Foreldrepenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };
@@ -115,7 +115,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      ytelser: "Dagpenger",
+      temaer: "Dagpenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };
@@ -164,7 +164,7 @@ describe("tester oppgavehenting", () => {
       antall: 15,
       start: 0,
       hjemler: "8-61,8-62",
-      ytelser: "Foreldrepenger",
+      temaer: "Foreldrepenger",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };

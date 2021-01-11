@@ -13,7 +13,7 @@ import {
   OppgaveState,
   OppgaveRad,
   Transformasjoner,
-  ytelseType,
+  temaType,
 } from "./oppgave";
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
@@ -38,7 +38,7 @@ describe("Oppgave epos", () => {
   /**
    * Test queryBuilder
    */
-  test("+++ QUERYBUILDER ytelse", () => {
+  test("+++ QUERYBUILDER tema", () => {
     const inputValues = {
       ident: "ZATHRAS",
       enhetId: "42",
@@ -49,16 +49,13 @@ describe("Oppgave epos", () => {
           frist: "synkende" as "synkende",
         },
         filtrering: {
-          ytelser: [
-            ("Sykepenger" as unknown) as ytelseType,
-            ("Dagpenger" as unknown) as ytelseType,
-          ],
+          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -74,16 +71,13 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: ["Klage"],
-          ytelser: [
-            ("Sykepenger" as unknown) as ytelseType,
-            ("Dagpenger" as unknown) as ytelseType,
-          ],
+          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=Klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=Klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -99,16 +93,13 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: ["Feilutbetaling"],
-          ytelser: [
-            ("Sykepenger" as unknown) as ytelseType,
-            ("Dagpenger" as unknown) as ytelseType,
-          ],
+          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=Feilutbetaling&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=Feilutbetaling&temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -125,16 +116,13 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: ["klage"],
-          ytelser: [
-            ("Sykepenger" as unknown) as ytelseType,
-            ("Dagpenger" as unknown) as ytelseType,
-          ],
+          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=klage&ytelser=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&enhetId=42"
     );
   });
 
@@ -150,17 +138,14 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           type: undefined,
-          ytelser: [
-            ("Sykepenger" as unknown) as ytelseType,
-            ("Dagpenger" as unknown) as ytelseType,
-          ],
+          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
           hjemler: ["8-12", "9-31"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -176,17 +161,14 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           type: undefined,
-          ytelser: [
-            ("Sykepenger" as unknown) as ytelseType,
-            ("Dagpenger" as unknown) as ytelseType,
-          ],
+          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
           hjemler: ["8-2, 8-13 og 8-49", "8-19", "8-16"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?ytelser=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -358,7 +340,7 @@ describe("Oppgave epos", () => {
                 frist: "synkende",
               },
               filtrering: {
-                ytelser: [("Sykepenger" as unknown) as ytelseType],
+                temaer: [("Sykepenger" as unknown) as temaType],
               },
             },
           }),
@@ -368,15 +350,15 @@ describe("Oppgave epos", () => {
           start: 0,
           antall: 2,
           oppgaver: [
-            { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" },
-            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
+            { frist: "2019-09-12", tema: "SYK", hjemmel: "8-4" },
+            { frist: "2020-11-15", tema: "SYK", hjemmel: "10-12" },
           ],
           transformasjoner: {
             sortering: {
               frist: "synkende",
             },
             filtrering: {
-              ytelser: [("Sykepenger" as unknown) as ytelseType],
+              temaer: [("Sykepenger" as unknown) as temaType],
             },
           },
         };
@@ -388,11 +370,11 @@ describe("Oppgave epos", () => {
         const initState = {
           oppgaver: {
             rader: [
-              { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-4" },
-              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
-              { frist: "2018-12-21", ytelse: "FOR", hjemmel: "9-11" },
-              { frist: "2019-11-13", ytelse: "SYK", hjemmel: "10-1" },
-              { frist: "2018-12-21", ytelse: "DAG", hjemmel: "mangler" },
+              { frist: "2019-09-12", tema: "SYK", hjemmel: "8-4" },
+              { frist: "2020-11-15", tema: "SYK", hjemmel: "10-12" },
+              { frist: "2018-12-21", tema: "FOR", hjemmel: "9-11" },
+              { frist: "2019-11-13", tema: "SYK", hjemmel: "10-1" },
+              { frist: "2018-12-21", tema: "DAG", hjemmel: "mangler" },
             ],
           },
         };
@@ -442,10 +424,10 @@ describe("Oppgave epos", () => {
           start: 0,
           antall: 5,
           oppgaver: [
-            { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-2" },
-            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-13" },
-            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-49" },
-            { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-19" },
+            { frist: "2019-09-12", tema: "SYK", hjemmel: "8-2" },
+            { frist: "2020-11-15", tema: "SYK", hjemmel: "8-13" },
+            { frist: "2020-11-15", tema: "SYK", hjemmel: "8-49" },
+            { frist: "2020-11-15", tema: "SYK", hjemmel: "8-19" },
           ],
           transformasjoner: inputValues.a.payload.transformasjoner,
         };
@@ -457,14 +439,14 @@ describe("Oppgave epos", () => {
         const initState = {
           oppgaver: {
             rader: [
-              { frist: "2019-09-12", ytelse: "SYK", hjemmel: "8-2" },
-              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-13" },
-              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-49" },
-              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "8-19" },
-              { frist: "2020-11-15", ytelse: "SYK", hjemmel: "10-12" },
-              { frist: "2018-12-21", ytelse: "FOR", hjemmel: "9-11" },
-              { frist: "2019-11-13", ytelse: "SYK", hjemmel: "10-1" },
-              { frist: "2018-12-21", ytelse: "DAG", hjemmel: "mangler" },
+              { frist: "2019-09-12", tema: "SYK", hjemmel: "8-2" },
+              { frist: "2020-11-15", tema: "SYK", hjemmel: "8-13" },
+              { frist: "2020-11-15", tema: "SYK", hjemmel: "8-49" },
+              { frist: "2020-11-15", tema: "SYK", hjemmel: "8-19" },
+              { frist: "2020-11-15", tema: "SYK", hjemmel: "10-12" },
+              { frist: "2018-12-21", tema: "FOR", hjemmel: "9-11" },
+              { frist: "2019-11-13", tema: "SYK", hjemmel: "10-1" },
+              { frist: "2018-12-21", tema: "DAG", hjemmel: "mangler" },
             ],
           },
         };

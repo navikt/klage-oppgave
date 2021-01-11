@@ -54,12 +54,14 @@ export interface MegOgEnhet extends MegType {
 
 export interface IInnstillinger {
   aktiveHjemler: Array<Filter>;
+  aktiveTemaer: Array<Filter>;
   aktiveTyper: Array<Filter>;
 }
 export interface IInnstillingerPayload {
   navIdent: string;
   innstillinger: {
     aktiveHjemler?: Array<Filter>;
+    aktiveTemaer?: Array<Filter>;
     aktiveTyper?: Array<Filter>;
   };
 }

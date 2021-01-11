@@ -11,3 +11,8 @@ export const GyldigeFiltre = [
   { label: "22-3 og 22-12", value: "22-3, 22-12" },
   { label: "Annet", value: "?" },
 ];
+export const GyldigeTemaer = [
+  { label: "Foreldrepenger", value: "Foreldrepenger" },
+  { label: "Sykepenger", value: "Sykepenger" },
+  { label: "Dagpenger", value: "Dagpenger" },
+];

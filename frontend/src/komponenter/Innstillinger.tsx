@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Oppsett from "./Oppsett";
 import FiltrerbarHeader, { settFilter } from "./Tabell/FiltrerbarHeader";
-import { Filter } from "../tilstand/moduler/oppgave";
+import { Filter, temaType } from "../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import { velgFiltrering } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
-import { typeOversettelse } from "../domene/forkortelser";
 import { Knapp } from "nav-frontend-knapper";
-import axios from "axios";
 import { velgInnstillinger, velgMeg } from "../tilstand/moduler/meg.velgere";
 import { hentInnstillingerHandling, settInnstillingerHandling } from "../tilstand/moduler/meg";
-import { GyldigeFiltre } from "../domene/filtre";
+import { GyldigeFiltre, GyldigeTemaer } from "../domene/filtre";
 
 function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
@@ -31,6 +29,8 @@ const Innstillinger = (): JSX.Element => {
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
+  const [temaFilter, settTemaFilter] = useState<temaType[] | undefined>(undefined);
+  const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
 
   useEffect(() => {
     if (meg.id) dispatch(hentInnstillingerHandling(meg.id));
@@ -39,6 +39,7 @@ const Innstillinger = (): JSX.Element => {
   useEffect(() => {
     settAktiveHjemler(innstillinger?.aktiveHjemler ?? []);
     settAktiveTyper(innstillinger?.aktiveTyper ?? []);
+    settAktiveTemaer(innstillinger?.aktiveTemaer ?? []);
   }, [innstillinger, meg.id]);
 
   const lagreInnstillinger = () => {
@@ -48,11 +49,20 @@ const Innstillinger = (): JSX.Element => {
         innstillinger: {
           aktiveHjemler,
           aktiveTyper,
+          aktiveTemaer,
         },
       })
     );
   };
 
+  const filtrerTema = (filtre: Filter[]) => {
+    if (!filtre.length) {
+      settTemaFilter(undefined);
+    } else {
+      settTemaFilter(filtre.map((f) => f.value as temaType));
+    }
+    lagreInnstillinger();
+  };
   const filtrerType = (filtre: Filter[]) => {
     if (!filtre.length) {
       settTypeFilter(undefined);
@@ -73,7 +83,7 @@ const Innstillinger = (): JSX.Element => {
     <Oppsett>
       <>
         <h1>Innstillinger</h1>
-        <h3>Velg hvilke ytelser og hjemler du har kompetanse til å behandle</h3>
+        <h3>Velg hvilke temaer og hjemler du har kompetanse til å behandle</h3>
         <table className={"innstillinger"}>
           <thead>
             <tr>
@@ -90,6 +100,17 @@ const Innstillinger = (): JSX.Element => {
                 aktiveFiltere={aktiveTyper}
               >
                 Type
+              </FiltrerbarHeader>
+
+              <FiltrerbarHeader
+                onFilter={(filter, velgAlleEllerIngen) =>
+                  settFilter(settAktiveTemaer, filter, aktiveTemaer, velgAlleEllerIngen)
+                }
+                filtre={GyldigeTemaer}
+                dispatchFunc={filtrerTema}
+                aktiveFiltere={aktiveTemaer}
+              >
+                Temaer
               </FiltrerbarHeader>
 
               <FiltrerbarHeader
@@ -111,6 +132,17 @@ const Innstillinger = (): JSX.Element => {
                 {aktiveTyper.map((a) => (
                   <div key={a.value}>
                     <EtikettBase type="info" className={`etikett-type`}>
+                      {a.label}
+                    </EtikettBase>
+                  </div>
+                ))}
+              </td>
+
+              <td>
+                {!aktiveTemaer.length && <div>Ingen temaer valgt</div>}
+                {aktiveTemaer.map((a) => (
+                  <div key={a.value}>
+                    <EtikettBase type="info" className={`etikett--hjemmel`}>
                       {a.label}
                     </EtikettBase>
                   </div>

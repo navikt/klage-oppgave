@@ -16,6 +16,7 @@ import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { oppgaveHentingFeilet } from "./oppgave";
+import { toasterSett, toasterSkjul } from "./toaster";
 
 describe("'Meg' epos", () => {
   let ts: TestScheduler;
@@ -126,6 +127,7 @@ describe("'Meg' epos", () => {
         };
         const mockedResponse = {
           aktiveHjemler: [{ navn: "8-1", label: "8-1" }],
+          aktiveTemaer: [{ navn: "SYK", label: "Sykepenger" }],
           aktiveTyper: [{ navn: "test-enhet", label: "42" }],
         };
         const reducerResponse = hentetInnstillingerHandling(mockedResponse);
@@ -229,6 +231,17 @@ describe("'Meg' epos", () => {
             payload: undefined,
             type: oppgaveHentingFeilet.type,
           },
+          x: {
+            payload: {
+              display: true,
+              feilmelding: "meg feilet",
+            },
+            type: toasterSett.type,
+          },
+          y: {
+            payload: undefined,
+            type: toasterSkjul.type,
+          },
         };
 
         const state$ = new StateObservable(hot("-a", observableValues), {});
@@ -236,7 +249,7 @@ describe("'Meg' epos", () => {
           throwError({ message: "meg feilet", status: 503 })
         );
         expectObservable(hentMegEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
-          "12001ms (ts)",
+          "12001ms (tsxy)",
           observableValues
         );
       });

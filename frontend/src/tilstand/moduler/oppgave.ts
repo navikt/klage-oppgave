@@ -21,7 +21,7 @@ export interface OppgaveRad {
   };
   type: string;
   versjon: number;
-  ytelse: string;
+  tema: string;
   hjemmel: string;
   frist: string;
   saksbehandler: string;
@@ -71,7 +71,7 @@ export interface OppgaveRader {
 export interface Transformasjoner {
   filtrering?: {
     typer?: undefined | string[] | Filter[];
-    ytelser?: undefined | ytelseType[] | Filter[];
+    temaer?: undefined | temaType[] | Filter[];
     hjemler?: undefined | string[] | Filter[];
   };
   sortering: {
@@ -147,7 +147,7 @@ export const oppgaveSlice = createSlice({
     transformasjoner: {
       filtrering: {
         typer: undefined,
-        ytelser: undefined,
+        temaer: undefined,
         hjemler: undefined,
       },
       sortering: {
@@ -189,7 +189,7 @@ export interface OppgaveParams {
   transformasjoner: Transformasjoner;
 }
 
-export type ytelseType = ["Foreldrepenger"] | ["Dagpenger"] | ["Sykepenger"] | undefined;
+export type temaType = ["Foreldrepenger"] | ["Dagpenger"] | ["Sykepenger"] | undefined;
 
 export default oppgaveSlice.reducer;
 
