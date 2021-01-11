@@ -76,6 +76,10 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
               </div>
             );
           })}
+          <hr />
+          <div className={classNames({ enhet: true })}>
+            <NavLink to={"/logout"}>Logg ut</NavLink>
+          </div>
         </div>
       </div>
     </div>
