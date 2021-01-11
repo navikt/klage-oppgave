@@ -123,7 +123,7 @@ const setup = (authClient) => {
   });
 
   // log the user out
-  router.get("/logout", (req, res) => {
+  router.get("/internal/logout", (req, res) => {
     req.logOut();
     res.redirect(
       authClient.endSessionUrl({
