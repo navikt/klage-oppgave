@@ -1,5 +1,4 @@
 export const ytelseOversettelse = (ytelse: string): string => {
-  //if (!ytelse) debugger;
   switch (ytelse) {
     case "SYK":
       return "Sykepenger";
