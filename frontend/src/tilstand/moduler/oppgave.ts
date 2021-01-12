@@ -104,7 +104,14 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 //==========
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
   const { antallTreffTotalt, start, antall, projeksjon, tildeltSaksbehandler } = payload;
-  state.rader = payload.oppgaver;
+  const { ascend, descend, prop, sort } = R;
+  const sorter = (dir: "synkende" | "stigende") =>
+    (dir === "synkende" ? descend : ascend)(prop("frist"));
+  let sorterteRader = payload.oppgaver;
+  if (state.transformasjoner.sortering.frist == "synkende")
+    state.rader = sort(sorter("synkende"), sorterteRader);
+  else state.rader = sort(sorter("stigende"), sorterteRader);
+  state.rader = sorterteRader;
   state.lasterData = true;
   state.meta.start = start;
   state.meta.totalAntall = antallTreffTotalt;
