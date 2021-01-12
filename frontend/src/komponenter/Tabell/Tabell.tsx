@@ -81,6 +81,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
     } else {
       settSorteringFilter("synkende");
     }
+    settStart(0);
+    history.push(history.location.pathname.replace(/\d+$/, "1"));
   }
 
   useEffect(() => {
