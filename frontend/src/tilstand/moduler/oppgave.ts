@@ -107,10 +107,16 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
   const { ascend, descend, prop, sort } = R;
   const sorter = (dir: "synkende" | "stigende") =>
     (dir === "synkende" ? descend : ascend)(prop("frist"));
-  let sorterteRader = payload.oppgaver;
+  let sorterteRader = payload.oppgaver.map(function (rad) {
+    return {
+      ...rad,
+      frist: new Date(rad.frist).getTime(),
+    };
+  });
   if (state.transformasjoner.sortering.frist == "synkende")
     state.rader = sort(sorter("synkende"), sorterteRader);
   else state.rader = sort(sorter("stigende"), sorterteRader);
+
   state.lasterData = true;
   state.meta.start = start;
   state.meta.totalAntall = antallTreffTotalt;
