@@ -103,6 +103,7 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 // Reducer
 //==========
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
+  state.transformasjoner = payload.transformasjoner;
   const { antallTreffTotalt, start, antall, projeksjon, tildeltSaksbehandler } = payload;
   const { ascend, descend, prop, sort } = R;
   const sorter = (dir: "synkende" | "stigende") =>
@@ -116,8 +117,6 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
   if (state.transformasjoner.sortering.frist === "synkende")
     state.rader = sort(sorter("synkende"), sorterteRader);
   else state.rader = sort(sorter("stigende"), sorterteRader);
-  console.log(state.transformasjoner.sortering.frist);
-
   state.lasterData = true;
   state.meta.start = start;
   state.meta.totalAntall = antallTreffTotalt;
@@ -133,7 +132,6 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
     Math.floor(antallTreffTotalt / antall) + (antallTreffTotalt % antall !== 0 ? 1 : 0);
   state.lasterData = false;
   state.meta.feilmelding = undefined;
-  state.transformasjoner = payload.transformasjoner;
   return state;
 }
 

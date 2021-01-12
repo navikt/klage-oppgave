@@ -74,6 +74,15 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const pathname = history.location.pathname.split("/")[1];
   const innstillinger = useSelector(velgInnstillinger);
 
+  function skiftSortering(event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
+    event.preventDefault();
+    if (sorteringFilter === "synkende") {
+      settSorteringFilter("stigende");
+    } else {
+      settSorteringFilter("synkende");
+    }
+  }
+
   useEffect(() => {
     if (meg.id) dispatch(hentInnstillingerHandling(meg.id));
   }, [meg.id]);
@@ -174,19 +183,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
     settStart(0);
     history.push(history.location.pathname.replace(/\d+$/, "1"));
   };
-  const skiftSortering = (
-    event: React.MouseEvent<HTMLElement | HTMLButtonElement>,
-    sorteringsfilter: "stigende" | "synkende",
-    settSorteringFilter: Function
-  ) => {
-    event.preventDefault();
-    if (sorteringsfilter === "synkende") {
-      settSorteringFilter("stigende");
-    } else {
-      settSorteringFilter("synkende");
-    }
-    settStart(0);
-  };
 
   const filtrerHjemmel = (filtre: Filter[]) => {
     if (!filtre.length) {
@@ -286,7 +282,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
                 className={`sortHeader ${
                   sorteringFilter === "stigende" ? "ascending" : "descending"
                 }`}
-                onClick={(e) => skiftSortering(e, sorteringFilter, settSorteringFilter)}
+                onClick={skiftSortering}
               >
                 Frist
               </div>
