@@ -185,7 +185,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     } else {
       settSorteringFilter("synkende");
     }
-    history.push(history.location.pathname.replace(/\d+$/, "1"));
+    settStart(0);
   };
 
   const filtrerHjemmel = (filtre: Filter[]) => {

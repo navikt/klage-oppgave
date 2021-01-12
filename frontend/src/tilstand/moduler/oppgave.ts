@@ -116,7 +116,7 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
   if (state.transformasjoner.sortering.frist === "synkende")
     state.rader = sort(sorter("synkende"), sorterteRader);
   else state.rader = sort(sorter("stigende"), sorterteRader);
-  console.log(state.transformasjoner.sortering.frist, payload.oppgaver, state.rader);
+  console.log(state.transformasjoner.sortering.frist);
 
   state.lasterData = true;
   state.meta.start = start;
