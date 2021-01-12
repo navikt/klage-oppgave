@@ -9,6 +9,7 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { settEnhetHandling } from "./meg";
 
 const R = require("ramda");
+const { ascend, descend, prop, sort } = R;
 
 //==========
 // Type defs
@@ -103,20 +104,26 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 // Reducer
 //==========
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
-  state.transformasjoner = payload.transformasjoner;
-  const { antallTreffTotalt, start, antall, projeksjon, tildeltSaksbehandler } = payload;
-  const { ascend, descend, prop, sort } = R;
-  const sorter = (dir: "synkende" | "stigende") =>
+  const {
+    antallTreffTotalt,
+    start,
+    antall,
+    projeksjon,
+    tildeltSaksbehandler,
+    transformasjoner,
+  } = payload;
+  state.transformasjoner = transformasjoner;
+  const sorterEtterFrist = (dir: "synkende" | "stigende") =>
     (dir === "synkende" ? descend : ascend)(prop("frist"));
-  let sorterteRader = payload.oppgaver.map(function (rad) {
+  let oppgaverMedFristIUnixtime = payload.oppgaver.map(function (rad) {
     return {
       ...rad,
       frist: new Date(rad.frist).getTime(),
     };
   });
   if (state.transformasjoner.sortering.frist === "synkende")
-    state.rader = sort(sorter("synkende"), sorterteRader);
-  else state.rader = sort(sorter("stigende"), sorterteRader);
+    state.rader = sort(sorterEtterFrist("synkende"), oppgaverMedFristIUnixtime);
+  else state.rader = sort(sorterEtterFrist("stigende"), oppgaverMedFristIUnixtime);
   state.lasterData = true;
   state.meta.start = start;
   state.meta.totalAntall = antallTreffTotalt;
