@@ -56,7 +56,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
   let { side } = useParams<ParamTypes>();
   let tolketSide = parseInt(side as string, 10) || 1;
 
-  const [sortToggle, setSortToggle] = useState(0);
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
 
@@ -177,17 +176,14 @@ const OppgaveTabell: React.FunctionComponent = () => {
   };
   const skiftSortering = (
     event: React.MouseEvent<HTMLElement | HTMLButtonElement>,
-    sortToggle: number,
-    settSorteringFilter: Function,
-    setSortToggle: Function
+    sorteringsfilter: "stigende" | "synkende",
+    settSorteringFilter: Function
   ) => {
     event.preventDefault();
-    if (sortToggle === 0) {
+    if (sorteringsfilter === "synkende") {
       settSorteringFilter("stigende");
-      setSortToggle(1);
     } else {
       settSorteringFilter("synkende");
-      setSortToggle(0);
     }
   };
 
@@ -281,10 +277,15 @@ const OppgaveTabell: React.FunctionComponent = () => {
             {utvidetProjeksjon && <th>&nbsp;</th>}
             {utvidetProjeksjon && <th>&nbsp;</th>}
 
-            <th role="columnheader" aria-sort={sortToggle === 0 ? "ascending" : "descending"}>
+            <th
+              role="columnheader"
+              aria-sort={sorteringFilter === "stigende" ? "ascending" : "descending"}
+            >
               <div
-                className={`sortHeader ${sortToggle === 0 ? "ascending" : "descending"}`}
-                onClick={(e) => skiftSortering(e, sortToggle, settSorteringFilter, setSortToggle)}
+                className={`sortHeader ${
+                  sorteringFilter === "stigende" ? "ascending" : "descending"
+                }`}
+                onClick={(e) => skiftSortering(e, sorteringFilter, settSorteringFilter)}
               >
                 Frist
               </div>
