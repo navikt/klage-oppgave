@@ -113,7 +113,10 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
       frist: new Date(rad.frist).getTime(),
     };
   });
-  state.rader = sort(sorter("stigende"), sorterteRader);
+  if (state.transformasjoner.sortering.frist == "synkende")
+    state.rader = sort(sorter("synkende"), sorterteRader);
+  else state.rader = sort(sorter("stigende"), sorterteRader);
+
   state.lasterData = true;
   state.meta.start = start;
   state.meta.totalAntall = antallTreffTotalt;
