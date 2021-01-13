@@ -10,13 +10,13 @@ import megTilstand, {
   hentInnstillingerHandling,
   hentMegEpos,
   hentMegHandling,
-  MegType,
 } from "./meg";
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { oppgaveHentingFeilet } from "./oppgave";
 import { toasterSett, toasterSkjul } from "./toaster";
+import { ReactFragment } from "react";
 
 describe("'Meg' epos", () => {
   let ts: TestScheduler;
@@ -45,7 +45,17 @@ describe("'Meg' epos", () => {
           a: hentMegHandling(),
         };
         const initState = {
-          meg: {},
+          meg: {
+            id: "",
+            navn: "",
+            fornavn: "",
+            mail: "",
+            etternavn: "",
+            valgtEnhet: 0,
+            lovligeTemaer: undefined,
+            enheter: [],
+            innstillinger: undefined,
+          },
         };
         const mockedResponse = {
           displayName: "Rboert dEniro",
@@ -60,16 +70,20 @@ describe("'Meg' epos", () => {
           etternavn: mockedResponse.surname,
           navn: mockedResponse.displayName,
           mail: mockedResponse.mail,
-          enhetId: "42",
-          enhetNavn: "test",
-          lovligeTemaer: ["test"],
+          enheter: [
+            {
+              id: "42",
+              navn: "test",
+              lovligeTemaer: [{ label: "test", value: "test" }],
+            },
+          ],
         });
 
         const enhetResponse = hentetEnhetHandling([
           {
             navn: "test",
             id: "42",
-            lovligeTemaer: ["test"],
+            lovligeTemaer: [{ label: "test", value: "test" }],
           },
         ]);
 
@@ -80,7 +94,7 @@ describe("'Meg' epos", () => {
                 {
                   navn: "test",
                   id: "42",
-                  lovligeTemaer: ["test"],
+                  lovligeTemaer: [{ label: "test", value: "test" }],
                 },
               ]);
             } else {
@@ -118,7 +132,7 @@ describe("'Meg' epos", () => {
         const expectedMarble = "c-";
 
         const inputValues = {
-          a: hentInnstillingerHandling("en_navIdent"),
+          a: hentInnstillingerHandling({ navIdent: "en_navIdent", enhetId: "42" }),
         };
         const initState = {
           meg: {
@@ -133,7 +147,7 @@ describe("'Meg' epos", () => {
         const reducerResponse = hentetInnstillingerHandling(mockedResponse);
 
         const dependencies = {
-          getJSON: (navIdent: string) => {
+          getJSON: (navIdent: string, enhetId: string) => {
             return of(mockedResponse);
           },
         };
@@ -163,8 +177,14 @@ describe("'Meg' epos", () => {
           fornavn: "",
           mail: "",
           etternavn: "",
-          enhetId: "",
-          enhetNavn: "",
+          valgtEnhet: 0,
+          enheter: [
+            {
+              id: "",
+              navn: "",
+              lovligeTemaer: [{ label: "", value: "" }],
+            },
+          ],
         },
         {
           type: hentetHandling.type,
@@ -183,6 +203,8 @@ describe("'Meg' epos", () => {
       fornavn: "Robert",
       mail: "rob@han.no",
       etternavn: "Hansen",
+      valgtEnhet: 0,
+      enheter: undefined,
     });
   });
 
@@ -195,8 +217,14 @@ describe("'Meg' epos", () => {
         fornavn: "",
         mail: "",
         etternavn: "",
-        enhetId: "",
-        enhetNavn: "",
+        valgtEnhet: 0,
+        enheter: [
+          {
+            id: "",
+            navn: "",
+            lovligeTemaer: [{ label: "", value: "" }],
+          },
+        ],
       },
       {
         type: feiletHandling.type,

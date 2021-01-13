@@ -6,8 +6,13 @@ import {
   temaType,
 } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
-import { velgInnstillinger, velgMeg } from "../../tilstand/moduler/meg.velgere";
+import React, { ReactFragment, useEffect, useState } from "react";
+import {
+  valgtEnhet,
+  velgEnheter,
+  velgInnstillinger,
+  velgMeg,
+} from "../../tilstand/moduler/meg.velgere";
 import {
   velgFiltrering,
   velgOppgaver,
@@ -60,6 +65,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
 
   const [temaFilter, settTemaFilter] = useState<temaType[] | undefined>(undefined);
+  const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
   const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
 
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
@@ -73,6 +79,23 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const history = useHistory();
   const pathname = history.location.pathname.split("/")[1];
   const innstillinger = useSelector(velgInnstillinger);
+  const enheter = useSelector(velgEnheter);
+  const valgtEnhetIdx = useSelector(valgtEnhet);
+
+  useEffect(() => {
+    if (meg.id)
+      dispatch(hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id }));
+  }, [meg.id, valgtEnhetIdx]);
+
+  useEffect(() => {
+    if (enheter.length > 0) {
+      let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
+      enheter[valgtEnhetIdx].lovligeTemaer.forEach((tema: any) => {
+        if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
+      });
+      settLovligeTemaer(lovligeTemaer);
+    }
+  }, [enheter, valgtEnhetIdx]);
 
   function skiftSortering(event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
     event.preventDefault();
@@ -85,9 +108,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
     history.push(history.location.pathname.replace(/\d+$/, "1"));
   }
 
-  useEffect(() => {
-    if (meg.id) dispatch(hentInnstillingerHandling(meg.id));
-  }, [meg.id]);
   useEffect(() => {
     if (innstillinger?.aktiveHjemler) {
       const hjemler = innstillinger.aktiveHjemler.map((hjemmel) => hjemmel.value as string);
@@ -123,7 +143,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     }
 
     dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
-  }, [innstillinger]);
+  }, [innstillinger, valgtEnhetIdx]);
 
   useEffect(() => {
     if (valgtOppgave.id) {
@@ -255,7 +275,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
               onFilter={(filter, velgAlleEllerIngen) =>
                 settFilter(settAktiveTemaer, filter, aktiveTemaer, velgAlleEllerIngen)
               }
-              filtre={GyldigeTemaer}
+              filtre={lovligeTemaer}
               dispatchFunc={filtrerTema}
               aktiveFiltere={aktiveTemaer}
             >

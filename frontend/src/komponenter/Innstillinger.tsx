@@ -6,7 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { velgFiltrering } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
 import { Knapp } from "nav-frontend-knapper";
-import { velgInnstillinger, velgMeg } from "../tilstand/moduler/meg.velgere";
+import {
+  velgInnstillinger,
+  velgEnheter,
+  velgMeg,
+  valgtEnhet,
+} from "../tilstand/moduler/meg.velgere";
 import { hentInnstillingerHandling, settInnstillingerHandling } from "../tilstand/moduler/meg";
 import { GyldigeFiltre, GyldigeTemaer } from "../domene/filtre";
 
@@ -24,6 +29,7 @@ const Innstillinger = (): JSX.Element => {
   const dispatch = useDispatch();
   const filtrering = useSelector(velgFiltrering);
   const meg = useSelector(velgMeg);
+  const enheter = useSelector(velgEnheter);
   const innstillinger = useSelector(velgInnstillinger);
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
@@ -31,10 +37,23 @@ const Innstillinger = (): JSX.Element => {
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
   const [temaFilter, settTemaFilter] = useState<temaType[] | undefined>(undefined);
   const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
+  const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
+  const valgtEnhetIdx = useSelector(valgtEnhet);
 
   useEffect(() => {
-    if (meg.id) dispatch(hentInnstillingerHandling(meg.id));
-  }, [meg.id]);
+    if (meg.id)
+      dispatch(hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id }));
+  }, [meg.id, valgtEnhetIdx]);
+
+  useEffect(() => {
+    if (enheter.length > 0) {
+      let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
+      enheter[valgtEnhetIdx].lovligeTemaer.forEach((tema: any) => {
+        if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
+      });
+      settLovligeTemaer(lovligeTemaer);
+    }
+  }, [enheter, valgtEnhetIdx]);
 
   useEffect(() => {
     settAktiveHjemler(innstillinger?.aktiveHjemler ?? []);
@@ -46,6 +65,7 @@ const Innstillinger = (): JSX.Element => {
     dispatch(
       settInnstillingerHandling({
         navIdent: meg.id,
+        enhetId: enheter[valgtEnhetIdx].id,
         innstillinger: {
           aktiveHjemler,
           aktiveTyper,
@@ -88,6 +108,7 @@ const Innstillinger = (): JSX.Element => {
           <thead>
             <tr>
               <FiltrerbarHeader
+                data-testid={"typefilter"}
                 onFilter={(filter, velgAlleEllerIngen) =>
                   settFilter(settAktiveTyper, filter, aktiveTyper, velgAlleEllerIngen)
                 }
@@ -106,7 +127,7 @@ const Innstillinger = (): JSX.Element => {
                 onFilter={(filter, velgAlleEllerIngen) =>
                   settFilter(settAktiveTemaer, filter, aktiveTemaer, velgAlleEllerIngen)
                 }
-                filtre={GyldigeTemaer}
+                filtre={lovligeTemaer}
                 dispatchFunc={filtrerTema}
                 aktiveFiltere={aktiveTemaer}
               >

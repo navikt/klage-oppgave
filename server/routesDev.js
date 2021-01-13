@@ -21,22 +21,21 @@ const envVar = ({ name, required = true }) => {
 
 const setup = (authClient) => {
   router.post("/internal/innstillinger", async (req, res) => {
-    const { innstillinger } = req.body;
-    const { navIdent } = req.body;
+    const { navIdent, enhetId, innstillinger } = req.body;
     let settings = "";
     try {
-      await lagreIRedis(`innstillinger${navIdent}`, innstillinger);
-      settings = await hentFraRedis(`innstillinger${navIdent}`);
+      await lagreIRedis(`innstillinger_${navIdent}_${enhetId}`, innstillinger);
+      settings = await hentFraRedis(`innstillinger_${navIdent}_${enhetId}`);
       res.status(200).json(JSON.parse(settings));
     } catch (e) {
       res.status(500).json({ err: e });
     }
   });
-  router.get("/internal/innstillinger/:navIdent", async (req, res) => {
-    const { navIdent } = req.params;
+  router.get("/internal/innstillinger/:navIdent/:enhetId", async (req, res) => {
+    const { navIdent, enhetId } = req.params;
     let settings = "";
     try {
-      settings = await hentFraRedis(`innstillinger${navIdent}`);
+      settings = await hentFraRedis(`innstillinger_${navIdent}_${enhetId}`);
       res.status(200).json(JSON.parse(settings));
     } catch (e) {
       res.status(500).json({ err: e });

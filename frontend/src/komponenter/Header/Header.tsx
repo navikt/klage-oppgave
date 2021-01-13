@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import "./Header.less";
 import { useDispatch, useSelector } from "react-redux";
-import { velgEnheter, velgMeg } from "../../tilstand/moduler/meg.velgere";
+import { valgtEnhet, velgEnheter, velgMeg } from "../../tilstand/moduler/meg.velgere";
 import { settEnhetHandling } from "../../tilstand/moduler/meg";
 import { useOnInteractOutside } from "../Tabell/FiltrerbarHeader";
 
@@ -23,7 +23,8 @@ export interface HeaderProps {
 
 export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   const [aapen, setAapen] = useState(false);
-  const [valgtEnhet, settValgtEnhet] = useState("");
+  const [satte_valgtEnhet, settValgtEnhet] = useState(0);
+  const enhetNo = useSelector(valgtEnhet);
   const enheter = useSelector(velgEnheter);
   const person = useSelector(velgMeg);
   const dispatch = useDispatch();
@@ -35,15 +36,14 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
     active: aapen,
   });
 
-  const settEnhet = (event: React.MouseEvent<HTMLElement | HTMLButtonElement>, id: string) => {
+  const settEnhet = (event: React.MouseEvent<HTMLElement | HTMLButtonElement>, id: number) => {
     settValgtEnhet(id);
     dispatch(settEnhetHandling(id));
     setAapen(false);
   };
 
   const visValgtEnhet = () => {
-    if (valgtEnhet === "") return person.enhetNavn;
-    else return enheter.filter((enhet) => enhet.id === valgtEnhet)[0].navn;
+    return enheter[enhetNo]?.navn ?? "";
   };
 
   return (
@@ -64,13 +64,13 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
       </button>
       <div className={classNames(aapen ? "velg-enhet maksimert" : "minimert")} ref={ref}>
         <div className={"enheter"}>
-          {enheter.map((enhet) => {
+          {enheter.map((enhet, index) => {
             return (
               <div
                 className={classNames({ enhet: true, active: person.enhetId == enhet.id })}
                 key={enhet.id}
               >
-                <NavLink to={"#"} onClick={(e) => settEnhet(e, enhet.id)}>
+                <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
                   {enhet.id} {enhet.navn}
                 </NavLink>
               </div>

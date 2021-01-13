@@ -46,10 +46,12 @@ app.get("/ansatte/:id/enheter", async (req, res) => {
     {
       navn: "test-enhet",
       id: "42",
+      lovligeTemaer: ["Foreldrepenger"],
     },
     {
       navn: "test-enhet 2",
       id: "43",
+      lovligeTemaer: ["Sykepenger"],
     },
   ]);
 });

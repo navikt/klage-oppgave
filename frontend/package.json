@@ -55,6 +55,7 @@
     "file-loader": "^6.1.0",
     "husky": "^4.3.0",
     "jest": "^26.5.3",
+    "jest-transform-stub": "^2.0.0",
     "less": "^3.12.2",
     "less-loader": "^7.0.1",
     "mini-css-extract-plugin": "^1.2.1",
