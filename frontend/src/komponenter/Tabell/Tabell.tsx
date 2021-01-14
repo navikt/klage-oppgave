@@ -88,13 +88,11 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [meg.id, valgtEnhetIdx]);
 
   useEffect(() => {
-    if (enheter.length > 0) {
-      let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
-      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
-        if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
-      });
-      settLovligeTemaer(lovligeTemaer);
-    }
+    let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
+    enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
+      if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
+    });
+    settLovligeTemaer(lovligeTemaer);
   }, [enheter, valgtEnhetIdx]);
 
   function skiftSortering(event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
