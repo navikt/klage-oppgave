@@ -89,9 +89,11 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   useEffect(() => {
     let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
-    enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
-      if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
-    });
+    if (enheter.length > 0) {
+      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
+        if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
+      });
+    }
     settLovligeTemaer(lovligeTemaer);
   }, [enheter, valgtEnhetIdx]);
 
@@ -127,6 +129,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
         settTypeFilter(undefined);
       }
     }
+
     if (innstillinger?.aktiveTemaer) {
       const temaer = innstillinger.aktiveTemaer.map((type) => type.value as temaType);
       if (temaer.length) {
@@ -134,10 +137,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
           innstillinger.aktiveTemaer.concat([{ label: "Sykepenger", value: "Sykepenger" }])
         );
         settTemaFilter(temaer);
-      } else {
-        settAktiveTemaer(initState(filtrering.temaer));
-        settTemaFilter(undefined);
       }
+    } else {
+      settAktiveTemaer([{ label: "Sykepenger", value: "Sykepenger" }]);
+      settTemaFilter(["Sykepenger"] as any);
     }
 
     if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
