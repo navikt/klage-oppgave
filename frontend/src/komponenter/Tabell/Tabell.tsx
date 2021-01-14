@@ -34,6 +34,8 @@ import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
 import { hentInnstillingerHandling } from "../../tilstand/moduler/meg";
 import { GyldigeFiltre, GyldigeTemaer } from "../../domene/filtre";
 
+const R = require("ramda");
+
 function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
     return [];
@@ -62,13 +64,18 @@ const OppgaveTabell: React.FunctionComponent = () => {
   let tolketSide = parseInt(side as string, 10) || 1;
 
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
+  const [forrigeHjemmelFilter, settForrigeHjemmelFilter] = useState<string[] | undefined>(
+    undefined
+  );
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
 
   const [temaFilter, settTemaFilter] = useState<temaType[] | undefined>(undefined);
+  const [forrigeTemaFilter, settForrigeTemaFilter] = useState<temaType[] | undefined>(undefined);
   const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
   const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
 
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
+  const [forrigeTypeFilter, settForrigeTypeFilter] = useState<string[] | undefined>(undefined);
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
 
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
@@ -134,7 +141,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
       const temaer = innstillinger.aktiveTemaer.map((type) => type.value as temaType);
       if (temaer.length) {
         settAktiveTemaer(
-          innstillinger.aktiveTemaer.concat([{ label: "Sykepenger", value: "Sykepenger" }])
+          (innstillinger?.aktiveTemaer ?? [])
+            .filter((tema: Filter) => tema.label !== "Sykepenger")
+            .concat([{ label: "Sykepenger", value: "Sykepenger" }])
         );
         settTemaFilter(temaer);
       }
@@ -159,16 +168,30 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [valgtOppgave.id]);
 
   useEffect(() => {
-    console.log(enheter);
     if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
-  }, [start, meg, hjemmelFilter, temaFilter, typeFilter, sorteringFilter]);
+  }, [start, meg, sorteringFilter]);
+
+  useEffect(() => {
+    if (
+      !R.equals(forrigeHjemmelFilter, hjemmelFilter) ||
+      !R.equals(forrigeTemaFilter, temaFilter) ||
+      !R.equals(forrigeTypeFilter, typeFilter)
+    )
+      if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
+    settForrigeHjemmelFilter(hjemmelFilter);
+    settForrigeTemaFilter(temaFilter);
+    settForrigeTypeFilter(typeFilter);
+  }, [hjemmelFilter, temaFilter, typeFilter]);
 
   useEffect(() => {
     settStart((tolketSide - 1) * antall);
     if (forrigeSti.split("/")[1] !== history.location.pathname.split("/")[1]) {
       settHjemmelFilter(undefined);
+      settForrigeHjemmelFilter(undefined);
       settTemaFilter(undefined);
+      settForrigeTemaFilter(undefined);
       settTypeFilter(undefined);
+      settForrigeTypeFilter(undefined);
       settAktiveTyper([]);
       settAktiveTemaer([]);
       settAktiveHjemler([]);
