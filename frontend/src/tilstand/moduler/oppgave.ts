@@ -225,7 +225,6 @@ export function buildQuery(url: string, data: OppgaveParams) {
     R.map(R.map(R.replace(/ /g, ""))),
     R.filter(R.identity)
   )(data.transformasjoner.filtrering || []);
-
   let query = [];
   query.push(`antall=${data.antall}`);
   query.push(`start=${data.start}`);

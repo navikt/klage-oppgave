@@ -90,11 +90,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
   useEffect(() => {
     if (enheter.length > 0) {
       let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
-      if (enheter[valgtEnhetIdx]?.lovligeTemaer) {
-        enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
-          if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
-        });
-      }
+      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
+        if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
+      });
       settLovligeTemaer(lovligeTemaer);
     }
   }, [enheter, valgtEnhetIdx]);
@@ -144,8 +142,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
       }
     }
 
-    dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
-  }, [innstillinger, valgtEnhetIdx]);
+    if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
+  }, [innstillinger, valgtEnhetIdx, meg]);
 
   useEffect(() => {
     if (valgtOppgave.id) {
@@ -160,6 +158,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [valgtOppgave.id]);
 
   useEffect(() => {
+    console.log(enheter);
     if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
   }, [start, meg, hjemmelFilter, temaFilter, typeFilter, sorteringFilter]);
 
@@ -182,7 +181,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
         ident: meg.id,
         antall: antall,
         start: start,
-        enhetId: meg.enhetId,
+        enhetId: enheter[valgtEnhetIdx].id,
         projeksjon: utvidet ? "UTVIDET" : undefined,
         tildeltSaksbehandler: utvidet ? meg.id : undefined,
         transformasjoner: {
