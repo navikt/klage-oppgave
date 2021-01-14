@@ -48,7 +48,7 @@ const setup = (authClient) => {
       res.status(500).json({ err: e });
     }
   });
-  router.get("/internal/innstillinger/:navIdent", async (req, res) => {
+  router.get("/internal/innstillinger/:navIdent/:enhetId", async (req, res) => {
     const { navIdent, enhetId } = req.params;
     let settings = "";
     try {
