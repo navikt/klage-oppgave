@@ -48,9 +48,11 @@ const Innstillinger = (): JSX.Element => {
   useEffect(() => {
     if (enheter.length > 0) {
       let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
-      enheter[valgtEnhetIdx].lovligeTemaer.forEach((tema: any) => {
-        if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
-      });
+      if (enheter[valgtEnhetIdx]?.lovligeTemaer) {
+        enheter[valgtEnhetIdx].lovligeTemaer.forEach((tema: any) => {
+          if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
+        });
+      }
       settLovligeTemaer(lovligeTemaer);
     }
   }, [enheter, valgtEnhetIdx]);
