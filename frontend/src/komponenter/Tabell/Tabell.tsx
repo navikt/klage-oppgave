@@ -91,7 +91,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     if (enheter.length > 0) {
       let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
       if (enheter[valgtEnhetIdx]?.lovligeTemaer) {
-        enheter[valgtEnhetIdx].lovligeTemaer.forEach((tema: any) => {
+        enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
           if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
         });
       }

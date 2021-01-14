@@ -43,7 +43,7 @@ interface Graphdata {
 export interface IEnhetData {
   id: string;
   navn: string;
-  lovligeTemaer: [Filter];
+  lovligeTemaer?: [Filter];
 }
 
 interface GraphOgEnhet extends Graphdata, Array<IEnhetData> {}
