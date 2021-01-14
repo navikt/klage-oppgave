@@ -46,19 +46,23 @@ const Innstillinger = (): JSX.Element => {
   }, [meg.id, valgtEnhetIdx]);
 
   useEffect(() => {
+    let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
     if (enheter.length > 0) {
-      let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
         if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
       });
-      settLovligeTemaer(lovligeTemaer);
     }
+    settLovligeTemaer(lovligeTemaer);
   }, [enheter, valgtEnhetIdx]);
 
   useEffect(() => {
     settAktiveHjemler(innstillinger?.aktiveHjemler ?? []);
     settAktiveTyper(innstillinger?.aktiveTyper ?? []);
-    settAktiveTemaer(innstillinger?.aktiveTemaer ?? []);
+    settAktiveTemaer(
+      (innstillinger?.aktiveTemaer ?? [])
+        .filter((tema: Filter) => tema.label !== "Sykepenger")
+        .concat([{ label: "Sykepenger", value: "Sykepenger" }])
+    );
   }, [innstillinger, meg.id]);
 
   const lagreInnstillinger = () => {
