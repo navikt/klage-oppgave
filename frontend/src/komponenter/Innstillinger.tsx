@@ -172,6 +172,12 @@ const Innstillinger = (): JSX.Element => {
                     </EtikettBase>
                   </div>
                 ))}
+                <div>
+                  <small>
+                    OBS: Sykepenger er satt som forvalgt tema, så det blir aktivt selv om du
+                    forsøker å velge det bort.
+                  </small>
+                </div>
               </td>
               <td>
                 {!aktiveHjemler.length && <div>Ingen hjemler valgt</div>}
