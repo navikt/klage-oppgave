@@ -25,7 +25,7 @@ function lagreIRedis(key, value) {
       return err;
     }
     client.set(key, bufferData);
-    client.expire(key, process.env.CACHE_EXP || 600);
+    //client.expire(key, process.env.CACHE_EXP || 600);
   });
 }
 
