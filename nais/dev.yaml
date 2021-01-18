@@ -21,7 +21,7 @@ spec:
         - application: klage-oppgave-e2e
     outbound:
       rules:
-        - application: klage-redis
+        - application: klage-redis-fe
         - application: klage-oppgave-api
       external:
         - host: login.microsoftonline.com

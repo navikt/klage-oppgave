@@ -17,7 +17,7 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: klage-redis
+        - application: klage-redis-fe
         - application: klage-oppgave-api
           cluster: prod-gcp
           namespace: klage
