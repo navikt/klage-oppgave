@@ -4,7 +4,7 @@ kind: "Application"
 metadata:
   labels:
     team: klage
-  name: klage-redis
+  name: klage-redis-fe
   namespace: klage
 spec:
   image: redis:latest
@@ -26,4 +26,3 @@ spec:
     inbound:
       rules:
         - application: klage-oppgave
-        - application: klage-oppgave-api
