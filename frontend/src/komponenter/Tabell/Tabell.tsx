@@ -117,15 +117,22 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }
 
   useEffect(() => {
-    const hjemler = innstillinger?.aktiveHjemler.map((hjemmel) => hjemmel.value as string) || [];
-    if (hjemler.length > 0) {
+    const hjemler =
+      (innstillinger?.aktiveHjemler &&
+        innstillinger?.aktiveHjemler.map((hjemmel) => hjemmel.value as string)) ||
+      [];
+    if (hjemler.length) {
       settAktiveHjemler(innstillinger.aktiveHjemler);
       settHjemmelFilter(hjemler);
     } else {
       settAktiveHjemler([]);
       settHjemmelFilter(undefined);
     }
-    const typer = innstillinger?.aktiveTyper.map((type) => type.value as string) || [];
+
+    const typer =
+      (innstillinger?.aktiveTyper &&
+        innstillinger?.aktiveTyper.map((type) => type.value as string)) ||
+      [];
     if (typer.length) {
       settAktiveTyper(innstillinger.aktiveTyper);
       settTypeFilter(typer);
@@ -134,7 +141,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settTypeFilter(undefined);
     }
 
-    const temaer = innstillinger?.aktiveTemaer.map((type) => type.value as temaType) || [];
+    const temaer =
+      (innstillinger?.aktiveTemaer &&
+        innstillinger?.aktiveTemaer.map((type) => type.value as temaType)) ||
+      [];
     if (temaer.length) {
       settAktiveTemaer(
         (innstillinger?.aktiveTemaer ?? [])
@@ -289,7 +299,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
               dispatchFunc={filtrerType}
               aktiveFiltere={aktiveTyper}
             >
-              Type
+              Type ({aktiveTyper?.length || 0})
             </FiltrerbarHeader>
 
             <FiltrerbarHeader
@@ -300,7 +310,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
               dispatchFunc={filtrerTema}
               aktiveFiltere={aktiveTemaer}
             >
-              Tema
+              Tema ({aktiveTemaer?.length || 0})
             </FiltrerbarHeader>
 
             <FiltrerbarHeader
@@ -311,7 +321,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
               dispatchFunc={filtrerHjemmel}
               aktiveFiltere={aktiveHjemler}
             >
-              Hjemmel ({aktiveHjemler.length})
+              Hjemmel ({aktiveHjemler?.length || 0})
             </FiltrerbarHeader>
 
             {utvidetProjeksjon && <th>&nbsp;</th>}
