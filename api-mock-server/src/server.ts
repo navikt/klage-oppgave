@@ -56,7 +56,7 @@ app.get("/ansatte/:id/enheter", async (req, res) => {
   ]);
 });
 
-app.get("/aapenfeaturetoggle/:feature", (req, res) => {
+app.get("/featuretoggle/:feature", (req, res) => {
   res.status(200).send("true");
 });
 

@@ -27,6 +27,7 @@ export default function Oppsett({ children }: LayoutType) {
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
   }, []);
+
   useEffect(() => {
     const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.generellTilgang");
     if (tilgangEnabled?.isEnabled !== undefined) {

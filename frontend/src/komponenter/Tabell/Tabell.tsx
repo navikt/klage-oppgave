@@ -33,6 +33,8 @@ import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
 import { hentInnstillingerHandling } from "../../tilstand/moduler/meg";
 import { GyldigeHjemler, GyldigeTemaer } from "../../domene/filtre";
+import { hentFeatureToggleHandling } from "../../tilstand/moduler/unleash";
+import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
 
 const R = require("ramda");
 
@@ -82,6 +84,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
   const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
+  const [visFnr, settVisFnr] = useState<boolean>(false);
+
   const [antall] = useState<number>(10);
   const [start, settStart] = useState<number>(0);
   const history = useHistory();
@@ -89,6 +93,22 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const innstillinger = useSelector(velgInnstillinger);
   const enheter = useSelector(velgEnheter);
   const valgtEnhetIdx = useSelector(valgtEnhet);
+  const featureToggles = useSelector(velgFeatureToggles);
+
+  useEffect(() => {
+    settVisFnr(utvidetProjeksjon);
+  }, [utvidetProjeksjon]);
+
+  useEffect(() => {
+    dispatch(hentFeatureToggleHandling("klage.listFnr"));
+  }, [meg]);
+
+  useEffect(() => {
+    const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.listFnr");
+    if (tilgangEnabled?.isEnabled !== undefined) {
+      settVisFnr(tilgangEnabled.isEnabled);
+    }
+  }, [featureToggles]);
 
   useEffect(() => {
     if (meg.id)
@@ -324,8 +344,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
               Hjemmel ({aktiveHjemler?.length || 0})
             </FiltrerbarHeader>
 
-            {utvidetProjeksjon && <th>&nbsp;</th>}
-            {utvidetProjeksjon && <th>&nbsp;</th>}
+            {visFnr && <th>&nbsp;</th>}
+            {visFnr && <th>&nbsp;</th>}
 
             <th
               role="columnheader"
@@ -344,9 +364,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {genererTabellRader(settValgtOppgave, oppgaver, utvidetProjeksjon)}
+          {genererTabellRader(settValgtOppgave, oppgaver, visFnr)}
           <tr>
-            <td colSpan={utvidetProjeksjon ? 8 : 6}>
+            <td colSpan={visFnr ? 8 : 6}>
               <div className="table-lbl">
                 <div className="antall-saker">{visAntallTreff(oppgaver)}</div>
                 <div className={"paginering"}>
