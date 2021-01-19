@@ -177,7 +177,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settTemaFilter(["Sykepenger"] as any);
     }
 
-    if (meg.id) dispatchTransformering(location.pathname.startsWith("/mineoppgaver"));
+    if (meg.id) dispatchTransformering(visFnr);
   }, [innstillinger, valgtEnhetIdx, meg]);
 
   useEffect(() => {
@@ -193,7 +193,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [valgtOppgave.id]);
 
   useEffect(() => {
-    if (meg.id) dispatchTransformering(location.pathname.startsWith("/mineoppgaver"));
+    if (meg.id) dispatchTransformering(visFnr);
   }, [start, meg, sorteringFilter]);
 
   useEffect(() => {
@@ -202,7 +202,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
       !R.equals(forrigeTemaFilter, temaFilter) ||
       !R.equals(forrigeTypeFilter, typeFilter)
     ) {
-      if (meg.id) dispatchTransformering(location.pathname.startsWith("/mineoppgaver"));
+      if (meg.id) dispatchTransformering(visFnr);
     }
     settForrigeHjemmelFilter(hjemmelFilter);
     settForrigeTemaFilter(temaFilter);
