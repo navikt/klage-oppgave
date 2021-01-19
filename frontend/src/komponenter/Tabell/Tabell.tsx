@@ -84,8 +84,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
   const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
-  const [visFnr, settVisFnr] = useState<boolean>(false);
-
   const [antall] = useState<number>(10);
   const [start, settStart] = useState<number>(0);
   const history = useHistory();
@@ -95,13 +93,17 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const valgtEnhetIdx = useSelector(valgtEnhet);
   const featureToggles = useSelector(velgFeatureToggles);
 
+  /** UTVIDET PROJEKSJON
+   * Med dette flagget kommer det persondata fra klage-oppgave-API. Dette skal skrus
+   * på for "MINE OPPGAVER" og dersom det er skrudd på i featuretoggles.
+   */
+  const [visFnr, settVisFnr] = useState<boolean>(false);
+  useEffect(() => {
+    dispatch(hentFeatureToggleHandling("klage.listFnr"));
+  }, []);
   useEffect(() => {
     settVisFnr(utvidetProjeksjon);
   }, [utvidetProjeksjon]);
-
-  useEffect(() => {
-    dispatch(hentFeatureToggleHandling("klage.listFnr"));
-  }, [meg]);
 
   useEffect(() => {
     const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.listFnr");
@@ -111,8 +113,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [featureToggles]);
 
   useEffect(() => {
-    if (meg.id)
+    if (meg.id && valgtEnhetIdx) {
       dispatch(hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id }));
+    }
   }, [meg.id, valgtEnhetIdx]);
 
   useEffect(() => {
@@ -176,7 +179,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settAktiveTemaer([{ label: "Sykepenger", value: "Sykepenger" }]);
       settTemaFilter(["Sykepenger"] as any);
     }
-
     if (meg.id) dispatchTransformering(visFnr);
   }, [innstillinger, valgtEnhetIdx, meg]);
 
@@ -194,7 +196,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   useEffect(() => {
     if (meg.id) dispatchTransformering(visFnr);
-  }, [start, meg, sorteringFilter]);
+  }, [start, meg, visFnr, sorteringFilter]);
 
   useEffect(() => {
     if (
