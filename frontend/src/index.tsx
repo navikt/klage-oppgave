@@ -5,6 +5,7 @@ import { Provider, useDispatch } from "react-redux";
 import store from "./tilstand/konfigurerTilstand";
 //import { initEnvironment } from './state/modules/environment';
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import KlageBehandling from "./komponenter/KlageBehandling";
 import MineSaker from "./komponenter/MineSaker";
 import AlleSaker from "./komponenter/AlleSaker";
 import Innstillinger from "./komponenter/Innstillinger";
@@ -17,6 +18,7 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
+          <Route exact path="/klagebehandling/:id" render={() => <KlageBehandling />} />
           <Route exact path="/oppgaver" render={() => <AlleSaker />} />
           <Route exact path="/oppgaver/:side" render={() => <AlleSaker />} />
           <Route exact path="/mineoppgaver" render={() => <MineSaker />} />
