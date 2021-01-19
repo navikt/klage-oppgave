@@ -27,12 +27,12 @@ import FiltrerbarHeader, { settFilter } from "./FiltrerbarHeader";
 import { valgtOppgaveType } from "../types";
 import { genererTabellRader } from "./tabellfunksjoner";
 import Paginering from "../Paginering/Paginering";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
 import { hentInnstillingerHandling } from "../../tilstand/moduler/meg";
-import { GyldigeFiltre, GyldigeTemaer } from "../../domene/filtre";
+import { GyldigeHjemler, GyldigeTemaer } from "../../domene/filtre";
 
 const R = require("ramda");
 
@@ -55,6 +55,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const oppgaver = useSelector(velgOppgaver);
   const forrigeSti = useSelector(velgForrigeSti);
   const utvidetProjeksjon = useSelector(velgProjeksjon);
+  const location = useLocation();
 
   interface ParamTypes {
     side: string | undefined;
@@ -84,7 +85,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [antall] = useState<number>(10);
   const [start, settStart] = useState<number>(0);
   const history = useHistory();
-  const pathname = history.location.pathname.split("/")[1];
+  const pathname = location.pathname.split("/")[1];
   const innstillinger = useSelector(velgInnstillinger);
   const enheter = useSelector(velgEnheter);
   const valgtEnhetIdx = useSelector(valgtEnhet);
@@ -112,47 +113,41 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settSorteringFilter("synkende");
     }
     settStart(0);
-    history.push(history.location.pathname.replace(/\d+$/, "1"));
+    history.push(location.pathname.replace(/\d+$/, "1"));
   }
 
   useEffect(() => {
-    if (innstillinger?.aktiveHjemler) {
-      const hjemler = innstillinger.aktiveHjemler.map((hjemmel) => hjemmel.value as string);
-      if (hjemler.length) {
-        settAktiveHjemler(innstillinger.aktiveHjemler);
-        settHjemmelFilter(hjemler);
-      } else {
-        settAktiveHjemler(initState(filtrering.hjemler));
-        settHjemmelFilter(undefined);
-      }
+    const hjemler = innstillinger?.aktiveHjemler.map((hjemmel) => hjemmel.value as string) || [];
+    if (hjemler.length > 0) {
+      settAktiveHjemler(innstillinger.aktiveHjemler);
+      settHjemmelFilter(hjemler);
+    } else {
+      settAktiveHjemler([]);
+      settHjemmelFilter(undefined);
     }
-    if (innstillinger?.aktiveTyper) {
-      const typer = innstillinger.aktiveTyper.map((type) => type.value as string);
-      if (typer.length) {
-        settAktiveTyper(innstillinger.aktiveTyper);
-        settTypeFilter(typer);
-      } else {
-        settAktiveTyper(initState(filtrering.typer));
-        settTypeFilter(undefined);
-      }
+    const typer = innstillinger?.aktiveTyper.map((type) => type.value as string) || [];
+    if (typer.length) {
+      settAktiveTyper(innstillinger.aktiveTyper);
+      settTypeFilter(typer);
+    } else {
+      settAktiveTyper([]);
+      settTypeFilter(undefined);
     }
 
-    if (innstillinger?.aktiveTemaer) {
-      const temaer = innstillinger.aktiveTemaer.map((type) => type.value as temaType);
-      if (temaer.length) {
-        settAktiveTemaer(
-          (innstillinger?.aktiveTemaer ?? [])
-            .filter((tema: Filter) => tema.label !== "Sykepenger")
-            .concat([{ label: "Sykepenger", value: "Sykepenger" }])
-        );
-        settTemaFilter(temaer);
-      }
+    const temaer = innstillinger?.aktiveTemaer.map((type) => type.value as temaType) || [];
+    if (temaer.length) {
+      settAktiveTemaer(
+        (innstillinger?.aktiveTemaer ?? [])
+          .filter((tema: Filter) => tema.label !== "Sykepenger")
+          .concat([{ label: "Sykepenger", value: "Sykepenger" }])
+      );
+      settTemaFilter(temaer);
     } else {
       settAktiveTemaer([{ label: "Sykepenger", value: "Sykepenger" }]);
       settTemaFilter(["Sykepenger"] as any);
     }
 
-    if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
+    if (meg.id) dispatchTransformering(location.pathname.startsWith("/mineoppgaver"));
   }, [innstillinger, valgtEnhetIdx, meg]);
 
   useEffect(() => {
@@ -168,7 +163,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [valgtOppgave.id]);
 
   useEffect(() => {
-    if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
+    if (meg.id) dispatchTransformering(location.pathname.startsWith("/mineoppgaver"));
   }, [start, meg, sorteringFilter]);
 
   useEffect(() => {
@@ -176,8 +171,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
       !R.equals(forrigeHjemmelFilter, hjemmelFilter) ||
       !R.equals(forrigeTemaFilter, temaFilter) ||
       !R.equals(forrigeTypeFilter, typeFilter)
-    )
-      if (meg.id) dispatchTransformering(history.location.pathname.startsWith("/mineoppgaver"));
+    ) {
+      if (meg.id) dispatchTransformering(location.pathname.startsWith("/mineoppgaver"));
+    }
     settForrigeHjemmelFilter(hjemmelFilter);
     settForrigeTemaFilter(temaFilter);
     settForrigeTypeFilter(typeFilter);
@@ -185,7 +181,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   useEffect(() => {
     settStart((tolketSide - 1) * antall);
-    if (forrigeSti.split("/")[1] !== history.location.pathname.split("/")[1]) {
+    if (forrigeSti.split("/")[1] !== location.pathname.split("/")[1]) {
       settHjemmelFilter(undefined);
       settForrigeHjemmelFilter(undefined);
       settTemaFilter(undefined);
@@ -195,9 +191,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settAktiveTyper([]);
       settAktiveTemaer([]);
       settAktiveHjemler([]);
-      dispatch(routingRequest(history.location.pathname));
+      dispatch(routingRequest(location.pathname));
     }
-  }, [antall, tolketSide, forrigeSti, history.location.pathname]);
+  }, [antall, tolketSide, forrigeSti, location.pathname]);
 
   const dispatchTransformering = (utvidet: boolean) =>
     dispatch(
@@ -228,7 +224,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settTypeFilter(filtre.map((f) => f.value as string));
     }
     settStart(0);
-    history.push(history.location.pathname.replace(/\d+$/, "1"));
+    history.push(location.pathname.replace(/\d+$/, "1"));
   };
 
   const filtrerHjemmel = (filtre: Filter[]) => {
@@ -238,7 +234,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settHjemmelFilter(filtre.map((f) => f.value as string));
     }
     settStart(0);
-    history.push(history.location.pathname.replace(/\d+$/, "1"));
+    history.push(location.pathname.replace(/\d+$/, "1"));
   };
   const filtrerTema = (filtre: Filter[]) => {
     if (!filtre.length) {
@@ -247,7 +243,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settTemaFilter(filtre.map((f) => f.value as temaType));
     }
     settStart(0);
-    history.push(history.location.pathname.replace(/\d+$/, "1"));
+    history.push(location.pathname.replace(/\d+$/, "1"));
   };
 
   if (oppgaver.meta.feilmelding) {
@@ -311,11 +307,11 @@ const OppgaveTabell: React.FunctionComponent = () => {
               onFilter={(filter, velgAlleEllerIngen) =>
                 settFilter(settAktiveHjemler, filter, aktiveHjemler, velgAlleEllerIngen)
               }
-              filtre={GyldigeFiltre}
+              filtre={GyldigeHjemler}
               dispatchFunc={filtrerHjemmel}
               aktiveFiltere={aktiveHjemler}
             >
-              Hjemmel
+              Hjemmel ({aktiveHjemler.length})
             </FiltrerbarHeader>
 
             {utvidetProjeksjon && <th>&nbsp;</th>}

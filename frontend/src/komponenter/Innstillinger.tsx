@@ -13,7 +13,7 @@ import {
   valgtEnhet,
 } from "../tilstand/moduler/meg.velgere";
 import { hentInnstillingerHandling, settInnstillingerHandling } from "../tilstand/moduler/meg";
-import { GyldigeFiltre, GyldigeTemaer } from "../domene/filtre";
+import { GyldigeHjemler, GyldigeTemaer } from "../domene/filtre";
 
 function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
@@ -31,6 +31,7 @@ const Innstillinger = (): JSX.Element => {
   const meg = useSelector(velgMeg);
   const enheter = useSelector(velgEnheter);
   const innstillinger = useSelector(velgInnstillinger);
+  const [reload, settReload] = useState<boolean>(false);
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
@@ -43,7 +44,7 @@ const Innstillinger = (): JSX.Element => {
   useEffect(() => {
     if (meg.id)
       dispatch(hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id }));
-  }, [meg.id, valgtEnhetIdx]);
+  }, [meg.id, valgtEnhetIdx, reload]);
 
   useEffect(() => {
     let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
@@ -53,7 +54,7 @@ const Innstillinger = (): JSX.Element => {
       });
     }
     settLovligeTemaer(lovligeTemaer);
-  }, [enheter, valgtEnhetIdx]);
+  }, [enheter, valgtEnhetIdx, reload]);
 
   useEffect(() => {
     settAktiveHjemler(innstillinger?.aktiveHjemler ?? []);
@@ -63,9 +64,10 @@ const Innstillinger = (): JSX.Element => {
         .filter((tema: Filter) => tema.label !== "Sykepenger")
         .concat([{ label: "Sykepenger", value: "Sykepenger" }])
     );
-  }, [innstillinger, meg.id]);
+  }, [innstillinger, meg.id, reload]);
 
   const lagreInnstillinger = () => {
+    settReload(true);
     dispatch(
       settInnstillingerHandling({
         navIdent: meg.id,
@@ -78,6 +80,10 @@ const Innstillinger = (): JSX.Element => {
       })
     );
   };
+
+  useEffect(() => {
+    if (reload) settReload(false);
+  }, [reload]);
 
   const filtrerTema = (filtre: Filter[]) => {
     if (!filtre.length) {
@@ -142,7 +148,7 @@ const Innstillinger = (): JSX.Element => {
                 onFilter={(filter, velgAlleEllerIngen) =>
                   settFilter(settAktiveHjemler, filter, aktiveHjemler, velgAlleEllerIngen)
                 }
-                filtre={GyldigeFiltre}
+                filtre={GyldigeHjemler}
                 dispatchFunc={filtrerHjemmel}
                 aktiveFiltere={aktiveHjemler}
               >

@@ -106,7 +106,11 @@ export const megSlice = createSlice({
       state.innstillinger = action.payload;
       return state;
     },
-    INNSTILLINGER_SATTT: (state, action: PayloadAction<IInnstillinger>) => {
+    INNSTILLINGER_SETT: (state, action: PayloadAction<IInnstillinger>) => {
+      state.innstillinger = action.payload;
+      return state;
+    },
+    INNSTILLINGER_SATT: (state, action: PayloadAction<IInnstillinger>) => {
       state.innstillinger = action.payload;
       return state;
     },
