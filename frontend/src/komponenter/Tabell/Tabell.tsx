@@ -1,12 +1,6 @@
-import {
-  Filter,
-  OppgaveRad,
-  OppgaveRader,
-  oppgaveRequest,
-  temaType,
-} from "../../tilstand/moduler/oppgave";
+import { Filter, temaType } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
-import React, { ReactFragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   valgtEnhet,
   velgEnheter,
@@ -14,10 +8,8 @@ import {
   velgMeg,
 } from "../../tilstand/moduler/meg.velgere";
 import {
-  velgFiltrering,
   velgOppgaver,
   velgSideLaster,
-  velgSortering,
   velgProjeksjon,
 } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
@@ -26,62 +18,59 @@ import "../../stilark/TabellHead.less";
 import FiltrerbarHeader, { settFilter } from "./FiltrerbarHeader";
 import { valgtOppgaveType } from "../types";
 import { genererTabellRader } from "./tabellfunksjoner";
-import Paginering from "../Paginering/Paginering";
+import Paginering, { visAntallTreff } from "../Paginering/Paginering";
 import { useHistory, useParams, useLocation } from "react-router-dom";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
 import { hentInnstillingerHandling } from "../../tilstand/moduler/meg";
-import { GyldigeHjemler, GyldigeTemaer } from "../../domene/filtre";
+import { GyldigeHjemler } from "../../domene/filtre";
 import { hentFeatureToggleHandling } from "../../tilstand/moduler/unleash";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
+import filterReducer from "./filterReducer";
+import Debug from "./Debug";
 
 const R = require("ramda");
-
-function initState(filter: Array<string> | undefined) {
-  if ("undefined" === typeof filter) {
-    return [];
-  }
-  if (!Array.isArray(filter)) return [{ label: filter }];
-  return filter.map(function (f: string) {
-    return { label: f, value: f };
-  });
-}
 
 const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
-  const sortering = useSelector(velgSortering);
-  const filtrering = useSelector(velgFiltrering);
   const sideLaster = useSelector(velgSideLaster);
   const oppgaver = useSelector(velgOppgaver);
   const forrigeSti = useSelector(velgForrigeSti);
   const utvidetProjeksjon = useSelector(velgProjeksjon);
   const location = useLocation();
 
+  const [showDebug, setDebug] = useState(false);
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey && e.key === "D") {
+        setDebug(!showDebug);
+      }
+    });
+  });
+
   interface ParamTypes {
     side: string | undefined;
   }
 
   let { side } = useParams<ParamTypes>();
-  let tolketSide = parseInt(side as string, 10) || 1;
+  let tolketStart = parseInt(side as string, 10) || 1;
+
+  const [forrigeStart, settForrigeStart] = useState<number>(0);
 
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [forrigeHjemmelFilter, settForrigeHjemmelFilter] = useState<string[] | undefined>(
     undefined
   );
-  const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
 
   const [temaFilter, settTemaFilter] = useState<temaType[] | undefined>(undefined);
   const [forrigeTemaFilter, settForrigeTemaFilter] = useState<temaType[] | undefined>(undefined);
   const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
-  const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
 
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
   const [forrigeTypeFilter, settForrigeTypeFilter] = useState<string[] | undefined>(undefined);
-  const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
 
-  const [sorteringFilter, settSorteringFilter] = useState<"synkende" | "stigende">(sortering.frist);
   const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
 
   const [antall] = useState<number>(10);
@@ -93,6 +82,24 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const valgtEnhetIdx = useSelector(valgtEnhet);
   const featureToggles = useSelector(velgFeatureToggles);
 
+  const { filter_state, filter_dispatch } = filterReducer(dispatch, antall, start);
+  const settFiltrering = (type: string, payload: Filter[]) => filter_dispatch({ type, payload });
+  const settTemaer = (payload: Filter[]) => R.curry(settFiltrering)("sett_aktive_temaer")(payload);
+  const settHjemler = (payload: Filter[]) =>
+    R.curry(settFiltrering)("sett_aktive_hjemler")(payload);
+  const settTyper = (payload: Filter[]) => R.curry(settFiltrering)("sett_aktive_typer")(payload);
+  const sorteringFrist: "synkende" | "stigende" =
+    filter_state?.transformasjoner?.sortering?.frist || "synkende";
+
+  /** NAVIDENT
+   * Vi ønsker å hente oppgaver når NAVIDENT og EnhetsID er satt
+   */
+  useEffect(() => {
+    if (meg.id) {
+      filter_dispatch({ type: "sett_navident", payload: meg });
+    }
+  }, [meg]);
+
   /** UTVIDET PROJEKSJON
    * Med dette flagget kommer det persondata fra klage-oppgave-API. Dette skal skrus
    * på for "MINE OPPGAVER" og dersom det er skrudd på i featuretoggles.
@@ -102,7 +109,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     dispatch(hentFeatureToggleHandling("klage.listFnr"));
   }, []);
   useEffect(() => {
-    settVisFnr(utvidetProjeksjon);
+    filter_dispatch({ type: "sett_projeksjon", payload: utvidetProjeksjon });
   }, [utvidetProjeksjon]);
 
   useEffect(() => {
@@ -113,15 +120,35 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [featureToggles]);
 
   useEffect(() => {
-    if (meg.id && valgtEnhetIdx) {
+    if (meg.id) {
       dispatch(hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id }));
     }
-  }, [meg.id, valgtEnhetIdx]);
+  }, [valgtEnhetIdx, meg.id, tolketStart]);
+
+  useEffect(() => {
+    if (filter_state.meta.kan_hente_oppgaver) filter_dispatch({ type: "hent_oppgaver" });
+  }, [
+    filter_state.meta.kan_hente_oppgaver,
+    filter_state.meta.transformasjoner_satt,
+    filter_state.ident,
+  ]);
+
+  useEffect(() => {
+    if (filter_state.meta.kan_hente_oppgaver) {
+      return filter_dispatch({ type: "hent_oppgaver" });
+    }
+  }, [filter_state.meta.kan_hente_oppgaver]);
+
+  useEffect(() => {
+    if (tolketStart !== forrigeStart) {
+      if (meg.id) return filter_dispatch({ type: "hent_oppgaver" });
+    }
+  }, [filter_state.start]);
 
   useEffect(() => {
     let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
     if (enheter.length > 0) {
-      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
+      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
         if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
       });
     }
@@ -130,25 +157,31 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   function skiftSortering(event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
     event.preventDefault();
-    if (sorteringFilter === "synkende") {
-      settSorteringFilter("stigende");
+    if (sorteringFrist === "synkende") {
+      filter_dispatch({ type: "sett_frist", payload: "stigende" });
     } else {
-      settSorteringFilter("synkende");
+      filter_dispatch({ type: "sett_frist", payload: "synkende" });
     }
-    settStart(0);
+    filter_dispatch({ type: "hent_oppgaver" });
+    filter_dispatch({ type: "sett_start", payload: 0 });
     history.push(location.pathname.replace(/\d+$/, "1"));
   }
 
   useEffect(() => {
+    let filtre = {
+      typer: {},
+      temaer: {},
+      hjemler: {},
+    };
     const hjemler =
       (innstillinger?.aktiveHjemler &&
         innstillinger?.aktiveHjemler.map((hjemmel) => hjemmel.value as string)) ||
       [];
     if (hjemler.length) {
-      settAktiveHjemler(innstillinger.aktiveHjemler);
+      filtre.hjemler = innstillinger?.aktiveHjemler || [];
       settHjemmelFilter(hjemler);
     } else {
-      settAktiveHjemler([]);
+      filtre.hjemler = [];
       settHjemmelFilter(undefined);
     }
 
@@ -157,10 +190,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
         innstillinger?.aktiveTyper.map((type) => type.value as string)) ||
       [];
     if (typer.length) {
-      settAktiveTyper(innstillinger.aktiveTyper);
+      filtre.typer = innstillinger.aktiveTyper;
       settTypeFilter(typer);
     } else {
-      settAktiveTyper([]);
+      filtre.typer = [];
       settTypeFilter(undefined);
     }
 
@@ -169,18 +202,16 @@ const OppgaveTabell: React.FunctionComponent = () => {
         innstillinger?.aktiveTemaer.map((type) => type.value as temaType)) ||
       [];
     if (temaer.length) {
-      settAktiveTemaer(
-        (innstillinger?.aktiveTemaer ?? [])
-          .filter((tema: Filter) => tema.label !== "Sykepenger")
-          .concat([{ label: "Sykepenger", value: "Sykepenger" }])
-      );
+      filtre.temaer = (innstillinger?.aktiveTemaer ?? [])
+        .filter((tema: Filter) => tema.label !== "Sykepenger")
+        .concat([{ label: "Sykepenger", value: "Sykepenger" }]);
       settTemaFilter(temaer);
     } else {
-      settAktiveTemaer([{ label: "Sykepenger", value: "Sykepenger" }]);
-      settTemaFilter(["Sykepenger"] as any);
+      filtre.temaer = [{ label: "Sykepenger", value: "Sykepenger" }];
+      settTemaFilter(["Sykepenger" as temaType]);
     }
-    if (meg.id) dispatchTransformering(visFnr);
-  }, [innstillinger, valgtEnhetIdx, meg]);
+    filter_dispatch({ type: "sett_transformasjoner", payload: filtre });
+  }, [innstillinger]);
 
   useEffect(() => {
     if (valgtOppgave.id) {
@@ -195,16 +226,14 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [valgtOppgave.id]);
 
   useEffect(() => {
-    if (meg.id) dispatchTransformering(visFnr);
-  }, [start, meg, visFnr, sorteringFilter]);
-
-  useEffect(() => {
     if (
       !R.equals(forrigeHjemmelFilter, hjemmelFilter) ||
       !R.equals(forrigeTemaFilter, temaFilter) ||
       !R.equals(forrigeTypeFilter, typeFilter)
     ) {
-      if (meg.id) dispatchTransformering(visFnr);
+      if (meg.id && filter_state.meta.kan_hente_oppgaver) {
+        filter_dispatch({ type: "hent_oppgaver" });
+      }
     }
     settForrigeHjemmelFilter(hjemmelFilter);
     settForrigeTemaFilter(temaFilter);
@@ -212,7 +241,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [hjemmelFilter, temaFilter, typeFilter]);
 
   useEffect(() => {
-    settStart((tolketSide - 1) * antall);
+    const side = (tolketStart - 1) * antall;
+    settForrigeStart(filter_state.start);
+    filter_dispatch({ type: "sett_start", payload: side });
     if (forrigeSti.split("/")[1] !== location.pathname.split("/")[1]) {
       settHjemmelFilter(undefined);
       settForrigeHjemmelFilter(undefined);
@@ -220,34 +251,11 @@ const OppgaveTabell: React.FunctionComponent = () => {
       settForrigeTemaFilter(undefined);
       settTypeFilter(undefined);
       settForrigeTypeFilter(undefined);
-      settAktiveTyper([]);
-      settAktiveTemaer([]);
-      settAktiveHjemler([]);
-      dispatch(routingRequest(location.pathname));
+      settTemaer([]);
+      settTyper([]);
+      settHjemler([]);
     }
-  }, [antall, tolketSide, forrigeSti, location.pathname]);
-
-  const dispatchTransformering = (utvidet: boolean) =>
-    dispatch(
-      oppgaveRequest({
-        ident: meg.id,
-        antall: antall,
-        start: start,
-        enhetId: enheter[valgtEnhetIdx].id,
-        projeksjon: utvidet ? "UTVIDET" : undefined,
-        tildeltSaksbehandler: utvidet ? meg.id : undefined,
-        transformasjoner: {
-          filtrering: {
-            hjemler: hjemmelFilter,
-            typer: typeFilter,
-            temaer: temaFilter,
-          },
-          sortering: {
-            frist: sorteringFilter,
-          },
-        },
-      })
-    );
+  }, [antall, tolketStart, forrigeSti, location.pathname]);
 
   const filtrerType = (filtre: Filter[]) => {
     if (!filtre.length) {
@@ -287,31 +295,29 @@ const OppgaveTabell: React.FunctionComponent = () => {
     );
   }
 
-  const visAntallTreff = (oppgaver: OppgaveRader) => {
-    const antall = oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1;
-    if (oppgaver.meta.totalAntall === 0) {
-      return "Ingen treff i oppgavesøket";
-    }
-    const antallIListe =
-      oppgaver.meta.side * oppgaver.meta.antall < oppgaver.meta.totalAntall
-        ? oppgaver.meta.side * oppgaver.meta.antall
-        : oppgaver.meta.totalAntall;
-    const s_oppgave = oppgaver.meta.totalAntall === 1 ? "oppgave" : "oppgaver";
-    return `Viser ${antall} til ${antallIListe} av ${oppgaver.meta.totalAntall} ${s_oppgave}`;
-  };
-
   if (sideLaster) {
-    return <NavFrontendSpinner />;
+    return (
+      <div style={{ width: "100%", textAlign: "center", padding: 20 }}>
+        <NavFrontendSpinner />
+      </div>
+    );
   }
 
   return (
     <>
+      {showDebug && <Debug state={filter_state} dispatch={filter_dispatch} />}
+
       <table className={`Tabell tabell oppgaver tabell--stripet`} cellSpacing={0} cellPadding={10}>
         <thead>
           <tr>
             <FiltrerbarHeader
               onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(settAktiveTyper, filter, aktiveTyper, velgAlleEllerIngen)
+                settFilter(
+                  settTyper,
+                  filter,
+                  filter_state?.transformasjoner?.filtrering?.typer,
+                  velgAlleEllerIngen
+                )
               }
               filtre={[
                 { label: "Klage", value: "Klage" },
@@ -319,43 +325,53 @@ const OppgaveTabell: React.FunctionComponent = () => {
                 { label: "Feilutbetaling", value: "Feilutbetaling" },
               ]}
               dispatchFunc={filtrerType}
-              aktiveFiltere={aktiveTyper}
+              aktiveFiltere={filter_state?.transformasjoner?.filtrering?.typer}
             >
-              Type ({aktiveTyper?.length || 0})
+              Type
             </FiltrerbarHeader>
 
             <FiltrerbarHeader
               onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(settAktiveTemaer, filter, aktiveTemaer, velgAlleEllerIngen)
+                settFilter(
+                  settTemaer,
+                  filter,
+                  filter_state?.transformasjoner?.filtrering?.temaer,
+                  velgAlleEllerIngen
+                )
               }
               filtre={lovligeTemaer}
               dispatchFunc={filtrerTema}
-              aktiveFiltere={aktiveTemaer}
+              aktiveFiltere={filter_state?.transformasjoner.filtrering?.temaer}
             >
-              Tema ({aktiveTemaer?.length || 0})
+              Tema
             </FiltrerbarHeader>
 
             <FiltrerbarHeader
               onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(settAktiveHjemler, filter, aktiveHjemler, velgAlleEllerIngen)
+                settFilter(
+                  settHjemler,
+                  filter,
+                  filter_state?.transformasjoner?.filtrering?.hjemler,
+                  velgAlleEllerIngen
+                )
               }
               filtre={GyldigeHjemler}
               dispatchFunc={filtrerHjemmel}
-              aktiveFiltere={aktiveHjemler}
+              aktiveFiltere={filter_state?.transformasjoner.filtrering?.hjemler}
             >
-              Hjemmel ({aktiveHjemler?.length || 0})
+              Hjemmel
             </FiltrerbarHeader>
 
-            {visFnr && <th>&nbsp;</th>}
-            {visFnr && <th>&nbsp;</th>}
+            {filter_state?.projeksjon === "UTVIDET" && <th>&nbsp;</th>}
+            {filter_state?.projeksjon === "UTVIDET" && <th>&nbsp;</th>}
 
             <th
               role="columnheader"
-              aria-sort={sorteringFilter === "stigende" ? "ascending" : "descending"}
+              aria-sort={sorteringFrist === "stigende" ? "ascending" : "descending"}
             >
               <div
                 className={`sortHeader ${
-                  sorteringFilter === "stigende" ? "ascending" : "descending"
+                  sorteringFrist === "stigende" ? "ascending" : "descending"
                 }`}
                 onClick={skiftSortering}
               >
@@ -366,14 +382,14 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {genererTabellRader(settValgtOppgave, oppgaver, visFnr)}
+          {genererTabellRader(settValgtOppgave, oppgaver, filter_state?.projeksjon)}
           <tr>
             <td colSpan={visFnr ? 8 : 6}>
               <div className="table-lbl">
                 <div className="antall-saker">{visAntallTreff(oppgaver)}</div>
                 <div className={"paginering"}>
                   <Paginering
-                    startSide={tolketSide}
+                    startSide={tolketStart}
                     antallSider={oppgaver.meta.sider}
                     pathname={pathname}
                   />

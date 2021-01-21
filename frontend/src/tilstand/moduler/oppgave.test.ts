@@ -49,6 +49,8 @@ describe("Oppgave epos", () => {
           frist: "synkende" as "synkende",
         },
         filtrering: {
+          typer: [],
+          hjemler: [],
           temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
@@ -71,6 +73,7 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: ["Klage"],
+          hjemler: [],
           temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
@@ -93,6 +96,7 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: ["Feilutbetaling"],
+          hjemler: [],
           temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
@@ -116,6 +120,7 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: ["klage"],
+          hjemler: [],
           temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
@@ -137,7 +142,7 @@ describe("Oppgave epos", () => {
           frist: "stigende" as "stigende",
         },
         filtrering: {
-          type: undefined,
+          typer: [],
           temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
           hjemler: ["8-12", "9-31"],
         },
@@ -160,7 +165,7 @@ describe("Oppgave epos", () => {
           frist: "stigende" as "stigende",
         },
         filtrering: {
-          type: undefined,
+          typer: [],
           temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
           hjemler: ["8-2, 8-13 og 8-49", "8-19", "8-16"],
         },
@@ -179,6 +184,11 @@ describe("Oppgave epos", () => {
       antall: 25,
       start: 100,
       transformasjoner: {
+        filtrering: {
+          temaer: [],
+          typer: [],
+          hjemler: [],
+        },
         sortering: {
           frist: "stigende" as "stigende",
         },
@@ -197,6 +207,11 @@ describe("Oppgave epos", () => {
       antall: 15,
       start: 0,
       transformasjoner: {
+        filtrering: {
+          temaer: [],
+          typer: [],
+          hjemler: [],
+        },
         sortering: {
           frist: "stigende" as "stigende",
         },
@@ -215,7 +230,11 @@ describe("Oppgave epos", () => {
       antall: 15,
       oppgaver: [],
       transformasjoner: {
-        filtrering: {},
+        filtrering: {
+          temaer: [],
+          typer: [],
+          hjemler: [],
+        },
         sortering: {
           frist: "stigende",
         },
@@ -243,7 +262,11 @@ describe("Oppgave epos", () => {
       projeksjon: "UTVIDET",
       oppgaver: [],
       transformasjoner: {
-        filtrering: {},
+        filtrering: {
+          temaer: [],
+          typer: [],
+          hjemler: [],
+        },
         sortering: {
           frist: "stigende",
         },
@@ -271,7 +294,11 @@ describe("Oppgave epos", () => {
       antall: 15,
       oppgaver: [],
       transformasjoner: {
-        filtrering: {},
+        filtrering: {
+          temaer: [],
+          typer: [],
+          hjemler: [],
+        },
         sortering: {
           frist: "stigende",
         },
@@ -298,7 +325,11 @@ describe("Oppgave epos", () => {
       antall: 15,
       oppgaver: [],
       transformasjoner: {
-        filtrering: {},
+        filtrering: {
+          temaer: [],
+          typer: [],
+          hjemler: [],
+        },
         sortering: {
           frist: "stigende",
         },
@@ -341,6 +372,8 @@ describe("Oppgave epos", () => {
               },
               filtrering: {
                 temaer: [("Sykepenger" as unknown) as temaType],
+                typer: [],
+                hjemler: [],
               },
             },
           }),
@@ -414,6 +447,8 @@ describe("Oppgave epos", () => {
                 frist: "synkende",
               },
               filtrering: {
+                typer: [],
+                temaer: [],
                 hjemler: ["8-2, 8-13 og 8-49", "8-19"],
               },
             },
@@ -479,6 +514,11 @@ describe("Oppgave epos", () => {
             antall: 5,
             start: 0,
             transformasjoner: {
+              filtrering: {
+                typer: [],
+                temaer: [],
+                hjemler: [],
+              },
               sortering: {
                 frist: "synkende",
               },

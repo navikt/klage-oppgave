@@ -39,7 +39,7 @@ export interface Filter {
    * filtere i samme kolonne.
    */
   label: ReactNode;
-  value?: string;
+  value?: string | temaType;
 }
 
 export interface Filtrering {
@@ -65,15 +65,15 @@ interface Metadata {
 }
 
 export interface OppgaveRader {
-  rader: [OppgaveRad];
+  rader: Array<OppgaveRad> | [OppgaveRad];
   meta: Metadata;
 }
 
 export interface Transformasjoner {
-  filtrering?: {
-    typer?: undefined | string[] | Filter[];
-    temaer?: undefined | temaType[] | Filter[];
-    hjemler?: undefined | string[] | Filter[];
+  filtrering: {
+    typer: string[] | Filter[];
+    temaer: temaType[] | Filter[];
+    hjemler: string[] | Filter[];
   };
   sortering: {
     frist: "synkende" | "stigende";
@@ -156,9 +156,9 @@ export const oppgaveSlice = createSlice({
     },
     transformasjoner: {
       filtrering: {
-        typer: undefined,
-        temaer: undefined,
-        hjemler: undefined,
+        typer: [],
+        temaer: [],
+        hjemler: [],
       },
       sortering: {
         frist: "stigende",
@@ -199,7 +199,7 @@ export interface OppgaveParams {
   transformasjoner: Transformasjoner;
 }
 
-export type temaType = ["Foreldrepenger"] | ["Dagpenger"] | ["Sykepenger"] | undefined;
+export type temaType = "Foreldrepenger" | "Dagpenger" | "Sykepenger" | undefined;
 
 export default oppgaveSlice.reducer;
 
@@ -216,13 +216,15 @@ export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 //==========
 
 export function buildQuery(url: string, data: OppgaveParams) {
-  const filters = R.compose(
+  let filters = R.compose(
     R.join("&"),
     R.map(R.join("=")),
+    //R.tap((x:any)=>console.log("WTF",x)),
     R.map(R.map(encodeURIComponent)),
     R.toPairs,
     R.map(R.map(R.replace(/og/g, ","))),
     R.map(R.map(R.replace(/ /g, ""))),
+    R.reject(R.equals([])),
     R.filter(R.identity)
   )(data.transformasjoner.filtrering || []);
   let query = [];

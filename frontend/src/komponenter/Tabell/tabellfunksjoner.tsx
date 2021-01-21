@@ -10,6 +10,7 @@ import { fradelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 // @ts-ignore
 import PilOppHoeyre from "../../komponenter/arrow.svg";
+import { NavLink } from "react-router-dom";
 
 const R = require("ramda");
 
@@ -116,11 +117,15 @@ const OppgaveTabellRad = ({
         </EtikettBase>
       </td>
 
-      {utvidetProjeksjon && <td>{person?.navn}</td>}
+      {utvidetProjeksjon && (
+        <td>
+          <NavLink to={`/klagebehandling/${id}`}>{person?.navn}</NavLink>
+        </td>
+      )}
       {utvidetProjeksjon && (
         <td>
           <div className="fnr-lenke-wrap">
-            {person?.fnr}
+            <NavLink to={`/klagebehandling/${id}`}>{person?.fnr}</NavLink>
             <a
               target="_blank"
               aria-label={"Ekstern lenke til Gosys for denne personen"}

@@ -1,14 +1,28 @@
 import { NavLink } from "react-router-dom";
 import React from "react";
 import "./paginering.less";
+import { OppgaveRader } from "../../tilstand/moduler/oppgave";
 
-type PagineringType = {
+interface IPaginering {
   startSide: number;
   antallSider: number;
   pathname: string;
-};
+}
 
-export default ({ startSide, antallSider, pathname }: PagineringType): JSX.Element => {
+export function visAntallTreff(oppgaver: OppgaveRader) {
+  const antall = oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1;
+  if (oppgaver.meta.totalAntall === 0) {
+    return "Ingen treff i oppgavesøket";
+  }
+  const antallIListe =
+    oppgaver.meta.side * oppgaver.meta.antall < oppgaver.meta.totalAntall
+      ? oppgaver.meta.side * oppgaver.meta.antall
+      : oppgaver.meta.totalAntall;
+  const s_oppgave = oppgaver.meta.totalAntall === 1 ? "oppgave" : "oppgaver";
+  return `Viser ${antall} til ${antallIListe} av ${oppgaver.meta.totalAntall} ${s_oppgave}`;
+}
+
+export default ({ startSide, antallSider, pathname }: IPaginering): JSX.Element => {
   startSide = Math.floor(startSide);
   let n = startSide;
   let out = [];

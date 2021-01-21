@@ -160,8 +160,8 @@ const Innstillinger = (): JSX.Element => {
             <tr>
               <td>
                 {!aktiveTyper.length && <div>Ingen typer valgt</div>}
-                {aktiveTyper.map((a) => (
-                  <div key={a.value}>
+                {aktiveTyper.map((a, idx) => (
+                  <div key={`type${idx}`}>
                     <EtikettBase type="info" className={`etikett-type`}>
                       {a.label}
                     </EtikettBase>
@@ -171,8 +171,8 @@ const Innstillinger = (): JSX.Element => {
 
               <td>
                 {!aktiveTemaer.length && <div>Ingen temaer valgt</div>}
-                {aktiveTemaer.map((a) => (
-                  <div key={a.value}>
+                {aktiveTemaer.map((a, idx) => (
+                  <div key={`tema${idx}`}>
                     <EtikettBase type="info" className={`etikett--hjemmel`}>
                       {a.label}
                     </EtikettBase>
@@ -187,8 +187,8 @@ const Innstillinger = (): JSX.Element => {
               </td>
               <td>
                 {!aktiveHjemler.length && <div>Ingen hjemler valgt</div>}
-                {aktiveHjemler.map((a) => (
-                  <div key={a.value}>
+                {aktiveHjemler.map((a, idx) => (
+                  <div key={`hjemmel${idx}`}>
                     <EtikettBase type="info" className={`etikett--hjemmel`}>
                       {a.label}
                     </EtikettBase>
