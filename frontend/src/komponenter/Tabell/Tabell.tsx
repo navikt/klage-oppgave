@@ -116,6 +116,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.listFnr");
     if (tilgangEnabled?.isEnabled !== undefined) {
       settVisFnr(tilgangEnabled.isEnabled);
+      filter_dispatch({ type: "sett_projeksjon", payload: tilgangEnabled.isEnabled });
     }
   }, [featureToggles]);
 

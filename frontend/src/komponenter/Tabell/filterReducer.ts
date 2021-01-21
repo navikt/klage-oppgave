@@ -165,7 +165,7 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
       case "sett_navident": {
         return {
           ...state,
-          kan_hente_oppgaver: kanHenteOppgaver(state),
+          meta: { ...state.meta, kan_hente_oppgaver: kanHenteOppgaver(state) },
           ident: action.payload.id,
           enhetId: action.payload.enheter[action.payload.valgtEnhet].id,
           meg: { ...action.payload },
