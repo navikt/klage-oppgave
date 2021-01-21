@@ -219,7 +219,6 @@ export function buildQuery(url: string, data: OppgaveParams) {
   let filters = R.compose(
     R.join("&"),
     R.map(R.join("=")),
-    //R.tap((x:any)=>console.log("WTF",x)),
     R.map(R.map(encodeURIComponent)),
     R.toPairs,
     R.map(R.map(R.replace(/og/g, ","))),
