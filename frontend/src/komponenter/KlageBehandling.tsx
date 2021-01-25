@@ -1,11 +1,13 @@
 import React from "react";
 import Oppsett from "./Oppsett";
-import OppgaveTabell from "./Tabell/Tabell";
+import "../stilark/klagebehandling.less";
 
 const Klagebehandling = (): JSX.Element => {
   return (
-    <Oppsett>
-      <div>Klage!</div>
+    <Oppsett visMeny={false}>
+      <div className="klagebehandling__informasjon">
+        <div className="rad">Henriette Bjørk</div>
+      </div>
     </Oppsett>
   );
 };

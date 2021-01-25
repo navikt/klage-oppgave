@@ -3,6 +3,7 @@ import { Header } from "./Header/Header";
 import Alertstripe from "nav-frontend-alertstriper";
 
 interface LayoutType {
+  visMeny: boolean;
   children: JSX.Element;
 }
 
@@ -16,7 +17,7 @@ import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.vel
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
 import NavFrontendSpinner from "nav-frontend-spinner";
 
-export default function Oppsett({ children }: LayoutType) {
+export default function Oppsett({ visMeny, children }: LayoutType) {
   const person = useSelector(velgMeg);
   const visFeilmelding = useSelector(velgToaster);
   const feilmelding = useSelector(velgToasterMelding);
@@ -45,7 +46,7 @@ export default function Oppsett({ children }: LayoutType) {
       <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
         {/* <Sok onSok={() => Promise.resolve("test")} /> */}
       </Header>
-      <nav className="main-nav" role="navigation" aria-label="Meny">
+      <nav className={`main-nav ${!visMeny ? "skjult" : ""}`} role="navigation" aria-label="Meny">
         <ul>
           <li>
             <NavLink className="link" to="/oppgaver">

@@ -169,6 +169,16 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }
 
   useEffect(() => {
+    if (meg.id) {
+      if (location.pathname.startsWith("/mineoppgaver") && !filter_state.tildeltSaksbehandler) {
+        filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: meg.id });
+      } else if (!location.pathname.startsWith("/mineoppgaver")) {
+        filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: undefined });
+      }
+    }
+  }, [location, meg.id]);
+
+  useEffect(() => {
     let filtre = {
       typer: {},
       temaer: {},
@@ -363,8 +373,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
               Hjemmel
             </FiltrerbarHeader>
 
-            {filter_state?.projeksjon === "UTVIDET" && <th>&nbsp;</th>}
-            {filter_state?.projeksjon === "UTVIDET" && <th>&nbsp;</th>}
+            {(filter_state?.projeksjon === "UTVIDET" || visFnr) && <th>&nbsp;</th>}
+            {(filter_state?.projeksjon === "UTVIDET" || visFnr) && <th>&nbsp;</th>}
 
             <th
               role="columnheader"
@@ -383,7 +393,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {genererTabellRader(settValgtOppgave, oppgaver, filter_state?.projeksjon)}
+          {genererTabellRader(settValgtOppgave, oppgaver, filter_state?.projeksjon || visFnr)}
           <tr>
             <td colSpan={visFnr ? 8 : 6}>
               <div className="table-lbl">

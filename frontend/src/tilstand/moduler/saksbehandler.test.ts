@@ -11,7 +11,6 @@ import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { OppgaveParams } from "./oppgave";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { hentetHandling } from "./meg";
 
 describe("TILDEL 'Meg' epos", () => {
   let ts: TestScheduler;
@@ -19,6 +18,12 @@ describe("TILDEL 'Meg' epos", () => {
   let initState = {
     meg: {
       id: "ZAKSBEHANDLER",
+      enheter: [
+        {
+          id: "42",
+        },
+      ],
+      valgtEnhet: 0,
     },
     oppgaver: {
       meta: {
@@ -135,6 +140,7 @@ describe("TILDEL 'Meg' epos", () => {
               ident: initState.meg.id,
               projeksjon: initState.oppgaver.meta.projeksjon,
               tildeltSaksbehandler: initState.oppgaver.meta.tildeltSaksbehandler,
+              enhetId: "42",
             } as OppgaveParams,
             type: "oppgaver/HENT",
           },

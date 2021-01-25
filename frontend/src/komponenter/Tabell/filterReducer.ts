@@ -5,6 +5,7 @@ import { MegType } from "../../tilstand/moduler/meg";
 interface FilterState {
   meta: {
     transformasjoner_satt: boolean;
+    saksbehandler_satt: boolean;
     kan_hente_oppgaver: boolean;
   };
   meg: Partial<MegType> | undefined;
@@ -21,6 +22,7 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
   const initialState: FilterState = {
     meta: {
       transformasjoner_satt: false,
+      saksbehandler_satt: false,
       kan_hente_oppgaver: false,
     },
     meg: undefined,
@@ -54,7 +56,7 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
         start: state.start || 0,
         enhetId: state?.enhetId,
         projeksjon: state?.projeksjon ? "UTVIDET" : undefined,
-        tildeltSaksbehandler: state?.projeksjon ? state.ident : undefined,
+        tildeltSaksbehandler: state.tildeltSaksbehandler,
         transformasjoner: {
           filtrering: {
             hjemler: <string[]>toValue(state.transformasjoner.filtrering.hjemler),
@@ -75,6 +77,9 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
       klar = false;
     }
     if (!state.meta.transformasjoner_satt) {
+      klar = false;
+    }
+    if (!state.meta.saksbehandler_satt) {
       klar = false;
     }
     return klar;
@@ -103,12 +108,21 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
           return state;
         }
 
+        state.meta.kan_hente_oppgaver = false;
         hentOppgaver(dispatchFn, state);
         return state;
       }
       case "sett_start": {
         if (undefined !== typeof action.payload) return { ...state, start: action.payload };
         else return state;
+      }
+
+      case "sett_tildelt_saksbehandler": {
+        return {
+          ...state,
+          meta: { ...state.meta, saksbehandler_satt: true },
+          tildeltSaksbehandler: action.payload,
+        };
       }
 
       case "sett_transformasjoner": {

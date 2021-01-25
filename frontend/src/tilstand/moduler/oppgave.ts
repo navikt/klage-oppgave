@@ -207,6 +207,7 @@ export default oppgaveSlice.reducer;
 // Actions
 //==========
 export const { MOTTATT, FEILET } = oppgaveSlice.actions;
+export const enkeltOppgave = createAction<OppgaveParams>("oppgaver/HENT_ENKELTOPPGAVE");
 export const oppgaveRequest = createAction<OppgaveParams>("oppgaver/HENT");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
@@ -240,6 +241,39 @@ export function buildQuery(url: string, data: OppgaveParams) {
 //==========
 // Epos
 //==========
+
+export function hentEnkeltOppgaveEpos(
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(enkeltOppgave.type),
+    withLatestFrom(state$),
+    switchMap(([action, state]) => {
+      let rader = state.oppgaver.rader.slice();
+      let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
+      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
+        timeout(5000),
+        map((oppgaver) =>
+          MOTTATT({
+            start: action.payload.start,
+            antall: action.payload.antall,
+            tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
+            projeksjon: action.payload.projeksjon,
+            transformasjoner: action.payload.transformasjoner,
+            ...oppgaver,
+          } as RaderMedMetadataUtvidet)
+        )
+      );
+      return hentOppgaver.pipe(
+        retryWhen(provIgjenStrategi()),
+        catchError((error) => of(FEILET(error)))
+      );
+    })
+  );
+}
+
 export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>,
@@ -249,7 +283,6 @@ export function hentOppgaverEpos(
     ofType(oppgaveRequest.type || settEnhetHandling.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      let rader = state.oppgaver.rader.slice();
       let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
         timeout(5000),

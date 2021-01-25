@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Draggable from "react-draggable";
 
 function Debug(state: any, dispatch: Function) {
+  const nodeRef = React.useRef(null);
   return (
-    <>
+    <Draggable defaultPosition={{ x: 50, y: 0 }} nodeRef={nodeRef}>
       <pre
+        ref={nodeRef}
         style={{
           position: "fixed",
           background: "white",
@@ -12,9 +15,7 @@ function Debug(state: any, dispatch: Function) {
           width: "40%",
           overflowX: "hidden",
           overflowY: "scroll",
-          zIndex: 0,
-          right: 0,
-          top: "5%",
+          zIndex: 1,
           border: "3px dashed #aa0000",
         }}
       >
@@ -42,7 +43,8 @@ function Debug(state: any, dispatch: Function) {
         </button>
         <button onClick={() => dispatch({ type: "hent_oppgaver" })}>hent oppgaver</button>
       </pre>
-    </>
+    </Draggable>
   );
 }
+
 export default Debug;

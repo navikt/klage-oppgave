@@ -10,7 +10,7 @@ import { fradelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 // @ts-ignore
 import PilOppHoeyre from "../../komponenter/arrow.svg";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
 
 const R = require("ramda");
 
@@ -98,9 +98,10 @@ const OppgaveTabellRad = ({
   const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id);
   const curriedVisHandlinger = visHandlinger(fradelOppgave)(id)(versjon);
   const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id)(versjon);
-
+  const location = useLocation();
+  const history = useHistory();
   return (
-    <tr className="table-filter">
+    <tr className="table-filter" onClick={() => history.push(`/klagebehandling/${id}`)}>
       <td>
         <EtikettBase type="info" className={`etikett-${type}`}>
           {typeOversettelse(type)}
@@ -117,15 +118,11 @@ const OppgaveTabellRad = ({
         </EtikettBase>
       </td>
 
-      {utvidetProjeksjon && (
-        <td>
-          <NavLink to={`/klagebehandling/${id}`}>{person?.navn}</NavLink>
-        </td>
-      )}
+      {utvidetProjeksjon && <td>{person?.navn}</td>}
       {utvidetProjeksjon && (
         <td>
           <div className="fnr-lenke-wrap">
-            <NavLink to={`/klagebehandling/${id}`}>{person?.fnr}</NavLink>
+            {person?.fnr}
             <a
               target="_blank"
               aria-label={"Ekstern lenke til Gosys for denne personen"}
@@ -140,8 +137,8 @@ const OppgaveTabellRad = ({
         </td>
       )}
       <td>{formattedDate(frist)}</td>
-      {!utvidetProjeksjon && curriedVelgOppgave}
-      {utvidetProjeksjon && curriedVisHandlinger}
+      {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave}
+      {location.pathname.startsWith("/mineoppgaver") && curriedVisHandlinger}
     </tr>
   );
 };

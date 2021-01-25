@@ -108,6 +108,7 @@ export function fradelEpos(
               antall: state$.value.oppgaver.meta.antall,
               transformasjoner: state$.value.oppgaver.transformasjoner,
               ident: state$.value.meg.id,
+              enhetId: state$.value.meg.enheter[state$.value.meg.valgtEnhet].id,
               projeksjon: state$.value.oppgaver.meta.projeksjon,
               tildeltSaksbehandler: state$.value.oppgaver.meta.tildeltSaksbehandler,
             } as OppgaveParams;
