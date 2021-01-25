@@ -101,7 +101,14 @@ const OppgaveTabellRad = ({
   const location = useLocation();
   const history = useHistory();
   return (
-    <tr className="table-filter" onClick={() => history.push(`/klagebehandling/${id}`)}>
+    <tr
+      className="table-filter"
+      onClick={() =>
+        location.pathname.startsWith("/mineoppgaver")
+          ? history.push(`/klagebehandling/${id}`)
+          : false
+      }
+    >
       <td>
         <EtikettBase type="info" className={`etikett-${type}`}>
           {typeOversettelse(type)}
