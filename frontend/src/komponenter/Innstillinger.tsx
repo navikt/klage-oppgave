@@ -111,7 +111,7 @@ const Innstillinger = (): JSX.Element => {
   };
   return (
     <Oppsett visMeny={true}>
-      <>
+      <div className={"innstillinger"}>
         <h1>Innstillinger</h1>
         <h3>Velg hvilke temaer og hjemler du har kompetanse til å behandle</h3>
         <table className={"innstillinger"}>
@@ -205,7 +205,7 @@ const Innstillinger = (): JSX.Element => {
             </tr>
           </tbody>
         </table>
-      </>
+      </div>
     </Oppsett>
   );
 };

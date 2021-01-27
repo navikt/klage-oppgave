@@ -8,6 +8,7 @@ const router = express.Router();
 const { createProxyMiddleware } = require("http-proxy-middleware");
 let { api_client_id, downstream_api } = require("./config");
 const { lagreIRedis, hentFraRedis } = require("./cache");
+let bodyParser = require("body-parser");
 
 const ensureAuthenticated = async (req, res, next) => {
   if (req.isAuthenticated() && authUtils.hasValidAccessToken(req)) {
@@ -32,32 +33,43 @@ const setup = (authClient) => {
     res.send("error");
   });
 
-  router.post("/internal/innstillinger", async (req, res) => {
-    const { navIdent, enhetId, innstillinger } = req.body;
+  router.post(
+    "/internal/innstillinger",
+    bodyParser.json(),
+    async (req, res) => {
+      const { navIdent, enhetId, innstillinger } = req.body;
 
-    let settings = "";
-    try {
-      await lagreIRedis(`innstillinger_${navIdent}_${enhetId}`, innstillinger);
-      settings = await hentFraRedis(`innstillinger_${navIdent}_${enhetId}`);
-      await lagreIRedis(
-        `endret_innstillinger_${navIdent}_${enhetId}`,
-        new Date()
-      );
-      res.status(200).json(JSON.parse(settings));
-    } catch (e) {
-      res.status(500).json({ err: e });
+      let settings = "";
+      try {
+        await lagreIRedis(
+          `innstillinger_${navIdent}_${enhetId}`,
+          innstillinger
+        );
+        settings = await hentFraRedis(`innstillinger_${navIdent}_${enhetId}`);
+        await lagreIRedis(
+          `endret_innstillinger_${navIdent}_${enhetId}`,
+          new Date()
+        );
+        res.status(200).json(JSON.parse(settings));
+      } catch (e) {
+        res.status(500).json({ err: e });
+      }
     }
-  });
-  router.get("/internal/innstillinger/:navIdent/:enhetId", async (req, res) => {
-    const { navIdent, enhetId } = req.params;
-    let settings = "";
-    try {
-      settings = await hentFraRedis(`innstillinger_${navIdent}_${enhetId}`);
-      res.status(200).json(JSON.parse(settings));
-    } catch (e) {
-      res.status(500).json({ err: e });
+  );
+  router.get(
+    "/internal/innstillinger/:navIdent/:enhetId",
+    bodyParser.json(),
+    async (req, res) => {
+      const { navIdent, enhetId } = req.params;
+      let settings = "";
+      try {
+        settings = await hentFraRedis(`innstillinger_${navIdent}_${enhetId}`);
+        res.status(200).json(JSON.parse(settings));
+      } catch (e) {
+        res.status(500).json({ err: e });
+      }
     }
-  });
+  );
 
   router.use(
     "/oauth2/callback",

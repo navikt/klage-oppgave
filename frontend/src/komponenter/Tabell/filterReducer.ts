@@ -87,31 +87,6 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
 
   function reducer(state: any, action: any) {
     switch (action.type) {
-      case "hent_oppgaver": {
-        /**
-         * HENT DATA FRA API
-         */
-        if (!state.ident) {
-          console.error("henter oppgaver uten ident!");
-          return state;
-        }
-        if (!state.enhetId) {
-          console.error("henter oppgaver uten enhetId!");
-          return state;
-        }
-        if (undefined === typeof state.start) {
-          console.error("henter ikke oppgaver uten start!");
-          return state;
-        }
-        if (!state.antall) {
-          console.error("henter ikke oppgaver uten antall!");
-          return state;
-        }
-
-        state.meta.kan_hente_oppgaver = false;
-        hentOppgaver(dispatchFn, state);
-        return state;
-      }
       case "sett_start": {
         if (undefined !== typeof action.payload) return { ...state, start: action.payload };
         else return state;
@@ -122,6 +97,13 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
           ...state,
           meta: { ...state.meta, saksbehandler_satt: true },
           tildeltSaksbehandler: action.payload,
+        };
+      }
+
+      case "sett_kan_hente_oppgaver": {
+        return {
+          ...state,
+          meta: { ...state.meta, kan_hente_oppgaver: true },
         };
       }
 
@@ -173,6 +155,7 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
       case "sett_frist": {
         return {
           ...state,
+          meta: { ...state.meta, kan_hente_oppgaver: true },
           transformasjoner: { ...state.transformasjoner, sortering: { frist: action.payload } },
         };
       }
@@ -198,4 +181,5 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
 
   return { filter_state, filter_dispatch };
 }
+
 export default filterReducer;

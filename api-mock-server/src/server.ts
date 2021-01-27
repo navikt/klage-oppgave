@@ -1,6 +1,6 @@
 import { App } from "@tinyhttp/app";
 import { logger } from "@tinyhttp/logger";
-import bodyParser from "body-parser";
+let bodyParser = require("body-parser");
 
 import {
   filtrerOppgaver,

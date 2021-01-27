@@ -25,20 +25,14 @@ const speedLimiter = slowDown({
 
 async function startApp() {
   try {
-    //morganBody(server);
-    server.use(bodyParser.urlencoded({ extended: true }));
-    server.use(bodyParser.json());
-    server.use(bodyParser.raw());
+    //ikke bruk global bodyParser, det gir timeout på spørringer mot API
     server.use(
       morgan("combined", {
         skip: (req, res) => {
           if (req.originalUrl === "/metrics") {
             return true;
           }
-          if (req.originalUrl === "/login") {
-            return true;
-          }
-          return false;
+          return req.originalUrl === "/login";
         },
       })
     );

@@ -100,32 +100,30 @@ const OppgaveTabellRad = ({
   const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id)(versjon);
   const location = useLocation();
   const history = useHistory();
+
+  const rerouteToKlage = (location: any) => {
+    //if (location.pathname.startsWith("/mineoppgaver")) history.push(`/klagebehandling/${id}`);
+  };
+
   return (
-    <tr
-      className="table-filter"
-      onClick={() =>
-        location.pathname.startsWith("/mineoppgaver")
-          ? history.push(`/klagebehandling/${id}`)
-          : false
-      }
-    >
-      <td>
+    <tr className="table-filter">
+      <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${type}`}>
           {typeOversettelse(type)}
         </EtikettBase>
       </td>
-      <td>
+      <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${tema}`}>
           {temaOversettelse(tema)}
         </EtikettBase>
       </td>
-      <td>
+      <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${hjemmel}`}>
           {hjemmel}
         </EtikettBase>
       </td>
 
-      {utvidetProjeksjon && <td>{person?.navn}</td>}
+      {utvidetProjeksjon && <td onClick={() => rerouteToKlage(location)}>{person?.navn}</td>}
       {utvidetProjeksjon && (
         <td>
           <div className="fnr-lenke-wrap">
@@ -143,7 +141,7 @@ const OppgaveTabellRad = ({
           </div>
         </td>
       )}
-      <td>{formattedDate(frist)}</td>
+      <td onClick={() => rerouteToKlage(location)}>{formattedDate(frist)}</td>
       {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave}
       {location.pathname.startsWith("/mineoppgaver") && curriedVisHandlinger}
     </tr>

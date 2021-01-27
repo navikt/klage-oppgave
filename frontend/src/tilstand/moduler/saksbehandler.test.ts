@@ -95,6 +95,7 @@ describe("TILDEL 'Meg' epos", () => {
               ident: initState.meg.id,
               projeksjon: initState.oppgaver.meta.projeksjon,
               tildeltSaksbehandler: initState.oppgaver.meta.tildeltSaksbehandler,
+              enhetId: "42",
             } as OppgaveParams,
             type: "oppgaver/HENT",
           },

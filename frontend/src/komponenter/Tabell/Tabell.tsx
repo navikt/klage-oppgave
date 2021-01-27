@@ -1,4 +1,4 @@
-import { Filter, temaType } from "../../tilstand/moduler/oppgave";
+import { Filter, oppgaveRequest, temaType } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import {
@@ -23,7 +23,7 @@ import { useHistory, useParams, useLocation } from "react-router-dom";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
-import { hentInnstillingerHandling } from "../../tilstand/moduler/meg";
+import { hentInnstillingerHandling, settInnstillingerHandling } from "../../tilstand/moduler/meg";
 import { GyldigeHjemler } from "../../domene/filtre";
 import { hentFeatureToggleHandling } from "../../tilstand/moduler/unleash";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
@@ -57,7 +57,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   let { side } = useParams<ParamTypes>();
   let tolketStart = parseInt(side as string, 10) || 1;
 
-  const [forrigeStart, settForrigeStart] = useState<number>(0);
+  const [forrigeStart, settForrigeStart] = useState<number>(1);
 
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [forrigeHjemmelFilter, settForrigeHjemmelFilter] = useState<string[] | undefined>(
@@ -83,7 +83,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const featureToggles = useSelector(velgFeatureToggles);
 
   const { filter_state, filter_dispatch } = filterReducer(dispatch, antall, start);
-  const settFiltrering = (type: string, payload: Filter[]) => filter_dispatch({ type, payload });
+  const settFiltrering = (type: string, payload: Filter[]) => {
+    filter_dispatch({ type, payload });
+  };
   const settTemaer = (payload: Filter[]) => R.curry(settFiltrering)("sett_aktive_temaer")(payload);
   const settHjemler = (payload: Filter[]) =>
     R.curry(settFiltrering)("sett_aktive_hjemler")(payload);
@@ -120,31 +122,17 @@ const OppgaveTabell: React.FunctionComponent = () => {
     }
   }, [featureToggles]);
 
+  const [innstillingerHentet, settInnstillingerHentet] = useState(false);
   useEffect(() => {
     if (meg.id) {
-      dispatch(hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id }));
+      if (!innstillingerHentet) {
+        settInnstillingerHentet(true);
+        dispatch(
+          hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id })
+        );
+      }
     }
-  }, [valgtEnhetIdx, meg.id, tolketStart]);
-
-  useEffect(() => {
-    if (filter_state.meta.kan_hente_oppgaver) filter_dispatch({ type: "hent_oppgaver" });
-  }, [
-    filter_state.meta.kan_hente_oppgaver,
-    filter_state.meta.transformasjoner_satt,
-    filter_state.ident,
-  ]);
-
-  useEffect(() => {
-    if (filter_state.meta.kan_hente_oppgaver) {
-      return filter_dispatch({ type: "hent_oppgaver" });
-    }
-  }, [filter_state.meta.kan_hente_oppgaver]);
-
-  useEffect(() => {
-    if (tolketStart !== forrigeStart) {
-      if (meg.id) return filter_dispatch({ type: "hent_oppgaver" });
-    }
-  }, [filter_state.start]);
+  }, [valgtEnhetIdx, meg.id]);
 
   useEffect(() => {
     let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
@@ -163,11 +151,42 @@ const OppgaveTabell: React.FunctionComponent = () => {
     } else {
       filter_dispatch({ type: "sett_frist", payload: "synkende" });
     }
-    filter_dispatch({ type: "hent_oppgaver" });
+    console.info(
+      "%chenter oppgaver basert på endring av sortering ",
+      "background: #aa9; color: #222255"
+    );
+    dispatchTransformering();
     filter_dispatch({ type: "sett_start", payload: 0 });
     history.push(location.pathname.replace(/\d+$/, "1"));
   }
 
+  function toValue<T>(filters: Array<string | temaType | Filter>) {
+    return filters.map((filter: any) => filter.value);
+  }
+
+  const dispatchTransformering = () => {
+    console.info("%c -> kjører den faktisk oppgave-spørringen", "background: #222; color: #bada55");
+    return dispatch(
+      oppgaveRequest({
+        ident: filter_state.ident,
+        antall: filter_state.antall,
+        start: filter_state.start || 0,
+        enhetId: filter_state?.enhetId,
+        projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
+        tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
+        transformasjoner: {
+          filtrering: {
+            hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
+            typer: toValue(filter_state.transformasjoner.filtrering.typer),
+            temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+          },
+          sortering: {
+            frist: filter_state.transformasjoner.sortering.frist,
+          },
+        },
+      })
+    );
+  };
   useEffect(() => {
     if (meg.id) {
       if (location.pathname.startsWith("/mineoppgaver") && !filter_state.tildeltSaksbehandler) {
@@ -242,8 +261,12 @@ const OppgaveTabell: React.FunctionComponent = () => {
       !R.equals(forrigeTemaFilter, temaFilter) ||
       !R.equals(forrigeTypeFilter, typeFilter)
     ) {
-      if (meg.id && filter_state.meta.kan_hente_oppgaver) {
-        filter_dispatch({ type: "hent_oppgaver" });
+      if (meg.id) {
+        console.info(
+          "%chenter oppgaver basert på endring/setting av filter ",
+          "background: #af7; color: #222255"
+        );
+        dispatchTransformering();
       }
     }
     settForrigeHjemmelFilter(hjemmelFilter);
@@ -252,20 +275,16 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [hjemmelFilter, temaFilter, typeFilter]);
 
   useEffect(() => {
-    const side = (tolketStart - 1) * antall;
+    if (filter_state.meta.kan_hente_oppgaver)
+      console.debug("%chenter fordi start har endret seg", "background: #222; color: #bada55");
+    if (filter_state.meta.kan_hente_oppgaver) dispatchTransformering();
+  }, [start]);
+
+  useEffect(() => {
+    const ny_start = (tolketStart - 1) * antall;
     settForrigeStart(filter_state.start);
-    filter_dispatch({ type: "sett_start", payload: side });
-    if (forrigeSti.split("/")[1] !== location.pathname.split("/")[1]) {
-      settHjemmelFilter(undefined);
-      settForrigeHjemmelFilter(undefined);
-      settTemaFilter(undefined);
-      settForrigeTemaFilter(undefined);
-      settTypeFilter(undefined);
-      settForrigeTypeFilter(undefined);
-      settTemaer([]);
-      settTyper([]);
-      settHjemler([]);
-    }
+    filter_dispatch({ type: "sett_start", payload: ny_start });
+    settStart(ny_start);
   }, [antall, tolketStart, forrigeSti, location.pathname]);
 
   const filtrerType = (filtre: Filter[]) => {

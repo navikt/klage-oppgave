@@ -113,6 +113,7 @@ describe("Oppgave epos", () => {
       enhetId: "42",
       antall: 2,
       start: 0,
+      tildeltSaksbehandler: "ZATHRAS",
       projeksjon: "UTVIDET" as "UTVIDET",
       transformasjoner: {
         sortering: {
@@ -127,11 +128,11 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&tildeltSaksbehandler=ZATHRAS&erTildeltSaksbehandler=true&enhetId=42"
     );
   });
 
-  test("+++ QUERYBUILDER type", () => {
+  test("+++ QUERYBUILDER uten type og projeksjon utvidet", () => {
     const inputValues = {
       ident: "ZATHRAS",
       enhetId: "42",
