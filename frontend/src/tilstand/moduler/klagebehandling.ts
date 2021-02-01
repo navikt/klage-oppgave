@@ -146,7 +146,7 @@ export function klagebehandlingDokumenterEpos(
     ofType(hentKlageDokumenterHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
-      let klageUrl = `/klagebehandlinger/${action.payload}/alledokumenter`;
+      let klageUrl = `/api/klagebehandlinger/${action.payload}/alledokumenter`;
       return getJSON<IKlagePayload>(klageUrl)
         .pipe(
           timeout(5000),
