@@ -215,8 +215,10 @@ const Klagebehandling = (): JSX.Element => {
   const klage: IKlage = useSelector(velgKlage);
 
   useEffect(() => {
-    dispatch(hentKlageHandling(klage_state.oppgaveId));
-    dispatch(hentKlageDokumenterHandling(klage_state.oppgaveId));
+    if (parseInt(klage_state.oppgaveId, 10) > 0) {
+      dispatch(hentKlageHandling(klage_state.oppgaveId));
+      dispatch(hentKlageDokumenterHandling(klage_state.oppgaveId));
+    }
   }, [klage_state.oppgaveId]);
 
   useEffect(() => {
