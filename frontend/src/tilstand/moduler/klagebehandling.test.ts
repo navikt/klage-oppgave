@@ -5,11 +5,6 @@ import { klagebehandlingEpos, hentKlageHandling, hentetKlageHandling } from "./k
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import {
-  hentetInnstillingerHandling,
-  hentInnstillingerEpos,
-  hentInnstillingerHandling,
-} from "./meg";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
@@ -26,7 +21,7 @@ describe("Oppgave epos", () => {
     ajax.get = originalAjaxGet;
   });
 
-  /** Test henting av innstillinger */
+  /** Test henting av klageoppgave */
   test(
     "+++ HENT KLAGE",
     marbles(() => {
@@ -35,20 +30,28 @@ describe("Oppgave epos", () => {
         const expectedMarble = "c-";
 
         const inputValues = {
-          a: hentKlageHandling("Kattulf"),
+          a: hentKlageHandling("123"),
         };
         const initState = {
           klagebehandling: {
-            navn: "",
+            id: "123",
           },
         };
         const mockedResponse = {
-          navn: "Kattulf",
+          id: "64848",
+          fraNAVEnhet: "4416",
+          mottattFoersteinstans: "2019-08-22",
+          foedselsnummer: "29125639036",
+          tema: "SYK",
+          sakstype: "Klage",
+          mottatt: "2021-01-26",
+          frist: "2019-12-05",
+          hjemler: [{ kapittel: 8, paragraf: 14, original: "8-14" }],
         };
         const reducerResponse = hentetKlageHandling(mockedResponse);
 
         const dependencies = {
-          getJSON: (navIdent: string, enhetId: string) => {
+          getJSON: (id: string) => {
             return of(mockedResponse);
           },
         };

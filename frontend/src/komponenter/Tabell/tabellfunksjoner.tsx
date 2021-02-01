@@ -127,7 +127,7 @@ const OppgaveTabellRad = ({
       {utvidetProjeksjon && (
         <td>
           <div className="fnr-lenke-wrap">
-            {person?.fnr}
+            <NavLink to={`/klagebehandling/${id}&side=klagen`}> {person?.fnr}</NavLink>
             <a
               target="_blank"
               aria-label={"Ekstern lenke til Gosys for denne personen"}
@@ -141,7 +141,7 @@ const OppgaveTabellRad = ({
           </div>
         </td>
       )}
-      <td onClick={() => rerouteToKlage(location)}>{formattedDate(frist)}</td>
+      <td>{formattedDate(frist)}</td>
       {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave}
       {location.pathname.startsWith("/mineoppgaver") && curriedVisHandlinger}
     </tr>

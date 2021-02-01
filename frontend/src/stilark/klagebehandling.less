@@ -1,9 +1,171 @@
+@li-w: 9.5em;
 .klagebehandling__informasjon {
   background-color: #f8f8f8;
   display: flex;
   height: 4em;
+  font-size: 1.1em;
   .rad {
     margin-top: 1.5em;
     padding: 0 0 0 1em;
   }
+}
+
+.meny__linker {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-areas: "klage_nav lenker";
+}
+
+.klage__nav {
+  grid-area: klage_nav;
+  padding: 0.1em 0 0 0;
+  margin: 0 20px 0 0;
+  max-width: calc(6 * @li-w);
+}
+
+.klage__nav ul {
+  max-width: calc(6 * @li-w);
+  padding: 5px 0 0 0;
+  border-bottom: 1px solid #3e3832;
+}
+
+.klage__nav ul li {
+  max-width: @li-w;
+  margin: 1.5em 0 0 0;
+
+  & a > * {
+    padding: 0 1em 0 0;
+  }
+}
+
+.klage__nav ul li a:link {
+  padding: 0 2em 0 0;
+  font-size: 0.9em;
+  font-weight: normal;
+}
+
+.klage__nav ul li a.active:link,
+.klage__nav ul li a:hover {
+  padding: 0 2em 0 0;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+ul.klage__lenker {
+  grid-area: lenker;
+  margin: 1em;
+  list-style: none;
+  max-width: calc(4 * @li-w);
+  display: flex;
+  justify-content: space-between;
+
+  li {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  a {
+    margin: 0 0.3em 0 0;
+    color: #3e3832;
+    font-size: 1em;
+    display: inline-flex;
+    vertical-align: middle;
+  }
+
+  a > img {
+    margin-top: 5px;
+  }
+}
+
+.detaljliste {
+  list-style: none;
+  margin: 0.5em 0;
+  padding: 0;
+
+  .detaljelement {
+  }
+}
+
+.klage_og_detaljer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5em;
+
+  .oversendingsdetaljer {
+    margin: 1em 0 0;
+
+    .detaljer {
+      display: flex;
+      justify-content: space-between;
+      max-width: 25em;
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .klage_og_detaljer {
+    grid-template-columns: 1fr;
+  }
+}
+
+.klagen {
+  display: flex;
+  margin-top: 1.5em;
+  padding: 0 0 0 1em;
+  flex-flow: column;
+  color: #59514b;
+  width: 45em;
+
+  .opplysninger {
+    display: flex;
+    justify-content: space-between;
+    width: 25em;
+    padding: 0.5em 0;
+
+    > div.data {
+      color: black;
+    }
+  }
+}
+
+.dokumenter {
+  border: 1px solid #59514b;
+  width: 45em;
+  display: flex;
+  margin-top: 1.5em;
+  padding: 0 0 0 1em;
+  flex-flow: column;
+  color: #59514b;
+
+  .wrapper {
+    display: grid;
+    grid-template-columns: 1fr 7em 5em;
+    gap: 1em;
+    grid-template-rows: 4em 1fr;
+
+    .lenke_knapp {
+      border: none;
+      background: none;
+      font-size: 0.9em;
+      text-decoration: underline;
+      color: #0067c5;
+      padding: 0;
+    }
+
+    .lenke_knapp:active {
+      color: #0037c5;
+      font-weight: bold;
+    }
+  }
+
+  .opplysninger {
+    padding: 1em 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+.pl {
+  padding-left: 0.5em;
 }

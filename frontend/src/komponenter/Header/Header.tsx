@@ -1,6 +1,6 @@
 import React, { ReactNode, useRef, useState } from "react";
 import IkonSystem from "./icons/IkonSystem";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import "./Header.less";
 import { useDispatch, useSelector } from "react-redux";
@@ -87,9 +87,11 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
 };
 
 export const Header = ({ tittel, children, brukerinfo }: HeaderProps) => {
+  const history = useHistory();
+
   return (
     <header className={"header__container"}>
-      <div className={"header__rad"}>
+      <div className={"header__rad pointer"} onClick={() => history.push(`/`)}>
         <h1 className={"header__tittel"}>{tittel}</h1>
         <div className={"header__avdeler skjult"} />
         {children}

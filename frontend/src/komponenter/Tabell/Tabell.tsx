@@ -82,7 +82,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const valgtEnhetIdx = useSelector(valgtEnhet);
   const featureToggles = useSelector(velgFeatureToggles);
 
-  const { filter_state, filter_dispatch } = filterReducer(dispatch, antall, start);
+  const { filter_state, filter_dispatch } = filterReducer(antall, start);
   const settFiltrering = (type: string, payload: Filter[]) => {
     filter_dispatch({ type, payload });
   };
@@ -151,7 +151,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     } else {
       filter_dispatch({ type: "sett_frist", payload: "synkende" });
     }
-    console.info(
+    console.debug(
       "%chenter oppgaver basert på endring av sortering ",
       "background: #aa9; color: #222255"
     );
@@ -165,7 +165,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }
 
   const dispatchTransformering = () => {
-    console.info("%c -> kjører den faktisk oppgave-spørringen", "background: #222; color: #bada55");
+    console.debug(
+      "%c -> kjører den faktisk oppgave-spørringen",
+      "background: #222; color: #bada55"
+    );
     return dispatch(
       oppgaveRequest({
         ident: filter_state.ident,
@@ -262,7 +265,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
       !R.equals(forrigeTypeFilter, typeFilter)
     ) {
       if (meg.id) {
-        console.info(
+        console.debug(
           "%chenter oppgaver basert på endring/setting av filter ",
           "background: #af7; color: #222255"
         );

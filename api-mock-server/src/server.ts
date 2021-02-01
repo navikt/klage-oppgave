@@ -33,6 +33,34 @@ async function hentOppgaver() {
   });
 }
 
+app.get("/klagebehandlinger/:id", async (req, res) => {
+  res.send({
+    id: "e1335d60-015a-487b-9bf3-9032a175a158",
+    klageInnsendtdato: null,
+    fraNAVEnhet: "4416",
+    mottattFoersteinstans: "2019-08-22",
+    foedselsnummer: "29125639036",
+    tema: "SYK",
+    sakstype: "Klage",
+    mottatt: "2021-01-26",
+    startet: null,
+    avsluttet: null,
+    frist: "2019-12-05",
+    tildeltSaksbehandlerident: null,
+    hjemler: [
+      {
+        kapittel: 8,
+        paragraf: 14,
+        ledd: null,
+        bokstav: null,
+        original: "8-14",
+      },
+    ],
+    modified: "2021-01-26T22:09:35.041601",
+    created: "2021-01-26T22:09:35.041607",
+  });
+});
+
 app.get("/ansatte/:id/oppgaver", async (req, res) => {
   const result = await filtrerOppgaver({
     navIdent: req.params?.id,

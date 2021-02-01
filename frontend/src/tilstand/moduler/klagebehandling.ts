@@ -17,11 +17,32 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 //==========
 // Interfaces
 //==========
-export interface IKlage {
-  navn: string;
+export interface IHjemmel {
+  kapittel: number;
+  paragraf: number;
+  ledd?: number;
+  bokstav?: string;
+  original?: string;
 }
+
+export interface IKlage {
+  id: string;
+  klageInnsendtdato?: string;
+  fraNAVEnhet: string;
+  mottattFoersteinstans: string;
+  foedselsnummer: string;
+  tema: string;
+  sakstype: string;
+  mottatt: string;
+  startet?: string;
+  avsluttet?: string;
+  frist: string;
+  tildeltSaksbehandlerident?: string;
+  hjemler: Array<IHjemmel>;
+}
+
 interface IKlagePayload {
-  navn: string;
+  id: string;
 }
 
 //==========
@@ -30,10 +51,23 @@ interface IKlagePayload {
 export const klageSlice = createSlice({
   name: "klagebehandling",
   initialState: {
-    navn: "",
+    id: "",
+    klageInnsendtdato: undefined,
+    fraNAVEnhet: "4416",
+    mottattFoersteinstans: "2019-08-22",
+    foedselsnummer: "29125639036",
+    tema: "SYK",
+    sakstype: "Klage",
+    mottatt: "2021-01-26",
+    startet: undefined,
+    avsluttet: undefined,
+    frist: "2019-12-05",
+    tildeltSaksbehandlerident: undefined,
+    hjemler: [],
   } as IKlage,
   reducers: {
     HENTET: (state, action: PayloadAction<IKlage>) => {
+      state = action.payload;
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
@@ -56,8 +90,9 @@ export const feiletHandling = createAction<string>("klagebehandling/FEILET");
 //==========
 // Epos
 //==========
-const klageUrl = (id: string) => `/api/klagebehandling/${id}`;
+const klageUrl = (id: string) => `/api/klagebehandlinger/${id}`;
 var resultData: IKlage;
+const R = require("ramda");
 
 export function klagebehandlingEpos(
   action$: ActionsObservable<PayloadAction<string>>,
@@ -72,14 +107,12 @@ export function klagebehandlingEpos(
         .pipe(
           timeout(5000),
           map((response: IKlagePayload) => {
-            return {
-              navn: action.payload,
-            };
+            return R.compose(R.omit("id"))(response);
           })
         )
         .pipe(
           map((data) => {
-            return hentetKlageHandling(data);
+            return hentetKlageHandling(data as any);
           })
         )
         .pipe(

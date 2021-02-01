@@ -10,6 +10,7 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import routing, { ROUTING_EPICS } from "./moduler/router";
 import toaster, { TOASTER_EPICS } from "./moduler/toaster";
 import featureToggles, { UNLEASH_EPICS } from "./moduler/unleash";
+import klagebehandling, { KLAGEBEHANDLING_EPICS } from "./moduler/klagebehandling";
 
 const epics: Array<(
   $action: ActionsObservable<PayloadAction<any>>,
@@ -23,6 +24,7 @@ const epics: Array<(
   ...TILDEL_EPICS,
   ...UNLEASH_EPICS,
   ...TOASTER_EPICS,
+  ...KLAGEBEHANDLING_EPICS,
   ...ROUTING_EPICS,
 ];
 export const rootEpic = combineEpics.apply(combineEpics, epics);
@@ -32,6 +34,7 @@ const rootReducer = combineReducers({
   meg,
   routing,
   toaster,
+  klagebehandling,
   featureToggles,
   saksbehandler,
 });

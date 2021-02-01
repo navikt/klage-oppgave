@@ -18,7 +18,7 @@ interface FilterState {
   transformasjoner: Transformasjoner;
 }
 
-function filterReducer(dispatchFn: Function, antall: number, start: number) {
+function filterReducer(antall: number, start: number) {
   const initialState: FilterState = {
     meta: {
       transformasjoner_satt: false,
@@ -43,33 +43,6 @@ function filterReducer(dispatchFn: Function, antall: number, start: number) {
       },
     },
   };
-
-  function toValue<T>(filters: Array<string | temaType | Filter>) {
-    return filters.map((filter: any) => filter.value);
-  }
-
-  function hentOppgaver(dispatchFn: Function, state: FilterState) {
-    dispatchFn(
-      oppgaveRequest({
-        ident: state.ident,
-        antall: state.antall,
-        start: state.start || 0,
-        enhetId: state?.enhetId,
-        projeksjon: state?.projeksjon ? "UTVIDET" : undefined,
-        tildeltSaksbehandler: state.tildeltSaksbehandler,
-        transformasjoner: {
-          filtrering: {
-            hjemler: <string[]>toValue(state.transformasjoner.filtrering.hjemler),
-            typer: <string[]>toValue(state.transformasjoner.filtrering.typer),
-            temaer: <temaType[]>toValue(state.transformasjoner.filtrering.temaer),
-          },
-          sortering: {
-            frist: state.transformasjoner.sortering.frist,
-          },
-        },
-      })
-    );
-  }
 
   function kanHenteOppgaver(state: any) {
     let klar = true;
