@@ -39,6 +39,7 @@ export interface IKlage {
   frist: string;
   tildeltSaksbehandlerident?: string;
   hjemler: Array<IHjemmel>;
+  dokumenter?: any;
 }
 
 interface IKlagePayload {
@@ -70,6 +71,10 @@ export const klageSlice = createSlice({
       state = action.payload;
       return state;
     },
+    DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
+      state.dokumenter = action.payload;
+      return state;
+    },
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
       return state;
@@ -86,6 +91,13 @@ export const { HENTET, FEILET } = klageSlice.actions;
 export const hentKlageHandling = createAction<string>("klagebehandling/HENT_KLAGE");
 export const hentetKlageHandling = createAction<IKlage>("klagebehandling/HENTET");
 export const feiletHandling = createAction<string>("klagebehandling/FEILET");
+
+export const hentetKlageDokumenterHandling = createAction<IKlage>(
+  "klagebehandling/DOKUMENTER_HENTET"
+);
+export const hentKlageDokumenterHandling = createAction<string>(
+  "klagebehandling/HENT_KLAGE_DOKUMENTER"
+);
 
 //==========
 // Epos
@@ -125,4 +137,36 @@ export function klagebehandlingEpos(
   );
 }
 
-export const KLAGEBEHANDLING_EPICS = [klagebehandlingEpos];
+export function klagebehandlingDokumenterEpos(
+  action$: ActionsObservable<PayloadAction<string>>,
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(hentKlageDokumenterHandling.type),
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
+      let klageUrl = `/klagebehandlinger/${action.payload}/alledokumenter`;
+      return getJSON<IKlagePayload>(klageUrl)
+        .pipe(
+          timeout(5000),
+          map((response: IKlagePayload) => {
+            return R.compose(R.omit("id"))(response);
+          })
+        )
+        .pipe(
+          map((data) => {
+            return hentetKlageDokumenterHandling(data as any);
+          })
+        )
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+          catchError((error) => {
+            return of(feiletHandling(error.message));
+          })
+        );
+    })
+  );
+}
+
+export const KLAGEBEHANDLING_EPICS = [klagebehandlingEpos, klagebehandlingDokumenterEpos];

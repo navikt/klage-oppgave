@@ -3,15 +3,17 @@ import Oppsett from "./Oppsett";
 import "../stilark/klagebehandling.less";
 //@ts-ignore
 import ExtLink from "../komponenter/extlink.svg";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useParams } from "react-router-dom";
 import klageReducer, { IKlageState } from "./klage-reducer";
 import classNames from "classnames";
 import qs from "qs";
 import { useDispatch, useSelector } from "react-redux";
-import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
-import { hentKlageHandling } from "../tilstand/moduler/klagebehandling";
+import {
+  hentKlageDokumenterHandling,
+  hentKlageHandling,
+  IKlage,
+} from "../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../tilstand/moduler/klagebehandlinger.velgere";
-import { velgEnheter } from "../tilstand/moduler/meg.velgere";
 
 const KlageMeny = ({ klage_state, id }: { klage_state: IKlageState; id: string }) => {
   return (
@@ -139,7 +141,7 @@ const Dokumenter = () => {
 };
 
 const Klagen = () => {
-  const klage = useSelector(velgKlage);
+  const klage: IKlage = useSelector(velgKlage);
 
   return (
     <div className={"klage_og_detaljer"}>
@@ -208,20 +210,26 @@ const Klagen = () => {
 
 const Klagebehandling = (): JSX.Element => {
   const { klage_state, klage_dispatch } = klageReducer();
-  const id = "309873006";
   const location = useLocation();
   const dispatch = useDispatch();
-  const klage = useSelector(velgKlage);
+  const klage: IKlage = useSelector(velgKlage);
 
   useEffect(() => {
-    klage_dispatch({ type: "sett_oppgave_id", payload: id });
-    dispatch(hentKlageHandling(id));
-  }, [id]);
+    dispatch(hentKlageHandling(klage_state.oppgaveId));
+    dispatch(hentKlageDokumenterHandling(klage_state.oppgaveId));
+  }, [klage_state.oppgaveId]);
 
   useEffect(() => {
     const params = qs.parse(location.pathname);
+    let loc = location.pathname.split("/");
+    let id = loc[2].split("&")[0];
+    if (id) klage_dispatch({ type: "sett_oppgave_id", payload: id });
     if (params.side) klage_dispatch({ type: "sett_aktiv_side", payload: params.side });
   }, [location]);
+
+  if (!klage_state.oppgaveId) {
+    return <>Spinner</>;
+  }
 
   return (
     <Oppsett visMeny={false}>
@@ -230,7 +238,7 @@ const Klagebehandling = (): JSX.Element => {
           <div className="rad">FORNAVN ETTERNAVN {klage.foedselsnummer} </div>
         </div>
 
-        <KlageMeny klage_state={klage_state} id={id} />
+        <KlageMeny klage_state={klage_state} id={klage_state.oppgaveId} />
 
         <Klagen />
       </>
