@@ -118,13 +118,11 @@ export function klagebehandlingEpos(
       return getJSON<IKlagePayload>(klageUrl(action.payload))
         .pipe(
           timeout(5000),
-          map((response: IKlagePayload) => {
-            return R.compose(R.omit("id"))(response);
-          })
+          map((response: IKlagePayload) => response)
         )
         .pipe(
           map((data) => {
-            return hentetKlageHandling(data as any);
+            return hentetKlageHandling(data as IKlage);
           })
         )
         .pipe(

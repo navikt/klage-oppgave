@@ -60,6 +60,9 @@ app.get("/klagebehandlinger/:id", async (req, res) => {
     created: "2021-01-26T22:09:35.041607",
   });
 });
+app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
+  res.send({});
+});
 
 app.get("/ansatte/:id/oppgaver", async (req, res) => {
   const result = await filtrerOppgaver({

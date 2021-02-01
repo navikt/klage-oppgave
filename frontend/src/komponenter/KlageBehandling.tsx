@@ -217,9 +217,13 @@ const Klagebehandling = (): JSX.Element => {
   useEffect(() => {
     if (parseInt(klage_state.oppgaveId, 10) > 0) {
       dispatch(hentKlageHandling(klage_state.oppgaveId));
-      dispatch(hentKlageDokumenterHandling(klage_state.oppgaveId));
     }
   }, [klage_state.oppgaveId]);
+  useEffect(() => {
+    if (klage.id) {
+      dispatch(hentKlageDokumenterHandling(klage.id));
+    }
+  }, [klage.id]);
 
   useEffect(() => {
     const params = qs.parse(location.pathname);
