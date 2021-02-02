@@ -251,7 +251,15 @@ function Dokumenter() {
                 <input type={"checkbox"} />
               </td>
               <td>{dokument.tittel}</td>
-              <td>{dokument.tema}</td>
+              <td>
+                <div
+                  className={`etikett etikett--mw etikett--info etikett--${dokument.tema
+                    .split(" ")[0]
+                    .toLowerCase()}`}
+                >
+                  {dokument.tema}
+                </div>
+              </td>
               <td>{formattedDate(dokument.registrert)}</td>
             </tr>
           ))}
