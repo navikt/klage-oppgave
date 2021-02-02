@@ -5,6 +5,7 @@
   display: flex;
   height: 4em;
   font-size: 1.1em;
+
   .rad {
     margin-top: 1.5em;
     padding: 0 0 0 1em;
@@ -143,20 +144,6 @@ ul.klage__lenker {
     grid-template-columns: 1fr 7em 5em;
     gap: 1em;
     grid-template-rows: 4em 1fr;
-
-    .lenke_knapp {
-      border: none;
-      background: none;
-      font-size: 0.9em;
-      text-decoration: underline;
-      color: #0067c5;
-      padding: 0;
-    }
-
-    .lenke_knapp:active {
-      color: #0037c5;
-      font-weight: bold;
-    }
   }
 
   .opplysninger {
@@ -166,23 +153,53 @@ ul.klage__lenker {
     width: 100%;
   }
 }
+.liten {
+  font-size: 0.7em;
+}
+.knapp__lenke {
+  border: none;
+  background: none;
+  font-size: 0.9em;
+  text-decoration: underline;
+  color: #0067c5;
+  padding: 0;
+}
+
+.knapp__lenke:active {
+  color: #0037c5;
+  font-weight: bold;
+}
 
 .pl {
   padding-left: 0.5em;
 }
+
 .pl-2 {
   padding-left: 1em;
 }
 
+.dokument-wrapper {
+  display: grid;
+  grid-template-columns: 50em 40em;
+}
+.preview {
+}
+
 table.dokument-tabell {
   margin: @margin-default;
+
   th {
     border-bottom: 1px solid #c6c2bf;
   }
+
   th,
   td {
-    padding: 0.5em;
+    padding: 0.5em 0.76em;
     border-bottom: 1px solid #c6c2bf;
+  }
+  tr:hover,
+  td:hover {
+    background-color: #e5f3ff;
   }
 }
 

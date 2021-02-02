@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import Oppsett from "./Oppsett";
 import "../stilark/klagebehandling.less";
 //@ts-ignore
@@ -133,8 +133,8 @@ const KlageDokumenter = () => {
     <div className={"dokumenter"}>
       <div className={"wrapper"}>
         <h1>Dokumenter</h1>
-        <button className={"lenke_knapp"}>Legg til/ta bort</button>
-        <button className={"lenke_knapp"}>Åpne alle</button>
+        <button className={"knapp__lenke"}>Legg til/ta bort</button>
+        <button className={"knapp__lenke"}>Åpne alle</button>
       </div>
       <div className={"opplysninger"}>Ingen dokumenter knyttet til klagen enda</div>
     </div>
@@ -230,11 +230,12 @@ const Klagen = () => {
 
 function Dokumenter() {
   const klage: IKlage = useSelector(velgKlage);
+  const [aktivtDokument, settaktivtDokument] = useState(0);
   if (!klage.dokumenter) {
     return <></>;
   }
   return (
-    <>
+    <div className={"dokument-wrapper"}>
       <table className={"dokument-tabell"} cellPadding={0} cellSpacing={0}>
         <thead>
           <tr>
@@ -246,11 +247,21 @@ function Dokumenter() {
         </thead>
         <tbody>
           {klage.dokumenter.map((dokument: any, idx: number) => (
-            <tr key={dokument.dokumentInfoId}>
+            <tr
+              key={dokument.dokumentInfoId}
+              onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
+            >
               <td>
                 <input type={"checkbox"} />
               </td>
-              <td>{dokument.tittel}</td>
+              <td>
+                <button
+                  onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
+                  className={"knapp__lenke"}
+                >
+                  {dokument.tittel}
+                </button>
+              </td>
               <td>
                 <div
                   className={`etikett etikett--mw etikett--info etikett--${dokument.tema
@@ -260,12 +271,13 @@ function Dokumenter() {
                   {dokument.tema}
                 </div>
               </td>
-              <td>{formattedDate(dokument.registrert)}</td>
+              <td className={"liten"}>{formattedDate(dokument.registrert)}</td>
             </tr>
           ))}
         </tbody>
       </table>
-    </>
+      <div className={"preview"}>Forhåndsvisning {aktivtDokument > 0 && aktivtDokument}</div>
+    </div>
   );
 }
 
