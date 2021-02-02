@@ -192,13 +192,32 @@ const Klagen = () => {
       <div className={"oversendingsdetaljer"}>
         <h3>Oversendingsdetaljer</h3>
         <div className={"detaljer"}>
-          <div>Tema:</div>
-          <div>Type:</div>
+          <div>
+            Tema:
+            <ul className={"detaljliste"}>
+              <li>
+                <div className={"etikett etikett-Sykepenger etikett--info"}>{klage.tema}</div>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            Type:
+            <ul className={"detaljliste"}>
+              <li>
+                <div className={"etikett etikett-Sykepenger etikett--type"}>{klage.sakstype}</div>
+              </li>
+            </ul>
+          </div>
           <div>
             Hjemmel:
             <ul className={"detaljliste"}>
               {klage.hjemler.map((hjemmel: any, idx: number) => (
-                <li key={`hjemmel${idx}`}>{hjemmel.original}</li>
+                <li key={`hjemmel${idx}`}>
+                  <div className={"etikett etikett-Sykepenger etikett--hjemmel"}>
+                    {hjemmel.original}
+                  </div>
+                </li>
               ))}
             </ul>
           </div>
