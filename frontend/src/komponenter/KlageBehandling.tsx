@@ -127,7 +127,7 @@ const KlageMeny = ({ klage_state, id }: { klage_state: IKlageState; id: string }
   );
 };
 
-const Dokumenter = () => {
+const KlageDokumenter = () => {
   return (
     <div className={"dokumenter"}>
       <div className={"wrapper"}>
@@ -186,7 +186,7 @@ const Klagen = () => {
           </div>
         </div>
 
-        <Dokumenter />
+        <KlageDokumenter />
       </div>
 
       <div className={"oversendingsdetaljer"}>
@@ -227,6 +227,51 @@ const Klagen = () => {
   );
 };
 
+function Dokumenter() {
+  const klage: IKlage = useSelector(velgKlage);
+  if (!klage.dokumenter) {
+    return <></>;
+  }
+  return (
+    <>
+      <table className={"dokument-tabell"}>
+        <thead>
+          <tr>
+            <th />
+            <th>Dokumentbeskrivelse</th>
+            <th>Tema</th>
+            <th>Registrert</th>
+          </tr>
+        </thead>
+        <tbody>
+          {klage.dokumenter.map((dokument: any, idx: number) => (
+            <tr key={dokument.dokumentInfoId}>
+              <td>
+                <input type={"checkbox"} />
+              </td>
+              <td>{dokument.tittel}</td>
+              <td>{dokument.tema}</td>
+              <td>{dokument.registrert}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+function UtarbeideVedtak() {
+  return <>Utarbeide Vedtak</>;
+}
+
+function KvalitetsVurdering() {
+  return <>Kvalitetsvurdering</>;
+}
+
+function Oppgave() {
+  return <>Oppgave</>;
+}
+
 const Klagebehandling = (): JSX.Element => {
   const { klage_state, klage_dispatch } = klageReducer();
   const location = useLocation();
@@ -265,7 +310,11 @@ const Klagebehandling = (): JSX.Element => {
 
         <KlageMeny klage_state={klage_state} id={klage_state.oppgaveId} />
 
-        <Klagen />
+        {klage_state.aktivSide === "klagen" && <Klagen />}
+        {klage_state.aktivSide === "dokumenter" && <Dokumenter />}
+        {klage_state.aktivSide === "utarbeidevedtak" && <UtarbeideVedtak />}
+        {klage_state.aktivSide === "kvalitetsvurdering" && <KvalitetsVurdering />}
+        {klage_state.aktivSide === "oppgave" && <Oppgave />}
       </>
     </Oppsett>
   );

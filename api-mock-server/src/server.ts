@@ -61,7 +61,9 @@ app.get("/klagebehandlinger/:id", async (req, res) => {
   });
 });
 app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
-  res.send({});
+  res.sendFile(
+    require("path").resolve(__dirname, "../fixtures/dokumenter.json")
+  );
 });
 
 app.get("/ansatte/:id/oppgaver", async (req, res) => {

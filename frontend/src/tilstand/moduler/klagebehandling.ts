@@ -72,7 +72,7 @@ export const klageSlice = createSlice({
       return state;
     },
     DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
-      state.dokumenter = action.payload;
+      state.dokumenter = action.payload.dokumenter;
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
