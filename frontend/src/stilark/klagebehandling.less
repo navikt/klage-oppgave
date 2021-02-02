@@ -1,4 +1,5 @@
 @li-w: 9.5em;
+@margin-default: 1.5em;
 .klagebehandling__informasjon {
   background-color: #f8f8f8;
   display: flex;
@@ -53,7 +54,7 @@
 
 ul.klage__lenker {
   grid-area: lenker;
-  margin: 1em;
+  margin: @margin-default;
   list-style: none;
   max-width: calc(4 * @li-w);
   display: flex;
@@ -92,7 +93,7 @@ ul.klage__lenker {
   gap: 5em;
 
   .oversendingsdetaljer {
-    margin: 1em 0 0;
+    margin: @margin-default 0 0;
 
     .detaljer {
       display: flex;
@@ -111,7 +112,7 @@ ul.klage__lenker {
 .klagen {
   display: flex;
   margin-top: 1.5em;
-  padding: 0 0 0 1em;
+  padding: 0 0 0 @margin-default;
   flex-flow: column;
   color: #59514b;
   width: 45em;
@@ -159,7 +160,7 @@ ul.klage__lenker {
   }
 
   .opplysninger {
-    padding: 1em 0;
+    padding: @margin-default 0;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -174,9 +175,26 @@ ul.klage__lenker {
 }
 
 table.dokument-tabell {
-  margin: 1em;
+  margin: @margin-default;
+  th {
+    border-bottom: 1px solid #c6c2bf;
+  }
   th,
   td {
     padding: 0.5em;
+    border-bottom: 1px solid #c6c2bf;
   }
+}
+
+input[type="checkbox"] {
+  content: "";
+  display: block;
+  text-align: center;
+  background-color: #fff;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border: 1px solid #78706a;
+  width: 24px;
+  height: 24px;
+  border-radius: 0.2em;
 }

@@ -11,6 +11,7 @@ import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 // @ts-ignore
 import PilOppHoeyre from "../../komponenter/arrow.svg";
 import { NavLink, useHistory, useLocation } from "react-router-dom";
+import { formattedDate } from "../../domene/datofunksjoner";
 
 const R = require("ramda");
 
@@ -73,14 +74,6 @@ const leggTilbakeOppgave = R.curry(
       })
     )
 );
-
-const formattedDate = (frist: string) => {
-  const utime = new Date(frist).getTime();
-  const ye = new Intl.DateTimeFormat("nb", { year: "numeric" }).format(utime);
-  const mo = new Intl.DateTimeFormat("nb", { month: "2-digit" }).format(utime);
-  const da = new Intl.DateTimeFormat("nb", { day: "2-digit" }).format(utime);
-  return `${da}${mo}${ye}`;
-};
 
 const OppgaveTabellRad = ({
   id,

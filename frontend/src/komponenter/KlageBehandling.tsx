@@ -14,6 +14,7 @@ import {
   IKlage,
 } from "../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../tilstand/moduler/klagebehandlinger.velgere";
+import { formattedDate } from "../domene/datofunksjoner";
 
 const KlageMeny = ({ klage_state, id }: { klage_state: IKlageState; id: string }) => {
   return (
@@ -234,7 +235,7 @@ function Dokumenter() {
   }
   return (
     <>
-      <table className={"dokument-tabell"}>
+      <table className={"dokument-tabell"} cellPadding={0} cellSpacing={0}>
         <thead>
           <tr>
             <th />
@@ -251,7 +252,7 @@ function Dokumenter() {
               </td>
               <td>{dokument.tittel}</td>
               <td>{dokument.tema}</td>
-              <td>{dokument.registrert}</td>
+              <td>{formattedDate(dokument.registrert)}</td>
             </tr>
           ))}
         </tbody>
