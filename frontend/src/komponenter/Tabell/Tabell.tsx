@@ -275,13 +275,13 @@ const OppgaveTabell: React.FunctionComponent = () => {
     settForrigeHjemmelFilter(hjemmelFilter);
     settForrigeTemaFilter(temaFilter);
     settForrigeTypeFilter(typeFilter);
-  }, [hjemmelFilter, temaFilter, typeFilter, innstillinger, meg]);
+  }, [hjemmelFilter, temaFilter, typeFilter]);
 
   useEffect(() => {
-    if (filter_state.meta.kan_hente_oppgaver)
+    if (filter_state.meta.kan_hente_oppgaver || start > 1)
       console.debug("%chenter fordi start har endret seg", "background: #222; color: #bada55");
     if (filter_state.meta.kan_hente_oppgaver) dispatchTransformering();
-  }, [start]);
+  }, [start, filter_state.meta.kan_hente_oppgaver]);
 
   useEffect(() => {
     const ny_start = (tolketStart - 1) * antall;
@@ -327,11 +327,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
       </div>
     );
   }
-
   if (sideLaster) {
     return (
       <div style={{ width: "100%", textAlign: "center", padding: 20 }}>
-        {showDebug && <Debug state={filter_state} dispatch={filter_dispatch} />}
+        {showDebug && <Debug state={filter_state} />}
         <NavFrontendSpinner />
       </div>
     );
@@ -339,7 +338,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   return (
     <>
-      {showDebug && <Debug state={filter_state} dispatch={filter_dispatch} />}
+      {showDebug && <Debug state={filter_state} />}
 
       <table className={`Tabell tabell oppgaver tabell--stripet`} cellSpacing={0} cellPadding={10}>
         <thead>

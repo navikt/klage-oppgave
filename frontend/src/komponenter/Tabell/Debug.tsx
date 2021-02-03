@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 
-function Debug(state: any, dispatch: Function) {
+function Debug(state: any) {
+  console.debug(state);
   const nodeRef = React.useRef(null);
   return (
     <Draggable defaultPosition={{ x: 50, y: 0 }} nodeRef={nodeRef}>
@@ -13,6 +14,7 @@ function Debug(state: any, dispatch: Function) {
           height: "80vh",
           padding: 10,
           width: "40%",
+          textAlign: "left",
           overflowX: "hidden",
           overflowY: "scroll",
           zIndex: 1,
@@ -20,28 +22,6 @@ function Debug(state: any, dispatch: Function) {
         }}
       >
         {JSON.stringify(state, null, 2)}
-        <button
-          onClick={() =>
-            dispatch({
-              type: "sett_frist",
-              payload:
-                state?.transformasjoner?.sortering?.frist === "stigende" ? "synkende" : "stigende",
-            })
-          }
-        >
-          frist
-        </button>
-        <button
-          onClick={() =>
-            dispatch({
-              type: "sett_projeksjon",
-              payload: state?.projeksjon === "UTVIDET" ? undefined : "UTVIDET",
-            })
-          }
-        >
-          sett projeksjon
-        </button>
-        <button onClick={() => dispatch({ type: "hent_oppgaver" })}>hent oppgaver</button>
       </pre>
     </Draggable>
   );
