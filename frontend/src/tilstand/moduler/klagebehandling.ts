@@ -41,7 +41,7 @@ export interface IKlage {
   tildeltSaksbehandlerident?: string;
   hjemler: Array<IHjemmel>;
   pageReference: string | null;
-  prevPageReference: string | null;
+  prevPageReference: string | null | undefined;
   dokumenter?: any;
 }
 
@@ -73,7 +73,7 @@ export const klageSlice = createSlice({
     avsluttet: undefined,
     frist: "2019-12-05",
     tildeltSaksbehandlerident: undefined,
-    prevPageReference: null,
+    prevPageReference: undefined,
     pageReference: null,
     hjemler: [],
   } as IKlage,
