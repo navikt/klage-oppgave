@@ -15,6 +15,7 @@ import {
 } from "../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../tilstand/moduler/klagebehandlinger.velgere";
 import { formattedDate } from "../domene/datofunksjoner";
+import Debug from "./Tabell/Debug";
 
 const KlageMeny = ({ klage_state, id }: { klage_state: IKlageState; id: string }) => {
   return (
@@ -286,7 +287,7 @@ function Dokumenter() {
           ))}
           <tr>
             <td colSpan={4}>
-              <button onClick={hentForrige} disabled={klage.pageReference !== null}>
+              <button onClick={hentForrige} disabled={klage.prevPageReference !== null}>
                 Forrige
               </button>
               <button onClick={hentNeste} disabled={klage.pageReference === null}>
@@ -319,6 +320,15 @@ const Klagebehandling = (): JSX.Element => {
   const dispatch = useDispatch();
   const klage: IKlage = useSelector(velgKlage);
 
+  const [showDebug, setDebug] = useState(false);
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey && e.key === "D") {
+        setDebug(!showDebug);
+      }
+    });
+  });
+
   useEffect(() => {
     if (parseInt(klage_state.oppgaveId, 10) > 0) {
       dispatch(hentKlageHandling(klage_state.oppgaveId));
@@ -348,6 +358,8 @@ const Klagebehandling = (): JSX.Element => {
         <div className="klagebehandling__informasjon">
           <div className="rad">FORNAVN ETTERNAVN {klage.foedselsnummer} </div>
         </div>
+
+        {showDebug && <Debug state={klage} />}
 
         <KlageMeny klage_state={klage_state} id={klage_state.oppgaveId} />
 
