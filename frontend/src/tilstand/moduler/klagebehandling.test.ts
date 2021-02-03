@@ -46,6 +46,8 @@ describe("Oppgave epos", () => {
           sakstype: "Klage",
           mottatt: "2021-01-26",
           frist: "2019-12-05",
+          pageReference: "id...",
+          prevPageReference: "id...",
           hjemler: [{ kapittel: 8, paragraf: 14, original: "8-14" }],
         };
         const reducerResponse = hentetKlageHandling(mockedResponse);
