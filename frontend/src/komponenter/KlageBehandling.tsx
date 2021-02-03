@@ -9,7 +9,7 @@ import classNames from "classnames";
 import qs from "qs";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  hentKlageDokumenterHandling,
+  hentDokumenterHandling,
   hentKlageHandling,
   IKlage,
 } from "../tilstand/moduler/klagebehandling";
@@ -231,6 +231,12 @@ const Klagen = () => {
 function Dokumenter() {
   const klage: IKlage = useSelector(velgKlage);
   const [aktivtDokument, settaktivtDokument] = useState(0);
+  const dispatch = useDispatch();
+
+  function hentNeste() {
+    dispatch(hentDokumenterHandling({ id: klage.id, handling: "neste", antall: 10 }));
+  }
+
   if (!klage.dokumenter) {
     return <></>;
   }
@@ -274,6 +280,11 @@ function Dokumenter() {
               <td className={"liten"}>{formattedDate(dokument.registrert)}</td>
             </tr>
           ))}
+          <tr>
+            <td colSpan={3}>
+              <button onClick={hentNeste}>Neste</button>
+            </td>
+          </tr>
         </tbody>
       </table>
       <div className={"preview"}>Forhåndsvisning {aktivtDokument > 0 && aktivtDokument}</div>
@@ -306,7 +317,7 @@ const Klagebehandling = (): JSX.Element => {
   }, [klage_state.oppgaveId]);
   useEffect(() => {
     if (klage.id) {
-      dispatch(hentKlageDokumenterHandling(klage.id));
+      dispatch(hentDokumenterHandling({ id: klage.id, handling: "init", antall: 10 }));
     }
   }, [klage.id]);
 

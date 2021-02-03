@@ -275,7 +275,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     settForrigeHjemmelFilter(hjemmelFilter);
     settForrigeTemaFilter(temaFilter);
     settForrigeTypeFilter(typeFilter);
-  }, [hjemmelFilter, temaFilter, typeFilter, innstillinger]);
+  }, [hjemmelFilter, temaFilter, typeFilter, innstillinger, meg]);
 
   useEffect(() => {
     if (filter_state.meta.kan_hente_oppgaver)

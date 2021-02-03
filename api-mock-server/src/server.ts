@@ -61,9 +61,16 @@ app.get("/klagebehandlinger/:id", async (req, res) => {
   });
 });
 app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
-  res.sendFile(
-    require("path").resolve(__dirname, "../fixtures/dokumenter.json")
-  );
+  let fs = require("fs");
+  let path = require("path");
+  let data = fs
+    .readFileSync(path.resolve(__dirname, "../fixtures/dokumenter.json"))
+    .toString("utf8");
+  let dokumenter = JSON.parse(data);
+  res.send({
+    dokumenter: dokumenter.dokumenter.slice(0, 10),
+    pageReference: dokumenter.pageReference,
+  });
 });
 
 app.get("/ansatte/:id/oppgaver", async (req, res) => {

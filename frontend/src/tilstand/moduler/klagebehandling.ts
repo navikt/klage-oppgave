@@ -13,6 +13,7 @@ import {
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { OppgaveParams } from "./oppgave";
 
 //==========
 // Interfaces
@@ -39,11 +40,18 @@ export interface IKlage {
   frist: string;
   tildeltSaksbehandlerident?: string;
   hjemler: Array<IHjemmel>;
+  pageReference?: string;
   dokumenter?: any;
 }
 
 interface IKlagePayload {
   id: string;
+}
+
+interface IDokumentParams {
+  id: string;
+  handling: string;
+  antall: number;
 }
 
 //==========
@@ -64,6 +72,7 @@ export const klageSlice = createSlice({
     avsluttet: undefined,
     frist: "2019-12-05",
     tildeltSaksbehandlerident: undefined,
+    pageReference: "",
     hjemler: [],
   } as IKlage,
   reducers: {
@@ -72,6 +81,7 @@ export const klageSlice = createSlice({
       return state;
     },
     DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
+      state.pageReference = action.payload.pageReference;
       state.dokumenter = action.payload.dokumenter;
       return state;
     },
@@ -95,7 +105,7 @@ export const feiletHandling = createAction<string>("klagebehandling/FEILET");
 export const hentetKlageDokumenterHandling = createAction<IKlage>(
   "klagebehandling/DOKUMENTER_HENTET"
 );
-export const hentKlageDokumenterHandling = createAction<string>(
+export const hentDokumenterHandling = createAction<IDokumentParams>(
   "klagebehandling/HENT_KLAGE_DOKUMENTER"
 );
 
@@ -136,15 +146,17 @@ export function klagebehandlingEpos(
 }
 
 export function klagebehandlingDokumenterEpos(
-  action$: ActionsObservable<PayloadAction<string>>,
+  action$: ActionsObservable<PayloadAction<IDokumentParams>>,
   state$: StateObservable<RootStateOrAny>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
-    ofType(hentKlageDokumenterHandling.type),
+    ofType(hentDokumenterHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
       let klageUrl = `/api/klagebehandlinger/${action.payload}/alledokumenter?antall=10`;
+      if (action.payload.handling === "neste")
+        klageUrl = `/api/klagebehandlinger/${action.payload}/alledokumenter?antall=10&forrigeSide=${state.klagebehandling.pageReference}`;
       return getJSON<IKlagePayload>(klageUrl)
         .pipe(
           timeout(5000),
