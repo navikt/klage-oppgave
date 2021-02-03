@@ -237,6 +237,10 @@ function Dokumenter() {
     dispatch(hentDokumenterHandling({ id: klage.id, handling: "neste", antall: 10 }));
   }
 
+  function hentForrige() {
+    dispatch(hentDokumenterHandling({ id: klage.id, handling: "forrige", antall: 10 }));
+  }
+
   if (!klage.dokumenter) {
     return <></>;
   }
@@ -281,8 +285,13 @@ function Dokumenter() {
             </tr>
           ))}
           <tr>
-            <td colSpan={3}>
-              <button onClick={hentNeste}>Neste</button>
+            <td colSpan={4}>
+              <button onClick={hentForrige} disabled={klage.pageReference !== null}>
+                Forrige
+              </button>
+              <button onClick={hentNeste} disabled={klage.pageReference === null}>
+                Neste
+              </button>
             </td>
           </tr>
         </tbody>

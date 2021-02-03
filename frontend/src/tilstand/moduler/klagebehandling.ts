@@ -40,7 +40,8 @@ export interface IKlage {
   frist: string;
   tildeltSaksbehandlerident?: string;
   hjemler: Array<IHjemmel>;
-  pageReference?: string;
+  pageReference: string | null;
+  prevPageReference: string | null;
   dokumenter?: any;
 }
 
@@ -72,7 +73,8 @@ export const klageSlice = createSlice({
     avsluttet: undefined,
     frist: "2019-12-05",
     tildeltSaksbehandlerident: undefined,
-    pageReference: "",
+    prevPageReference: null,
+    pageReference: null,
     hjemler: [],
   } as IKlage,
   reducers: {
@@ -81,6 +83,7 @@ export const klageSlice = createSlice({
       return state;
     },
     DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
+      state.prevPageReference = state.pageReference;
       state.pageReference = action.payload.pageReference;
       state.dokumenter = action.payload.dokumenter;
       return state;
@@ -157,6 +160,8 @@ export function klagebehandlingDokumenterEpos(
       let klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10`;
       if (action.payload.handling === "neste")
         klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10&forrigeSide=${state.klagebehandling.pageReference}`;
+      if (action.payload.handling === "forrige")
+        klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10&forrigeSide=${state.klagebehandling.prevPageReference}`;
       return getJSON<IKlagePayload>(klageUrl)
         .pipe(
           timeout(5000),
