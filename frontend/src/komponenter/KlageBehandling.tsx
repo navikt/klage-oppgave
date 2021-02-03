@@ -287,10 +287,10 @@ function Dokumenter() {
           ))}
           <tr>
             <td colSpan={4}>
-              <button onClick={hentForrige} disabled={klage.prevPageReference === undefined}>
+              <button onClick={hentForrige} disabled={!klage.prevPageReference}>
                 Forrige
               </button>
-              <button onClick={hentNeste} disabled={klage.pageReference === null}>
+              <button onClick={hentNeste} disabled={!klage.pageReference}>
                 Neste
               </button>
             </td>
