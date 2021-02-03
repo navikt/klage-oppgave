@@ -331,6 +331,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   if (sideLaster) {
     return (
       <div style={{ width: "100%", textAlign: "center", padding: 20 }}>
+        {showDebug && <Debug state={filter_state} dispatch={filter_dispatch} />}
         <NavFrontendSpinner />
       </div>
     );
