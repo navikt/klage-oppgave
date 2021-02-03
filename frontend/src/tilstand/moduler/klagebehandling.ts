@@ -154,9 +154,9 @@ export function klagebehandlingDokumenterEpos(
     ofType(hentDokumenterHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
-      let klageUrl = `/api/klagebehandlinger/alledokumenter?antall=10`;
+      let klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10`;
       if (action.payload.handling === "neste")
-        klageUrl = `/api/klagebehandlinger/alledokumenter?antall=10&forrigeSide=${state.klagebehandling.pageReference}`;
+        klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10&forrigeSide=${state.klagebehandling.pageReference}`;
       return getJSON<IKlagePayload>(klageUrl)
         .pipe(
           timeout(5000),
