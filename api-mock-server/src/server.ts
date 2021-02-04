@@ -10,7 +10,10 @@ import {
 } from "./oppgaver";
 import { OppgaveQuery } from "./types";
 
-const app = new App().use(logger()).use(bodyParser.json());
+const app = new App()
+  .use(logger())
+  .use(bodyParser.json())
+  .use(bodyParser.urlencoded({ extended: false }));
 const port = 3000; // default port to listen
 
 async function hentOppgaver() {
@@ -63,13 +66,36 @@ app.get("/klagebehandlinger/:id", async (req, res) => {
 app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
   let fs = require("fs");
   let path = require("path");
+  const query = req.query;
+  let forrigeSide = query.forrigeSide || undefined;
+  let pageReference: string | null;
+  let start: number;
+
+  if (forrigeSide == "null") {
+    pageReference = "side1";
+    start = 0;
+  } else if (forrigeSide == "side1") {
+    pageReference = "side2";
+    start = 10;
+  } else if (forrigeSide == "side2") {
+    pageReference = "side3";
+    start = 20;
+  } else if (forrigeSide == "side3") {
+    pageReference = "side4";
+    start = 30;
+  } else {
+    start = 40;
+    pageReference = null;
+  }
+
   let data = fs
     .readFileSync(path.resolve(__dirname, "../fixtures/dokumenter.json"))
     .toString("utf8");
   let dokumenter = JSON.parse(data);
   res.send({
-    dokumenter: dokumenter.dokumenter.slice(0, 10),
-    pageReference: dokumenter.pageReference,
+    forrigeSide,
+    dokumenter: dokumenter.dokumenter.slice(start, 10 + start),
+    pageReference,
   });
 });
 

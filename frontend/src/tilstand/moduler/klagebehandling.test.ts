@@ -48,6 +48,10 @@ describe("Oppgave epos", () => {
           frist: "2019-12-05",
           pageReference: "id...",
           prevPageReference: "id...",
+          pageRefs: [],
+          historyNavigate: false,
+          historyRef: "",
+          pageIdx: 0,
           hjemler: [{ kapittel: 8, paragraf: 14, original: "8-14" }],
         };
         const reducerResponse = hentetKlageHandling(mockedResponse);

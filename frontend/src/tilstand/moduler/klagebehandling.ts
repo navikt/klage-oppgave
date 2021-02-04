@@ -1,19 +1,11 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, from, of } from "rxjs";
-import {
-  catchError,
-  concatAll,
-  map,
-  mergeMap,
-  retryWhen,
-  timeout,
-  withLatestFrom,
-} from "rxjs/operators";
+import { concat, of } from "rxjs";
+import { catchError, map, mergeMap, retryWhen, timeout, withLatestFrom } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { OppgaveParams } from "./oppgave";
+import { toasterSett, toasterSkjul } from "./toaster";
 
 //==========
 // Interfaces
@@ -40,8 +32,12 @@ export interface IKlage {
   frist: string;
   tildeltSaksbehandlerident?: string;
   hjemler: Array<IHjemmel>;
-  pageReference: string | null;
-  prevPageReference: string | null;
+  pageReference: string;
+  prevPageReference: string;
+  pageRefs: Array<string | null>;
+  pageIdx: number;
+  historyNavigate: boolean;
+  historyRef: string;
   dokumenter?: any;
 }
 
@@ -51,8 +47,11 @@ interface IKlagePayload {
 
 interface IDokumentParams {
   id: string;
+  idx: number;
   handling: string;
   antall: number;
+  ref: string | null;
+  historyNavigate: boolean;
 }
 
 //==========
@@ -73,8 +72,12 @@ export const klageSlice = createSlice({
     avsluttet: undefined,
     frist: "2019-12-05",
     tildeltSaksbehandlerident: undefined,
-    prevPageReference: null,
-    pageReference: null,
+    prevPageReference: "",
+    pageReference: "",
+    historyNavigate: false,
+    historyRef: "",
+    pageRefs: [null],
+    pageIdx: 0,
     hjemler: [],
   } as IKlage,
   reducers: {
@@ -83,8 +86,23 @@ export const klageSlice = createSlice({
       return state;
     },
     DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
+      const { historyNavigate, historyRef } = action.payload;
+      console.debug("HENTET", historyNavigate);
+      if (!state.pageRefs) {
+        state.pageRefs = [];
+        state.pageRefs.push(null);
+      }
+      if (action.payload.pageReference && !historyNavigate) {
+        console.debug("PUSH", historyNavigate);
+        if (!historyNavigate) {
+          const found = state.pageRefs.filter((ref) => ref === action.payload.pageReference);
+          if (found.length === 0) state.pageRefs.push(action.payload.pageReference);
+        }
+      }
       state.prevPageReference = state.pageReference;
       state.pageReference = action.payload.pageReference;
+      if (action.payload.pageReference)
+        state.pageIdx = state.pageRefs.indexOf(action.payload.pageReference);
       state.dokumenter = action.payload.dokumenter;
       return state;
     },
@@ -108,7 +126,11 @@ export const feiletHandling = createAction<string>("klagebehandling/FEILET");
 export const hentetKlageDokumenterHandling = createAction<IKlage>(
   "klagebehandling/DOKUMENTER_HENTET"
 );
-export const hentDokumenterHandling = createAction<IDokumentParams>(
+export const hentDokumenterHandling = createAction<Partial<IDokumentParams>>(
+  "klagebehandling/HENT_KLAGE_DOKUMENTER"
+);
+
+export const hentDokumentSideHandling = createAction<Partial<IDokumentParams>>(
   "klagebehandling/HENT_KLAGE_DOKUMENTER"
 );
 
@@ -141,32 +163,42 @@ export function klagebehandlingEpos(
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
-            return of(feiletHandling(error.message));
+            return concat([
+              feiletHandling(error.message),
+              toasterSett({
+                display: true,
+                feilmelding: error.message,
+              }),
+              toasterSkjul(),
+            ]);
           })
         );
     })
   );
 }
 
-export function klagebehandlingDokumenterEpos(
+export function klagebehandlingDokumenterSideEpos(
   action$: ActionsObservable<PayloadAction<IDokumentParams>>,
   state$: StateObservable<RootStateOrAny>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
-    ofType(hentDokumenterHandling.type),
+    ofType(hentDokumentSideHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
-      let klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10`;
-      if (action.payload.handling === "neste")
-        klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10&forrigeSide=${state.klagebehandling.pageReference}`;
-      if (action.payload.handling === "forrige")
-        klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10&forrigeSide=${state.klagebehandling.prevPageReference}`;
+      let ref = action.payload.ref;
+      let historyRef = ref;
+      let { historyNavigate } = action.payload;
+      let klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10&forrigeSide=${ref}`;
       return getJSON<IKlagePayload>(klageUrl)
         .pipe(
           timeout(5000),
           map((response: IKlagePayload) => {
-            return R.compose(R.omit("id"))(response);
+            return {
+              historyNavigate,
+              historyRef,
+              ...response,
+            };
           })
         )
         .pipe(
@@ -177,11 +209,18 @@ export function klagebehandlingDokumenterEpos(
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
-            return of(feiletHandling(error.message));
+            return concat([
+              feiletHandling(error.message),
+              toasterSett({
+                display: true,
+                feilmelding: `Henting av dokumenter feilet: ${error.message}`,
+              }),
+              toasterSkjul(),
+            ]);
           })
         );
     })
   );
 }
 
-export const KLAGEBEHANDLING_EPICS = [klagebehandlingEpos, klagebehandlingDokumenterEpos];
+export const KLAGEBEHANDLING_EPICS = [klagebehandlingEpos, klagebehandlingDokumenterSideEpos];

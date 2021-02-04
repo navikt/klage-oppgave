@@ -153,9 +153,11 @@ ul.klage__lenker {
     width: 100%;
   }
 }
+
 .liten {
   font-size: 0.7em;
 }
+
 .knapp__lenke {
   border: none;
   background: none;
@@ -180,13 +182,17 @@ ul.klage__lenker {
 
 .dokument-wrapper {
   display: grid;
-  grid-template-columns: 50em 40em;
+  grid-template-columns: 54em 40em;
 }
+
 .preview {
+  margin: 1em 0;
 }
 
 table.dokument-tabell {
   margin: @margin-default;
+  width: 50em;
+  max-width: 50em;
 
   th {
     border-bottom: 1px solid #c6c2bf;
@@ -194,13 +200,44 @@ table.dokument-tabell {
 
   th,
   td {
-    padding: 0.5em 0.76em;
+    padding: 0.5em 0.5em;
     border-bottom: 1px solid #c6c2bf;
   }
+
   tr:hover,
   td:hover {
     background-color: #e5f3ff;
   }
+
+  th:first-child,
+  td:first-child {
+    width: 3em;
+    max-width: 3em;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 15em;
+    max-width: 15em;
+    text-align: left;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 20em;
+    max-width: 20em;
+    text-align: left;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    max-width: 10em;
+    text-align: left;
+  }
+}
+
+.dokument-tabell__paginator {
+  margin: 1em;
 }
 
 input[type="checkbox"] {

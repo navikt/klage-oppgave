@@ -10,6 +10,7 @@ import qs from "qs";
 import { useDispatch, useSelector } from "react-redux";
 import {
   hentDokumenterHandling,
+  hentDokumentSideHandling,
   hentKlageHandling,
   IKlage,
 } from "../tilstand/moduler/klagebehandling";
@@ -214,6 +215,7 @@ const Klagen = () => {
           <div>
             Hjemmel:
             <ul className={"detaljliste"}>
+              {klage.hjemler.length === 0 && <div>Ingen satt</div>}
               {klage.hjemler.map((hjemmel: any, idx: number) => (
                 <li key={`hjemmel${idx}`}>
                   <div className={"etikett etikett-Sykepenger etikett--hjemmel"}>
@@ -234,12 +236,35 @@ function Dokumenter() {
   const [aktivtDokument, settaktivtDokument] = useState(0);
   const dispatch = useDispatch();
 
-  function hentNeste() {
-    dispatch(hentDokumenterHandling({ id: klage.id, handling: "neste", antall: 10 }));
+  function hentNeste(ref: string | null) {
+    dispatch(hentDokumentSideHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
   }
 
-  function hentForrige() {
-    dispatch(hentDokumenterHandling({ id: klage.id, handling: "forrige", antall: 10 }));
+  function hentForrige(ref: string | null) {
+    dispatch(
+      hentDokumentSideHandling({
+        id: klage.id,
+        ref: ref ?? null,
+        antall: 10,
+        historyNavigate: true,
+      })
+    );
+  }
+
+  function hentSide({
+    ref,
+    idx,
+    historyNavigate,
+  }: {
+    ref?: string | null;
+    idx?: number;
+    historyNavigate: boolean;
+  }) {
+    if (idx) dispatch(hentDokumentSideHandling({ id: klage.id, idx, antall: 10, historyNavigate }));
+    else
+      dispatch(
+        hentDokumentSideHandling({ id: klage.id, ref: ref ?? null, antall: 10, historyNavigate })
+      );
   }
 
   if (!klage.dokumenter) {
@@ -247,59 +272,84 @@ function Dokumenter() {
   }
   return (
     <div className={"dokument-wrapper"}>
-      <table className={"dokument-tabell"} cellPadding={0} cellSpacing={0}>
-        <thead>
-          <tr>
-            <th />
-            <th>Dokumentbeskrivelse</th>
-            <th>Tema</th>
-            <th>Registrert</th>
-          </tr>
-        </thead>
-        <tbody>
-          {klage.dokumenter.map((dokument: any, idx: number) => (
-            <tr
-              key={dokument.dokumentInfoId}
-              onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
-            >
-              <td>
-                <input type={"checkbox"} />
-              </td>
-              <td>
-                <button
-                  onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
-                  className={"knapp__lenke"}
-                >
-                  {dokument.tittel}
-                </button>
-              </td>
-              <td>
-                <div
-                  className={`etikett etikett--mw etikett--info etikett--${dokument.tema
-                    .split(" ")[0]
-                    .toLowerCase()}`}
-                >
-                  {dokument.tema}
-                </div>
-              </td>
-              <td className={"liten"}>{formattedDate(dokument.registrert)}</td>
+      <div>
+        {klage.dokumenter.length} dok
+        <table className={"dokument-tabell"} cellPadding={0} cellSpacing={0}>
+          <thead>
+            <tr>
+              <th />
+              <th>Dokumentbeskrivelse</th>
+              <th>Tema</th>
+              <th>Registrert</th>
             </tr>
-          ))}
-          <tr>
-            <td colSpan={4}>
-              <button onClick={hentForrige} disabled={!klage.prevPageReference}>
-                Forrige
-              </button>
-              <button onClick={hentNeste} disabled={!klage.pageReference}>
-                Neste
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {klage.dokumenter.map((dokument: any, idx: number) => (
+              <tr
+                key={`${idx}_${dokument.dokumentInfoId}`}
+                onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
+              >
+                <td>
+                  <input type={"checkbox"} />
+                </td>
+                <td>
+                  <button
+                    onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
+                    className={"knapp__lenke"}
+                  >
+                    {dokument.tittel}
+                  </button>
+                </td>
+                <td>
+                  <div
+                    className={`etikett etikett--mw etikett--info etikett--${dokument.tema
+                      .split(" ")[0]
+                      .toLowerCase()}`}
+                  >
+                    {dokument.tema}
+                  </div>
+                </td>
+                <td className={"liten"}>{formattedDate(dokument.registrert)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className={"dokument-tabell__paginator"}>
+          <button onClick={() => hentForrige(klage.pageRefs[klage.pageIdx - 2])}>
+            Forrige ({JSON.stringify(klage.pageRefs[klage.pageIdx - 2])})
+          </button>
+          <button onClick={() => hentNeste(klage.pageReference)} disabled={!klage.pageReference}>
+            Neste ({klage.pageReference})
+          </button>
+        </div>
+      </div>
       <div className={"preview"}>Forhåndsvisning {aktivtDokument > 0 && aktivtDokument}</div>
     </div>
   );
+  /*
+
+    {klage.pageRefs.map((ref: string | null, idx: number) => {
+        if (ref === null) {
+            return (
+                <button
+                    onClick={() => hentSide({ref:null, historyNavigate:false})}
+                    key={`paginate${idx}`}
+                >
+                    {idx} - {JSON.stringify(ref)}
+                </button>
+            );
+        }
+        return (
+            <button
+                key={`paginate${idx}`}
+                onClick={() => hentSide({ref,historyNavigate:true})}
+                //disabled={ref===klage.pageReference}
+            >
+                {idx} - {ref}
+            </button>
+        );
+    })}
+    */
 }
 
 function UtarbeideVedtak() {
@@ -335,8 +385,8 @@ const Klagebehandling = (): JSX.Element => {
     }
   }, [klage_state.oppgaveId]);
   useEffect(() => {
-    if (klage.id) {
-      dispatch(hentDokumenterHandling({ id: klage.id, handling: "init", antall: 10 }));
+    if (klage.id !== "") {
+      dispatch(hentDokumenterHandling({ id: klage.id, ref: null, antall: 10 }));
     }
   }, [klage.id]);
 
