@@ -176,6 +176,10 @@ export const oppgaveSlice = createSlice({
       }
       return state;
     },
+    HENTET_UGATTE: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
+      console.debug(action.payload);
+      return state;
+    },
     FEILET: (state, action: PayloadAction<string>) => {
       state.meta.feilmelding = "Oppgave-henting feilet";
       state.lasterData = false;
@@ -206,11 +210,12 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const { MOTTATT, FEILET } = oppgaveSlice.actions;
+export const { MOTTATT, FEILET, HENTET_UGATTE } = oppgaveSlice.actions;
 export const enkeltOppgave = createAction<OppgaveParams>("oppgaver/HENT_ENKELTOPPGAVE");
 export const oppgaveRequest = createAction<OppgaveParams>("oppgaver/HENT");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
+export const hentUtgatte = createAction<OppgaveParams>("oppgaver/HENT_UTGAATTE");
 
 //==========
 // Sortering og filtrering
@@ -307,4 +312,38 @@ export function hentOppgaverEpos(
   );
 }
 
-export const OPPGAVER_EPICS = [hentOppgaverEpos];
+export function hentUtgaatteFristerEpos(
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(hentUtgatte.type),
+    withLatestFrom(state$),
+    switchMap(([action, state]) => {
+      let oppgaveUrl = buildQuery(
+        `/api/ansatte/${action.payload.ident}/antallutgaattefrister`,
+        action.payload
+      );
+      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
+        timeout(5000),
+        map((oppgaver) =>
+          HENTET_UGATTE({
+            start: action.payload.start,
+            antall: action.payload.antall,
+            tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
+            projeksjon: action.payload.projeksjon,
+            transformasjoner: action.payload.transformasjoner,
+            ...oppgaver,
+          } as RaderMedMetadataUtvidet)
+        )
+      );
+      return hentOppgaver.pipe(
+        retryWhen(provIgjenStrategi()),
+        catchError((error) => of(FEILET(error)))
+      );
+    })
+  );
+}
+
+export const OPPGAVER_EPICS = [hentUtgaatteFristerEpos, hentOppgaverEpos];

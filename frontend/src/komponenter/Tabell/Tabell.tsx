@@ -1,4 +1,4 @@
-import { Filter, oppgaveRequest, temaType } from "../../tilstand/moduler/oppgave";
+import { Filter, hentUtgatte, oppgaveRequest, temaType } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import {
@@ -169,7 +169,28 @@ const OppgaveTabell: React.FunctionComponent = () => {
       "%c -> kjører den faktisk oppgave-spørringen",
       "background: #222; color: #bada55"
     );
-    return dispatch(
+    dispatch(
+      hentUtgatte({
+        ident: filter_state.ident,
+        antall: filter_state.antall,
+        start: filter_state.start || 0,
+        enhetId: filter_state?.enhetId,
+        projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
+        tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
+        transformasjoner: {
+          filtrering: {
+            hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
+            typer: toValue(filter_state.transformasjoner.filtrering.typer),
+            temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+          },
+          sortering: {
+            frist: filter_state.transformasjoner.sortering.frist,
+          },
+        },
+      })
+    );
+
+    dispatch(
       oppgaveRequest({
         ident: filter_state.ident,
         antall: filter_state.antall,
