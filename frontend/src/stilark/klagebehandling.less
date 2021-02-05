@@ -58,7 +58,7 @@
 
 ul.klage__lenker {
   grid-area: lenker;
-  margin: @margin-default;
+  margin: @margin-default 0;
   list-style: none;
   justify-content: space-evenly;
   display: flex;
@@ -159,21 +159,26 @@ ul.klage__lenker {
 }
 
 .liten {
-  font-size: 0.7em;
+  font-size: 0.85em;
 }
 
 .knapp__lenke {
   border: none;
   background: none;
-  font-size: 0.9em;
   text-decoration: underline;
   color: #0067c5;
   padding: 0;
+  font-size: 1em;
 }
 
 .knapp__lenke:active {
   color: #0037c5;
   font-weight: bold;
+}
+.knapp__lenke:disabled,
+.knapp__lenke[disabled] {
+  text-decoration: none;
+  color: #3e3832;
 }
 
 .pl {
@@ -186,11 +191,15 @@ ul.klage__lenker {
 
 .dokument-wrapper {
   display: grid;
-  grid-template-columns: 54em 40em;
+  grid-template-columns: 1fr 1fr;
 }
 
 .preview {
-  margin: 1em 0;
+  margin: 0 1em 1em 0;
+  padding: 1em;
+  color: #3e3832;
+  width: 98%;
+  border: 1px dotted #3e3832;
 }
 
 table.dokument-tabell {

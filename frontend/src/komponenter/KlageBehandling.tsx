@@ -319,14 +319,14 @@ function Dokumenter() {
         </table>
         <div className={"dokument-tabell__paginator"}>
           <button
-            className={"knapp knapp knapp--standard"}
+            className={"knapp__lenke"}
             onClick={() => hentForrige(klage.pageRefs[klage.pageIdx - 2])}
             disabled={klage.pageIdx === 1}
           >
             Forrige
           </button>
           <button
-            className={"knapp knapp knapp--standard"}
+            className={"knapp__lenke"}
             onClick={() => hentNeste(klage.pageReference)}
             disabled={!klage.pageReference}
           >
