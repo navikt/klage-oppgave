@@ -180,7 +180,6 @@ export const oppgaveSlice = createSlice({
       return state;
     },
     HENTET_UGATTE: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
-      console.debug(action.payload);
       state.meta = { ...state.meta, utgaatteFrister: action.payload.antall };
       return state;
     },
@@ -333,12 +332,7 @@ export function hentUtgaatteFristerEpos(
         timeout(5000),
         map((oppgaver) =>
           HENTET_UGATTE({
-            start: action.payload.start,
             antall: action.payload.antall,
-            tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
-            projeksjon: action.payload.projeksjon,
-            transformasjoner: action.payload.transformasjoner,
-            ...oppgaver,
           } as RaderMedMetadataUtvidet)
         )
       );
