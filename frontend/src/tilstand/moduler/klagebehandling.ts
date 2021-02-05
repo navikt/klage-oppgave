@@ -167,7 +167,7 @@ export function klagebehandlingEpos(
               feiletHandling(error.message),
               toasterSett({
                 display: true,
-                feilmelding: error.message,
+                feilmelding: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error.message}`,
               }),
               toasterSkjul(),
             ]);
