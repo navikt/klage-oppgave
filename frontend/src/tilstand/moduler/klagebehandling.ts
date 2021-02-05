@@ -35,11 +35,9 @@ export interface IKlage {
   tildeltSaksbehandlerident?: string;
   hjemler: Array<IHjemmel>;
   pageReference: string;
-  prevPageReference: string;
   pageRefs: Array<string | null>;
   pageIdx: number;
   historyNavigate: boolean;
-  historyRef: string;
   dokumenter?: any;
 }
 
@@ -76,10 +74,8 @@ export const klageSlice = createSlice({
     avsluttet: undefined,
     frist: "",
     tildeltSaksbehandlerident: undefined,
-    prevPageReference: "",
     pageReference: "",
     historyNavigate: false,
-    historyRef: "",
     pageRefs: [null],
     pageIdx: 0,
     hjemler: [],
@@ -101,7 +97,7 @@ export const klageSlice = createSlice({
       return state;
     },
     DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
-      const { historyNavigate, historyRef } = action.payload;
+      const { historyNavigate } = action.payload;
       state.dokumenterLastet = true;
 
       if (!state.pageRefs) {
@@ -114,7 +110,6 @@ export const klageSlice = createSlice({
           if (found.length === 0) state.pageRefs.push(action.payload.pageReference);
         }
       }
-      state.prevPageReference = state.pageReference;
       state.pageReference = action.payload.pageReference;
       if (action.payload.pageReference)
         state.pageIdx = state.pageRefs.indexOf(action.payload.pageReference);
@@ -205,7 +200,6 @@ export function klagebehandlingDokumenterSideEpos(
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
       let ref = action.payload.ref;
-      let historyRef = ref;
       let { historyNavigate } = action.payload;
       let klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10&forrigeSide=${ref}`;
       return getJSON<IKlagePayload>(klageUrl)
@@ -214,7 +208,6 @@ export function klagebehandlingDokumenterSideEpos(
           map((response: IKlagePayload) => {
             return {
               historyNavigate,
-              historyRef,
               ...response,
             };
           })

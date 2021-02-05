@@ -49,12 +49,7 @@ export default function Klagebehandling() {
       dispatch(hentKlageHandling(klage_state.oppgaveId));
     }
   }, [klage_state.oppgaveId]);
-  /*useEffect(() => {
-    if (klage.id !== "") {
-      dispatch(hentDokumenterHandling({ id: klage.id, ref: null, antall: 10 }));
-    }
-  }, [klage.id]);
-*/
+
   useEffect(() => {
     const params = qs.parse(location.pathname);
     let loc = location.pathname.split("/");
