@@ -1,12 +1,14 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { of, timer } from "rxjs";
+import { concat, of, timer } from "rxjs";
 import { catchError, map, retryWhen, switchMap, timeout, withLatestFrom } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { settEnhetHandling } from "./meg";
+import { toasterSett, toasterSkjul } from "./toaster";
+import { feiletHandling } from "./klagebehandling";
 
 const R = require("ramda");
 const { ascend, descend, prop, sort } = R;
@@ -62,6 +64,7 @@ interface Metadata {
   tildeltSaksbehandler?: string | undefined;
   projeksjon?: string;
   feilmelding?: string | undefined;
+  utgaatteFrister?: number;
 }
 
 export interface OppgaveRader {
@@ -178,6 +181,7 @@ export const oppgaveSlice = createSlice({
     },
     HENTET_UGATTE: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
       console.debug(action.payload);
+      state.meta = { ...state.meta, utgaatteFrister: action.payload.antall };
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
@@ -340,7 +344,16 @@ export function hentUtgaatteFristerEpos(
       );
       return hentOppgaver.pipe(
         retryWhen(provIgjenStrategi()),
-        catchError((error) => of(FEILET(error)))
+        catchError((error) =>
+          concat([
+            feiletHandling(error.message),
+            toasterSett({
+              display: true,
+              feilmelding: `Henting av utgått frister feilet (${error.message})`,
+            }),
+            toasterSkjul(),
+          ])
+        )
       );
     })
   );

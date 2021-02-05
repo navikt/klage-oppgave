@@ -107,6 +107,14 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
   res.send(result);
 });
 
+app.get("/ansatte/:id/antallutgaattefrister", async (req, res) => {
+  const result = await filtrerOppgaver({
+    navIdent: req.params?.id,
+    ...req.query,
+  } as OppgaveQuery);
+  res.send(result);
+});
+
 app.get("/ansatte/:id/enheter", async (req, res) => {
   res.send([
     {

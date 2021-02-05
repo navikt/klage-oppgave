@@ -453,6 +453,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </tbody>
       </table>
+      <div>Antall oppgaver med utgåtte frister: {oppgaver.meta.utgaatteFrister}</div>
     </>
   );
 };
