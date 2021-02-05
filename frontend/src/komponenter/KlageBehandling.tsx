@@ -12,6 +12,7 @@ import {
   hentDokumenterHandling,
   hentDokumentSideHandling,
   hentKlageHandling,
+  lasterDokumenter,
   IKlage,
 } from "../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../tilstand/moduler/klagebehandlinger.velgere";
@@ -238,10 +239,12 @@ function Dokumenter() {
   const dispatch = useDispatch();
 
   function hentNeste(ref: string | null) {
+    dispatch(lasterDokumenter(true));
     dispatch(hentDokumentSideHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
   }
 
   function hentForrige(ref: string | null) {
+    dispatch(lasterDokumenter(true));
     dispatch(
       hentDokumentSideHandling({
         id: klage.id,
@@ -274,7 +277,6 @@ function Dokumenter() {
   return (
     <div className={"dokument-wrapper"}>
       <div>
-        {klage.dokumenter.length} dok
         <table className={"dokument-tabell"} cellPadding={0} cellSpacing={0}>
           <thead>
             <tr>
@@ -316,41 +318,15 @@ function Dokumenter() {
           </tbody>
         </table>
         <div className={"dokument-tabell__paginator"}>
-          <button onClick={() => hentForrige(klage.pageRefs[klage.pageIdx - 2])}>
-            Forrige ({JSON.stringify(klage.pageRefs[klage.pageIdx - 2])})
-          </button>
+          <button onClick={() => hentForrige(klage.pageRefs[klage.pageIdx - 2])}>Forrige</button>
           <button onClick={() => hentNeste(klage.pageReference)} disabled={!klage.pageReference}>
-            Neste ({klage.pageReference})
+            Neste
           </button>
         </div>
       </div>
       <div className={"preview"}>Forhåndsvisning {aktivtDokument > 0 && aktivtDokument}</div>
     </div>
   );
-  /*
-
-    {klage.pageRefs.map((ref: string | null, idx: number) => {
-        if (ref === null) {
-            return (
-                <button
-                    onClick={() => hentSide({ref:null, historyNavigate:false})}
-                    key={`paginate${idx}`}
-                >
-                    {idx} - {JSON.stringify(ref)}
-                </button>
-            );
-        }
-        return (
-            <button
-                key={`paginate${idx}`}
-                onClick={() => hentSide({ref,historyNavigate:true})}
-                //disabled={ref===klage.pageReference}
-            >
-                {idx} - {ref}
-            </button>
-        );
-    })}
-    */
 }
 
 function UtarbeideVedtak() {

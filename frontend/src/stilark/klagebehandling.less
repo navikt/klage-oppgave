@@ -62,9 +62,11 @@ ul.klage__lenker {
   list-style: none;
   justify-content: space-evenly;
   display: flex;
+  flex-flow: wrap;
 
   li {
     overflow: hidden;
+    padding: 0.1em 0.5em;
     white-space: nowrap;
   }
 
@@ -240,6 +242,8 @@ table.dokument-tabell {
 
 .dokument-tabell__paginator {
   margin: 1em;
+  display: flex;
+  justify-content: space-between;
 }
 
 input[type="checkbox"] {

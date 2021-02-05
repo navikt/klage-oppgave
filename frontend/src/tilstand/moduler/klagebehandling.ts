@@ -90,6 +90,11 @@ export const klageSlice = createSlice({
       state.klageLastet = true;
       return state;
     },
+    LASTER_DOKUMENTER: (state, action: PayloadAction<boolean>) => {
+      console.debug("lasterDokumenter", action.payload);
+      state.dokumenterLastet = action.payload;
+      return state;
+    },
     DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
       const { historyNavigate, historyRef } = action.payload;
       state.dokumenterLastet = true;
@@ -140,6 +145,8 @@ export const hentDokumentSideHandling = createAction<Partial<IDokumentParams>>(
   "klagebehandling/HENT_KLAGE_DOKUMENTER"
 );
 
+export const lasterDokumenter = createAction<boolean>("klagebehandling/LASTER_DOKUMENTER");
+
 //==========
 // Epos
 //==========
@@ -179,6 +186,15 @@ export function klagebehandlingEpos(
             ]);
           })
         );
+    })
+  );
+}
+
+function lasterDokumenterEpos(action$: ActionsObservable<PayloadAction<boolean>>) {
+  return action$.pipe(
+    ofType(lasterDokumenter.type),
+    map(() => {
+      return feiletHandling("test");
     })
   );
 }
