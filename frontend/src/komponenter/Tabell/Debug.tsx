@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 
 function Debug(state: any) {
-  console.debug(state);
   const nodeRef = React.useRef(null);
   return (
     <Draggable defaultPosition={{ x: 50, y: 0 }} nodeRef={nodeRef}>

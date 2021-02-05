@@ -12,7 +12,7 @@ function klageReducer() {
   };
 
   function reducer(state: any, action: any) {
-    console.debug({ type: action.type, payload: action.payload });
+    //console.debug({ type: action.type, payload: action.payload });
     switch (action.type) {
       case "sett_aktiv_side": {
         return {

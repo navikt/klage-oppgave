@@ -91,7 +91,6 @@ export const klageSlice = createSlice({
       return state;
     },
     LASTER_DOKUMENTER: (state, action: PayloadAction<boolean>) => {
-      console.debug("lasterDokumenter", action.payload);
       state.dokumenterLastet = action.payload;
       return state;
     },
@@ -104,7 +103,6 @@ export const klageSlice = createSlice({
         state.pageRefs.push(null);
       }
       if (action.payload.pageReference && !historyNavigate) {
-        console.debug("PUSH", historyNavigate);
         if (!historyNavigate) {
           const found = state.pageRefs.filter((ref) => ref === action.payload.pageReference);
           if (found.length === 0) state.pageRefs.push(action.payload.pageReference);

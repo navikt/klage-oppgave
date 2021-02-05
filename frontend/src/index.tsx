@@ -5,7 +5,7 @@ import { Provider, useDispatch } from "react-redux";
 import store from "./tilstand/konfigurerTilstand";
 //import { initEnvironment } from './state/modules/environment';
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import KlageBehandling from "./komponenter/KlageBehandling";
+import KlageBehandling from "./komponenter/Klagebehandling/KlageBehandling";
 import MineSaker from "./komponenter/MineSaker";
 import AlleSaker from "./komponenter/AlleSaker";
 import Innstillinger from "./komponenter/Innstillinger";
