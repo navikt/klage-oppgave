@@ -1,4 +1,4 @@
-@li-w: 9.5em;
+@li-w: 9em;
 @margin-default: 1.5em;
 .klagebehandling__informasjon {
   background-color: #f8f8f8;
@@ -14,19 +14,23 @@
 
 .meny__linker {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-areas: "klage_nav lenker";
+  max-width: 100em;
+}
+@media (max-width: 800px) {
+  .meny__linker {
+    grid-template-columns: 1fr;
+  }
 }
 
 .klage__nav {
   grid-area: klage_nav;
   padding: 0.1em 0 0 0;
-  margin: 0 20px 0 0;
-  max-width: calc(6 * @li-w);
+  margin: 0;
 }
 
 .klage__nav ul {
-  max-width: calc(6 * @li-w);
   padding: 5px 0 0 0;
   border-bottom: 1px solid #3e3832;
 }
@@ -34,7 +38,6 @@
 .klage__nav ul li {
   max-width: @li-w;
   margin: 1.5em 0 0 0;
-
   & a > * {
     padding: 0 1em 0 0;
   }
@@ -57,9 +60,8 @@ ul.klage__lenker {
   grid-area: lenker;
   margin: @margin-default;
   list-style: none;
-  max-width: calc(4 * @li-w);
+  justify-content: space-evenly;
   display: flex;
-  justify-content: space-between;
 
   li {
     overflow: hidden;

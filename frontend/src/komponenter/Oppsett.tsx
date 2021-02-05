@@ -42,7 +42,7 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
     return <div>Beklager, men din bruker har ikke tilgang til denne siden</div>;
   }
   return (
-    <main className="container" data-testid="klagesiden">
+    <main className="main container" data-testid="klagesiden">
       <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
         {/* <Sok onSok={() => Promise.resolve("test")} /> */}
       </Header>
