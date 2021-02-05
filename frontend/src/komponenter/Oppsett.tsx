@@ -73,7 +73,7 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
         )}
       </div>
       <article className="content">{children}</article>
-      <footer className="main-footer"></footer>
+      <footer className="main-footer">Saksbehandlingsappen for Klage</footer>
     </main>
   );
 }
