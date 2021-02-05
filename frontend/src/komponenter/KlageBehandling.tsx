@@ -242,6 +242,9 @@ function Dokumenter() {
     dispatch(lasterDokumenter(false));
     dispatch(hentDokumentSideHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
   }
+  useEffect(() => {
+    hentNeste(null);
+  }, []);
 
   function hentForrige(ref: string | null) {
     dispatch(lasterDokumenter(false));
