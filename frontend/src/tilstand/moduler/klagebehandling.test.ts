@@ -51,6 +51,8 @@ describe("Oppgave epos", () => {
           pageRefs: [],
           historyNavigate: false,
           historyRef: "",
+          klageLastet: false,
+          dokumenterLastet: false,
           pageIdx: 0,
           hjemler: [{ kapittel: 8, paragraf: 14, original: "8-14" }],
         };
