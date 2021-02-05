@@ -15,6 +15,7 @@ import Debug from "../Tabell/Debug";
 import KlageMeny from "./KlageMeny";
 import Klagen from "./Klagen";
 import Dokumenter from "./Dokumenter";
+import NavFrontendSpinner from "nav-frontend-spinner";
 
 function UtarbeideVedtak() {
   return <>Utarbeide Vedtak</>;
@@ -63,7 +64,7 @@ export default function Klagebehandling() {
   }, [location]);
 
   if (!klage_state.oppgaveId || !klage.klageLastet) {
-    return <>Spinner</>;
+    return <NavFrontendSpinner />;
   }
 
   return (
