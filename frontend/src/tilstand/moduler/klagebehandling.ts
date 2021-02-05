@@ -190,15 +190,6 @@ export function klagebehandlingEpos(
   );
 }
 
-function lasterDokumenterEpos(action$: ActionsObservable<PayloadAction<boolean>>) {
-  return action$.pipe(
-    ofType(lasterDokumenter.type),
-    map(() => {
-      return feiletHandling("test");
-    })
-  );
-}
-
 export function klagebehandlingDokumenterSideEpos(
   action$: ActionsObservable<PayloadAction<IDokumentParams>>,
   state$: StateObservable<RootStateOrAny>,

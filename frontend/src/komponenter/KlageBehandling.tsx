@@ -239,12 +239,12 @@ function Dokumenter() {
   const dispatch = useDispatch();
 
   function hentNeste(ref: string | null) {
-    dispatch(lasterDokumenter(true));
+    dispatch(lasterDokumenter(false));
     dispatch(hentDokumentSideHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
   }
 
   function hentForrige(ref: string | null) {
-    dispatch(lasterDokumenter(true));
+    dispatch(lasterDokumenter(false));
     dispatch(
       hentDokumentSideHandling({
         id: klage.id,
