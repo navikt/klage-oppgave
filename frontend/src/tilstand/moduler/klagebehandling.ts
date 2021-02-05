@@ -94,6 +94,12 @@ export const klageSlice = createSlice({
       state.dokumenterLastet = action.payload;
       return state;
     },
+    NULLSTILL_DOKUMENTER: (state, action: PayloadAction<boolean>) => {
+      state.dokumenterLastet = false;
+      state.pageRefs = [];
+      state.pageIdx = 0;
+      return state;
+    },
     DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
       const { historyNavigate, historyRef } = action.payload;
       state.dokumenterLastet = true;
@@ -144,6 +150,7 @@ export const hentDokumentSideHandling = createAction<Partial<IDokumentParams>>(
 );
 
 export const lasterDokumenter = createAction<boolean>("klagebehandling/LASTER_DOKUMENTER");
+export const nullstillDokumenter = createAction("klagebehandling/NULLSTILL_DOKUMENTER");
 
 //==========
 // Epos

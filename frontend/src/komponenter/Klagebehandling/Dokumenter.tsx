@@ -2,6 +2,7 @@ import {
   hentDokumentSideHandling,
   IKlage,
   lasterDokumenter,
+  nullstillDokumenter,
 } from "../../tilstand/moduler/klagebehandling";
 import { useDispatch, useSelector } from "react-redux";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
@@ -30,7 +31,8 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
     dispatch(hentDokumentSideHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
   }
   useEffect(() => {
-    hentNeste(null);
+    dispatch(nullstillDokumenter());
+    dispatch(hentDokumentSideHandling({ id: klage.id, ref: null, antall: 10 }));
   }, []);
 
   function hentForrige(ref: string | null) {
@@ -94,7 +96,7 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
         <button
           className={"knapp__lenke"}
           onClick={() => hentForrige(klage.pageRefs[klage.pageIdx - 2])}
-          disabled={klage.pageIdx === 1}
+          disabled={klage.pageIdx === 0}
         >
           Forrige
         </button>
