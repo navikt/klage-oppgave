@@ -17,6 +17,7 @@ import {
 import { velgKlage } from "../tilstand/moduler/klagebehandlinger.velgere";
 import { formattedDate } from "../domene/datofunksjoner";
 import Debug from "./Tabell/Debug";
+import NavFrontendSpinner from "nav-frontend-spinner";
 
 const KlageMeny = ({ klage_state, id }: { klage_state: IKlageState; id: string }) => {
   return (
@@ -267,8 +268,8 @@ function Dokumenter() {
       );
   }
 
-  if (!klage.dokumenter) {
-    return <></>;
+  if (!klage.dokumenter || !klage.dokumenterLastet) {
+    return <NavFrontendSpinner />;
   }
   return (
     <div className={"dokument-wrapper"}>
@@ -398,7 +399,7 @@ const Klagebehandling = (): JSX.Element => {
     if (params.side) klage_dispatch({ type: "sett_aktiv_side", payload: params.side });
   }, [location]);
 
-  if (!klage_state.oppgaveId) {
+  if (!klage_state.oppgaveId || !klage.klageLastet) {
     return <>Spinner</>;
   }
 

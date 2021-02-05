@@ -20,6 +20,8 @@ export interface IHjemmel {
 
 export interface IKlage {
   id: string;
+  klageLastet: boolean;
+  dokumenterLastet: boolean;
   klageInnsendtdato?: string;
   fraNAVEnhet: string;
   mottattFoersteinstans: string;
@@ -61,16 +63,18 @@ export const klageSlice = createSlice({
   name: "klagebehandling",
   initialState: {
     id: "",
+    klageLastet: false,
+    dokumenterLastet: false,
     klageInnsendtdato: undefined,
-    fraNAVEnhet: "4416",
-    mottattFoersteinstans: "2019-08-22",
-    foedselsnummer: "29125639036",
-    tema: "SYK",
-    sakstype: "Klage",
-    mottatt: "2021-01-26",
+    fraNAVEnhet: "",
+    mottattFoersteinstans: "",
+    foedselsnummer: "",
+    tema: "",
+    sakstype: "",
+    mottatt: "",
     startet: undefined,
     avsluttet: undefined,
-    frist: "2019-12-05",
+    frist: "",
     tildeltSaksbehandlerident: undefined,
     prevPageReference: "",
     pageReference: "",
@@ -83,11 +87,13 @@ export const klageSlice = createSlice({
   reducers: {
     HENTET: (state, action: PayloadAction<IKlage>) => {
       state = action.payload;
+      state.klageLastet = true;
       return state;
     },
     DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
       const { historyNavigate, historyRef } = action.payload;
-      console.debug("HENTET", historyNavigate);
+      state.dokumenterLastet = true;
+
       if (!state.pageRefs) {
         state.pageRefs = [];
         state.pageRefs.push(null);
