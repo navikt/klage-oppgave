@@ -1,5 +1,6 @@
 import {
-  hentDokumentSideHandling,
+  hentDokumentAlleHandling,
+  hentDokumentTilordnedeHandling,
   IKlage,
   lasterDokumenter,
   nullstillDokumenter,
@@ -28,17 +29,18 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
 
   function hentNeste(ref: string | null) {
     dispatch(lasterDokumenter(false));
-    dispatch(hentDokumentSideHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
+    dispatch(hentDokumentAlleHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
   }
   useEffect(() => {
     dispatch(nullstillDokumenter());
-    dispatch(hentDokumentSideHandling({ id: klage.id, ref: null, antall: 10 }));
+    dispatch(hentDokumentAlleHandling({ id: klage.id, ref: null, antall: 10 }));
+    dispatch(hentDokumentTilordnedeHandling({ id: klage.id }));
   }, []);
 
   function hentForrige(ref: string | null) {
     dispatch(lasterDokumenter(false));
     dispatch(
-      hentDokumentSideHandling({
+      hentDokumentAlleHandling({
         id: klage.id,
         ref: ref ?? null,
         antall: 10,
@@ -47,7 +49,7 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
     );
   }
 
-  if (!klage.dokumenter || !klage.dokumenterLastet) {
+  if (!klage.dokumenter || !klage.dokumenterAlleHentet) {
     return <NavFrontendSpinner />;
   }
   return (

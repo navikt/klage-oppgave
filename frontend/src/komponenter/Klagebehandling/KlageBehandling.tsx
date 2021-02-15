@@ -5,11 +5,7 @@ import { NavLink, useLocation, useParams } from "react-router-dom";
 import klageReducer, { IKlageState } from "../klage-reducer";
 import qs from "qs";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  hentDokumenterHandling,
-  hentKlageHandling,
-  IKlage,
-} from "../../tilstand/moduler/klagebehandling";
+import { hentKlageHandling, IKlage } from "../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
 import Debug from "../Tabell/Debug";
 import KlageMeny from "./KlageMeny";

@@ -21,7 +21,8 @@ export interface IHjemmel {
 export interface IKlage {
   id: string;
   klageLastet: boolean;
-  dokumenterLastet: boolean;
+  dokumenterAlleHentet: boolean;
+  dokumenterTilordnedeHentet: boolean;
   klageInnsendtdato?: string;
   fraNAVEnhet: string;
   mottattFoersteinstans: string;
@@ -39,6 +40,7 @@ export interface IKlage {
   pageIdx: number;
   historyNavigate: boolean;
   dokumenter?: any;
+  dokumenterTilordnede?: any;
 }
 
 interface IKlagePayload {
@@ -62,7 +64,8 @@ export const klageSlice = createSlice({
   initialState: {
     id: "",
     klageLastet: false,
-    dokumenterLastet: false,
+    dokumenterAlleHentet: false,
+    dokumenterTilordnedeHentet: false,
     klageInnsendtdato: undefined,
     fraNAVEnhet: "",
     mottattFoersteinstans: "",
@@ -87,18 +90,18 @@ export const klageSlice = createSlice({
       return state;
     },
     LASTER_DOKUMENTER: (state, action: PayloadAction<boolean>) => {
-      state.dokumenterLastet = action.payload;
+      state.dokumenterAlleHentet = action.payload;
       return state;
     },
     NULLSTILL_DOKUMENTER: (state, action: PayloadAction<boolean>) => {
-      state.dokumenterLastet = false;
+      state.dokumenterAlleHentet = false;
       state.pageRefs = [];
       state.pageIdx = 0;
       return state;
     },
-    DOKUMENTER_HENTET: (state, action: PayloadAction<IKlage>) => {
+    DOKUMENTER_ALLE_HENTET: (state, action: PayloadAction<IKlage>) => {
       const { historyNavigate } = action.payload;
-      state.dokumenterLastet = true;
+      state.dokumenterAlleHentet = true;
 
       if (!state.pageRefs) {
         state.pageRefs = [];
@@ -114,6 +117,12 @@ export const klageSlice = createSlice({
       if (action.payload.pageReference)
         state.pageIdx = state.pageRefs.indexOf(action.payload.pageReference);
       state.dokumenter = action.payload.dokumenter;
+      return state;
+    },
+    DOKUMENTER_TILORDNEDE_HENTET: (state, action: PayloadAction<IKlage>) => {
+      const { historyNavigate } = action.payload;
+      state.dokumenterTilordnedeHentet = true;
+      state.dokumenterTilordnede = action.payload.dokumenter;
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
@@ -133,15 +142,19 @@ export const hentKlageHandling = createAction<string>("klagebehandling/HENT_KLAG
 export const hentetKlageHandling = createAction<IKlage>("klagebehandling/HENTET");
 export const feiletHandling = createAction<string>("klagebehandling/FEILET");
 
-export const hentetKlageDokumenterHandling = createAction<IKlage>(
-  "klagebehandling/DOKUMENTER_HENTET"
-);
-export const hentDokumenterHandling = createAction<Partial<IDokumentParams>>(
-  "klagebehandling/HENT_KLAGE_DOKUMENTER"
+export const hentetKlageDokumenterAlleHandling = createAction<IKlage>(
+  "klagebehandling/DOKUMENTER_ALLE_HENTET"
 );
 
-export const hentDokumentSideHandling = createAction<Partial<IDokumentParams>>(
+export const hentetKlageDokumenterTilordnedeHandling = createAction<IKlage>(
+  "klagebehandling/DOKUMENTER_TILORDNEDE_HENTET"
+);
+
+export const hentDokumentAlleHandling = createAction<Partial<IDokumentParams>>(
   "klagebehandling/HENT_KLAGE_DOKUMENTER"
+);
+export const hentDokumentTilordnedeHandling = createAction<Partial<IDokumentParams>>(
+  "klagebehandling/HENT_TILORDNEDE_DOKUMENTER"
 );
 
 export const lasterDokumenter = createAction<boolean>("klagebehandling/LASTER_DOKUMENTER");
@@ -190,13 +203,13 @@ export function klagebehandlingEpos(
   );
 }
 
-export function klagebehandlingDokumenterSideEpos(
+export function klagebehandlingDokumenterAlleEpos(
   action$: ActionsObservable<PayloadAction<IDokumentParams>>,
   state$: StateObservable<RootStateOrAny>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
-    ofType(hentDokumentSideHandling.type),
+    ofType(hentDokumentAlleHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
       let ref = action.payload.ref;
@@ -214,7 +227,7 @@ export function klagebehandlingDokumenterSideEpos(
         )
         .pipe(
           map((data) => {
-            return hentetKlageDokumenterHandling(data as any);
+            return hentetKlageDokumenterAlleHandling(data as any);
           })
         )
         .pipe(
@@ -234,4 +247,52 @@ export function klagebehandlingDokumenterSideEpos(
   );
 }
 
-export const KLAGEBEHANDLING_EPICS = [klagebehandlingEpos, klagebehandlingDokumenterSideEpos];
+export function klagebehandlingDokumenterTilordnedeEpos(
+  action$: ActionsObservable<PayloadAction<IDokumentParams>>,
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(hentDokumentTilordnedeHandling.type),
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
+      let ref = action.payload.ref;
+      let { historyNavigate } = action.payload;
+      let klageUrl = `/api/klagebehandlinger/${action.payload.id}/dokumenter`;
+      return getJSON<IKlagePayload>(klageUrl)
+        .pipe(
+          timeout(5000),
+          map((response: IKlagePayload) => {
+            return {
+              historyNavigate,
+              ...response,
+            };
+          })
+        )
+        .pipe(
+          map((data) => {
+            return hentetKlageDokumenterTilordnedeHandling(data as any);
+          })
+        )
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+          catchError((error) => {
+            return concat([
+              feiletHandling(error.message),
+              toasterSett({
+                display: true,
+                feilmelding: `Henting av tilordnede dokumenter feilet: ${error.message}`,
+              }),
+              toasterSkjul(),
+            ]);
+          })
+        );
+    })
+  );
+}
+
+export const KLAGEBEHANDLING_EPICS = [
+  klagebehandlingEpos,
+  klagebehandlingDokumenterTilordnedeEpos,
+  klagebehandlingDokumenterAlleEpos,
+];
