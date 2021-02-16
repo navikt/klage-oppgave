@@ -340,8 +340,9 @@ export function TilordneKlageDokumentEpos(
           )
         )
         .pipe(
-          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
+          retryWhen(provIgjenStrategi({ maksForsok: 0 })),
           catchError((error) => {
+            console.debug(error);
             return concat([
               feiletHandling(error.message),
               toasterSett({

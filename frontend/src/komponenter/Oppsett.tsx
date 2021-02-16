@@ -65,7 +65,7 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
           </li>
         </ul>
       </nav>
-      <div className="toaster">
+      <div className={`toaster ${visFeilmelding ? "active" : ""}`}>
         {visFeilmelding && (
           <Alertstripe type="feil">
             <span>{feilmelding}</span>
