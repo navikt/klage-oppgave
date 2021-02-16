@@ -42,39 +42,41 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
     return <div>Beklager, men din bruker har ikke tilgang til denne siden</div>;
   }
   return (
-    <main className="main container" data-testid="klagesiden">
-      <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
-        {/* <Sok onSok={() => Promise.resolve("test")} /> */}
-      </Header>
-      <nav className={`main-nav ${!visMeny ? "skjult" : ""}`} role="navigation" aria-label="Meny">
-        <ul>
-          <li>
-            <NavLink className="link" to="/oppgaver">
-              Oppgaver
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="link" to="/mineoppgaver">
-              Mine&nbsp;Oppgaver
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="link" to="/innstillinger">
-              Innstillinger
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
-      <div className={`toaster ${visFeilmelding ? "active" : ""}`}>
-        {visFeilmelding && (
-          <Alertstripe type="feil">
-            <span>{feilmelding}</span>
-          </Alertstripe>
-        )}
-      </div>
-      <article className="content">{children}</article>
+    <>
+      <main className="main container" data-testid="klagesiden">
+        <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
+          {/* <Sok onSok={() => Promise.resolve("test")} /> */}
+        </Header>
+        <nav className={`main-nav ${!visMeny ? "skjult" : ""}`} role="navigation" aria-label="Meny">
+          <ul>
+            <li>
+              <NavLink className="link" to="/oppgaver">
+                Oppgaver
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="link" to="/mineoppgaver">
+                Mine&nbsp;Oppgaver
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="link" to="/innstillinger">
+                Innstillinger
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+        <div className={`toaster ${visFeilmelding ? "active" : ""}`}>
+          {visFeilmelding && (
+            <Alertstripe type="feil">
+              <span>{feilmelding}</span>
+            </Alertstripe>
+          )}
+        </div>
+        <article className="content">{children}</article>
+      </main>
       <footer className="main-footer">Klagesaksbehandling</footer>
-    </main>
+    </>
   );
 }
 
