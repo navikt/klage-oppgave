@@ -2,10 +2,20 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { concat, of } from "rxjs";
-import { catchError, map, mergeMap, retryWhen, timeout, withLatestFrom } from "rxjs/operators";
+import {
+  catchError,
+  map,
+  mergeMap,
+  retryWhen,
+  switchMap,
+  timeout,
+  withLatestFrom,
+} from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
+import { OppgaveParams, oppgaveRequest } from "./oppgave";
+import { IInnstillinger, sattInnstillinger, settInnstillingerHandling } from "./meg";
 
 //==========
 // Interfaces
@@ -45,6 +55,11 @@ export interface IKlage {
 
 interface IKlagePayload {
   id: string;
+}
+
+interface IDokumentPayload {
+  id: string;
+  journalpostId: string;
 }
 
 interface IDokumentParams {
@@ -125,6 +140,10 @@ export const klageSlice = createSlice({
       state.dokumenterTilordnede = action.payload.dokumenter;
       return state;
     },
+    DOKUMENT_TILORDNET: (state, action: PayloadAction<any>) => {
+      console.debug(action.payload);
+      return state;
+    },
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
       return state;
@@ -155,6 +174,13 @@ export const hentDokumentAlleHandling = createAction<Partial<IDokumentParams>>(
 );
 export const hentDokumentTilordnedeHandling = createAction<Partial<IDokumentParams>>(
   "klagebehandling/HENT_TILORDNEDE_DOKUMENTER"
+);
+
+export const tilordneDokumenterHandling = createAction<Partial<IDokumentPayload>>(
+  "klagebehandling/TILORDNE_DOKUMENT"
+);
+export const tilordnetDokumentHandling = createAction<Partial<any>>(
+  "klagebehandling/DOKUMENT_TILORDNET"
 );
 
 export const lasterDokumenter = createAction<boolean>("klagebehandling/LASTER_DOKUMENTER");
@@ -291,8 +317,48 @@ export function klagebehandlingDokumenterTilordnedeEpos(
   );
 }
 
+export function TilordneKlageDokumentEpos(
+  action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
+  state$: StateObservable<RootStateOrAny>,
+  { post }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(tilordneDokumenterHandling.type),
+    switchMap((action) => {
+      const url = `/api/klagebehandlinger/${action.payload.id}/dokumenter`;
+      return post(
+        url,
+        {
+          id: action.payload.id,
+          journalpostId: action.payload.journalpostId,
+        },
+        { "Content-Type": "application/json" }
+      )
+        .pipe(
+          map((payload: { response: IInnstillinger }) =>
+            tilordnetDokumentHandling(payload.response)
+          )
+        )
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
+          catchError((error) => {
+            return concat([
+              feiletHandling(error.message),
+              toasterSett({
+                display: true,
+                feilmelding: `Tilordning av dokument feilet: (${error.message})`,
+              }),
+              toasterSkjul(),
+            ]);
+          })
+        );
+    })
+  );
+}
+
 export const KLAGEBEHANDLING_EPICS = [
   klagebehandlingEpos,
   klagebehandlingDokumenterTilordnedeEpos,
   klagebehandlingDokumenterAlleEpos,
+  TilordneKlageDokumentEpos,
 ];

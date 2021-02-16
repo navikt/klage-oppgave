@@ -4,6 +4,7 @@ import {
   IKlage,
   lasterDokumenter,
   nullstillDokumenter,
+  tilordneDokumenterHandling,
 } from "../../tilstand/moduler/klagebehandling";
 import { useDispatch, useSelector } from "react-redux";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
@@ -49,6 +50,10 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
     );
   }
 
+  function tilordneDokument(behandlingId: string, journalpostId: string) {
+    dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId }));
+  }
+
   if (!klage.dokumenter || !klage.dokumenterAlleHentet) {
     return <NavFrontendSpinner />;
   }
@@ -70,7 +75,10 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
               onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
             >
               <td>
-                <input type={"checkbox"} />
+                <input
+                  type={"checkbox"}
+                  onClick={() => tilordneDokument(klage.id, dokument.journalpostId)}
+                />
               </td>
               <td>
                 <button
