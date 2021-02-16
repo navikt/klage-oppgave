@@ -347,7 +347,7 @@ export function TilordneKlageDokumentEpos(
               feiletHandling(error.message),
               toasterSett({
                 display: true,
-                feilmelding: `Tilordning av dokument feilet: (${error.message})`,
+                feilmelding: `Tilordning av dokument feilet: (${error.response.detail})`,
               }),
               toasterSkjul(),
             ]);
