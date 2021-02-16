@@ -216,10 +216,10 @@ export function klagebehandlingEpos(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
             return concat([
-              feiletHandling(error.message),
+              feiletHandling(error.response.detail),
               toasterSett({
                 display: true,
-                feilmelding: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error.message}`,
+                feilmelding: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error.response.detail}`,
               }),
               toasterSkjul(),
             ]);
@@ -260,10 +260,10 @@ export function klagebehandlingDokumenterAlleEpos(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
             return concat([
-              feiletHandling(error.message),
+              feiletHandling(error.response.detail),
               toasterSett({
                 display: true,
-                feilmelding: `Henting av dokumenter feilet: ${error.message}`,
+                feilmelding: `Henting av dokumenter feilet: ${error.response.detail}`,
               }),
               toasterSkjul(),
             ]);
@@ -307,7 +307,7 @@ export function klagebehandlingDokumenterTilordnedeEpos(
               feiletHandling(error.message),
               toasterSett({
                 display: true,
-                feilmelding: `Henting av tilordnede dokumenter feilet: ${error.message}`,
+                feilmelding: `Henting av tilordnede dokumenter feilet: ${error.response.detail}`,
               }),
               toasterSkjul(),
             ]);

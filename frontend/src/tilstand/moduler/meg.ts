@@ -216,9 +216,9 @@ export function hentMegEpos(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
             return concat([
-              feiletHandling(error.message),
+              feiletHandling(error.response.detail),
               oppgaveFeiletHandling(),
-              displayToast(error.message),
+              displayToast(error.response.detail),
               skjulToaster(),
             ]);
           })
@@ -249,7 +249,7 @@ export function hentInnstillingerEpos(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
             return concat([
-              feiletHandling(error.message),
+              feiletHandling(error.response.detail),
               displayToast("Kunne ikke hente innstillinger"),
               skjulToaster(),
             ]);
@@ -280,7 +280,11 @@ export function settInnstillingerEpos(
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
-            return concat([feiletHandling(error.message), displayToast(error), skjulToaster()]);
+            return concat([
+              feiletHandling(error.response.detail),
+              displayToast(error),
+              skjulToaster(),
+            ]);
           })
         );
     })
