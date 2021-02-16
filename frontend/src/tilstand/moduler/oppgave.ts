@@ -340,10 +340,10 @@ export function hentUtgaatteFristerEpos(
         retryWhen(provIgjenStrategi()),
         catchError((error) =>
           concat([
-            feiletHandling(error.message),
+            feiletHandling(error.response.detail),
             toasterSett({
               display: true,
-              feilmelding: `Henting av utgått frister feilet (${error.message})`,
+              feilmelding: `Henting av utgått frister feilet (${error.response.detail})`,
             }),
             toasterSkjul(),
           ])

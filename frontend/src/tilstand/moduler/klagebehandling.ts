@@ -304,7 +304,7 @@ export function klagebehandlingDokumenterTilordnedeEpos(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
             return concat([
-              feiletHandling(error.message),
+              feiletHandling(error.response.detail),
               toasterSett({
                 display: true,
                 feilmelding: `Henting av tilordnede dokumenter feilet: ${error.response.detail}`,
@@ -344,7 +344,7 @@ export function TilordneKlageDokumentEpos(
           catchError((error) => {
             console.debug(error);
             return concat([
-              feiletHandling(error.message),
+              feiletHandling(error.response.detail),
               toasterSett({
                 display: true,
                 feilmelding: `Tilordning av dokument feilet: (${error.response.detail})`,

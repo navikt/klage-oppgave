@@ -17,7 +17,7 @@ interface IToaster {
 //==========
 export const toasterInitialState = {
   display: false,
-  feilmelding: "Oppgaven kan ikke tildeles da den allerede er tildelt en annen saksbehandler",
+  feilmelding: "Generisk feilmelding",
 };
 export const toasterSlice = createSlice({
   name: "toaster",

@@ -96,7 +96,7 @@ export function unleashEpos(
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
-            return of(feiletHandling(error.message));
+            return of(feiletHandling(error.response.detail));
           })
         );
     })
