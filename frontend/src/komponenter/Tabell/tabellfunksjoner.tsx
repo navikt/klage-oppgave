@@ -81,6 +81,7 @@ const OppgaveTabellRad = ({
   tema,
   hjemmel,
   frist,
+  mottatt,
   versjon,
   person,
   utvidetProjeksjon,
@@ -135,6 +136,7 @@ const OppgaveTabellRad = ({
         </td>
       )}
       <td>{formattedDate(frist)}</td>
+      <td>{formattedDate(mottatt)}</td>
       {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave}
       {location.pathname.startsWith("/mineoppgaver") && curriedVisHandlinger}
     </tr>

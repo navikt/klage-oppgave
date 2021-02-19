@@ -92,6 +92,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const settTyper = (payload: Filter[]) => R.curry(settFiltrering)("sett_aktive_typer")(payload);
   const sorteringFrist: "synkende" | "stigende" =
     filter_state?.transformasjoner?.sortering?.frist || "synkende";
+  const sorteringMottatt: "synkende" | "stigende" =
+    filter_state?.transformasjoner?.sortering?.mottatt || "synkende";
 
   /** NAVIDENT
    * Vi ønsker å hente oppgaver når NAVIDENT og EnhetsID er satt
@@ -144,13 +146,23 @@ const OppgaveTabell: React.FunctionComponent = () => {
     settLovligeTemaer(lovligeTemaer);
   }, [enheter, valgtEnhetIdx]);
 
-  function skiftSortering(event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
+  function skiftSortering(type: string, event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
     event.preventDefault();
-    if (sorteringFrist === "synkende") {
-      filter_dispatch({ type: "sett_frist", payload: "stigende" });
-    } else {
-      filter_dispatch({ type: "sett_frist", payload: "synkende" });
+    if (type === "frist") {
+      if (sorteringFrist === "synkende") {
+        filter_dispatch({ type: "sett_frist", payload: "stigende" });
+      } else {
+        filter_dispatch({ type: "sett_frist", payload: "synkende" });
+      }
     }
+    if (type === "mottatt") {
+      if (sorteringMottatt === "synkende") {
+        filter_dispatch({ type: "sett_mottatt", payload: "stigende" });
+      } else {
+        filter_dispatch({ type: "sett_mottatt", payload: "synkende" });
+      }
+    }
+
     console.debug(
       "%chenter oppgaver basert på endring av sortering ",
       "background: #aa9; color: #222255"
@@ -159,6 +171,11 @@ const OppgaveTabell: React.FunctionComponent = () => {
     filter_dispatch({ type: "sett_start", payload: 0 });
     history.push(location.pathname.replace(/\d+$/, "1"));
   }
+
+  const skiftSorteringFrist = (event: React.MouseEvent<HTMLElement | HTMLButtonElement>) =>
+    R.curry(skiftSortering)("frist")(event);
+  const skiftSorteringMottatt = (event: React.MouseEvent<HTMLElement | HTMLButtonElement>) =>
+    R.curry(skiftSortering)("mottatt")(event);
 
   function toValue<T>(filters: Array<string | temaType | Filter>) {
     return filters.map((filter: any) => filter.value);
@@ -184,8 +201,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
             temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
           },
           sortering: {
-            type: "frist",
+            type: filter_state.transformasjoner.sortering.type,
             frist: filter_state.transformasjoner.sortering.frist,
+            mottatt: filter_state.transformasjoner.sortering.mottatt,
           },
         },
       })
@@ -206,8 +224,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
             temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
           },
           sortering: {
-            type: "frist",
+            type: filter_state.transformasjoner.sortering.type,
             frist: filter_state.transformasjoner.sortering.frist,
+            mottatt: filter_state.transformasjoner.sortering.mottatt,
           },
         },
       })
@@ -430,9 +449,25 @@ const OppgaveTabell: React.FunctionComponent = () => {
                 className={`sortHeader ${
                   sorteringFrist === "stigende" ? "ascending" : "descending"
                 }`}
-                onClick={skiftSortering}
+                onClick={skiftSorteringFrist}
               >
+                {filter_state.transformasjoner.sortering.type === "frist" ? "*" : ""}
                 Frist
+              </div>
+            </th>
+
+            <th
+              role="columnheader"
+              aria-sort={sorteringFrist === "stigende" ? "ascending" : "descending"}
+            >
+              <div
+                className={`sortHeader ${
+                  sorteringFrist === "stigende" ? "ascending" : "descending"
+                }`}
+                onClick={skiftSorteringMottatt}
+              >
+                {filter_state.transformasjoner.sortering.type === "mottatt" ? "*" : ""}
+                Mottatt
               </div>
             </th>
             <th />
@@ -441,7 +476,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
         <tbody>
           {genererTabellRader(settValgtOppgave, oppgaver, filter_state?.projeksjon || visFnr)}
           <tr>
-            <td colSpan={visFnr ? 8 : 6}>
+            <td colSpan={visFnr ? 9 : 7}>
               <div className="table-lbl">
                 <div className="antall-saker">{visAntallTreff(oppgaver)}</div>
                 <div className={"paginering"}>

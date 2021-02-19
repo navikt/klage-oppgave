@@ -41,6 +41,7 @@ function filterReducer(antall: number, start: number) {
       sortering: {
         type: "frist",
         frist: "stigende",
+        mottatt: "stigende",
       },
     },
   };
@@ -130,7 +131,28 @@ function filterReducer(antall: number, start: number) {
         return {
           ...state,
           meta: { ...state.meta, kan_hente_oppgaver: true },
-          transformasjoner: { ...state.transformasjoner, sortering: { frist: action.payload } },
+          transformasjoner: {
+            ...state.transformasjoner,
+            sortering: {
+              type: "frist",
+              frist: action.payload,
+              mottatt: state.transformasjoner.sortering.mottatt,
+            },
+          },
+        };
+      }
+      case "sett_mottatt": {
+        return {
+          ...state,
+          meta: { ...state.meta, kan_hente_oppgaver: true },
+          transformasjoner: {
+            ...state.transformasjoner,
+            sortering: {
+              type: "mottatt",
+              frist: state.transformasjoner.sortering.frist,
+              mottatt: action.payload,
+            },
+          },
         };
       }
       case "sett_navident": {

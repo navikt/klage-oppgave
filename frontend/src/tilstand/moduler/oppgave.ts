@@ -27,6 +27,7 @@ export interface OppgaveRad {
   tema: string;
   hjemmel: string;
   frist: string;
+  mottatt: string;
   saksbehandler: string;
 }
 
@@ -123,6 +124,7 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
   let oppgaverMedFristIUnixtime = payload.oppgaver.map(function (rad) {
     return {
       ...rad,
+      mottatt: new Date(rad.mottatt).getTime(),
       frist: new Date(rad.frist).getTime(),
     };
   });
