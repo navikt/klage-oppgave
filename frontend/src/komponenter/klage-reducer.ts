@@ -7,7 +7,7 @@ export interface IKlageState {
 
 function klageReducer() {
   const initialState: IKlageState = {
-    oppgaveId: "0",
+    oppgaveId: "",
     aktivSide: "klagen",
   };
 

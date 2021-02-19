@@ -42,7 +42,7 @@ export default function Klagebehandling() {
 
   useEffect(() => {
     console.debug("henter", klage_state.oppgaveId);
-    if (klage_state.oppgaveId.length > 0) {
+    if (klage_state.oppgaveId != 0 && klage_state.oppgaveId.length > 0) {
       dispatch(hentKlageHandling(klage_state.oppgaveId));
     }
   }, [klage_state.oppgaveId]);
