@@ -41,7 +41,8 @@ export default function Klagebehandling() {
   });
 
   useEffect(() => {
-    if (parseInt(klage_state.oppgaveId, 10) > 0) {
+    console.debug("henter", klage_state.oppgaveId);
+    if (klage_state.oppgaveId.length > 0) {
       dispatch(hentKlageHandling(klage_state.oppgaveId));
     }
   }, [klage_state.oppgaveId]);
@@ -55,11 +56,6 @@ export default function Klagebehandling() {
   }, [location]);
 
   if (!klage_state.oppgaveId || !klage.klageLastet) {
-    let loc = location.pathname.split("/");
-    let id = loc[2].split("&")[0];
-    console.debug(location.pathname);
-    console.debug({ oppgaveId: klage_state.oppgaveId, lastet: klage.klageLastet });
-    console.debug({ id });
     return <NavFrontendSpinner />;
   }
 
