@@ -451,7 +451,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
                 }`}
                 onClick={skiftSorteringFrist}
               >
-                {filter_state.transformasjoner.sortering.type === "frist" ? "*" : ""}
                 Frist
               </div>
             </th>
@@ -461,12 +460,11 @@ const OppgaveTabell: React.FunctionComponent = () => {
               aria-sort={sorteringFrist === "stigende" ? "ascending" : "descending"}
             >
               <div
-                className={`sortHeader ${
-                  sorteringFrist === "stigende" ? "ascending" : "descending"
+                className={`sortHeader larger ${
+                  sorteringMottatt === "stigende" ? "ascending" : "descending"
                 }`}
                 onClick={skiftSorteringMottatt}
               >
-                {filter_state.transformasjoner.sortering.type === "mottatt" ? "*" : ""}
                 Mottatt
               </div>
             </th>
