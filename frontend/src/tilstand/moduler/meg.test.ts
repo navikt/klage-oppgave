@@ -252,7 +252,7 @@ describe("'Meg' epos", () => {
         const observableValues = {
           a: {},
           t: {
-            payload: "meg feilet",
+            payload: "ukjent feil",
             type: feiletHandling.type,
           },
           s: {
@@ -262,7 +262,7 @@ describe("'Meg' epos", () => {
           x: {
             payload: {
               display: true,
-              feilmelding: "meg feilet",
+              feilmelding: "ukjent feil",
             },
             type: toasterSett.type,
           },
@@ -274,7 +274,7 @@ describe("'Meg' epos", () => {
 
         const state$ = new StateObservable(hot("-a", observableValues), {});
         spyOn(dependencies, "getJSON").and.returnValue(
-          throwError({ message: "meg feilet", status: 503 })
+          throwError({ message: "ukjent feil", status: 503 })
         );
         expectObservable(hentMegEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
           "12001ms (tsxy)",

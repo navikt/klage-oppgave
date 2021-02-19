@@ -215,10 +215,12 @@ export function hentMegEpos(
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
+            let err = error?.response?.detail || "ukjent feil";
+
             return concat([
-              feiletHandling(error.response.detail),
+              feiletHandling(err),
               oppgaveFeiletHandling(),
-              displayToast(error.response.detail),
+              displayToast(err),
               skjulToaster(),
             ]);
           })
@@ -248,8 +250,10 @@ export function hentInnstillingerEpos(
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
+            let err = error?.response?.detail || "ukjent feil";
+
             return concat([
-              feiletHandling(error.response.detail),
+              feiletHandling(err),
               displayToast("Kunne ikke hente innstillinger"),
               skjulToaster(),
             ]);
@@ -280,11 +284,8 @@ export function settInnstillingerEpos(
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
-            return concat([
-              feiletHandling(error.response.detail),
-              displayToast(error),
-              skjulToaster(),
-            ]);
+            let err = error?.response?.detail || "ukjent feil";
+            return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
           })
         );
     })

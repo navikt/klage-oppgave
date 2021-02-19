@@ -46,6 +46,7 @@ describe("Oppgave epos", () => {
       start: 0,
       transformasjoner: {
         sortering: {
+          type: "frist" as "frist",
           frist: "synkende" as "synkende",
         },
         filtrering: {
@@ -57,7 +58,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -69,6 +70,7 @@ describe("Oppgave epos", () => {
       start: 0,
       transformasjoner: {
         sortering: {
+          type: "frist" as "frist",
           frist: "synkende" as "synkende",
         },
         filtrering: {
@@ -80,7 +82,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=Klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=Klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -92,6 +94,7 @@ describe("Oppgave epos", () => {
       start: 0,
       transformasjoner: {
         sortering: {
+          type: "frist" as "frist",
           frist: "synkende" as "synkende",
         },
         filtrering: {
@@ -103,7 +106,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=Feilutbetaling&temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=Feilutbetaling&temaer=Sykepenger%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -117,6 +120,7 @@ describe("Oppgave epos", () => {
       projeksjon: "UTVIDET" as "UTVIDET",
       transformasjoner: {
         sortering: {
+          type: "frist" as "frist",
           frist: "synkende" as "synkende",
         },
         filtrering: {
@@ -128,7 +132,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&tildeltSaksbehandler=ZATHRAS&erTildeltSaksbehandler=true&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&tildeltSaksbehandler=ZATHRAS&erTildeltSaksbehandler=true&enhetId=42"
     );
   });
 
@@ -140,6 +144,7 @@ describe("Oppgave epos", () => {
       start: 0,
       transformasjoner: {
         sortering: {
+          type: "frist" as "frist",
           frist: "stigende" as "stigende",
         },
         filtrering: {
@@ -151,7 +156,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -163,6 +168,7 @@ describe("Oppgave epos", () => {
       start: 0,
       transformasjoner: {
         sortering: {
+          type: "frist" as "frist",
           frist: "stigende" as "stigende",
         },
         filtrering: {
@@ -174,7 +180,7 @@ describe("Oppgave epos", () => {
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -191,13 +197,14 @@ describe("Oppgave epos", () => {
           hjemler: [],
         },
         sortering: {
+          type: "frist" as "frist",
           frist: "stigende" as "stigende",
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?&antall=25&start=100&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?&antall=25&start=100&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -214,13 +221,14 @@ describe("Oppgave epos", () => {
           hjemler: [],
         },
         sortering: {
+          type: "frist" as "frist",
           frist: "stigende" as "stigende",
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?&antall=15&start=0&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?&antall=15&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -237,6 +245,7 @@ describe("Oppgave epos", () => {
           hjemler: [],
         },
         sortering: {
+          type: "frist",
           frist: "stigende",
         },
       },
@@ -269,6 +278,7 @@ describe("Oppgave epos", () => {
           hjemler: [],
         },
         sortering: {
+          type: "frist",
           frist: "stigende",
         },
       },
@@ -301,6 +311,7 @@ describe("Oppgave epos", () => {
           hjemler: [],
         },
         sortering: {
+          type: "frist",
           frist: "stigende",
         },
       },
@@ -332,6 +343,7 @@ describe("Oppgave epos", () => {
           hjemler: [],
         },
         sortering: {
+          type: "frist",
           frist: "stigende",
         },
       },
@@ -369,6 +381,7 @@ describe("Oppgave epos", () => {
             start: 0,
             transformasjoner: {
               sortering: {
+                type: "frist",
                 frist: "synkende",
               },
               filtrering: {
@@ -445,6 +458,7 @@ describe("Oppgave epos", () => {
             start: 0,
             transformasjoner: {
               sortering: {
+                type: "frist",
                 frist: "synkende",
               },
               filtrering: {
@@ -521,6 +535,7 @@ describe("Oppgave epos", () => {
                 hjemler: [],
               },
               sortering: {
+                type: "frist",
                 frist: "synkende",
               },
             },

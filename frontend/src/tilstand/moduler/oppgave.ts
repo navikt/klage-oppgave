@@ -79,7 +79,9 @@ export interface Transformasjoner {
     hjemler: string[] | Filter[];
   };
   sortering: {
+    type: "frist" | "mottatt";
     frist: "synkende" | "stigende";
+    mottatt?: "synkende" | "stigende";
   };
 }
 
@@ -164,6 +166,7 @@ export const oppgaveSlice = createSlice({
         hjemler: [],
       },
       sortering: {
+        type: "frist",
         frist: "stigende",
       },
     },
@@ -238,6 +241,7 @@ export function buildQuery(url: string, data: OppgaveParams) {
   let query = [];
   query.push(`antall=${data.antall}`);
   query.push(`start=${data.start}`);
+  query.push(`sortering=${data.transformasjoner.sortering.type.toLocaleUpperCase()}`);
   query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
   if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
   if (data.tildeltSaksbehandler) {
@@ -338,16 +342,17 @@ export function hentUtgaatteFristerEpos(
       );
       return hentOppgaver.pipe(
         retryWhen(provIgjenStrategi()),
-        catchError((error) =>
-          concat([
-            feiletHandling(error.response.detail),
+        catchError((error) => {
+          let err = error?.response?.detail || "ukjent feil";
+          return concat([
+            feiletHandling(err),
             toasterSett({
               display: true,
-              feilmelding: `Henting av utgått frister feilet (${error.response.detail})`,
+              feilmelding: `Henting av utgått frister feilet (${err})`,
             }),
             toasterSkjul(),
-          ])
-        )
+          ]);
+        })
       );
     })
   );
