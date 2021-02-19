@@ -301,9 +301,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [hjemmelFilter, temaFilter, typeFilter]);
 
   useEffect(() => {
-    if (filter_state.meta.kan_hente_oppgaver || start > 1)
+    if (filter_state.meta.kan_hente_oppgaver || start > 1) {
       console.debug("%chenter fordi start har endret seg", "background: #222; color: #bada55");
-    if (filter_state.meta.kan_hente_oppgaver) dispatchTransformering();
+      dispatchTransformering();
+    }
   }, [start, filter_state.meta.kan_hente_oppgaver]);
 
   useEffect(() => {
