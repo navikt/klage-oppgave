@@ -39,6 +39,7 @@ function filterReducer(antall: number, start: number) {
         temaer: [],
       },
       sortering: {
+        type: "frist",
         frist: "stigende",
       },
     },

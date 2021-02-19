@@ -184,6 +184,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
             temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
           },
           sortering: {
+            type: "frist",
             frist: filter_state.transformasjoner.sortering.frist,
           },
         },
@@ -205,6 +206,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
             temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
           },
           sortering: {
+            type: "frist",
             frist: filter_state.transformasjoner.sortering.frist,
           },
         },
