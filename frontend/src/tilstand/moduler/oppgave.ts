@@ -132,6 +132,7 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
     };
   });
 
+  /*
   if (state.transformasjoner.sortering.type === "frist") {
     if (state.transformasjoner.sortering.frist === "synkende")
       state.rader = sort(sorterEtterFrist("synkende"), oppgaverMedDatoerIUnixtime);
@@ -143,6 +144,7 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
       state.rader = sort(sorterEtterMottatt("synkende"), oppgaverMedDatoerIUnixtime);
     else state.rader = sort(sorterEtterMottatt("stigende"), oppgaverMedDatoerIUnixtime);
   }
+  */
 
   state.lasterData = true;
   state.meta.start = start;
