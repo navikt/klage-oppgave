@@ -335,7 +335,7 @@ export function hentUtgaatteFristerEpos(
         `/api/ansatte/${action.payload.ident}/antallutgaattefrister`,
         action.payload
       );
-      const hentOppgaver = getJSON<any>(oppgaveUrl).pipe(
+      const hentOppgaver = getJSON<{ antall: number }>(oppgaveUrl).pipe(
         timeout(5000),
         map((response) =>
           HENTET_UGATTE({
