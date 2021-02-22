@@ -185,6 +185,7 @@ export const oppgaveSlice = createSlice({
       return state;
     },
     HENTET_UGATTE: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
+      console.debug("utgåtte frister", action.payload);
       state.meta = { ...state.meta, utgaatteFrister: action.payload.antall };
       return state;
     },
@@ -334,11 +335,11 @@ export function hentUtgaatteFristerEpos(
         `/api/ansatte/${action.payload.ident}/antallutgaattefrister`,
         action.payload
       );
-      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
+      const hentOppgaver = getJSON<any>(oppgaveUrl).pipe(
         timeout(5000),
-        map((oppgaver) =>
+        map((response) =>
           HENTET_UGATTE({
-            antall: action.payload.antall,
+            antall: response.antall,
           } as RaderMedMetadataUtvidet)
         )
       );

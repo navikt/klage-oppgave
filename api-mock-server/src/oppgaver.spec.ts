@@ -6,7 +6,7 @@ type Oppgaver = {
     {
       frist: string;
       type: string;
-      ytelse: string;
+      tema: string;
       hjemmel: string;
     }
   ];
@@ -74,7 +74,7 @@ describe("tester oppgavehenting", () => {
     expect(resultat.oppgaver?.length).toEqual(5);
     let i = 0;
     while (++i < resultat.oppgaver.length)
-      expect(resultat.oppgaver[i].ytelse).toEqual("Sykepenger");
+      expect(resultat.oppgaver[i].tema).toEqual("Sykepenger");
   });
   it("filtrer etter ytelse Dagpenger", async () => {
     let query = {
@@ -89,7 +89,7 @@ describe("tester oppgavehenting", () => {
     expect(resultat.oppgaver?.length).toEqual(5);
     let i = 0;
     while (++i < resultat.oppgaver.length)
-      expect(resultat.oppgaver[i].ytelse).toEqual("Dagpenger");
+      expect(resultat.oppgaver[i].tema).toEqual("Dagpenger");
   });
 
   it("filtrer etter ytelse Foreldrepenger og Dagpenger", async () => {
@@ -106,8 +106,8 @@ describe("tester oppgavehenting", () => {
     let i = 0;
     while (++i < resultat.oppgaver.length)
       expect(
-        resultat.oppgaver[i].ytelse == "Foreldrepenger" ||
-          resultat.oppgaver[i].ytelse == "Dagpenger"
+        resultat.oppgaver[i].tema == "Foreldrepenger" ||
+          resultat.oppgaver[i].tema == "Dagpenger"
       ).toBe(true);
   });
 
@@ -124,7 +124,7 @@ describe("tester oppgavehenting", () => {
     expect(resultat.oppgaver?.length).toEqual(5);
     let i = 0;
     while (++i < resultat.oppgaver.length)
-      expect(resultat.oppgaver[i].ytelse).toEqual("Dagpenger");
+      expect(resultat.oppgaver[i].tema).toEqual("Dagpenger");
   });
 
   it("filtrer etter hjemmel 8-61", async () => {
@@ -173,7 +173,7 @@ describe("tester oppgavehenting", () => {
     expect(result.oppgaver.length).toBeGreaterThan(1);
     let i = 0;
     while (++i < result.oppgaver.length) {
-      expect(result.oppgaver[i].ytelse === "Foreldrepenger");
+      expect(result.oppgaver[i].tema === "Foreldrepenger");
       expect(
         result.oppgaver[i].hjemmel == "8-62" ||
           result.oppgaver[i].hjemmel == "8-61"
