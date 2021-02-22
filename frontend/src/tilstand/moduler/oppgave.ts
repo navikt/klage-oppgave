@@ -132,6 +132,8 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
     };
   });
 
+  state.rader = payload.oppgaver; // for API-sortering
+
   /*
   if (state.transformasjoner.sortering.type === "frist") {
     if (state.transformasjoner.sortering.frist === "synkende")
