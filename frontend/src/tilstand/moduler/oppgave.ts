@@ -26,8 +26,8 @@ export interface OppgaveRad {
   versjon: number;
   tema: string;
   hjemmel: string;
-  frist: string;
-  mottatt: string;
+  frist: string | number;
+  mottatt: string | number;
   saksbehandler: string;
 }
 
@@ -124,29 +124,35 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
   const sorterEtterMottatt = (dir: "synkende" | "stigende") =>
     (dir === "synkende" ? descend : ascend)(prop("mottatt"));
 
-  let oppgaverMedDatoerIUnixtime = payload.oppgaver.map(function (rad) {
+  // for API-sortering
+  state.rader = payload.oppgaver.map(function (rad) {
     return {
       ...rad,
-      mottatt: new Date(rad.mottatt).getTime(),
       frist: new Date(rad.frist).getTime(),
+      mottatt: new Date(rad.mottatt).getTime(),
     };
   });
 
-  state.rader = payload.oppgaver; // for API-sortering
-
   /*
-  if (state.transformasjoner.sortering.type === "frist") {
-    if (state.transformasjoner.sortering.frist === "synkende")
-      state.rader = sort(sorterEtterFrist("synkende"), oppgaverMedDatoerIUnixtime);
-    else state.rader = sort(sorterEtterFrist("stigende"), oppgaverMedDatoerIUnixtime);
-  }
+    let oppgaverMedDatoerIUnixtime = payload.oppgaver.map(function (rad) {
+        return {
+            ...rad,
+            mottatt: new Date(rad.mottatt).getTime(),
+            frist: new Date(rad.frist).getTime(),
+        };
+    });
+    if (state.transformasjoner.sortering.type === "frist") {
+      if (state.transformasjoner.sortering.frist === "synkende")
+        state.rader = sort(sorterEtterFrist("synkende"), oppgaverMedDatoerIUnixtime);
+      else state.rader = sort(sorterEtterFrist("stigende"), oppgaverMedDatoerIUnixtime);
+    }
 
-  if (state.transformasjoner.sortering.type === "mottatt") {
-    if (state.transformasjoner.sortering.mottatt === "synkende")
-      state.rader = sort(sorterEtterMottatt("synkende"), oppgaverMedDatoerIUnixtime);
-    else state.rader = sort(sorterEtterMottatt("stigende"), oppgaverMedDatoerIUnixtime);
-  }
-  */
+    if (state.transformasjoner.sortering.type === "mottatt") {
+      if (state.transformasjoner.sortering.mottatt === "synkende")
+        state.rader = sort(sorterEtterMottatt("synkende"), oppgaverMedDatoerIUnixtime);
+      else state.rader = sort(sorterEtterMottatt("stigende"), oppgaverMedDatoerIUnixtime);
+    }
+    */
 
   state.lasterData = true;
   state.meta.start = start;

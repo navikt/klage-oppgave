@@ -135,8 +135,8 @@ const OppgaveTabellRad = ({
           </div>
         </td>
       )}
-      <td>{formattedDate(frist)}</td>
-      <td>{formattedDate(mottatt)}</td>
+      <td>{formattedDate(frist as number)}</td>
+      <td>{formattedDate(mottatt as number)}</td>
       {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave}
       {location.pathname.startsWith("/mineoppgaver") && curriedVisHandlinger}
     </tr>
