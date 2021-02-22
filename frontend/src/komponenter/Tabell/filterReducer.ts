@@ -169,6 +169,7 @@ function filterReducer(antall: number, start: number) {
       }
 
       default:
+        console.debug(action.type, action.payload);
         throw new Error(action.type);
     }
   }

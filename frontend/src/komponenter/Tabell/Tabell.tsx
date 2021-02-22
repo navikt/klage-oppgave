@@ -148,18 +148,27 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   function skiftSortering(type: string, event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
     event.preventDefault();
+    let sortOrder;
+    let sortType;
     if (type === "frist") {
       if (sorteringFrist === "synkende") {
         filter_dispatch({ type: "sett_frist", payload: "stigende" });
+        sortOrder = "stigende" as "stigende";
+        sortType = "frist" as "frist";
       } else {
-        filter_dispatch({ type: "sett_frist", payload: "synkende" });
+        filter_dispatch({ type: "sett_frist", payload: "synkende" as "synkende" });
+        sortOrder = "synkende" as "synkende";
+        sortType = "frist" as "frist";
       }
-    }
-    if (type === "mottatt") {
+    } else {
       if (sorteringMottatt === "synkende") {
-        filter_dispatch({ type: "sett_mottatt", payload: "stigende" });
+        filter_dispatch({ type: "sett_mottatt", payload: "stigende" as "stigende" });
+        sortOrder = "stigende" as "stigende";
+        sortType = "mottatt" as "mottatt";
       } else {
-        filter_dispatch({ type: "sett_mottatt", payload: "synkende" });
+        filter_dispatch({ type: "sett_mottatt", payload: "synkende" as "synkende" });
+        sortOrder = "synkende" as "synkende";
+        sortType = "mottatt" as "mottatt";
       }
     }
 
@@ -167,7 +176,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
       "%chenter oppgaver basert på endring av sortering ",
       "background: #aa9; color: #222255"
     );
-    dispatchTransformering();
+    dispatchTransformering({ sortType, sortOrder });
     filter_dispatch({ type: "sett_start", payload: 0 });
     history.push(location.pathname.replace(/\d+$/, "1"));
   }
@@ -181,7 +190,13 @@ const OppgaveTabell: React.FunctionComponent = () => {
     return filters.map((filter: any) => filter.value);
   }
 
-  const dispatchTransformering = () => {
+  const dispatchTransformering = ({
+    sortType,
+    sortOrder,
+  }: {
+    sortType: "frist" | "mottatt";
+    sortOrder: "synkende" | "stigende";
+  }) => {
     console.debug(
       "%c -> kjører den faktisk oppgave-spørringen",
       "background: #222; color: #bada55"
@@ -201,9 +216,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
             temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
           },
           sortering: {
-            type: filter_state.transformasjoner.sortering.type,
-            frist: filter_state.transformasjoner.sortering.frist,
-            mottatt: filter_state.transformasjoner.sortering.mottatt,
+            type: sortType,
+            frist: sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
+            mottatt:
+              sortType === "mottatt" ? sortOrder : filter_state.transformasjoner.sortering.mottatt,
           },
         },
       })
@@ -224,9 +240,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
             temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
           },
           sortering: {
-            type: filter_state.transformasjoner.sortering.type,
-            frist: filter_state.transformasjoner.sortering.frist,
-            mottatt: filter_state.transformasjoner.sortering.mottatt,
+            type: sortType,
+            frist: sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
+            mottatt:
+              sortType === "mottatt" ? sortOrder : filter_state.transformasjoner.sortering.mottatt,
           },
         },
       })
@@ -311,7 +328,16 @@ const OppgaveTabell: React.FunctionComponent = () => {
           "%chenter oppgaver basert på endring/setting av filter ",
           "background: #af7; color: #222255"
         );
-        dispatchTransformering();
+        if (filter_state.transformasjoner.type === "frist")
+          dispatchTransformering({
+            sortType: filter_state.transformasjoner.sortering.type,
+            sortOrder: filter_state.transformasjoner.sortering.frist,
+          });
+        else
+          dispatchTransformering({
+            sortType: filter_state.transformasjoner.sortering.type,
+            sortOrder: filter_state.transformasjoner.sortering.mottatt,
+          });
       }
     }
     settForrigeHjemmelFilter(hjemmelFilter);
@@ -322,7 +348,16 @@ const OppgaveTabell: React.FunctionComponent = () => {
   useEffect(() => {
     if (filter_state.meta.kan_hente_oppgaver || start > 1) {
       console.debug("%chenter fordi start har endret seg", "background: #222; color: #bada55");
-      dispatchTransformering();
+      if (filter_state.transformasjoner.type === "frist")
+        dispatchTransformering({
+          sortType: filter_state.transformasjoner.sortering.type,
+          sortOrder: filter_state.transformasjoner.sortering.frist,
+        });
+      else
+        dispatchTransformering({
+          sortType: filter_state.transformasjoner.sortering.type,
+          sortOrder: filter_state.transformasjoner.sortering.mottatt,
+        });
     }
   }, [start, filter_state.meta.kan_hente_oppgaver]);
 
@@ -460,9 +495,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
               aria-sort={sorteringFrist === "stigende" ? "ascending" : "descending"}
             >
               <div
-                className={`sortHeader larger 
-    ${filter_state.transformasjoner.sortering.type === "mottatt" ? "" : "inaktiv"}
-                ${sorteringMottatt === "stigende" ? "ascending" : "descending"}`}
+                className={`sortHeader larger ${
+                  filter_state.transformasjoner.sortering.type === "mottatt" ? "" : "inaktiv"
+                } 
+                            ${sorteringMottatt === "stigende" ? "ascending" : "descending"}`}
                 onClick={skiftSorteringMottatt}
               >
                 Mottatt
