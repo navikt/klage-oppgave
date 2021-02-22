@@ -191,7 +191,7 @@ export const oppgaveSlice = createSlice({
         hjemler: [],
       },
       sortering: {
-        type: "frist",
+        type: "mottatt",
         frist: "stigende",
       },
     },
