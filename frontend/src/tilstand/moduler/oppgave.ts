@@ -121,16 +121,29 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
   state.transformasjoner = transformasjoner;
   const sorterEtterFrist = (dir: "synkende" | "stigende") =>
     (dir === "synkende" ? descend : ascend)(prop("frist"));
-  let oppgaverMedFristIUnixtime = payload.oppgaver.map(function (rad) {
+  const sorterEtterMottatt = (dir: "synkende" | "stigende") =>
+    (dir === "synkende" ? descend : ascend)(prop("mottatt"));
+
+  let oppgaverMedDatoerIUnixtime = payload.oppgaver.map(function (rad) {
     return {
       ...rad,
       mottatt: new Date(rad.mottatt).getTime(),
       frist: new Date(rad.frist).getTime(),
     };
   });
-  if (state.transformasjoner.sortering.frist === "synkende")
-    state.rader = sort(sorterEtterFrist("synkende"), oppgaverMedFristIUnixtime);
-  else state.rader = sort(sorterEtterFrist("stigende"), oppgaverMedFristIUnixtime);
+
+  if (state.transformasjoner.sortering.type === "frist") {
+    if (state.transformasjoner.sortering.frist === "synkende")
+      state.rader = sort(sorterEtterFrist("synkende"), oppgaverMedDatoerIUnixtime);
+    else state.rader = sort(sorterEtterFrist("stigende"), oppgaverMedDatoerIUnixtime);
+  }
+
+  if (state.transformasjoner.sortering.type === "mottatt") {
+    if (state.transformasjoner.sortering.mottatt === "synkende")
+      state.rader = sort(sorterEtterMottatt("synkende"), oppgaverMedDatoerIUnixtime);
+    else state.rader = sort(sorterEtterMottatt("stigende"), oppgaverMedDatoerIUnixtime);
+  }
+
   state.lasterData = true;
   state.meta.start = start;
   state.meta.totalAntall = antallTreffTotalt;
