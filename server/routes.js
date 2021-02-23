@@ -75,8 +75,8 @@ const setup = (authClient) => {
     res.json(req.user.tokenSets.self.expires_at);
   });
 
-  router.use("/token", async (req, res) => {
-    let token = await hentFraRedis(`innstillinger_${navIdent}_${enhetId}`);
+  router.use("/usertoken", async (req, res) => {
+    let token = await hentFraRedis(`token_${navIdent}`);
     res.status(200).json(JSON.parse(token));
   });
 
