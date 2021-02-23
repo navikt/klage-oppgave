@@ -82,7 +82,7 @@ export interface Transformasjoner {
   sortering: {
     type: "frist" | "mottatt";
     frist: "synkende" | "stigende";
-    mottatt?: "synkende" | "stigende";
+    mottatt: "synkende" | "stigende";
   };
 }
 
@@ -119,10 +119,6 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
     transformasjoner,
   } = payload;
   state.transformasjoner = transformasjoner;
-  const sorterEtterFrist = (dir: "synkende" | "stigende") =>
-    (dir === "synkende" ? descend : ascend)(prop("frist"));
-  const sorterEtterMottatt = (dir: "synkende" | "stigende") =>
-    (dir === "synkende" ? descend : ascend)(prop("mottatt"));
 
   // for API-sortering
   state.rader = payload.oppgaver.map(function (rad) {
@@ -134,6 +130,11 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
   });
 
   /*
+    const sorterEtterFrist = (dir: "synkende" | "stigende") =>
+    (dir === "synkende" ? descend : ascend)(prop("frist"));
+  const sorterEtterMottatt = (dir: "synkende" | "stigende") =>
+    (dir === "synkende" ? descend : ascend)(prop("mottatt"));
+
     let oppgaverMedDatoerIUnixtime = payload.oppgaver.map(function (rad) {
         return {
             ...rad,
@@ -193,6 +194,7 @@ export const oppgaveSlice = createSlice({
       sortering: {
         type: "mottatt",
         frist: "stigende",
+        mottatt: "stigende",
       },
     },
   } as OppgaveState,
@@ -268,7 +270,9 @@ export function buildQuery(url: string, data: OppgaveParams) {
   query.push(`antall=${data.antall}`);
   query.push(`start=${data.start}`);
   query.push(`sortering=${data.transformasjoner.sortering.type.toLocaleUpperCase()}`);
-  query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
+  if (data.transformasjoner.sortering.type === "frist")
+    query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
+  else query.push(`rekkefoelge=${data.transformasjoner.sortering.mottatt.toLocaleUpperCase()}`);
   if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
   if (data.tildeltSaksbehandler) {
     query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);

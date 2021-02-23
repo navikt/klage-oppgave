@@ -151,24 +151,22 @@ const OppgaveTabell: React.FunctionComponent = () => {
     let sortOrder;
     let sortType;
     if (type === "frist") {
+      sortType = "frist" as "frist";
       if (sorteringFrist === "synkende") {
         filter_dispatch({ type: "sett_frist", payload: "stigende" });
         sortOrder = "stigende" as "stigende";
-        sortType = "frist" as "frist";
       } else {
         filter_dispatch({ type: "sett_frist", payload: "synkende" as "synkende" });
         sortOrder = "synkende" as "synkende";
-        sortType = "frist" as "frist";
       }
     } else {
+      sortType = "mottatt" as "mottatt";
       if (sorteringMottatt === "synkende") {
         filter_dispatch({ type: "sett_mottatt", payload: "stigende" as "stigende" });
         sortOrder = "stigende" as "stigende";
-        sortType = "mottatt" as "mottatt";
       } else {
         filter_dispatch({ type: "sett_mottatt", payload: "synkende" as "synkende" });
         sortOrder = "synkende" as "synkende";
-        sortType = "mottatt" as "mottatt";
       }
     }
 

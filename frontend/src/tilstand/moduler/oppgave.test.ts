@@ -48,6 +48,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist" as "frist",
           frist: "synkende" as "synkende",
+          mottatt: "synkende" as "synkende",
         },
         filtrering: {
           typer: [],
@@ -72,6 +73,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist" as "frist",
           frist: "synkende" as "synkende",
+          mottatt: "synkende" as "synkende",
         },
         filtrering: {
           typer: ["Klage"],
@@ -96,6 +98,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist" as "frist",
           frist: "synkende" as "synkende",
+          mottatt: "synkende" as "synkende",
         },
         filtrering: {
           typer: ["Feilutbetaling"],
@@ -122,6 +125,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist" as "frist",
           frist: "synkende" as "synkende",
+          mottatt: "synkende" as "synkende",
         },
         filtrering: {
           typer: ["klage"],
@@ -146,6 +150,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist" as "frist",
           frist: "stigende" as "stigende",
+          mottatt: "synkende" as "synkende",
         },
         filtrering: {
           typer: [],
@@ -170,6 +175,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist" as "frist",
           frist: "stigende" as "stigende",
+          mottatt: "synkende" as "synkende",
         },
         filtrering: {
           typer: [],
@@ -199,6 +205,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist" as "frist",
           frist: "stigende" as "stigende",
+          mottatt: "synkende" as "synkende",
         },
       },
     };
@@ -223,6 +230,31 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "mottatt" as "mottatt",
           frist: "synkende" as "synkende",
+          mottatt: "synkende" as "synkende",
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/oppgaver?&antall=25&start=100&sortering=MOTTATT&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+    );
+  });
+  test("+++ QUERYBUILDER frist/mottatt stigende", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      enhetId: "42",
+      antall: 25,
+      start: 100,
+      transformasjoner: {
+        filtrering: {
+          temaer: [],
+          typer: [],
+          hjemler: [],
+        },
+        sortering: {
+          type: "mottatt" as "mottatt",
+          frist: "stigende" as "stigende",
+          mottatt: "synkende" as "synkende",
         },
       },
     };
@@ -247,6 +279,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist" as "frist",
           frist: "stigende" as "stigende",
+          mottatt: "synkende" as "synkende",
         },
       },
     };
@@ -271,6 +304,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist",
           frist: "stigende",
+          mottatt: "synkende" as "synkende",
         },
       },
     };
@@ -304,6 +338,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist",
           frist: "stigende",
+          mottatt: "synkende" as "synkende",
         },
       },
     };
@@ -337,6 +372,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist",
           frist: "stigende",
+          mottatt: "synkende" as "synkende",
         },
       },
     };
@@ -369,6 +405,7 @@ describe("Oppgave epos", () => {
         sortering: {
           type: "frist",
           frist: "stigende",
+          mottatt: "synkende" as "synkende",
         },
       },
     };
@@ -407,6 +444,7 @@ describe("Oppgave epos", () => {
               sortering: {
                 type: "frist",
                 frist: "synkende",
+                mottatt: "synkende" as "synkende",
               },
               filtrering: {
                 temaer: [("Sykepenger" as unknown) as temaType],
@@ -484,6 +522,7 @@ describe("Oppgave epos", () => {
               sortering: {
                 type: "frist",
                 frist: "synkende",
+                mottatt: "synkende" as "synkende",
               },
               filtrering: {
                 typer: [],
@@ -561,6 +600,7 @@ describe("Oppgave epos", () => {
               sortering: {
                 type: "frist",
                 frist: "synkende",
+                mottatt: "synkende" as "synkende",
               },
             },
           }),
