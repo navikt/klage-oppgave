@@ -73,12 +73,12 @@ const setup = (authClient) => {
 
   // return tokeninfo for the current user
   // DO NOT DO THIS IN PRODUCTION
-  router.get("/", (req, res) => {
+  router.get("/userinfo", (req, res) => {
     res.json(req.user);
   });
 
   // return user info fetched from the Microsoft Graph API
-  router.get("/me", (req, res) => {
+  router.get("/me_token", (req, res) => {
     msgraph
       .getUserInfoFromGraphApi(authClient, req)
       .then((userinfo) => res.json(userinfo))
