@@ -9,7 +9,7 @@ interface LayoutType {
 
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
 
@@ -25,14 +25,20 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
   const featureToggles = useSelector(velgFeatureToggles);
   const dispatch = useDispatch();
   const [generellTilgang, settTilgang] = useState<boolean | undefined>(undefined);
+  const history = useHistory();
 
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
 
-    axios.get("/token_expiration").then((data) => {
-      console.debug("token_expiration", data);
-    });
     //sjekk innlogging
+    axios.get("/token_expiration").then((data) => {
+      // @ts-ignore
+      const expiration = parseInt(data, 10);
+      const now = Math.round(new Date().getTime() / 1000);
+      if (expiration < now) {
+        history.push("/login");
+      }
+    });
   }, []);
 
   useEffect(() => {

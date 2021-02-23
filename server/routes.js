@@ -75,27 +75,10 @@ const setup = (authClient) => {
     res.json(req.user.tokenSets.self.expires_at);
   });
 
-  router.use("/usertoken", async (req, res) => {
-    let token = await hentFraRedis(`token_${navIdent}`);
-    res.status(200).json(JSON.parse(token));
-  });
-
   router.use(
     "/oauth2/callback",
     passport.authenticate("azureOidc", { failureRedirect: "/error" }),
     async (req, res) => {
-      try {
-        const token = await new Promise((resolve, reject) =>
-          authUtils
-            .getOnBehalfOfAccessToken(authClient, req, params)
-            .then((userinfo) => resolve(userinfo))
-            .catch((err) => reject(err))
-        );
-        await lagreIRedis(`token_${navIdent}`, JSON.stringify(token));
-      } catch (e) {
-        console.log("kunne ikke lagre token");
-      }
-
       if (session.redirectTo) {
         res.redirect(session.redirectTo);
       } else {
