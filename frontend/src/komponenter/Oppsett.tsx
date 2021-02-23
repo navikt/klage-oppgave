@@ -44,7 +44,7 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
   return (
     <>
       <main className="main container" data-testid="klagesiden">
-        <Header tittel="Nav Klage" brukerinfo={{ navn: person.navn, ident: person.id }}>
+        <Header tittel="KABAL" brukerinfo={{ navn: person.navn, ident: person.id }}>
           {/* <Sok onSok={() => Promise.resolve("test")} /> */}
         </Header>
         <nav className={`main-nav ${!visMeny ? "skjult" : ""}`} role="navigation" aria-label="Meny">
