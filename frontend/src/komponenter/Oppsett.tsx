@@ -27,6 +27,8 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
 
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
+
+    //sjekk innlogging
   }, []);
 
   useEffect(() => {

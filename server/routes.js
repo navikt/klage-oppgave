@@ -71,10 +71,41 @@ const setup = (authClient) => {
     }
   );
 
+  // return tokeninfo for the current user
+  // DO NOT DO THIS IN PRODUCTION
+  router.get("/", (req, res) => {
+    res.json(req.user);
+  });
+
+  // return user info fetched from the Microsoft Graph API
+  router.get("/me", (req, res) => {
+    msgraph
+      .getUserInfoFromGraphApi(authClient, req)
+      .then((userinfo) => res.json(userinfo))
+      .catch((err) => res.status(500).json(err));
+  });
+
+  router.use("/token", async (req, res) => {
+    let token = await hentFraRedis(`innstillinger_${navIdent}_${enhetId}`);
+    res.status(200).json(JSON.parse(token));
+  });
+
   router.use(
     "/oauth2/callback",
     passport.authenticate("azureOidc", { failureRedirect: "/error" }),
-    (req, res) => {
+    async (req, res) => {
+      try {
+        const token = await new Promise((resolve, reject) =>
+          authUtils
+            .getOnBehalfOfAccessToken(authClient, req, params)
+            .then((userinfo) => resolve(userinfo))
+            .catch((err) => reject(err))
+        );
+        await lagreIRedis(`token_${navIdent}`, JSON.stringify(token));
+      } catch (e) {
+        console.log("kunne ikke lagre token");
+      }
+
       if (session.redirectTo) {
         res.redirect(session.redirectTo);
       } else {
