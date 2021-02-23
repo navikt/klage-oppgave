@@ -16,6 +16,7 @@ import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
 import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
 import NavFrontendSpinner from "nav-frontend-spinner";
+import axios from "axios";
 
 export default function Oppsett({ visMeny, children }: LayoutType) {
   const person = useSelector(velgMeg);
@@ -28,6 +29,9 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
 
+    axios.get("/token_expiration").then((data) => {
+      console.debug("token_expiration", data);
+    });
     //sjekk innlogging
   }, []);
 

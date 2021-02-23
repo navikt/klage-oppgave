@@ -71,18 +71,8 @@ const setup = (authClient) => {
     }
   );
 
-  // return tokeninfo for the current user
-  // DO NOT DO THIS IN PRODUCTION
-  router.get("/userinfo", (req, res) => {
-    res.json(req.user);
-  });
-
-  // return user info fetched from the Microsoft Graph API
-  router.get("/me_token", (req, res) => {
-    msgraph
-      .getUserInfoFromGraphApi(authClient, req)
-      .then((userinfo) => res.json(userinfo))
-      .catch((err) => res.status(500).json(err));
+  router.get("/token_expiration", (req, res) => {
+    res.json(req.user.tokenSets.self.expires_at);
   });
 
   router.use("/token", async (req, res) => {
