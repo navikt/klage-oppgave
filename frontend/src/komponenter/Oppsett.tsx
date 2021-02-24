@@ -29,7 +29,6 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
 
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
-
     //sjekk innlogging
     axios.get("/internal/token_expiration").then((response) => {
       localStorage.setItem("tokenExpire", response.data.toString());
@@ -39,9 +38,11 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
     const interval = setInterval(() => {
       let fiftyNineMinutes = 3540;
       let expiration = localStorage.getItem("tokenExpire");
-      const now = Math.round(new Date().getTime() / 1000) + fiftyNineMinutes;
-      if (Number(expiration) < now) {
-        history.push("/login");
+      if (expiration) {
+        const now = Math.round(new Date().getTime() / 1000) + fiftyNineMinutes;
+        if (Number(expiration) < now) {
+          history.push("/login");
+        }
       }
     }, 1000);
     return () => clearInterval(interval);
