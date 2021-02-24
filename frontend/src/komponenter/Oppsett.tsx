@@ -31,9 +31,8 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
 
     //sjekk innlogging
-    axios.get("/token_expiration").then((data) => {
-      // @ts-ignore
-      localStorage.setItem("tokenExpire", data.toString());
+    axios.get("/internal/token_expiration").then((response) => {
+      localStorage.setItem("tokenExpire", response.data.toString());
     });
   }, []);
   useEffect(() => {
