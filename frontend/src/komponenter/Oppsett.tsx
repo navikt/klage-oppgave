@@ -33,8 +33,7 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
     //sjekk innlogging
     axios.get("/token_expiration").then((data) => {
       // @ts-ignore
-      const expiration = parseInt(data, 10);
-      localStorage.setItem("tokenExpire", expiration.toString());
+      localStorage.setItem("tokenExpire", data.toString());
     });
   }, []);
   useEffect(() => {
