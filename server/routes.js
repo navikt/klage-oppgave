@@ -71,7 +71,7 @@ const setup = (authClient) => {
     }
   );
 
-  router.get("/internal/token_expiration", (req, res) => {
+  router.get("/internal/token_expiration", async (req, res) => {
     res.send(req.user.tokenSets.self.expires_at);
   });
 
