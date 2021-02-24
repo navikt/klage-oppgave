@@ -34,11 +34,19 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
     axios.get("/token_expiration").then((data) => {
       // @ts-ignore
       const expiration = parseInt(data, 10);
-      const now = Math.round(new Date().getTime() / 1000);
-      if (expiration < now) {
+      localStorage.setItem("tokenExpire", expiration.toString());
+    });
+  }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      let fiftyNineMinutes = 3540;
+      let expiration = localStorage.getItem("tokenExpire");
+      const now = Math.round(new Date().getTime() / 1000) + fiftyNineMinutes;
+      if (Number(expiration) < now) {
         history.push("/login");
       }
-    });
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
