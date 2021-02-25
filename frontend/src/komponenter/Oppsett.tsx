@@ -14,13 +14,15 @@ import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
 
 import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
+import { velgExpire } from "../tilstand/moduler/token.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
 import NavFrontendSpinner from "nav-frontend-spinner";
-import axios from "axios";
+import { hentExpiry } from "../tilstand/moduler/token";
 
 export default function Oppsett({ visMeny, children }: LayoutType) {
   const person = useSelector(velgMeg);
   const visFeilmelding = useSelector(velgToaster);
+  const expireTime = useSelector(velgExpire);
   const feilmelding = useSelector(velgToasterMelding);
   const featureToggles = useSelector(velgFeatureToggles);
   const dispatch = useDispatch();
@@ -30,17 +32,14 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
     //sjekk innlogging
-    axios.get("/internal/token_expiration").then((response) => {
-      localStorage.setItem("tokenExpire", response.data.toString());
-    });
+    dispatch(hentExpiry());
   }, []);
   useEffect(() => {
     const interval = setInterval(() => {
-      let expiration = localStorage.getItem("tokenExpire");
+      let expiration = expireTime;
       if (expiration) {
         const now = Math.round(new Date().getTime() / 1000);
         if (Number(expiration) < now) {
-          localStorage.removeItem("tokenExpire");
           history.push("/login");
         }
       }
