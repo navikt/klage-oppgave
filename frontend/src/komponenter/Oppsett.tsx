@@ -36,11 +36,11 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
   }, []);
   useEffect(() => {
     const interval = setInterval(() => {
-      let fiftyNineMinutes = 3540;
       let expiration = localStorage.getItem("tokenExpire");
       if (expiration) {
-        const now = Math.round(new Date().getTime() / 1000) + fiftyNineMinutes;
+        const now = Math.round(new Date().getTime() / 1000);
         if (Number(expiration) < now) {
+          localStorage.removeItem("tokenExpire");
           history.push("/login");
         }
       }
