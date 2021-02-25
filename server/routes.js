@@ -72,7 +72,7 @@ const setup = (authClient) => {
   );
 
   router.use("/internal/token_expiration", async (req, res) => {
-    res.send(req.user.tokenSets.self.expires_at);
+    res.send(req.user); //.tokenSets.self.expires_at);
   });
 
   router.use(
