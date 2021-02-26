@@ -40,7 +40,8 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
       if (expiration) {
         const now = Math.round(new Date().getTime() / 1000);
         if (Number(expiration) < now) {
-          history.push("/login");
+          // @ts-ignore
+          window.location = "/login";
         }
       }
     }, 1000);
