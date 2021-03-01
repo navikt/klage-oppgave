@@ -1,6 +1,7 @@
 import {
   hentDokumentAlleHandling,
   hentDokumentTilordnedeHandling,
+  hentPreviewHandling,
   IKlage,
   lasterDokumenter,
   nullstillDokumenter,
@@ -28,6 +29,9 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
   const klage: IKlage = useSelector(velgKlage);
   const { settaktivtDokument } = props;
 
+  function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
+    dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
+  }
   function hentNeste(ref: string | null) {
     dispatch(lasterDokumenter(false));
     dispatch(hentDokumentAlleHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
@@ -72,7 +76,7 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
           {klage.dokumenter.map((dokument: any, idx: number) => (
             <tr
               key={`${idx}_${dokument.dokumentInfoId}`}
-              onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
+              onClick={() => hentPreview(klage.id, dokument.journalpostId, dokument.dokumentInfoId)}
             >
               <td>
                 <input

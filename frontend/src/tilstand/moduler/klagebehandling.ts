@@ -60,6 +60,7 @@ interface IKlagePayload {
 interface IDokumentPayload {
   id: string;
   journalpostId: string;
+  dokumentInfoId: string;
 }
 
 interface IDokumentParams {
@@ -102,6 +103,10 @@ export const klageSlice = createSlice({
     HENTET: (state, action: PayloadAction<IKlage>) => {
       state = action.payload;
       state.klageLastet = true;
+      return state;
+    },
+    HENTET_DOKUMENT_FORHÅNDSVISNING: (state, action: PayloadAction<any>) => {
+      console.debug(action.payload);
       return state;
     },
     LASTER_DOKUMENTER: (state, action: PayloadAction<boolean>) => {
@@ -161,6 +166,13 @@ export const hentKlageHandling = createAction<string>("klagebehandling/HENT_KLAG
 export const hentetKlageHandling = createAction<IKlage>("klagebehandling/HENTET");
 export const feiletHandling = createAction<string>("klagebehandling/FEILET");
 
+export const hentPreviewHandling = createAction<IDokumentPayload>(
+  "klagebehandling/HENT_DOKUMENT_FORHANDSVISNING"
+);
+export const hentetPreviewHandling = createAction<string>(
+  "klagebehandling/klagebehandling/HENTET_DOKUMENT_FORHÅNDSVISNING"
+);
+
 export const hentetKlageDokumenterAlleHandling = createAction<IKlage>(
   "klagebehandling/DOKUMENTER_ALLE_HENTET"
 );
@@ -176,7 +188,7 @@ export const hentDokumentTilordnedeHandling = createAction<Partial<IDokumentPara
   "klagebehandling/HENT_TILORDNEDE_DOKUMENTER"
 );
 
-export const tilordneDokumenterHandling = createAction<Partial<IDokumentPayload>>(
+export const tilordneDokumenterHandling = createAction<Partial<Partial<IDokumentPayload>>>(
   "klagebehandling/TILORDNE_DOKUMENT"
 );
 export const tilordnetDokumentHandling = createAction<Partial<any>>(
@@ -264,6 +276,45 @@ export function klagebehandlingDokumenterAlleEpos(
               toasterSett({
                 display: true,
                 feilmelding: `Henting av dokumenter feilet: ${error.response.detail}`,
+              }),
+              toasterSkjul(),
+            ]);
+          })
+        );
+    })
+  );
+}
+
+export function HentDokumentForhandsvisningEpos(
+  action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(hentPreviewHandling.type),
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
+      let klageUrl = `/api/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
+      return getJSON<IKlagePayload>(klageUrl)
+        .pipe(
+          timeout(5000),
+          map((response: any) => {
+            return response;
+          })
+        )
+        .pipe(
+          map((data) => {
+            return hentetPreviewHandling(data as any);
+          })
+        )
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+          catchError((error) => {
+            return concat([
+              feiletHandling(error.response.detail),
+              toasterSett({
+                display: true,
+                feilmelding: `Henting av forhåndsvisningsdokument feilet: ${error.response.detail}`,
               }),
               toasterSkjul(),
             ]);
@@ -362,4 +413,5 @@ export const KLAGEBEHANDLING_EPICS = [
   klagebehandlingDokumenterTilordnedeEpos,
   klagebehandlingDokumenterAlleEpos,
   TilordneKlageDokumentEpos,
+  HentDokumentForhandsvisningEpos,
 ];
