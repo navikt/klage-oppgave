@@ -1,5 +1,6 @@
 import { App } from "@tinyhttp/app";
 import { logger } from "@tinyhttp/logger";
+
 let bodyParser = require("body-parser");
 
 import {
@@ -35,6 +36,16 @@ async function hentOppgaver() {
     });
   });
 }
+
+app.get(
+  "/klagebehandlinger/:id/journalposter/:journalPostId/dokumenter/:dokumentId",
+  (req, res) => {
+    let buff = new Buffer(
+      "JVBERi0xLjUKJeLjz9MKNiAwIG9iago8PCAvQ3JlYXRvciAoT3BlblRleHQgRXhzdHJlYW0gVmVyc2lvbiA5LjUuMzA3IDMyLWJpdCkKL0NyZWF0aW9uRGF0ZSAoMy8xLzIwMjEgMDg6NTM6NDUpCi9BdXRob3IgKFJlZ2lzdGVyZWQgdG86IE5BViAgICAgKQovVGl0bGUgKEdPU1lTX0ZFUkRJR1NUSUxMX1pPUykKPj4KZW5kb2JqCjcgMCBvYmoKPDwvTGVuZ3RoIDU5NS9GaWx0ZXIvRmxhdGVEZWNvZGU"
+    );
+    res.send(buff.toJSON());
+  }
+);
 
 app.get("/klagebehandlinger/:id", async (req, res) => {
   res.send({

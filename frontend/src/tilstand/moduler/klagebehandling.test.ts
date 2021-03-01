@@ -49,6 +49,7 @@ describe("Oppgave epos", () => {
           pageReference: "id...",
           pageRefs: [],
           historyNavigate: false,
+          currentPDF: "",
           klageLastet: false,
           dokumenterAlleHentet: false,
           dokumenterTilordnedeHentet: false,

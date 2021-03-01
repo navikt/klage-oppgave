@@ -12,14 +12,18 @@ import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
 import React, { useEffect, useState } from "react";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../domene/datofunksjoner";
+import { Document as PDFDocument } from "react-pdf";
 
 export default function Dokumenter() {
   const [aktivtDokument, settaktivtDokument] = useState(0);
+  const klage: IKlage = useSelector(velgKlage);
 
   return (
     <div className={"dokument-wrapper"}>
       <DokumentTabell settaktivtDokument={settaktivtDokument} />
-      <div className={"preview"}>Forhåndsvisning {aktivtDokument > 0 && aktivtDokument}</div>
+      <div className={"preview"}>
+        <PDFDocument file={klage.currentPDF} />
+      </div>
     </div>
   );
 }
@@ -32,10 +36,12 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
   function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
     dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
+
   function hentNeste(ref: string | null) {
     dispatch(lasterDokumenter(false));
     dispatch(hentDokumentAlleHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
   }
+
   useEffect(() => {
     dispatch(nullstillDokumenter());
     dispatch(hentDokumentAlleHandling({ id: klage.id, ref: null, antall: 10 }));

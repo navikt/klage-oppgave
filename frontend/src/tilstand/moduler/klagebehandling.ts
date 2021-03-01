@@ -51,10 +51,15 @@ export interface IKlage {
   historyNavigate: boolean;
   dokumenter?: any;
   dokumenterTilordnede?: any;
+  currentPDF: string;
 }
 
 interface IKlagePayload {
   id: string;
+}
+
+interface IDokumenter {
+  saksbehandlerHarTilgang: boolean;
 }
 
 interface IDokumentPayload {
@@ -98,6 +103,7 @@ export const klageSlice = createSlice({
     pageRefs: [null],
     pageIdx: 0,
     hjemler: [],
+    currentPDF: "",
   } as IKlage,
   reducers: {
     HENTET: (state, action: PayloadAction<IKlage>) => {
@@ -105,8 +111,8 @@ export const klageSlice = createSlice({
       state.klageLastet = true;
       return state;
     },
-    HENTET_DOKUMENT_FORHÅNDSVISNING: (state, action: PayloadAction<any>) => {
-      console.debug(action.payload);
+    HENTET_DOKUMENT_FORHANDSVISNING: (state, action: PayloadAction<any>) => {
+      state.currentPDF = action.payload;
       return state;
     },
     LASTER_DOKUMENTER: (state, action: PayloadAction<boolean>) => {
@@ -170,7 +176,7 @@ export const hentPreviewHandling = createAction<IDokumentPayload>(
   "klagebehandling/HENT_DOKUMENT_FORHANDSVISNING"
 );
 export const hentetPreviewHandling = createAction<string>(
-  "klagebehandling/klagebehandling/HENTET_DOKUMENT_FORHÅNDSVISNING"
+  "klagebehandling/HENTET_DOKUMENT_FORHANDSVISNING"
 );
 
 export const hentetKlageDokumenterAlleHandling = createAction<IKlage>(
@@ -264,8 +270,8 @@ export function klagebehandlingDokumenterAlleEpos(
           })
         )
         .pipe(
-          map((data) => {
-            return hentetKlageDokumenterAlleHandling(data as any);
+          map((data: any) => {
+            return hentetKlageDokumenterAlleHandling(data);
           })
         )
         .pipe(
@@ -288,23 +294,25 @@ export function klagebehandlingDokumenterAlleEpos(
 export function HentDokumentForhandsvisningEpos(
   action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { get }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(hentPreviewHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
-      let klageUrl = `/api/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
-      return getJSON<IKlagePayload>(klageUrl)
+      let url = `/api/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
+      return get(url, {
+        type: "text/plain",
+      })
         .pipe(
           timeout(5000),
-          map((response: any) => {
+          map((response) => {
             return response;
           })
         )
         .pipe(
           map((data) => {
-            return hentetPreviewHandling(data as any);
+            return hentetPreviewHandling(data.response.data as any);
           })
         )
         .pipe(
