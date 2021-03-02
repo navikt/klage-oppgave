@@ -301,7 +301,10 @@ export function hentOppgaverEpos(
     ofType(oppgaveRequest.type || settEnhetHandling.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
+      let oppgaveUrl = buildQuery(
+        `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
+        action.payload
+      );
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
         timeout(5000),
         map((oppgaver) =>
