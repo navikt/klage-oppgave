@@ -91,6 +91,7 @@ export type OppgaveState = {
   transformasjoner: Transformasjoner;
   meta: Metadata;
   lasterData: boolean;
+  kodeverk: any;
 };
 
 export interface RaderMedMetadata {
@@ -152,6 +153,7 @@ export const oppgaveSlice = createSlice({
   initialState: {
     rader: [],
     lasterData: true,
+    kodeverk: {},
     meta: {
       antall: 0,
       totalAntall: 0,
@@ -188,6 +190,11 @@ export const oppgaveSlice = createSlice({
       state.meta = { ...state.meta, utgaatteFrister: action.payload.antall };
       return state;
     },
+    HENTET_KODEVERK: (state, action: PayloadAction<any>) => {
+      console.debug("kodeverk", action.payload);
+      state.kodeverk = action.payload;
+      return state;
+    },
     FEILET: (state, action: PayloadAction<string>) => {
       state.meta.feilmelding = "Oppgave-henting feilet";
       state.lasterData = false;
@@ -218,12 +225,13 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const { MOTTATT, FEILET, HENTET_UGATTE } = oppgaveSlice.actions;
+export const { HENTET_KODEVERK, MOTTATT, FEILET, HENTET_UGATTE } = oppgaveSlice.actions;
 export const enkeltOppgave = createAction<OppgaveParams>("oppgaver/HENT_ENKELTOPPGAVE");
 export const oppgaveRequest = createAction<OppgaveParams>("oppgaver/HENT");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
 export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
 export const hentUtgatte = createAction<OppgaveParams>("oppgaver/HENT_UTGAATTE");
+export const kodeverkRequest = createAction("oppgaver/HENT_KODEVERK");
 
 //==========
 // Sortering og filtrering
@@ -285,6 +293,27 @@ export function hentEnkeltOppgaveEpos(
         )
       );
       return hentOppgaver.pipe(
+        retryWhen(provIgjenStrategi()),
+        catchError((error) => of(FEILET(error)))
+      );
+    })
+  );
+}
+
+export function hentKodeverk(
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(kodeverkRequest.type),
+    withLatestFrom(state$),
+    switchMap(([action, state]) => {
+      const hent = getJSON<any>("/api/kodeverk").pipe(
+        timeout(5000),
+        map((kodeverk) => HENTET_KODEVERK(kodeverk))
+      );
+      return hent.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => of(FEILET(error)))
       );
@@ -365,4 +394,4 @@ export function hentUtgaatteFristerEpos(
   );
 }
 
-export const OPPGAVER_EPICS = [hentUtgaatteFristerEpos, hentOppgaverEpos];
+export const OPPGAVER_EPICS = [hentKodeverk, hentUtgaatteFristerEpos, hentOppgaverEpos];

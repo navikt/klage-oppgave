@@ -1,4 +1,10 @@
-import { Filter, hentUtgatte, oppgaveRequest, temaType } from "../../tilstand/moduler/oppgave";
+import {
+  Filter,
+  hentUtgatte,
+  kodeverkRequest,
+  oppgaveRequest,
+  temaType,
+} from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import {
@@ -113,6 +119,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
     dispatch(hentFeatureToggleHandling("klage.listFnr"));
   }, []);
   useEffect(() => {
+    dispatch(kodeverkRequest());
+  }, []);
+
+  useEffect(() => {
     filter_dispatch({ type: "sett_projeksjon", payload: utvidetProjeksjon });
   }, [utvidetProjeksjon]);
 
@@ -222,7 +232,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
         },
       })
     );
-
     dispatch(
       oppgaveRequest({
         ident: filter_state.ident,
