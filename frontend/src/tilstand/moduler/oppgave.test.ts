@@ -53,13 +53,13 @@ describe("Oppgave epos", () => {
         filtrering: {
           typer: [],
           hjemler: [],
-          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
+          temaer: [("SYK" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -78,13 +78,13 @@ describe("Oppgave epos", () => {
         filtrering: {
           typer: ["Klage"],
           hjemler: [],
-          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
+          temaer: [("SYK" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=Klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=Klage&temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -103,13 +103,13 @@ describe("Oppgave epos", () => {
         filtrering: {
           typer: ["Feilutbetaling"],
           hjemler: [],
-          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
+          temaer: [("SYK" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=Feilutbetaling&temaer=Sykepenger%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=Feilutbetaling&temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -130,13 +130,13 @@ describe("Oppgave epos", () => {
         filtrering: {
           typer: ["klage"],
           hjemler: [],
-          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
+          temaer: [("SYK" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=klage&temaer=Sykepenger%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&tildeltSaksbehandler=ZATHRAS&erTildeltSaksbehandler=true&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?typer=klage&temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&tildeltSaksbehandler=ZATHRAS&erTildeltSaksbehandler=true&enhetId=42"
     );
   });
 
@@ -154,14 +154,14 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: [],
-          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
+          temaer: [("SYK" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
           hjemler: ["8-12", "9-31"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?temaer=SYK%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -179,14 +179,14 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: [],
-          temaer: [("Sykepenger" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
+          temaer: [("SYK" as unknown) as temaType, ("Dagpenger" as unknown) as temaType],
           hjemler: ["8-2, 8-13 og 8-49", "8-19", "8-16"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?temaer=Sykepenger%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/oppgaver?temaer=SYK%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -447,7 +447,7 @@ describe("Oppgave epos", () => {
                 mottatt: "synkende" as "synkende",
               },
               filtrering: {
-                temaer: [("Sykepenger" as unknown) as temaType],
+                temaer: [("SYK" as unknown) as temaType],
                 typer: [],
                 hjemler: [],
               },
@@ -467,7 +467,7 @@ describe("Oppgave epos", () => {
               frist: "synkende",
             },
             filtrering: {
-              temaer: [("Sykepenger" as unknown) as temaType],
+              temaer: [("SYK" as unknown) as temaType],
             },
           },
         };
