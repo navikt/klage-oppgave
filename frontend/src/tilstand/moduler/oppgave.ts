@@ -370,7 +370,7 @@ export function hentUtgaatteFristerEpos(
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
-        `/api/ansatte/${action.payload.ident}/antallutgaattefrister`,
+        `/api/ansatte/${action.payload.ident}/antallklagebehandlingermedutgaattefrister`,
         action.payload
       );
       const hentOppgaver = getJSON<{ antall: number }>(oppgaveUrl).pipe(
