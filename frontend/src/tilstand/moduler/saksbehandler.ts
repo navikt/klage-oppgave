@@ -62,7 +62,7 @@ export function tildelEpos(
     ofType(tildelMegHandling.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
-      const tildelMegUrl = `/api/ansatte/${action.payload.ident}/oppgaver/${action.payload.oppgaveId}/saksbehandlertildeling`;
+      const tildelMegUrl = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlertildeling`;
       return post(
         tildelMegUrl,
         { navIdent: action.payload.ident, oppgaveversjon: action.payload.versjon },
@@ -96,7 +96,7 @@ export function fradelEpos(
     ofType(fradelMegHandling.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
-      const url = `/api/ansatte/${action.payload.ident}/oppgaver/${action.payload.oppgaveId}/saksbehandlerfradeling`;
+      const url = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlerfradeling`;
       return post(
         url,
         { navIdent: action.payload.ident, oppgaveversjon: action.payload.versjon },

@@ -47,6 +47,10 @@ app.get(
   }
 );
 
+app.get("/kodeverk", (req, res) => {
+  res.send({ test: "test" });
+});
+
 app.get("/klagebehandlinger/:id", async (req, res) => {
   res.send({
     id: "e1335d60-015a-487b-9bf3-9032a175a158",
@@ -129,13 +133,24 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
   res.send(result);
 });
 
-app.get("/ansatte/:id/antallutgaattefrister", async (req, res) => {
+app.get("/ansatte/:id/klagebehandlinger", async (req, res) => {
   const result = await filtrerOppgaver({
     navIdent: req.params?.id,
     ...req.query,
   } as OppgaveQuery);
   res.send(result);
 });
+
+app.get(
+  "/ansatte/:id/antallklagebehandlingermedutgaattefrister",
+  async (req, res) => {
+    const result = await filtrerOppgaver({
+      navIdent: req.params?.id,
+      ...req.query,
+    } as OppgaveQuery);
+    res.send(result);
+  }
+);
 
 app.get("/ansatte/:id/enheter", async (req, res) => {
   res.send([
@@ -157,7 +172,7 @@ app.get("/featuretoggle/:feature", (req, res) => {
 });
 
 app.post(
-  "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlertildeling",
+  "/ansatte/:id/klagebehandlinger/:oppgaveid/saksbehandlertildeling",
   async (req, res) => {
     const result = await tildelSaksbehandler({
       oppgaveId: req.params?.oppgaveid,
@@ -169,7 +184,7 @@ app.post(
   }
 );
 app.post(
-  "/ansatte/:id/oppgaver/:oppgaveid/saksbehandlerfradeling",
+  "/ansatte/:id/klagebehandlinger/:oppgaveid/saksbehandlerfradeling",
   async (req, res) => {
     return await fradelSaksbehandler({
       oppgaveId: req.params?.oppgaveid,

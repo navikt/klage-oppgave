@@ -97,7 +97,7 @@ describe("TILDEL 'Meg' epos", () => {
               tildeltSaksbehandler: initState.oppgaver.meta.tildeltSaksbehandler,
               enhetId: "42",
             } as OppgaveParams,
-            type: "oppgaver/HENT",
+            type: "klagebehandlinger/HENT",
           },
         };
 
@@ -143,7 +143,7 @@ describe("TILDEL 'Meg' epos", () => {
               tildeltSaksbehandler: initState.oppgaver.meta.tildeltSaksbehandler,
               enhetId: "42",
             } as OppgaveParams,
-            type: "oppgaver/HENT",
+            type: "klagebehandlinger/HENT",
           },
         };
 

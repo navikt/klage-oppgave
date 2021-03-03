@@ -57,9 +57,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -82,9 +82,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=Klage&temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?typer=Klage&temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -107,9 +107,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=Feilutbetaling&temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?typer=Feilutbetaling&temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -134,9 +134,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?typer=klage&temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&tildeltSaksbehandler=ZATHRAS&erTildeltSaksbehandler=true&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?typer=klage&temaer=SYK%2CDagpenger&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&tildeltSaksbehandler=ZATHRAS&erTildeltSaksbehandler=true&enhetId=42"
     );
   });
 
@@ -159,9 +159,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?temaer=SYK%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?temaer=SYK%2CDagpenger&hjemler=8-12%2C9-31&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -184,9 +184,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?temaer=SYK%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?temaer=SYK%2CDagpenger&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -209,9 +209,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?&antall=25&start=100&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?&antall=25&start=100&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -234,9 +234,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?&antall=25&start=100&sortering=MOTTATT&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?&antall=25&start=100&sortering=MOTTATT&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
   test("+++ QUERYBUILDER frist/mottatt stigende", () => {
@@ -258,9 +258,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?&antall=25&start=100&sortering=MOTTATT&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?&antall=25&start=100&sortering=MOTTATT&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -283,9 +283,9 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const url = buildQuery("/ansatte/ZATHRAS/oppgaver", inputValues);
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/oppgaver?&antall=15&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?&antall=15&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -294,7 +294,7 @@ describe("Oppgave epos", () => {
       antallTreffTotalt: 72,
       start: 0,
       antall: 15,
-      oppgaver: [],
+      klagebehandlinger: [],
       transformasjoner: {
         filtrering: {
           temaer: [],
@@ -328,7 +328,7 @@ describe("Oppgave epos", () => {
       start: 15,
       antall: 15,
       projeksjon: "UTVIDET",
-      oppgaver: [],
+      klagebehandlinger: [],
       transformasjoner: {
         filtrering: {
           temaer: [],
@@ -362,7 +362,7 @@ describe("Oppgave epos", () => {
       antallTreffTotalt: 72,
       start: 30,
       antall: 15,
-      oppgaver: [],
+      klagebehandlinger: [],
       transformasjoner: {
         filtrering: {
           temaer: [],
@@ -395,7 +395,7 @@ describe("Oppgave epos", () => {
       antallTreffTotalt: 72,
       start: 60,
       antall: 15,
-      oppgaver: [],
+      klagebehandlinger: [],
       transformasjoner: {
         filtrering: {
           temaer: [],
@@ -458,7 +458,7 @@ describe("Oppgave epos", () => {
           antallTreffTotalt: 2,
           start: 0,
           antall: 2,
-          oppgaver: [
+          klagebehandlinger: [
             { frist: "2019-09-12", tema: "SYK", hjemmel: "8-4" },
             { frist: "2020-11-15", tema: "SYK", hjemmel: "10-12" },
           ],
@@ -477,7 +477,7 @@ describe("Oppgave epos", () => {
         };
 
         const initState = {
-          oppgaver: {
+          klagebehandlinger: {
             rader: [
               { frist: "2019-09-12", tema: "SYK", hjemmel: "8-4" },
               { frist: "2020-11-15", tema: "SYK", hjemmel: "10-12" },
@@ -493,7 +493,7 @@ describe("Oppgave epos", () => {
           a: initState,
           c: {
             payload: resultPayload.payload,
-            type: "oppgaver/MOTTATT",
+            type: "klagebehandlinger/MOTTATT",
           },
         };
 
@@ -536,7 +536,7 @@ describe("Oppgave epos", () => {
           antallTreffTotalt: 4,
           start: 0,
           antall: 5,
-          oppgaver: [
+          klagebehandlinger: [
             { frist: "2019-09-12", tema: "SYK", hjemmel: "8-2" },
             { frist: "2020-11-15", tema: "SYK", hjemmel: "8-13" },
             { frist: "2020-11-15", tema: "SYK", hjemmel: "8-49" },
@@ -550,7 +550,7 @@ describe("Oppgave epos", () => {
         };
 
         const initState = {
-          oppgaver: {
+          klagebehandlinger: {
             rader: [
               { frist: "2019-09-12", tema: "SYK", hjemmel: "8-2" },
               { frist: "2020-11-15", tema: "SYK", hjemmel: "8-13" },
@@ -569,7 +569,7 @@ describe("Oppgave epos", () => {
           a: initState,
           c: {
             payload: resultPayload.payload,
-            type: "oppgaver/MOTTATT",
+            type: "klagebehandlinger/MOTTATT",
           },
         };
 
@@ -612,7 +612,7 @@ describe("Oppgave epos", () => {
         };
 
         const initState = {
-          oppgaver: {
+          klagebehandlinger: {
             rader: [],
           },
         };
@@ -623,7 +623,7 @@ describe("Oppgave epos", () => {
             payload: {
               status: 503,
             },
-            type: "oppgaver/FEILET",
+            type: "klagebehandlinger/FEILET",
           },
         };
 

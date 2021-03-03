@@ -96,7 +96,7 @@ export type OppgaveState = {
 
 export interface RaderMedMetadata {
   antallTreffTotalt: number;
-  oppgaver: OppgaveRad[];
+  klagebehandlinger: OppgaveRad[];
 }
 
 export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
@@ -122,7 +122,7 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
   state.transformasjoner = transformasjoner;
 
   // for API-sortering
-  state.rader = payload.oppgaver.map(function (rad) {
+  state.rader = payload.klagebehandlinger.map(function (rad) {
     return {
       ...rad,
       frist: new Date(rad.frist).getTime(),
@@ -149,7 +149,7 @@ export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveSt
 }
 
 export const oppgaveSlice = createSlice({
-  name: "oppgaver",
+  name: "klagebehandlinger",
   initialState: {
     rader: [],
     lasterData: true,
@@ -226,12 +226,12 @@ export default oppgaveSlice.reducer;
 // Actions
 //==========
 export const { HENTET_KODEVERK, MOTTATT, FEILET, HENTET_UGATTE } = oppgaveSlice.actions;
-export const enkeltOppgave = createAction<OppgaveParams>("oppgaver/HENT_ENKELTOPPGAVE");
-export const oppgaveRequest = createAction<OppgaveParams>("oppgaver/HENT");
-export const oppgaverUtsnitt = createAction<[OppgaveRad]>("oppgaver/UTSNITT");
-export const oppgaveHentingFeilet = createAction("oppgaver/FEILET");
-export const hentUtgatte = createAction<OppgaveParams>("oppgaver/HENT_UTGAATTE");
-export const kodeverkRequest = createAction("oppgaver/HENT_KODEVERK");
+export const enkeltOppgave = createAction<OppgaveParams>("klagebehandlinger/HENT_ENKELTOPPGAVE");
+export const oppgaveRequest = createAction<OppgaveParams>("klagebehandlinger/HENT");
+export const oppgaverUtsnitt = createAction<[OppgaveRad]>("klagebehandlinger/UTSNITT");
+export const oppgaveHentingFeilet = createAction("klagebehandlinger/FEILET");
+export const hentUtgatte = createAction<OppgaveParams>("klagebehandlinger/HENT_UTGAATTE");
+export const kodeverkRequest = createAction("klagebehandlinger/HENT_KODEVERK");
 
 //==========
 // Sortering og filtrering
@@ -279,18 +279,21 @@ export function hentEnkeltOppgaveEpos(
     ofType(enkeltOppgave.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      let rader = state.oppgaver.rader.slice();
-      let oppgaveUrl = buildQuery(`/api/ansatte/${action.payload.ident}/oppgaver`, action.payload);
+      let rader = state.klagebehandlinger.rader.slice();
+      let oppgaveUrl = buildQuery(
+        `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
+        action.payload
+      );
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
         timeout(5000),
-        map((oppgaver) =>
+        map((klagebehandlinger) =>
           MOTTATT({
             start: action.payload.start,
             antall: action.payload.antall,
             tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
             projeksjon: action.payload.projeksjon,
             transformasjoner: action.payload.transformasjoner,
-            ...oppgaver,
+            ...klagebehandlinger,
           } as RaderMedMetadataUtvidet)
         )
       );
@@ -338,14 +341,14 @@ export function hentOppgaverEpos(
       );
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
         timeout(5000),
-        map((oppgaver) =>
+        map((klagebehandlinger) =>
           MOTTATT({
             start: action.payload.start,
             antall: action.payload.antall,
             tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
             projeksjon: action.payload.projeksjon,
             transformasjoner: action.payload.transformasjoner,
-            ...oppgaver,
+            ...klagebehandlinger,
           } as RaderMedMetadataUtvidet)
         )
       );
