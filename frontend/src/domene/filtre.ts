@@ -14,5 +14,6 @@ export const GyldigeHjemler = [
 export const GyldigeTemaer = [
   { label: "Foreldrepenger", value: "FOR" },
   { label: "Sykepenger", value: "SYK" },
+  { label: "Pensjon", value: "PEN" },
   { label: "Dagpenger", value: "DAG" },
 ];
