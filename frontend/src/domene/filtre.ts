@@ -12,7 +12,7 @@ export const GyldigeHjemler = [
   { label: "Annet", value: "?" },
 ];
 export const GyldigeTemaer = [
-  { label: "Foreldrepenger", value: "Foreldrepenger" },
-  { label: "Sykepenger", value: "Sykepenger" },
-  { label: "Dagpenger", value: "Dagpenger" },
+  { label: "Foreldrepenger", value: "FOR" },
+  { label: "Sykepenger", value: "SYK" },
+  { label: "Dagpenger", value: "DAG" },
 ];

@@ -2,7 +2,7 @@ import { filtrerOppgaver } from "./oppgaver";
 
 type Oppgaver = {
   antallTreffTotalt: number;
-  oppgaver: [
+  klagebehandlinger: [
     {
       frist: string;
       type: string;
@@ -23,10 +23,10 @@ describe("tester oppgavehenting", () => {
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
-    expect(resultat.oppgaver?.length).toEqual(5);
+    expect(resultat.klagebehandlinger?.length).toEqual(5);
     let i = 0;
-    while (++i < resultat.oppgaver.length)
-      expect(resultat.oppgaver[i].type).toEqual("klage");
+    while (++i < resultat.klagebehandlinger.length)
+      expect(resultat.klagebehandlinger[i].type).toEqual("klage");
   });
   it("filtrer etter type anke", async () => {
     let query = {
@@ -38,10 +38,10 @@ describe("tester oppgavehenting", () => {
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
-    expect(resultat.oppgaver?.length).toEqual(5);
+    expect(resultat.klagebehandlinger?.length).toEqual(5);
     let i = 0;
-    while (++i < resultat.oppgaver.length)
-      expect(resultat.oppgaver[i].type).toEqual("anke");
+    while (++i < resultat.klagebehandlinger.length)
+      expect(resultat.klagebehandlinger[i].type).toEqual("anke");
   });
   it("filtrer etter type klage og anke", async () => {
     let query = {
@@ -54,10 +54,10 @@ describe("tester oppgavehenting", () => {
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
     let i = 0;
-    while (++i < resultat.oppgaver.length)
+    while (++i < resultat.klagebehandlinger.length)
       expect(
-        resultat.oppgaver[i].type == "anke" ||
-          resultat.oppgaver[i].type == "klage"
+        resultat.klagebehandlinger[i].type == "anke" ||
+          resultat.klagebehandlinger[i].type == "klage"
       ).toBe(true);
   });
 
@@ -65,49 +65,49 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      temaer: "Sykepenger",
+      temaer: "SYK",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
-    expect(resultat.oppgaver?.length).toEqual(5);
+    expect(resultat.klagebehandlinger?.length).toEqual(5);
     let i = 0;
-    while (++i < resultat.oppgaver.length)
-      expect(resultat.oppgaver[i].tema).toEqual("Sykepenger");
+    while (++i < resultat.klagebehandlinger.length)
+      expect(resultat.klagebehandlinger[i].tema).toEqual("Sykepenger");
   });
   it("filtrer etter ytelse Dagpenger", async () => {
     let query = {
       antall: 5,
       start: 0,
-      temaer: "Dagpenger",
+      temaer: "DAG",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
-    expect(resultat.oppgaver?.length).toEqual(5);
+    expect(resultat.klagebehandlinger?.length).toEqual(5);
     let i = 0;
-    while (++i < resultat.oppgaver.length)
-      expect(resultat.oppgaver[i].tema).toEqual("Dagpenger");
+    while (++i < resultat.klagebehandlinger.length)
+      expect(resultat.klagebehandlinger[i].tema).toEqual("DAG");
   });
 
   it("filtrer etter ytelse Foreldrepenger og Dagpenger", async () => {
     let query = {
       antall: 5,
       start: 0,
-      temaer: "Dagpenger,Foreldrepenger",
+      temaer: "DAG,FOR",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
-    expect(resultat.oppgaver?.length).toEqual(5);
+    expect(resultat.klagebehandlinger?.length).toEqual(5);
     let i = 0;
-    while (++i < resultat.oppgaver.length)
+    while (++i < resultat.klagebehandlinger.length)
       expect(
-        resultat.oppgaver[i].tema == "Foreldrepenger" ||
-          resultat.oppgaver[i].tema == "Dagpenger"
+        resultat.klagebehandlinger[i].tema == "FOR" ||
+          resultat.klagebehandlinger[i].tema == "DAG"
       ).toBe(true);
   });
 
@@ -115,16 +115,16 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      temaer: "Dagpenger",
+      temaer: "DAG",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };
     let resultat: Oppgaver = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
-    expect(resultat.oppgaver?.length).toEqual(5);
+    expect(resultat.klagebehandlinger?.length).toEqual(5);
     let i = 0;
-    while (++i < resultat.oppgaver.length)
-      expect(resultat.oppgaver[i].tema).toEqual("Dagpenger");
+    while (++i < resultat.klagebehandlinger.length)
+      expect(resultat.klagebehandlinger[i].tema).toEqual("DAG");
   });
 
   it("filtrer etter hjemmel 8-61", async () => {
@@ -136,10 +136,10 @@ describe("tester oppgavehenting", () => {
       navIdent: "ZATHRAS",
     };
     let result = await filtrerOppgaver(query);
-    expect(result.oppgaver.length).toBeGreaterThan(1);
+    expect(result.klagebehandlinger.length).toBeGreaterThan(1);
     let i = 0;
-    while (++i < result.oppgaver.length)
-      expect(result.oppgaver[i].hjemmel).toEqual("8-61");
+    while (++i < result.klagebehandlinger.length)
+      expect(result.klagebehandlinger[i].hjemmel).toEqual("8-61");
   });
   it("filtrer etter hjemmel 8-61 og 8-62", async () => {
     let query = {
@@ -150,12 +150,12 @@ describe("tester oppgavehenting", () => {
       navIdent: "ZATHRAS",
     };
     let result = await filtrerOppgaver(query);
-    expect(result.oppgaver.length).toBeGreaterThan(1);
+    expect(result.klagebehandlinger.length).toBeGreaterThan(1);
     let i = 0;
-    while (++i < result.oppgaver.length) {
+    while (++i < result.klagebehandlinger.length) {
       expect(
-        result.oppgaver[i].hjemmel === "8-61" ||
-          result.oppgaver[i].hjemmel === "8-62"
+        result.klagebehandlinger[i].hjemmel === "8-61" ||
+          result.klagebehandlinger[i].hjemmel === "8-62"
       ).toBe(true);
     }
   });
@@ -164,19 +164,19 @@ describe("tester oppgavehenting", () => {
       antall: 15,
       start: 0,
       hjemler: "8-61,8-62",
-      temaer: "Foreldrepenger",
+      temaer: "FOR",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };
     let result = await filtrerOppgaver(query);
     //expect(result.antallTreffTotalt).toEqual(51);
-    expect(result.oppgaver.length).toBeGreaterThan(1);
+    expect(result.klagebehandlinger.length).toBeGreaterThan(1);
     let i = 0;
-    while (++i < result.oppgaver.length) {
-      expect(result.oppgaver[i].tema === "Foreldrepenger");
+    while (++i < result.klagebehandlinger.length) {
+      expect(result.klagebehandlinger[i].tema === "FOR");
       expect(
-        result.oppgaver[i].hjemmel == "8-62" ||
-          result.oppgaver[i].hjemmel == "8-61"
+        result.klagebehandlinger[i].hjemmel == "8-62" ||
+          result.klagebehandlinger[i].hjemmel == "8-61"
       ).toBe(true);
     }
   });

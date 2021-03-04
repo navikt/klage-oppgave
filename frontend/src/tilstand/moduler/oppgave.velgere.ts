@@ -5,17 +5,17 @@ import { OppgaveRader } from "./oppgave";
 // from the state. These are kept in a separate file from the rest of the
 // Redux module to avoid circular dependencies.
 export function velgOppgaver(state: RootStateOrAny) {
-  return state.oppgaver as OppgaveRader;
+  return state.klagebehandlinger as OppgaveRader;
 }
 export function velgSideLaster(state: RootStateOrAny) {
-  return state.oppgaver.lasterData as boolean;
+  return state.klagebehandlinger.lasterData as boolean;
 }
 export function velgFiltrering(state: RootStateOrAny) {
-  return state.oppgaver.transformasjoner.filtrering;
+  return state.klagebehandlinger.transformasjoner.filtrering;
 }
 export function velgSortering(state: RootStateOrAny) {
-  return state.oppgaver.transformasjoner.sortering;
+  return state.klagebehandlinger.transformasjoner.sortering;
 }
 export function velgProjeksjon(state: RootStateOrAny) {
-  return state.oppgaver.meta.projeksjon;
+  return state.klagebehandlinger.meta.projeksjon;
 }

@@ -51,13 +51,13 @@ end
 def tilfeldigTema()
   r = rand(3)
   if r == 0
-    return "Sykepenger"
+    return "SYK"
   end
   if r == 1
-    return "Dagpenger"
+    return "DAG"
   end
   if r == 2
-    return "Foreldrepenger"
+    return "FOR"
   end
 end
 

@@ -25,7 +25,7 @@ describe("TILDEL 'Meg' epos", () => {
       ],
       valgtEnhet: 0,
     },
-    oppgaver: {
+    klagebehandlinger: {
       meta: {
         start: 0,
         antall: 5,
@@ -89,12 +89,12 @@ describe("TILDEL 'Meg' epos", () => {
           },
           d: {
             payload: {
-              start: initState.oppgaver.meta.start,
-              antall: initState.oppgaver.meta.antall,
-              transformasjoner: initState.oppgaver.transformasjoner,
+              start: initState.klagebehandlinger.meta.start,
+              antall: initState.klagebehandlinger.meta.antall,
+              transformasjoner: initState.klagebehandlinger.transformasjoner,
               ident: initState.meg.id,
-              projeksjon: initState.oppgaver.meta.projeksjon,
-              tildeltSaksbehandler: initState.oppgaver.meta.tildeltSaksbehandler,
+              projeksjon: initState.klagebehandlinger.meta.projeksjon,
+              tildeltSaksbehandler: initState.klagebehandlinger.meta.tildeltSaksbehandler,
               enhetId: "42",
             } as OppgaveParams,
             type: "klagebehandlinger/HENT",
@@ -135,12 +135,12 @@ describe("TILDEL 'Meg' epos", () => {
           },
           d: {
             payload: {
-              start: initState.oppgaver.meta.start,
-              antall: initState.oppgaver.meta.antall,
-              transformasjoner: initState.oppgaver.transformasjoner,
+              start: initState.klagebehandlinger.meta.start,
+              antall: initState.klagebehandlinger.meta.antall,
+              transformasjoner: initState.klagebehandlinger.transformasjoner,
               ident: initState.meg.id,
-              projeksjon: initState.oppgaver.meta.projeksjon,
-              tildeltSaksbehandler: initState.oppgaver.meta.tildeltSaksbehandler,
+              projeksjon: initState.klagebehandlinger.meta.projeksjon,
+              tildeltSaksbehandler: initState.klagebehandlinger.meta.tildeltSaksbehandler,
               enhetId: "42",
             } as OppgaveParams,
             type: "klagebehandlinger/HENT",

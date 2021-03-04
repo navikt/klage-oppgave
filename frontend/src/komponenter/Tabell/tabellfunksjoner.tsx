@@ -160,10 +160,10 @@ function tildelOppgave(settValgtOppgave: Function, id: string, versjon: number) 
 
 export const genererTabellRader = (
   settValgOppgaveId: Function,
-  oppgaver: OppgaveRader,
+  klagebehandlinger: OppgaveRader,
   utvidetProjeksjon: "UTVIDET" | boolean | undefined
 ): JSX.Element[] =>
-  oppgaver.rader.map((rad: OppgaveRad) => (
+  klagebehandlinger.rader.map((rad: OppgaveRad) => (
     <OppgaveTabellRad
       key={rad.id}
       {...rad}

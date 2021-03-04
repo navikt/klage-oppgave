@@ -47,10 +47,13 @@ const Innstillinger = (): JSX.Element => {
   }, [meg.id, valgtEnhetIdx, reload]);
 
   useEffect(() => {
-    let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
+    let lovligeTemaer = [{ label: "Sykepenger", value: "SYK" } as Filter];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
-        if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
+        let label;
+        if (tema === "FOR") label = "Foreldrepenger";
+        if (tema === "DAG") label = "Dagpenger";
+        if (tema !== "Sykepenger") lovligeTemaer.push({ label: label, value: tema });
       });
     }
     settLovligeTemaer(lovligeTemaer);
@@ -62,7 +65,7 @@ const Innstillinger = (): JSX.Element => {
     settAktiveTemaer(
       (innstillinger?.aktiveTemaer ?? [])
         .filter((tema: Filter) => tema.label !== "Sykepenger")
-        .concat([{ label: "Sykepenger", value: "Sykepenger" }])
+        .concat([{ label: "Sykepenger", value: "SYK" }])
     );
   }, [innstillinger, meg.id, reload]);
 
@@ -123,9 +126,9 @@ const Innstillinger = (): JSX.Element => {
                   settFilter(settAktiveTyper, filter, aktiveTyper, velgAlleEllerIngen)
                 }
                 filtre={[
-                  { label: "Klage", value: "Klage" },
-                  { label: "Anke", value: "Anke" },
-                  { label: "Feilutbetaling", value: "Feilutbetaling" },
+                  { label: "Klage", value: "ae0058" },
+                  { label: "Anke", value: "ae0046" },
+                  { label: "Feilutbetaling", value: "ae0161" },
                 ]}
                 dispatchFunc={filtrerType}
                 aktiveFiltere={aktiveTyper}

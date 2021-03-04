@@ -218,7 +218,7 @@ export interface OppgaveParams {
   transformasjoner: Transformasjoner;
 }
 
-export type temaType = "Foreldrepenger" | "Dagpenger" | "Sykepenger" | undefined;
+export type temaType = "FOR" | "DAG" | "SYK" | undefined;
 
 export default oppgaveSlice.reducer;
 
