@@ -54,7 +54,7 @@ const Innstillinger = (): JSX.Element => {
         if (tema === "FOR") label = "Foreldrepenger";
         if (tema === "DAG") label = "Dagpenger";
         if (tema === "PEN") label = "Pensjon";
-        if (tema !== "SYK") lovligeTemaer.push({ label: label, value: tema });
+        if (tema !== "SYK" || "Sykepenger") lovligeTemaer.push({ label: label, value: tema });
       });
     }
     settLovligeTemaer(lovligeTemaer);

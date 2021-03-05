@@ -66,12 +66,12 @@ def nestenTilfeldigSaksbehandler()
 end
 
 def nestenTilfeldigHjemmel()
-  return "8-" + Faker::Number.number(digits: 2).to_s
+  return rand(2) == 1 ? "8-" + Faker::Number.number(digits: 2).to_s : ""
 end
 
 def lagData()
   id = Faker::Number.number(digits: 7)
-  type = rand(2) == 1 ? "klage" : "anke"
+  type = rand(2) == 1 ? "ae0058" : "ae0046"
   tema = tilfeldigTema()
   frist = Faker::Date.backward(days: 365)
   mottatt = Faker::Date.backward(days: 365)
@@ -83,7 +83,6 @@ def lagData()
 end
 
 init_oppgaver()
-
 
 i=0
 loop do

@@ -82,7 +82,7 @@ export default function Klagen() {
               {klage.hjemler.map((hjemmel: any, idx: number) => (
                 <li key={`hjemmel${idx}`}>
                   <div className={"etikett etikett-Sykepenger etikett--hjemmel"}>
-                    {hjemmel.original}
+                    {hjemmel.original || "ikke satt"}
                   </div>
                 </li>
               ))}
