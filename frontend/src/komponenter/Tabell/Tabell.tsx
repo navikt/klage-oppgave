@@ -156,7 +156,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
         }
       });
     }
-    console.debug({ lovligeTemaer });
     settLovligeTemaer(lovligeTemaer);
   }, [enheter, valgtEnhetIdx, kodeverk]);
 
