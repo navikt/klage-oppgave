@@ -3,7 +3,7 @@ import Oppsett from "./Oppsett";
 import FiltrerbarHeader, { settFilter } from "./Tabell/FiltrerbarHeader";
 import { Filter, temaType } from "../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
-import { velgFiltrering } from "../tilstand/moduler/oppgave.velgere";
+import { velgFiltrering, velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
 import { Knapp } from "nav-frontend-knapper";
 import {
@@ -40,6 +40,7 @@ const Innstillinger = (): JSX.Element => {
   const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
   const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
   const valgtEnhetIdx = useSelector(valgtEnhet);
+  const kodeverk = useSelector(velgKodeverk);
 
   useEffect(() => {
     if (meg.id)
@@ -50,11 +51,10 @@ const Innstillinger = (): JSX.Element => {
     let lovligeTemaer = [{ label: "Sykepenger", value: "SYK" } as Filter];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
-        let label;
-        if (tema === "FOR") label = "Foreldrepenger";
-        if (tema === "DAG") label = "Dagpenger";
-        if (tema === "PEN") label = "Pensjon";
-        if (tema !== "SYK" || "Sykepenger") lovligeTemaer.push({ label: label, value: tema });
+        if (tema !== "SYK") {
+          let kodeverkTema = kodeverk.tema.filter((t: any) => t.id === tema)[0];
+          lovligeTemaer.push({ label: kodeverkTema.navn, value: kodeverkTema.id });
+        }
       });
     }
     settLovligeTemaer(lovligeTemaer);

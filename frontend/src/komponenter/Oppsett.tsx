@@ -18,6 +18,8 @@ import { velgExpire } from "../tilstand/moduler/token.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { hentExpiry } from "../tilstand/moduler/token";
+import { kodeverkRequest } from "../tilstand/moduler/oppgave";
+import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 
 export default function Oppsett({ visMeny, children }: LayoutType) {
   const person = useSelector(velgMeg);
@@ -25,6 +27,7 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
   const expireTime = useSelector(velgExpire);
   const feilmelding = useSelector(velgToasterMelding);
   const featureToggles = useSelector(velgFeatureToggles);
+  const kodeverk = useSelector(velgKodeverk);
   const dispatch = useDispatch();
   const [generellTilgang, settTilgang] = useState<boolean | undefined>(undefined);
   const history = useHistory();
@@ -33,6 +36,7 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
     //sjekk innlogging
     dispatch(hentExpiry());
+    dispatch(kodeverkRequest());
   }, []);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,11 +58,14 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
       settTilgang(tilgangEnabled.isEnabled);
     }
   }, [featureToggles]);
-
   if (generellTilgang === undefined) {
     return <NavFrontendSpinner />;
-  } else if (!generellTilgang) {
+  }
+  if (!generellTilgang) {
     return <div>Beklager, men din bruker har ikke tilgang til denne siden</div>;
+  }
+  if (!kodeverk) {
+    return <NavFrontendSpinner />;
   }
   return (
     <>

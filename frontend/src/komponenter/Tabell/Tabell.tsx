@@ -17,6 +17,7 @@ import {
   velgOppgaver,
   velgSideLaster,
   velgProjeksjon,
+  velgKodeverk,
 } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import "../../stilark/Tabell.less";
@@ -33,6 +34,7 @@ import { hentInnstillingerHandling, settInnstillingerHandling } from "../../tils
 import { GyldigeHjemler } from "../../domene/filtre";
 import { hentFeatureToggleHandling } from "../../tilstand/moduler/unleash";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
+
 import filterReducer from "./filterReducer";
 import Debug from "./Debug";
 
@@ -42,6 +44,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
   const sideLaster = useSelector(velgSideLaster);
+  const kodeverk = useSelector(velgKodeverk);
   const klagebehandlinger = useSelector(velgOppgaver);
   const forrigeSti = useSelector(velgForrigeSti);
   const utvidetProjeksjon = useSelector(velgProjeksjon);
@@ -118,9 +121,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.listFnr"));
   }, []);
-  useEffect(() => {
-    dispatch(kodeverkRequest());
-  }, []);
 
   useEffect(() => {
     filter_dispatch({ type: "sett_projeksjon", payload: utvidetProjeksjon });
@@ -150,15 +150,15 @@ const OppgaveTabell: React.FunctionComponent = () => {
     let lovligeTemaer = [{ label: "Sykepenger", value: "SYK" } as Filter];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
-        let label;
-        if (tema === "FOR") label = "Foreldrepenger";
-        if (tema === "DAG") label = "Dagpenger";
-        if (tema === "PEN") label = "Pensjon";
-        if (tema !== "SYK" || "Sykepenger") lovligeTemaer.push({ label: label, value: tema });
+        if (tema !== "SYK") {
+          let kodeverkTema = kodeverk.tema.filter((t: any) => t.id === tema)[0];
+          lovligeTemaer.push({ label: kodeverkTema.navn, value: kodeverkTema.id });
+        }
       });
     }
+    console.debug({ lovligeTemaer });
     settLovligeTemaer(lovligeTemaer);
-  }, [enheter, valgtEnhetIdx]);
+  }, [enheter, valgtEnhetIdx, kodeverk]);
 
   function skiftSortering(type: string, event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
     event.preventDefault();

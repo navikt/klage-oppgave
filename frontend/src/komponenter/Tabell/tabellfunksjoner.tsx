@@ -113,7 +113,7 @@ const OppgaveTabellRad = ({
       </td>
       <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${hjemmel}`}>
-          {hjemmel}
+          {hjemmel || "mangler"}
         </EtikettBase>
       </td>
 

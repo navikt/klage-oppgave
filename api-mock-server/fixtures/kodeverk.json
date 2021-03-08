@@ -1,0 +1,253 @@
+{
+  "eoes": [
+    {
+      "id": 1,
+      "navn": "Riktig",
+      "beskrivelse": "Problemstilling knyttet til EØS/utland er godt håndtert"
+    },
+    {
+      "id": 2,
+      "navn": "Ikke oppdaget",
+      "beskrivelse": "Vedtaksinstansen har ikke oppdaget at saken gjelder EØS/utland"
+    },
+    {
+      "id": 3,
+      "navn": "Feil",
+      "beskrivelse": "Vedtaksinstansen har oppdaget at saken gjelder EØS/utland, men har håndtert saken feil"
+    },
+    {
+      "id": 4,
+      "navn": "Uaktuelt",
+      "beskrivelse": "EØS/utenlandsproblematikk er ikke relevant i saken"
+    }
+  ],
+  "grunn": [
+    { "id": 1, "navn": "Mangelfull utredning", "beskrivelse": null },
+    { "id": 2, "navn": "Andre saksbehandlingsfeil", "beskrivelse": null },
+    { "id": 3, "navn": "Endret faktum", "beskrivelse": null },
+    { "id": 4, "navn": "Feil i bevisvurderingen", "beskrivelse": null },
+    {
+      "id": 5,
+      "navn": "Feil i den generelle lovtolkningen",
+      "beskrivelse": null
+    },
+    {
+      "id": 6,
+      "navn": "Feil i den konkrete rettsanvendelsen",
+      "beskrivelse": null
+    }
+  ],
+  "kilde": ["OPPGAVE", "MODERNE"],
+  "lov": [
+    { "id": 1, "navn": "Folketrygdloven", "beskrivelse": "Lov om folketrygd" }
+  ],
+  "raadfoertMedLege": [
+    {
+      "id": 1,
+      "navn": "Mangler",
+      "beskrivelse": "Saken burde vært forelagt for ROL i vedtaksinstansen"
+    },
+    {
+      "id": 2,
+      "navn": "Riktig",
+      "beskrivelse": "Saken er godt nok medisinsk opplyst med ROL-uttalelse i vedtaksinstansen/uten at ROL har blitt konsultert"
+    },
+    {
+      "id": 3,
+      "navn": "Mangelfull",
+      "beskrivelse": "Saken er forelagt ROL i vedtaksinstans, men er fortsatt mangelfullt medisinsk vurdert"
+    },
+    {
+      "id": 4,
+      "navn": "Uaktuelt",
+      "beskrivelse": "Saken handler ikke om trygdemedisinske vurderinger"
+    }
+  ],
+  "sakstype": [
+    { "id": "ae0058", "navn": "Klage", "beskrivelse": null },
+    { "id": "ae0046", "navn": "Anke", "beskrivelse": null },
+    { "id": "ae0047", "navn": "Gjenopptak", "beskrivelse": null },
+    { "id": "ae0028", "navn": "Revurdering", "beskrivelse": null },
+    { "id": "ae0161", "navn": "Feilutbetaling", "beskrivelse": null }
+  ],
+  "tema": [
+    {
+      "id": "AAP",
+      "navn": "Arbeidsavklaringspenger",
+      "beskrivelse": "Arbeidsavklaringspenger"
+    },
+    { "id": "AAR", "navn": "Aa-registeret", "beskrivelse": "Aa-registeret" },
+    {
+      "id": "AGR",
+      "navn": "Ajourhold - Grunnopplysninger",
+      "beskrivelse": "Ajourhold - Grunnopplysninger"
+    },
+    { "id": "BAR", "navn": "Barnetrygd", "beskrivelse": "Barnetrygd" },
+    { "id": "BID", "navn": "Bidrag", "beskrivelse": "Bidrag" },
+    { "id": "BIL", "navn": "Bil", "beskrivelse": "Bil" },
+    { "id": "DAG", "navn": "Dagpenger", "beskrivelse": "Dagpenger" },
+    {
+      "id": "ENF",
+      "navn": "Enslig forsørger",
+      "beskrivelse": "Enslig forsørger"
+    },
+    { "id": "ERS", "navn": "Erstatning", "beskrivelse": "Erstatning" },
+    { "id": "FAR", "navn": "Farskap", "beskrivelse": "Farskap" },
+    { "id": "FEI", "navn": "Feilutbetaling", "beskrivelse": "Feilutbetaling" },
+    {
+      "id": "FOR",
+      "navn": "Foreldre- og svangerskapspenger",
+      "beskrivelse": "Foreldre- og svangerskapspenger"
+    },
+    { "id": "FOS", "navn": "Forsikring", "beskrivelse": "Forsikring" },
+    {
+      "id": "FRI",
+      "navn": "Kompensasjon for selvstendig næringsdrivende/frilansere",
+      "beskrivelse": "Kompensasjon for selvstendig næringsdrivende/frilansere"
+    },
+    { "id": "FUL", "navn": "Fullmakt", "beskrivelse": "Fullmakt" },
+    { "id": "GEN", "navn": "Generell", "beskrivelse": "Generell" },
+    {
+      "id": "GRA",
+      "navn": "Gravferdsstønad",
+      "beskrivelse": "Gravferdsstønad"
+    },
+    {
+      "id": "GRU",
+      "navn": "Grunn- og hjelpestønad",
+      "beskrivelse": "Grunn- og hjelpestønad"
+    },
+    {
+      "id": "HEL",
+      "navn": "Helsetjenester og ortopediske hjelpemidler",
+      "beskrivelse": "Helsetjenester og ortopediske hjelpemidler"
+    },
+    { "id": "HJE", "navn": "Hjelpemidler", "beskrivelse": "Hjelpemidler" },
+    {
+      "id": "IAR",
+      "navn": "Inkluderende arbeidsliv",
+      "beskrivelse": "Inkluderende arbeidsliv"
+    },
+    { "id": "IND", "navn": "Tiltakspenger", "beskrivelse": "Tiltakspenger" },
+    { "id": "KON", "navn": "Kontantstøtte", "beskrivelse": "Kontantstøtte" },
+    { "id": "KTR", "navn": "Kontroll", "beskrivelse": "Kontroll" },
+    { "id": "MED", "navn": "Medlemskap", "beskrivelse": "Medlemskap" },
+    {
+      "id": "MOB",
+      "navn": "Mobilitetsfremmende stønad",
+      "beskrivelse": "Mobilitetsfremmende stønad"
+    },
+    {
+      "id": "OMS",
+      "navn": "Omsorgspenger, pleiepenger og opplæringspenger",
+      "beskrivelse": "Omsorgspenger, pleiepenger og opplæringspenger"
+    },
+    {
+      "id": "OPA",
+      "navn": "Oppfølging - Arbeidsgiver",
+      "beskrivelse": "Oppfølging - Arbeidsgiver"
+    },
+    { "id": "OPP", "navn": "Oppfølging", "beskrivelse": "Oppfølging" },
+    { "id": "PEN", "navn": "Pensjon", "beskrivelse": "Pensjon" },
+    {
+      "id": "PER",
+      "navn": "Permittering og masseoppsigelser",
+      "beskrivelse": "Permittering og masseoppsigelser"
+    },
+    { "id": "REH", "navn": "Rehabilitering", "beskrivelse": "Rehabilitering" },
+    {
+      "id": "REK",
+      "navn": "Rekruttering og stilling",
+      "beskrivelse": "Rekruttering og stilling"
+    },
+    {
+      "id": "RPO",
+      "navn": "Retting av personopplysninger",
+      "beskrivelse": "Retting av personopplysninger"
+    },
+    {
+      "id": "RVE",
+      "navn": "Rettferdsvederlag",
+      "beskrivelse": "Rettferdsvederlag"
+    },
+    {
+      "id": "SAA",
+      "navn": "Sanksjon - Arbeidsgiver",
+      "beskrivelse": "Sanksjon - Arbeidsgiver"
+    },
+    {
+      "id": "SAK",
+      "navn": "Saksomkostninger",
+      "beskrivelse": "Saksomkostninger"
+    },
+    {
+      "id": "SAP",
+      "navn": "Sanksjon - Person",
+      "beskrivelse": "Sanksjon - Person"
+    },
+    { "id": "SER", "navn": "Serviceklager", "beskrivelse": "Serviceklager" },
+    {
+      "id": "SIK",
+      "navn": "Sikkerhetstiltak",
+      "beskrivelse": "Sikkerhetstiltak"
+    },
+    {
+      "id": "STO",
+      "navn": "Regnskap/utbetaling",
+      "beskrivelse": "Regnskap/utbetaling"
+    },
+    {
+      "id": "SUP",
+      "navn": "Supplerende stønad",
+      "beskrivelse": "\tSupplerende stønad"
+    },
+    { "id": "SYK", "navn": "Sykepenger", "beskrivelse": "Sykepenger" },
+    { "id": "SYM", "navn": "Sykmeldinger", "beskrivelse": "Sykmeldinger" },
+    { "id": "TIL", "navn": "Tiltak", "beskrivelse": "Tiltak" },
+    {
+      "id": "TRK",
+      "navn": "Trekkhåndtering",
+      "beskrivelse": "Trekkhåndtering"
+    },
+    { "id": "TRY", "navn": "Trygdeavgift", "beskrivelse": "Trygdeavgift" },
+    { "id": "TSO", "navn": "Tilleggsstønad", "beskrivelse": "Tilleggsstønad" },
+    {
+      "id": "TSR",
+      "navn": "Tilleggsstønad arbeidssøkere",
+      "beskrivelse": "Tilleggsstønad arbeidssøkere"
+    },
+    {
+      "id": "UFM",
+      "navn": "Unntak fra medlemskap",
+      "beskrivelse": "Unntak fra medlemskap"
+    },
+    { "id": "UFO", "navn": "Uføretrygd", "beskrivelse": "Uføretrygd" },
+    { "id": "UKJ", "navn": "Ukjent", "beskrivelse": "Ukjent" },
+    { "id": "VEN", "navn": "Ventelønn", "beskrivelse": "Ventelønn" },
+    {
+      "id": "YRA",
+      "navn": "Yrkesrettet attføring",
+      "beskrivelse": "Yrkesrettet attføring"
+    },
+    {
+      "id": "YRK",
+      "navn": "Yrkesskade / Menerstatning",
+      "beskrivelse": "Yrkesskade / Menerstatning"
+    },
+    {
+      "id": "GOS",
+      "navn": "Gosys",
+      "beskrivelse": "Er ikke egentlig et tema, men returneres fra Axsys likevel"
+    }
+  ],
+  "utfall": [
+    { "id": 1, "navn": "Trukket", "beskrivelse": null },
+    { "id": 2, "navn": "Retur", "beskrivelse": null },
+    { "id": 3, "navn": "Opphevet", "beskrivelse": null },
+    { "id": 4, "navn": "Medhold", "beskrivelse": null },
+    { "id": 5, "navn": "Delvis medhold", "beskrivelse": null },
+    { "id": 6, "navn": "Opprettholdt", "beskrivelse": null },
+    { "id": 7, "navn": "Ugunst (Ugyldig)", "beskrivelse": null },
+    { "id": 8, "navn": "Avvist", "beskrivelse": null }
+  ]
+}

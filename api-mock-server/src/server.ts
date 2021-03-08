@@ -48,7 +48,13 @@ app.get(
 );
 
 app.get("/kodeverk", (req, res) => {
-  res.send({ test: "test" });
+  let data = require("fs")
+    .readFileSync(
+      require("path").resolve(__dirname, "../fixtures/kodeverk.json")
+    )
+    .toString("utf8");
+  let kodeverk = JSON.parse(data);
+  res.send(kodeverk);
 });
 
 app.get("/klagebehandlinger/:id", async (req, res) => {
@@ -155,15 +161,11 @@ app.get(
 app.get("/ansatte/:id/enheter", async (req, res) => {
   res.send([
     {
-      navn: "test-enhet",
-      id: "42",
-      lovligeTemaer: ["FOR"],
+      id: "4291",
+      navn: "NAV Klageinstans Oslo og Akershus",
+      lovligeTemaer: ["SYK", "PEN", "GOS", "DAG"],
     },
-    {
-      navn: "test-enhet 2",
-      id: "43",
-      lovligeTemaer: ["SYK"],
-    },
+    { id: "0118", navn: "NAV Aremark", lovligeTemaer: ["PEN"] },
   ]);
 });
 
