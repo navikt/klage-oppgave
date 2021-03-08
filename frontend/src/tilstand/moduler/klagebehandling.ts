@@ -112,6 +112,7 @@ export const klageSlice = createSlice({
       return state;
     },
     HENTET_DOKUMENT_FORHANDSVISNING: (state, action: PayloadAction<any>) => {
+      console.debug("currentPDF", action.payload);
       state.currentPDF = action.payload;
       return state;
     },
@@ -312,6 +313,7 @@ export function HentDokumentForhandsvisningEpos(
         )
         .pipe(
           map((data) => {
+            console.debug("hentetPreviewHandling", data);
             return hentetPreviewHandling(data.response.data as any);
           })
         )

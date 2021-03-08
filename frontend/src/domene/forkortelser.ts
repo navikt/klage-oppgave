@@ -12,9 +12,9 @@ export const temaOversettelse = (tema: string): string => {
 };
 export const typeOversettelse = (type: string): string => {
   switch (type) {
-    case "klage":
+    case "ae0058":
       return "Klage";
-    case "anke":
+    case "ae0046":
       return "Anke";
     default:
       return type;

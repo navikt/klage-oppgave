@@ -17,6 +17,7 @@ import {
   velgOppgaver,
   velgSideLaster,
   velgProjeksjon,
+  velgKodeverk,
 } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import "../../stilark/Tabell.less";
@@ -33,6 +34,7 @@ import { hentInnstillingerHandling, settInnstillingerHandling } from "../../tils
 import { GyldigeHjemler } from "../../domene/filtre";
 import { hentFeatureToggleHandling } from "../../tilstand/moduler/unleash";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
+
 import filterReducer from "./filterReducer";
 import Debug from "./Debug";
 
@@ -42,7 +44,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
   const sideLaster = useSelector(velgSideLaster);
-  const oppgaver = useSelector(velgOppgaver);
+  const kodeverk = useSelector(velgKodeverk);
+  const klagebehandlinger = useSelector(velgOppgaver);
   const forrigeSti = useSelector(velgForrigeSti);
   const utvidetProjeksjon = useSelector(velgProjeksjon);
   const location = useLocation();
@@ -118,9 +121,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.listFnr"));
   }, []);
-  useEffect(() => {
-    dispatch(kodeverkRequest());
-  }, []);
 
   useEffect(() => {
     filter_dispatch({ type: "sett_projeksjon", payload: utvidetProjeksjon });
@@ -147,14 +147,17 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [valgtEnhetIdx, meg.id]);
 
   useEffect(() => {
-    let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
+    let lovligeTemaer = [{ label: "Sykepenger", value: "SYK" } as Filter];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
-        if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
+        if (tema !== "SYK") {
+          let kodeverkTema = kodeverk.tema.filter((t: any) => t.id === tema)[0];
+          lovligeTemaer.push({ label: kodeverkTema.navn, value: kodeverkTema.id });
+        }
       });
     }
     settLovligeTemaer(lovligeTemaer);
-  }, [enheter, valgtEnhetIdx]);
+  }, [enheter, valgtEnhetIdx, kodeverk]);
 
   function skiftSortering(type: string, event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
     event.preventDefault();
@@ -303,10 +306,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
     if (temaer.length) {
       filtre.temaer = (innstillinger?.aktiveTemaer ?? [])
         .filter((tema: Filter) => tema.label !== "Sykepenger")
-        .concat([{ label: "Sykepenger", value: "Sykepenger" }]);
+        .concat([{ label: "Sykepenger", value: "SYK" }]);
       settTemaFilter(temaer);
     } else {
-      filtre.temaer = [{ label: "Sykepenger", value: "Sykepenger" }];
+      filtre.temaer = [{ label: "Sykepenger", value: "SYK" }];
       settTemaFilter(["Sykepenger" as temaType]);
     }
     filter_dispatch({ type: "sett_transformasjoner", payload: filtre });
@@ -404,10 +407,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
     history.push(location.pathname.replace(/\d+$/, "1"));
   };
 
-  if (oppgaver.meta.feilmelding) {
+  if (klagebehandlinger.meta.feilmelding) {
     return (
       <div className={"feil"}>
-        <h1>{oppgaver.meta.feilmelding}</h1>
+        <h1>{klagebehandlinger.meta.feilmelding}</h1>
         <div>Vennligst forsøk igjen litt senere...</div>
       </div>
     );
@@ -438,9 +441,9 @@ const OppgaveTabell: React.FunctionComponent = () => {
                 )
               }
               filtre={[
-                { label: "Klage", value: "Klage" },
-                { label: "Anke", value: "Anke" },
-                { label: "Feilutbetaling", value: "Feilutbetaling" },
+                { label: "Klage", value: "ae0058" },
+                { label: "Anke", value: "ae0046" },
+                { label: "Feilutbetaling", value: "ae0161" },
               ]}
               dispatchFunc={filtrerType}
               aktiveFiltere={filter_state?.transformasjoner?.filtrering?.typer}
@@ -515,15 +518,19 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </thead>
         <tbody>
-          {genererTabellRader(settValgtOppgave, oppgaver, filter_state?.projeksjon || visFnr)}
+          {genererTabellRader(
+            settValgtOppgave,
+            klagebehandlinger,
+            filter_state?.projeksjon || visFnr
+          )}
           <tr>
             <td colSpan={visFnr ? 9 : 7}>
               <div className="table-lbl">
-                <div className="antall-saker">{visAntallTreff(oppgaver)}</div>
+                <div className="antall-saker">{visAntallTreff(klagebehandlinger)}</div>
                 <div className={"paginering"}>
                   <Paginering
                     startSide={tolketStart}
-                    antallSider={oppgaver.meta.sider}
+                    antallSider={klagebehandlinger.meta.sider}
                     pathname={pathname}
                   />
                 </div>
@@ -533,7 +540,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
         </tbody>
       </table>
       <div style={{ margin: "1em 2em" }}>
-        Antall oppgaver med utgåtte frister: {oppgaver.meta.utgaatteFrister}
+        Antall oppgaver med utgåtte frister: {klagebehandlinger.meta.utgaatteFrister}
       </div>
     </>
   );

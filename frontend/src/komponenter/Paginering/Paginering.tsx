@@ -9,17 +9,20 @@ interface IPaginering {
   pathname: string;
 }
 
-export function visAntallTreff(oppgaver: OppgaveRader) {
-  const antall = oppgaver.meta.side * oppgaver.meta.antall - oppgaver.meta.antall || 1;
-  if (oppgaver.meta.totalAntall === 0) {
+export function visAntallTreff(klagebehandlinger: OppgaveRader) {
+  const antall =
+    klagebehandlinger.meta.side * klagebehandlinger.meta.antall - klagebehandlinger.meta.antall ||
+    1;
+  if (klagebehandlinger.meta.totalAntall === 0) {
     return "Ingen treff i oppgavesøket";
   }
   const antallIListe =
-    oppgaver.meta.side * oppgaver.meta.antall < oppgaver.meta.totalAntall
-      ? oppgaver.meta.side * oppgaver.meta.antall
-      : oppgaver.meta.totalAntall;
-  const s_oppgave = oppgaver.meta.totalAntall === 1 ? "oppgave" : "oppgaver";
-  return `Viser ${antall} til ${antallIListe} av ${oppgaver.meta.totalAntall} ${s_oppgave}`;
+    klagebehandlinger.meta.side * klagebehandlinger.meta.antall < klagebehandlinger.meta.totalAntall
+      ? klagebehandlinger.meta.side * klagebehandlinger.meta.antall
+      : klagebehandlinger.meta.totalAntall;
+  const s_oppgave =
+    klagebehandlinger.meta.totalAntall === 1 ? "klagebehandling" : "klagebehandlinger";
+  return `Viser ${antall} til ${antallIListe} av ${klagebehandlinger.meta.totalAntall} ${s_oppgave}`;
 }
 
 export default ({ startSide, antallSider, pathname }: IPaginering): JSX.Element => {

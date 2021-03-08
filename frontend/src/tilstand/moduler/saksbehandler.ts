@@ -71,13 +71,13 @@ export function tildelEpos(
         .pipe(
           switchMap(({ response }) => {
             let params = {
-              start: state$.value.oppgaver.meta.start,
-              antall: state$.value.oppgaver.meta.antall,
-              transformasjoner: state$.value.oppgaver.transformasjoner,
+              start: state$.value.klagebehandlinger.meta.start,
+              antall: state$.value.klagebehandlinger.meta.antall,
+              transformasjoner: state$.value.klagebehandlinger.transformasjoner,
               ident: state$.value.meg.id,
               enhetId: state$.value.meg.enheter[state$.value.meg.valgtEnhet].id,
-              projeksjon: state$.value.oppgaver.meta.projeksjon,
-              tildeltSaksbehandler: state$.value.oppgaver.meta.tildeltSaksbehandler,
+              projeksjon: state$.value.klagebehandlinger.meta.projeksjon,
+              tildeltSaksbehandler: state$.value.klagebehandlinger.meta.tildeltSaksbehandler,
             } as OppgaveParams;
             return concat([tildeltHandling(response), oppgaveRequest(params)]);
           })
@@ -105,13 +105,13 @@ export function fradelEpos(
         .pipe(
           switchMap(({ response }) => {
             let params = {
-              start: state$.value.oppgaver.meta.start,
-              antall: state$.value.oppgaver.meta.antall,
-              transformasjoner: state$.value.oppgaver.transformasjoner,
+              start: state$.value.klagebehandlinger.meta.start,
+              antall: state$.value.klagebehandlinger.meta.antall,
+              transformasjoner: state$.value.klagebehandlinger.transformasjoner,
               ident: state$.value.meg.id,
               enhetId: state$.value.meg.enheter[state$.value.meg.valgtEnhet].id,
-              projeksjon: state$.value.oppgaver.meta.projeksjon,
-              tildeltSaksbehandler: state$.value.oppgaver.meta.tildeltSaksbehandler,
+              projeksjon: state$.value.klagebehandlinger.meta.projeksjon,
+              tildeltSaksbehandler: state$.value.klagebehandlinger.meta.tildeltSaksbehandler,
             } as OppgaveParams;
             return concat([fradeltHandling(response), oppgaveRequest(params)]);
           })

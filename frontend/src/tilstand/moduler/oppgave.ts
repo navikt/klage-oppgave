@@ -186,12 +186,10 @@ export const oppgaveSlice = createSlice({
       return state;
     },
     HENTET_UGATTE: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
-      console.debug("utgåtte frister", action.payload);
       state.meta = { ...state.meta, utgaatteFrister: action.payload.antall };
       return state;
     },
     HENTET_KODEVERK: (state, action: PayloadAction<any>) => {
-      console.debug("kodeverk", action.payload);
       state.kodeverk = action.payload;
       return state;
     },
@@ -218,7 +216,7 @@ export interface OppgaveParams {
   transformasjoner: Transformasjoner;
 }
 
-export type temaType = "Foreldrepenger" | "Dagpenger" | "Sykepenger" | undefined;
+export type temaType = "FOR" | "DAG" | "SYK" | undefined;
 
 export default oppgaveSlice.reducer;
 

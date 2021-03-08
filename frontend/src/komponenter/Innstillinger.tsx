@@ -3,7 +3,7 @@ import Oppsett from "./Oppsett";
 import FiltrerbarHeader, { settFilter } from "./Tabell/FiltrerbarHeader";
 import { Filter, temaType } from "../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
-import { velgFiltrering } from "../tilstand/moduler/oppgave.velgere";
+import { velgFiltrering, velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
 import { Knapp } from "nav-frontend-knapper";
 import {
@@ -40,6 +40,7 @@ const Innstillinger = (): JSX.Element => {
   const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
   const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
   const valgtEnhetIdx = useSelector(valgtEnhet);
+  const kodeverk = useSelector(velgKodeverk);
 
   useEffect(() => {
     if (meg.id)
@@ -47,10 +48,13 @@ const Innstillinger = (): JSX.Element => {
   }, [meg.id, valgtEnhetIdx, reload]);
 
   useEffect(() => {
-    let lovligeTemaer = [{ label: "Sykepenger", value: "Sykepenger" } as Filter];
+    let lovligeTemaer = [{ label: "Sykepenger", value: "SYK" } as Filter];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
-        if (tema !== "Sykepenger") lovligeTemaer.push({ label: tema, value: tema });
+        if (tema !== "SYK") {
+          let kodeverkTema = kodeverk.tema.filter((t: any) => t.id === tema)[0];
+          lovligeTemaer.push({ label: kodeverkTema.navn, value: kodeverkTema.id });
+        }
       });
     }
     settLovligeTemaer(lovligeTemaer);
@@ -62,7 +66,7 @@ const Innstillinger = (): JSX.Element => {
     settAktiveTemaer(
       (innstillinger?.aktiveTemaer ?? [])
         .filter((tema: Filter) => tema.label !== "Sykepenger")
-        .concat([{ label: "Sykepenger", value: "Sykepenger" }])
+        .concat([{ label: "Sykepenger", value: "SYK" }])
     );
   }, [innstillinger, meg.id, reload]);
 
@@ -123,9 +127,9 @@ const Innstillinger = (): JSX.Element => {
                   settFilter(settAktiveTyper, filter, aktiveTyper, velgAlleEllerIngen)
                 }
                 filtre={[
-                  { label: "Klage", value: "Klage" },
-                  { label: "Anke", value: "Anke" },
-                  { label: "Feilutbetaling", value: "Feilutbetaling" },
+                  { label: "Klage", value: "ae0058" },
+                  { label: "Anke", value: "ae0046" },
+                  { label: "Feilutbetaling", value: "ae0161" },
                 ]}
                 dispatchFunc={filtrerType}
                 aktiveFiltere={aktiveTyper}

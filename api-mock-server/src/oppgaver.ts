@@ -12,7 +12,7 @@ interface Oppgave {
 
 interface Oppgaver {
   antallTreffTotalt: number;
-  oppgaver: [Oppgave];
+  klagebehandlinger: [Oppgave];
 }
 
 function generiskFilterSpoerring(
@@ -230,6 +230,6 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
 
   return {
     antallTreffTotalt,
-    oppgaver,
+    klagebehandlinger: oppgaver,
   } as Oppgaver;
 }
