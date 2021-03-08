@@ -117,7 +117,9 @@ const OppgaveTabellRad = ({
         </EtikettBase>
       </td>
 
-      {utvidetProjeksjon && <td onClick={() => rerouteToKlage(location)}>{person?.navn}</td>}
+      {utvidetProjeksjon && (
+        <td onClick={() => rerouteToKlage(location)}>{person?.navn || "fornavn etternavn"}</td>
+      )}
       {utvidetProjeksjon && (
         <td>
           <div className="fnr-lenke-wrap">
