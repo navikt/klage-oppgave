@@ -59,6 +59,14 @@ export default function Klagebehandling() {
     return <NavFrontendSpinner />;
   }
 
+  if (klage.klageLastet && klage.klageLastingFeilet) {
+    return (
+      <Oppsett visMeny={false}>
+        <div>Klage kunne ikke hentes...</div>
+      </Oppsett>
+    );
+  }
+
   return (
     <Oppsett visMeny={false}>
       <>

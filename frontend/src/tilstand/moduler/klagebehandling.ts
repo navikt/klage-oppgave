@@ -31,6 +31,7 @@ export interface IHjemmel {
 export interface IKlage {
   id: string;
   klageLastet: boolean;
+  klageLastingFeilet: boolean;
   dokumenterAlleHentet: boolean;
   dokumenterTilordnedeHentet: boolean;
   klageInnsendtdato?: string;
@@ -85,6 +86,7 @@ export const klageSlice = createSlice({
   initialState: {
     id: "",
     klageLastet: false,
+    klageLastingFeilet: false,
     dokumenterAlleHentet: false,
     dokumenterTilordnedeHentet: false,
     klageInnsendtdato: undefined,
@@ -109,6 +111,7 @@ export const klageSlice = createSlice({
     HENTET: (state, action: PayloadAction<IKlage>) => {
       state = action.payload;
       state.klageLastet = true;
+      state.klageLastingFeilet = false;
       return state;
     },
     HENTET_DOKUMENT_FORHANDSVISNING: (state, action: PayloadAction<any>) => {
@@ -158,6 +161,8 @@ export const klageSlice = createSlice({
     },
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
+      state.klageLastet = true;
+      state.klageLastingFeilet = true;
       return state;
     },
   },
