@@ -108,6 +108,11 @@ export const klageSlice = createSlice({
     currentPDF: "",
   } as IKlage,
   reducers: {
+    HENT_KLAGE: (state, action: PayloadAction<IKlage>) => {
+      state.klageLastet = false;
+      state.klageLastingFeilet = false;
+      return state;
+    },
     HENTET: (state, action: PayloadAction<IKlage>) => {
       state = action.payload;
       state.klageLastet = true;

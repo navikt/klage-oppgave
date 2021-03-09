@@ -62,7 +62,7 @@ export default function Klagebehandling() {
   if (klage.klageLastet && klage.klageLastingFeilet) {
     return (
       <Oppsett visMeny={false}>
-        <div>Klage kunne ikke hentes...</div>
+        <div className="klagebehandling__informasjon">Klage kunne ikke hentes...</div>
       </Oppsett>
     );
   }
