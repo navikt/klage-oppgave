@@ -123,7 +123,10 @@ const OppgaveTabellRad = ({
       {utvidetProjeksjon && (
         <td>
           <div className="fnr-lenke-wrap">
-            <NavLink to={`/klagebehandling/${id}&side=klagen`}> {person?.fnr}</NavLink>
+            <NavLink to={`/klagebehandling/${id}&side=klagen`}>
+              {" "}
+              {person?.fnr || "fødselsnummer"}
+            </NavLink>
             <a
               target="_blank"
               aria-label={"Ekstern lenke til Gosys for denne personen"}
