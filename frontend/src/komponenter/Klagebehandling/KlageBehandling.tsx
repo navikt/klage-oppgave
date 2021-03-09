@@ -56,7 +56,11 @@ export default function Klagebehandling() {
   }, [location]);
 
   if (!klage_state.oppgaveId || !klage.klageLastet) {
-    return <NavFrontendSpinner />;
+    return (
+      <div style={{ margin: "40vh auto 0 auto" }}>
+        <NavFrontendSpinner />
+      </div>
+    );
   }
 
   if (klage.klageLastet && klage.klageLastingFeilet) {
