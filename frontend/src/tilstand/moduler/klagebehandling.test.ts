@@ -50,6 +50,7 @@ describe("Oppgave epos", () => {
           pageRefs: [],
           historyNavigate: false,
           currentPDF: "",
+          klageLastingFeilet: false,
           klageLastet: false,
           dokumenterAlleHentet: false,
           dokumenterTilordnedeHentet: false,
