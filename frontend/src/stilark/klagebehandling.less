@@ -16,6 +16,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas: "klage_nav lenker";
+  background: white;
 }
 @media (max-width: 800px) {
   .meny__linker {
@@ -95,8 +96,9 @@ ul.klage__lenker {
 
 .klage_og_detaljer {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 5em;
+  margin: 1em 0 0 0;
 
   .oversendingsdetaljer {
     margin: @margin-default 0 0;
@@ -106,6 +108,83 @@ ul.klage__lenker {
       justify-content: space-between;
       max-width: 25em;
     }
+  }
+
+  .klage__boks {
+    width: 100%;
+    background: white;
+    border-radius: 0.25em;
+    margin: 0 0 0 1em;
+    padding: 0.25em 0 1em 1em;
+
+    &.xl {
+      min-width: 37em;
+    }
+
+    &.md {
+      min-width: 19em;
+    }
+
+    h1 {
+      font-size: 1.25em;
+      font-weight: 600;
+      font-family: Source Sans Pro, serif;
+    }
+    &.hoeyrejustert {
+      justify-self: right;
+    }
+  }
+
+  .detaljer {
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-between;
+    margin: 0 0.25em;
+  }
+  .maxw80 {
+    max-width: 80%;
+  }
+  .maxw95 {
+    max-width: 95%;
+  }
+  .input__med_ikon {
+    display: block;
+    position: relative;
+  }
+  .ikon__bg {
+    border: 1px solid #0067c5;
+    position: absolute;
+    right: 0;
+    width: 2em;
+    height: 100%;
+    border-radius: 0 0.3em 0.3em 0;
+    text-align: center;
+    padding: 0.4em 0;
+  }
+  .input__dato {
+    border-radius: 0.45em;
+    border: 1px solid #78706a;
+    padding: 0.7em;
+  }
+
+  .checkbox__med_label {
+    display: flex;
+    flex-flow: row-reverse;
+    input {
+      margin: -0.2em 0.75em 0 0;
+    }
+    label {
+      margin: -0.1em 0.25em 0 0.2em;
+      font-size: 1.1em;
+    }
+  }
+  .input__submit {
+    padding: 0.5em;
+    border-radius: 0.4em;
+    border: 1px solid #b7b1a9;
+    background-color: #b7b1a9;
+    color: white;
+    font-size: 1.1em;
   }
 }
 

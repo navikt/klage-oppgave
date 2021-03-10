@@ -74,7 +74,7 @@ export default function Klagebehandling() {
   }
 
   return (
-    <Oppsett visMeny={false}>
+    <Oppsett visMeny={false} customClass={"bg_lysgraa"}>
       <>
         <div className="klagebehandling__informasjon">
           <div className="rad">FORNAVN ETTERNAVN {klage.foedselsnummer} </div>

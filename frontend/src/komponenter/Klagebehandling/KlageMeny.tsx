@@ -26,7 +26,7 @@ export default function KlageMeny({ klage_state, id }: { klage_state: IKlageStat
               Dokumenter
             </NavLink>
           </li>
-          <li>
+          <li className={"skjult"}>
             <NavLink
               className={classNames("link", {
                 active: klage_state.aktivSide === "utarbeidevedtak",

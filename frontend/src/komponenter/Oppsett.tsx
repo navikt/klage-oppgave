@@ -4,6 +4,7 @@ import Alertstripe from "nav-frontend-alertstriper";
 
 interface LayoutType {
   visMeny: boolean;
+  customClass?: string;
   children: JSX.Element;
 }
 
@@ -21,7 +22,7 @@ import { hentExpiry } from "../tilstand/moduler/token";
 import { kodeverkRequest } from "../tilstand/moduler/oppgave";
 import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 
-export default function Oppsett({ visMeny, children }: LayoutType) {
+export default function Oppsett({ visMeny, customClass, children }: LayoutType) {
   const person = useSelector(velgMeg);
   const visFeilmelding = useSelector(velgToaster);
   const expireTime = useSelector(velgExpire);
@@ -69,7 +70,7 @@ export default function Oppsett({ visMeny, children }: LayoutType) {
   }
   return (
     <>
-      <main className="main container" data-testid="klagesiden">
+      <main className={`main container ${customClass}`} data-testid="klagesiden">
         <Header tittel="KABAL" brukerinfo={{ navn: person.navn, ident: person.id }}>
           {/* <Sok onSok={() => Promise.resolve("test")} /> */}
         </Header>
