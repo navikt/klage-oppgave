@@ -82,7 +82,10 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
           {klage.dokumenter.map((dokument: any, idx: number) => (
             <tr
               key={`${idx}_${dokument.dokumentInfoId}`}
-              onClick={() => hentPreview(klage.id, dokument.journalpostId, dokument.dokumentInfoId)}
+              onClick={() =>
+                dokument.harTilgangTilArkivvariant &&
+                hentPreview(klage.id, dokument.journalpostId, dokument.dokumentInfoId)
+              }
             >
               <td>
                 <button
@@ -105,6 +108,7 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
               <td>
                 <input
                   type={"checkbox"}
+                  disabled={!dokument.harTilgangTilArkivvariant}
                   onClick={() => tilordneDokument(klage.id, dokument.journalpostId)}
                 />
               </td>
