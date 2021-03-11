@@ -324,7 +324,7 @@ export function HentDokumentForhandsvisningEpos(
         .pipe(
           map((data) => {
             console.debug("hentetPreviewHandling", data);
-            return hentetPreviewHandling(data.response.data as any);
+            return hentetPreviewHandling(data as any);
           })
         )
         .pipe(
