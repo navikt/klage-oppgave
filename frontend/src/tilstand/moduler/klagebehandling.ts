@@ -314,10 +314,13 @@ export function HentDokumentForhandsvisningEpos(
       let url = `/api/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
       return get(url, {
         type: "text/plain",
+        contentType: "application/pdf",
       })
         .pipe(
           timeout(5000),
           map((response) => {
+            console.debug("henter preview1");
+            console.debug(response);
             return response;
           })
         )
