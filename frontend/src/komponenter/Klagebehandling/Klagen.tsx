@@ -95,7 +95,7 @@ function OversendtKA() {
 function Sjekkliste() {
   const klage: IKlage = useSelector(velgKlage);
   return (
-    <div className={"detaljer maxw95"}>
+    <div className={"detaljer maxw95 flex-col"}>
       <div style={{ marginTop: "1em" }}>
         <div className={"checkbox__med_label"}>
           <label htmlFor={"formkrav"}>Vurdert formkrav</label>
@@ -234,7 +234,7 @@ export default function Klagen() {
         <Utfall />
         <HjemmelBasis />
       </div>
-      <div className={"klage__boks hoeyrejustert"}>
+      <div className={"klage__boks md "}>
         <h1>Dokumenter knyttet til klagen</h1>
       </div>
     </div>

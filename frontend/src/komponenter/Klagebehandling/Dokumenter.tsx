@@ -72,10 +72,10 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
       <table className={"dokument-tabell"} cellPadding={0} cellSpacing={0}>
         <thead>
           <tr>
-            <th />
             <th>Dokumentbeskrivelse</th>
             <th>Tema</th>
             <th>Registrert</th>
+            <th>Knytt til klagen</th>
           </tr>
         </thead>
         <tbody>
@@ -84,12 +84,6 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
               key={`${idx}_${dokument.dokumentInfoId}`}
               onClick={() => hentPreview(klage.id, dokument.journalpostId, dokument.dokumentInfoId)}
             >
-              <td>
-                <input
-                  type={"checkbox"}
-                  onClick={() => tilordneDokument(klage.id, dokument.journalpostId)}
-                />
-              </td>
               <td>
                 <button
                   onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
@@ -108,6 +102,12 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
                 </div>
               </td>
               <td className={"liten"}>{formattedDate(dokument.registrert)}</td>
+              <td>
+                <input
+                  type={"checkbox"}
+                  onClick={() => tilordneDokument(klage.id, dokument.journalpostId)}
+                />
+              </td>
             </tr>
           ))}
         </tbody>
