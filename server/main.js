@@ -58,7 +58,7 @@ async function startApp() {
       passport.deserializeUser((user, done) => done(null, user));
       server.use("/", routes.setup(azureAuthClient));
 
-      server.listen(8090, () => console.log(`Listening on port ${port}`));
+      server.listen(8080, () => console.log(`Listening on port ${port}`));
     } else {
       server.use("/", routesDev.setup());
       server.listen(
