@@ -1,10 +1,10 @@
-name: Bygg og rull ut manuelt
+name: Bygg manuelt
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - debug
+      - dockercompose
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
