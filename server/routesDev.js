@@ -58,7 +58,7 @@ const setup = (authClient) => {
     "/api",
     cacheMiddleWare,
     createProxyMiddleware({
-      target: "http://localhost:3000",
+      target: "http://apimock:3000",
       //target: "https://klage-oppgave-api.dev.nav.no/",
       pathRewrite: {
         "^/api": "",
@@ -83,16 +83,10 @@ const setup = (authClient) => {
     res.send(expiration.toString());
   });
 
-  router.get("/", (req, res) => {
-    return res
-      .status(200)
-      .sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
-  });
-
   router.use(
     "/me",
     createProxyMiddleware({
-      target: "http://localhost:3000",
+      target: "http://apimock:3000",
       onError: function onError(err, req, res) {
         res.status(500);
         res.json({ error: "Kunne ikke koble til API" });

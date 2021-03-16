@@ -13,12 +13,12 @@ const envVar = ({ name, required = true }) => {
 
 const server = {
   // should be equivalent to the URL this application is hosted on for correct CORS origin header
-  host: envVar({ name: "HOST", required: false }) || "localhost",
+  host: envVar({ name: "HOST", required: false }) || "0.0.0.0",
 
   cluster: envVar({ name: "NAIS_CLUSTER_NAME", required: true }),
 
   // port for your application
-  port: envVar({ name: "PORT", required: false }) || 3000,
+  port: envVar({ name: "PORT", required: false }) || 8090,
 
   // optional, only set if requests to Azure AD must be performed through a corporate proxy (i.e. traffic to login.microsoftonline.com is blocked by the firewall)
   proxy: envVar({ name: "HTTP_PROXY", required: false }),

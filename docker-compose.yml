@@ -1,15 +1,57 @@
-version: "3"
+version: "3.9"
 
 services:
   frontend:
-    build: .
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+    - ./frontend/.env.development
     ports:
-      - "8080:8080"
+    - "8060:8060"
     volumes:
-      - ./public:/usr/src/app/public
+    - ./frontend/src:/usr/src/app/src
     environment:
-      NODE_ENV: production
-      INLINE_RUNTIME_CHUNK: "false"
-      REACT_APP_URL: http://localhost:8080
-      REACT_APP_LOGINSERVICE_URL: https://loginservice.dev.nav.no/login
-      REACT_API_URL: https://klage-oppgave-api.dev.nav.no
+      NODE_ENV: development
+
+  apimock:
+    build:
+      context: ./api-mock-server
+      dockerfile: Dockerfile
+    env_file:
+      - ./api-mock-server/.env.development
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+
+  nodefront:
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./server/.env.development
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./server:/usr/src/app
+    environment:
+      NODE_ENV: development
+
+  ruby:
+    build:
+      context: ./api-mock-server/scripts
+      dockerfile: Dockerfile
+    command: bash -c 'ruby ./api-mock-server/scripts/genererOppgaver.rb ./api-mock-server/oppgaver.db'
+    working_dir: /usr/app/
+    volumes:
+      - ./:/usr/app/
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/var/lib/redis
+      - ./redis.conf:/usr/local/etc/redis/redis.conf

@@ -48,24 +48,25 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/",
     filename: "bundle.js",
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
   devServer: {
     contentBase: path.resolve(__dirname, "public"),
     hot: true,
+    host: "0.0.0.0",
+    port: 8060,
     historyApiFallback: true,
     proxy: {
       "/api": {
-        target: "http://localhost:3000",
+        target: "http://apimock:3000",
         pathRewrite: { "^/api": "" },
       },
       "/internal": {
-        target: "http://localhost:8090",
+        target: "http://nodefront:8090",
       },
       "/me": {
-        target: "http://localhost:3000",
+        target: "http://apimock:3000",
       },
     },
   },

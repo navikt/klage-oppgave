@@ -6,7 +6,7 @@ require 'sqlite3'
 
 def init_oppgaver()
     begin
-        db = SQLite3::Database.open "../oppgaver.db"
+        db = SQLite3::Database.open ARGV[0]
         db.execute "DROP TABLE IF EXISTS Oppgaver"
         db.execute "CREATE TABLE Oppgaver
             (
@@ -34,7 +34,7 @@ end
 
 def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon)
   begin
-	  db = SQLite3::Database.open "../oppgaver.db"
+	  db = SQLite3::Database.open ARGV[0]
       db.execute("INSERT INTO Oppgaver (Id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                                         [id, type, tema, hjemmel, frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon])
 

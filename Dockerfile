@@ -9,5 +9,5 @@ COPY frontend frontend
 WORKDIR server
 RUN npm install
 
-CMD ["node", "main.js"]
-EXPOSE 8080
+CMD ["npm", "start"]
+EXPOSE 8090
