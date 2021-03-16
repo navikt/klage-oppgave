@@ -57,15 +57,16 @@ async function startApp() {
       passport.serializeUser((user, done) => done(null, user));
       passport.deserializeUser((user, done) => done(null, user));
       server.use("/", routes.setup(azureAuthClient));
+
+      server.listen(8090, () => console.log(`Listening on port ${port}`));
     } else {
       server.use("/", routesDev.setup());
+      server.listen(
+        8090,
+        () => console.log(`Listening on port ${port}`),
+        "0.0.0.0"
+      );
     }
-
-    server.listen(
-      8090,
-      () => console.log(`Listening on port ${port}`),
-      "0.0.0.0"
-    );
   } catch (error) {
     console.error("Error during start-up", error);
   }
