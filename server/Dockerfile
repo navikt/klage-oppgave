@@ -7,4 +7,4 @@ COPY . .
 RUN npm install
 
 CMD ["npm","run","dev"]
-EXPOSE 8090
+EXPOSE 3000
