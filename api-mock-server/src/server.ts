@@ -173,6 +173,10 @@ app.get("/featuretoggle/:feature", (req, res) => {
   res.status(200).send("true");
 });
 
+app.get("/aapenfeaturetoggle/:feature", (req, res) => {
+  res.status(200).send("true");
+});
+
 app.post(
   "/ansatte/:id/klagebehandlinger/:oppgaveid/saksbehandlertildeling",
   async (req, res) => {
@@ -212,7 +216,11 @@ app.get("/me", (req, res) => {
 });
 
 // start the Express server
-app.listen(port, () => {
-  /*tslint:disable*/
-  console.log(`server started at http://localhost:${port}`);
-});
+app.listen(
+  port,
+  () => {
+    /*tslint:disable*/
+    console.log(`server started at http://localhost:${port}`);
+  },
+  "0.0.0.0"
+);

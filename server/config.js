@@ -13,7 +13,7 @@ const envVar = ({ name, required = true }) => {
 
 const server = {
   // should be equivalent to the URL this application is hosted on for correct CORS origin header
-  host: envVar({ name: "HOST", required: false }) || "localhost",
+  host: envVar({ name: "HOST", required: false }) || "0.0.0.0",
 
   cluster: envVar({ name: "NAIS_CLUSTER_NAME", required: true }),
 

@@ -1,0 +1,11 @@
+version: '3'
+services:
+  ruby:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: bash -c 'ruby genererOppgaver.rb oppgaver.db'
+    working_dir: /usr/app/
+    volumes:
+      - ./:/usr/app/
+
