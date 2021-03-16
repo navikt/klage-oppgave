@@ -1,20 +1,6 @@
 version: "3.9"
 
 services:
-  nodefrontend:
-    build:
-      context: ./
-      dockerfile: ./server/Dockerfile
-    env_file:
-    - ./frontend/.env.development
-    ports:
-    - "8090:8090"
-    volumes:
-    - ./frontend/public:/usr/src/app/public
-    - ./server:/usr/src/app/server
-    environment:
-      NODE_ENV: development
-
   frontend:
     build:
       context: ./frontend
@@ -39,6 +25,19 @@ services:
     environment:
       NODE_ENV: development
 
+  nodefront:
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./server/.env.development
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./server:/usr/src/app
+    environment:
+      NODE_ENV: development
+
   ruby:
     build:
       context: ./api-mock-server/scripts
@@ -47,3 +46,12 @@ services:
     working_dir: /usr/app/
     volumes:
       - ./:/usr/app/
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/var/lib/redis
+      - ./redis.conf:/usr/local/etc/redis/redis.conf

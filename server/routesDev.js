@@ -83,14 +83,6 @@ const setup = (authClient) => {
     res.send(expiration.toString());
   });
 
-  /*
-  router.get("/", (req, res) => {
-    return res
-      .status(200)
-      .sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
-  });
-  */
-
   router.use(
     "/me",
     createProxyMiddleware({

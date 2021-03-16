@@ -61,7 +61,11 @@ async function startApp() {
       server.use("/", routesDev.setup());
     }
 
-    server.listen(port, () => console.log(`Listening on port ${port}`));
+    server.listen(
+      8090,
+      () => console.log(`Listening on port ${port}`),
+      "0.0.0.0"
+    );
   } catch (error) {
     console.error("Error during start-up", error);
   }

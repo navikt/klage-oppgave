@@ -59,14 +59,14 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       "/api": {
-        target: "http://0.0.0.0:3000",
+        target: "http://apimock:3000",
         pathRewrite: { "^/api": "" },
       },
       "/internal": {
-        target: "http://0.0.0.0:8090",
+        target: "http://nodefront:8090",
       },
       "/me": {
-        target: "http://0.0.0.0:3000",
+        target: "http://apimock:3000",
       },
     },
   },
