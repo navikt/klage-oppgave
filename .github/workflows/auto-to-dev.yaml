@@ -26,13 +26,13 @@ jobs:
         run: |
           cd frontend
           npm ci 
-          npm run clean
           npm run build
       - name: Build and publish Docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SESSION_KEY: ${{ secrets.klage-session-key }}
         run: |
+          cat Dockerfile
           docker build --tag ${IMAGE} .
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
