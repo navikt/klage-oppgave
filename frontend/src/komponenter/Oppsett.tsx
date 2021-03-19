@@ -103,6 +103,11 @@ export default function Oppsett({
                 Innstillinger
               </NavLink>
             </li>
+            <li>
+              <NavLink className="link" to="/editor">
+                Editor
+              </NavLink>
+            </li>
           </ul>
         </nav>
         <div className={`toaster ${visFeilmelding ? "active" : ""}`}>

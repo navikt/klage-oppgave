@@ -1,0 +1,45 @@
+.editor-container {
+  z-index: 0;
+  display: block;
+  width: 100%;
+  padding: 1em;
+}
+
+.editor {
+  display: block;
+  width: 100%;
+  min-height: 30em;
+  padding: 1em;
+  background-color: white;
+
+  .table-container {
+    display: inline-block;
+    position: relative;
+
+    .over,
+    .under {
+      cursor: pointer;
+      border: none;
+      background-color: lightblue;
+      position: absolute;
+      width: 100%;
+    }
+    .over {
+      top: 0;
+      transform: translateY(-100%);
+    }
+    .under {
+      bottom: 0;
+      transform: translateY(100%);
+    }
+    table {
+      border-collapse: collapse;
+      tr {
+        td {
+          padding: 0.5em;
+          border: 1px solid lightgray;
+        }
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@ import MineSaker from "./komponenter/MineSaker";
 import AlleSaker from "./komponenter/AlleSaker";
 import Innstillinger from "./komponenter/Innstillinger";
 import { hentMegHandling } from "./tilstand/moduler/meg";
+import EditorPage from "./komponenter/Editor/EditorPage";
 
 store.dispatch(hentMegHandling());
 
@@ -24,6 +25,7 @@ ReactDOM.render(
           <Route exact path="/mineoppgaver" render={() => <MineSaker />} />
           <Route exact path="/mineoppgaver/:side" render={() => <MineSaker />} />
           <Route exact path="/innstillinger" render={() => <Innstillinger />} />
+          <Route exact path="/editor" render={() => <EditorPage />} />
           <Redirect to="/oppgaver" />
         </Switch>
       </BrowserRouter>

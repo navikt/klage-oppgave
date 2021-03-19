@@ -124,6 +124,8 @@
     "rxjs": "^6.6.3",
     "rxjs-hooks": "^0.6.2",
     "styled-components": "^5.2.2",
+    "slate": "^0.60.8",
+    "slate-react": "^0.60.8",
     "universal-cookie": "^4.0.4"
   },
   "husky": {

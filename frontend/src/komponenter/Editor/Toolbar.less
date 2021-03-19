@@ -1,0 +1,25 @@
+.toolbar {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  margin: 0;
+  background-color: white;
+}
+
+.toolbar-button {
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid lightgray;
+  padding: 0.5em;
+  margin: 0;
+  margin-right: 0.5em;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &.active,
+  &:active {
+    background-color: #aaa;
+  }
+}
