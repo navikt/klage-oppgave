@@ -4,23 +4,24 @@ import React, { useCallback, useMemo, useState } from "react";
 import { createEditor, Descendant, Transforms, Node, Range, Editor } from "slate";
 // Import the Slate components and React plugin.
 import { Slate, Editable, RenderElementProps, RenderLeafProps, withReact } from "slate-react";
-import { Blocks, HEADING_TYPES, isBlockElement, isLeaf, isVoidElement, VoidBlocks } from "./blocks";
+import { isBlockElement, isLeaf } from "./blocks";
 import "./Editor.less";
 import { Element } from "./Element";
 import { Leaf } from "./Leaf";
 import { Marks, toggleMark } from "./marks";
 import { Toolbar } from "./Toolbar";
+import { Blocks, HEADING } from "./types";
 import { withTables } from "./withTables";
 
 const KlageEditor = () => {
   const editor = useMemo(() => withTables(withReact(createEditor())), []);
-  editor.isVoid = (element): boolean => element.type === VoidBlocks.STANDARD_TEXT;
   const renderElement = useCallback((props: RenderElementProps) => <Element {...props} />, []);
   const renderLeaf = useCallback((props: RenderLeafProps) => <Leaf {...props} />, []);
   // Add the initial value when setting up our state.
   const [value, setValue] = useState<Descendant[]>([
     {
-      type: Blocks.H1,
+      type: HEADING,
+      level: 1,
       children: [{ text: "Tittel for vedtaket" }],
     },
     {
@@ -36,10 +37,10 @@ const KlageEditor = () => {
       ],
     },
     {
-      type: VoidBlocks.STANDARD_TEXT,
+      type: "standard-text",
       standardText: "Denne teksten er ikke redigerbar.",
       standardTextId: "id123",
-      children: [{ text: "" }],
+      children: [{ text: "Denne teksten er ikke redigerbar." }],
     },
     {
       type: Blocks.TABLE,
@@ -120,10 +121,7 @@ const KlageEditor = () => {
 
               // Enter trigger.
               if (event.key === "Enter") {
-                if (
-                  isBlockElement(selectedElement) &&
-                  HEADING_TYPES.includes(selectedElement.type)
-                ) {
+                if (selectedElement.type === "heading") {
                   event.preventDefault();
 
                   if (

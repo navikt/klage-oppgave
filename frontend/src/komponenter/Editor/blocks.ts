@@ -1,40 +1,9 @@
 import { Editor, Transforms, Node, Element as SlateElement, Path, Descendant } from "slate";
 import { ReactEditor } from "slate-react";
-import { EditableBlock, CustomElement, LeafType, NonEditableBlock } from "./types";
-
-export enum Blocks {
-  PARAGRAPH = "paragraph",
-  H1 = "heading-one",
-  H2 = "heading-two",
-  H3 = "heading-three",
-  H4 = "heading-four",
-  BULLET_LIST = "bulleted-list",
-  NUMBERED_LIST = "numbered-list",
-  LIST_ITEM = "list-item",
-  BLOCK_QUOTE = "block-quote",
-  TABLE = "table",
-  TABLE_ROW = "table-row",
-  TABLE_CELL = "table-cell",
-}
-
-export enum VoidBlocks {
-  STANDARD_TEXT = "standard-text",
-}
-
-export const VOID_BLOCK_TYPES = Object.keys(VoidBlocks);
-export const BLOCK_TYPES = Object.keys(Blocks);
-
-export const LIST_TYPES = [Blocks.NUMBERED_LIST, Blocks.BULLET_LIST];
-export const HEADING_TYPES = [Blocks.H1, Blocks.H2, Blocks.H3, Blocks.H4];
-
-export const isBlockElement = (element: Descendant): element is EditableBlock =>
-  typeof element.type === "string" && BLOCK_TYPES.includes(element.type);
-
-export const isVoidElement = (element: Descendant): element is NonEditableBlock =>
-  typeof element.type === "string" && VOID_BLOCK_TYPES.includes(element.type);
+import { LeafType } from "./types";
 
 export const isLeaf = (element: Descendant): element is LeafType =>
-  typeof element.type === "undefined";
+  typeof element["type"] === "undefined";
 
 export const toggleBlock = (editor: ReactEditor, format: Blocks) => {
   const isActive = isBlockActive(editor, format);
