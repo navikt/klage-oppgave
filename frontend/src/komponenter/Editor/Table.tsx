@@ -2,21 +2,24 @@ import React from "react";
 import { RenderElementProps, useSlate } from "slate-react";
 import { insertParagraph, isTable } from "./blocks";
 import { UiButton } from "./UIButton";
+import "./Table.less";
 
 export const Table = ({ attributes, element, children }: RenderElementProps) => {
   const editor = useSlate();
   return (
-    <div className="table-container">
-      <table>
-        <tbody {...attributes}>{children}</tbody>
-      </table>
-      <TableContextButton className="over" onClick={() => insertParagraph(editor, true)}>
-        Over
-      </TableContextButton>
-      <TableContextButton className="under" onClick={() => insertParagraph(editor, false)}>
-        Under
-      </TableContextButton>
-    </div>
+    <section className="table-container">
+      <div className="table-ui-container">
+        <table>
+          <tbody {...attributes}>{children}</tbody>
+        </table>
+        <TableContextButton className="over" onClick={() => insertParagraph(editor, true)}>
+          Over
+        </TableContextButton>
+        <TableContextButton className="under" onClick={() => insertParagraph(editor, false)}>
+          Under
+        </TableContextButton>
+      </div>
+    </section>
   );
 };
 

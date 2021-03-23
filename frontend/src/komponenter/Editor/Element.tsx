@@ -1,37 +1,47 @@
 import React from "react";
 import { RenderElementProps } from "slate-react";
-import { Blocks, VoidBlocks } from "./blocks";
-import { StandardText } from "./StandardText";
+import { isHeading, isStandardText } from "./blocks";
+import { StandardTextElement } from "./StandardText";
 import { Table } from "./Table";
+import { ListBlockTypes, NestedBlockTypes, TopBlockTypes } from "./types";
 
 export const Element = (props: RenderElementProps) => {
   const { attributes, children, element } = props;
 
+  if (isHeading(element)) {
+    switch (element.level) {
+      case 1:
+        return <h1 {...attributes}>{children}</h1>;
+      case 2:
+        return <h2 {...attributes}>{children}</h2>;
+      case 3:
+        return <h3 {...attributes}>{children}</h3>;
+      case 4:
+        return <h4 {...attributes}>{children}</h4>;
+      default:
+        return <h1 {...attributes}>{children}</h1>;
+    }
+  }
+
+  if (isStandardText(element)) {
+    return <StandardTextElement element={element} attributes={attributes} children={children} />;
+  }
+
   switch (element.type) {
-    case Blocks.H1:
-      return <h1 {...attributes}>{children}</h1>;
-    case Blocks.H2:
-      return <h2 {...attributes}>{children}</h2>;
-    case Blocks.H3:
-      return <h3 {...attributes}>{children}</h3>;
-    case Blocks.H4:
-      return <h4 {...attributes}>{children}</h4>;
-    case Blocks.BULLET_LIST:
+    case ListBlockTypes.BULLET_LIST:
       return <ul {...attributes}>{children}</ul>;
-    case Blocks.NUMBERED_LIST:
+    case ListBlockTypes.NUMBERED_LIST:
       return <ol {...attributes}>{children}</ol>;
-    case Blocks.LIST_ITEM:
+    case NestedBlockTypes.LIST_ITEM:
       return <li {...attributes}>{children}</li>;
-    case Blocks.BLOCK_QUOTE:
+    case TopBlockTypes.BLOCK_QUOTE:
       return <blockquote {...attributes}>{children}</blockquote>;
-    case Blocks.TABLE:
+    case TopBlockTypes.TABLE:
       return <Table {...props} />;
-    case Blocks.TABLE_ROW:
+    case NestedBlockTypes.TABLE_ROW:
       return <tr {...attributes}>{children}</tr>;
-    case Blocks.TABLE_CELL:
+    case NestedBlockTypes.TABLE_CELL:
       return <td {...attributes}>{children}</td>;
-    case VoidBlocks.STANDARD_TEXT:
-      return <StandardText element={element} attributes={attributes} children={children} />;
     default:
       return <p {...attributes}>{children}</p>;
   }

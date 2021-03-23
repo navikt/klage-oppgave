@@ -10,6 +10,8 @@ interface UiButtonProps {
 export const UiButton = ({ className, onClick, children, disabled }: UiButtonProps) => (
   <button
     className={className}
+    contentEditable={false}
+    style={{ userSelect: "none" }}
     onMouseDown={(event) => {
       event.preventDefault();
       if (!disabled) {

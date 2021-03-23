@@ -4,14 +4,14 @@ import React, { useCallback, useMemo, useState } from "react";
 import { createEditor, Descendant, Transforms, Node, Range, Editor } from "slate";
 // Import the Slate components and React plugin.
 import { Slate, Editable, RenderElementProps, RenderLeafProps, withReact } from "slate-react";
-import { isBlockElement, isLeaf } from "./blocks";
-import "./Editor.less";
+import { isLeaf } from "./blocks";
 import { Element } from "./Element";
 import { Leaf } from "./Leaf";
 import { Marks, toggleMark } from "./marks";
 import { Toolbar } from "./Toolbar";
-import { Blocks, HEADING } from "./types";
+import { ListBlockTypes, NestedBlockTypes, TopBlockTypes } from "./types";
 import { withTables } from "./withTables";
+import "./Editor.less";
 
 const KlageEditor = () => {
   const editor = useMemo(() => withTables(withReact(createEditor())), []);
@@ -20,12 +20,12 @@ const KlageEditor = () => {
   // Add the initial value when setting up our state.
   const [value, setValue] = useState<Descendant[]>([
     {
-      type: HEADING,
+      type: TopBlockTypes.HEADING,
       level: 1,
       children: [{ text: "Tittel for vedtaket" }],
     },
     {
-      type: Blocks.PARAGRAPH,
+      type: TopBlockTypes.PARAGRAPH,
       children: [
         { text: "En paragraf med " },
         { text: "bold", bold: true },
@@ -37,44 +37,62 @@ const KlageEditor = () => {
       ],
     },
     {
-      type: "standard-text",
-      standardText: "Denne teksten er ikke redigerbar.",
+      type: TopBlockTypes.STANDARD_TEXT,
+      standardText:
+        "Dette er en standardtekst. Den kan redigeres og settes tilbake til originalversjonen.",
       standardTextId: "id123",
-      children: [{ text: "Denne teksten er ikke redigerbar." }],
-    },
-    {
-      type: Blocks.TABLE,
       children: [
         {
-          type: Blocks.TABLE_ROW,
+          text:
+            "Dette er en standardtekst. Den kan redigeres og settes tilbake til originalversjonen.",
+        },
+      ],
+    },
+    {
+      type: TopBlockTypes.STANDARD_TEXT,
+      standardText:
+        "Dette er en standardtekst. Den kan redigeres og settes tilbake til originalversjonen.",
+      standardTextId: "id123",
+      children: [
+        {
+          text:
+            "Dette er en standardtekst. Den kan redigeres og settes tilbake til originalversjonen.",
+        },
+      ],
+    },
+    {
+      type: TopBlockTypes.TABLE,
+      children: [
+        {
+          type: NestedBlockTypes.TABLE_ROW,
           children: [
             {
-              type: Blocks.TABLE_CELL,
+              type: NestedBlockTypes.TABLE_CELL,
               children: [{ text: "test" }],
             },
             {
-              type: Blocks.TABLE_CELL,
+              type: NestedBlockTypes.TABLE_CELL,
               children: [{ text: "test" }],
             },
             {
-              type: Blocks.TABLE_CELL,
+              type: NestedBlockTypes.TABLE_CELL,
               children: [{ text: "test" }],
             },
           ],
         },
         {
-          type: Blocks.TABLE_ROW,
+          type: NestedBlockTypes.TABLE_ROW,
           children: [
             {
-              type: Blocks.TABLE_CELL,
+              type: NestedBlockTypes.TABLE_CELL,
               children: [{ text: "test" }],
             },
             {
-              type: Blocks.TABLE_CELL,
+              type: NestedBlockTypes.TABLE_CELL,
               children: [{ text: "test" }],
             },
             {
-              type: Blocks.TABLE_CELL,
+              type: NestedBlockTypes.TABLE_CELL,
               children: [{ text: "test" }],
             },
           ],
@@ -129,12 +147,12 @@ const KlageEditor = () => {
                     selectedLeaf.text.length === editor.selection.anchor.offset
                   ) {
                     Transforms.insertNodes(editor, {
-                      type: Blocks.PARAGRAPH,
+                      type: TopBlockTypes.PARAGRAPH,
                       children: [{ text: "" }],
                     });
                   } else {
                     Transforms.splitNodes(editor);
-                    Transforms.setNodes(editor, { type: Blocks.PARAGRAPH });
+                    Transforms.setNodes(editor, { type: TopBlockTypes.PARAGRAPH });
                   }
                   return;
                 }
@@ -148,16 +166,16 @@ const KlageEditor = () => {
                 ) {
                   Transforms.setNodes(
                     editor,
-                    { type: Blocks.BULLET_LIST },
+                    { type: ListBlockTypes.BULLET_LIST },
                     {
-                      match: (n) => Editor.isBlock(editor, n) && n.type === Blocks.PARAGRAPH,
+                      match: (n) => Editor.isBlock(editor, n) && n.type === TopBlockTypes.PARAGRAPH,
                     }
                   );
                   Transforms.insertNodes(editor, {
-                    type: Blocks.BULLET_LIST,
+                    type: ListBlockTypes.BULLET_LIST,
                     children: [
                       {
-                        type: Blocks.LIST_ITEM,
+                        type: NestedBlockTypes.LIST_ITEM,
                         children: [{ text: selectedLeaf.text.substring(1).trimStart() }],
                       },
                     ],

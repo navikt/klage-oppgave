@@ -2,9 +2,19 @@ import React from "react";
 import { useSlate } from "slate-react";
 import cx from "classnames";
 import { clearMarks, isMarkActive, Marks, toggleMark } from "./marks";
-import { Blocks, insertTable, insertTableRow, isBlockActive, toggleBlock } from "./blocks";
+import {
+  insertTable,
+  insertTableRow,
+  isBlockActive,
+  isHeadingActive,
+  isTable,
+  setParagraph,
+  toggleHeading,
+  toggleList,
+} from "./blocks";
 import { UiButton } from "./UIButton";
 import "./Toolbar.less";
+import { BlockTypes, HeadingLevel, ListBlockTypes, TopBlockTypes } from "./types";
 
 export interface ToolbarState {
   bold: boolean;
@@ -21,50 +31,46 @@ export const Toolbar = () => {
       <MarkButton mark={Marks.ITALIC}>Italic</MarkButton>
       <MarkButton mark={Marks.UNDERLINE}>Underline</MarkButton>
       <ToolbarButton onClick={() => clearMarks(editor)}>Clear marks</ToolbarButton>
-      <BlockTogglekButton block={Blocks.H1}>H1</BlockTogglekButton>
-      <BlockTogglekButton block={Blocks.H2}>H2</BlockTogglekButton>
-      <BlockTogglekButton block={Blocks.H3}>H3</BlockTogglekButton>
-      <BlockTogglekButton block={Blocks.H4}>H4</BlockTogglekButton>
-      <BlockTogglekButton block={Blocks.PARAGRAPH}>Paragraf</BlockTogglekButton>
-      <BlockTogglekButton block={Blocks.BULLET_LIST}>Punktliste</BlockTogglekButton>
-      <BlockTogglekButton block={Blocks.NUMBERED_LIST}>Nummerliste</BlockTogglekButton>
-      <BlockInsertkButton block={Blocks.TABLE} onClick={() => insertTable(editor)}>
+      <ToggleHeadingButton level={1} />
+      <ToggleHeadingButton level={2} />
+      <ToggleHeadingButton level={3} />
+      <ToggleHeadingButton level={4} />
+      <ToolbarButton
+        onClick={() => setParagraph(editor)}
+        active={isBlockActive(editor, TopBlockTypes.PARAGRAPH)}
+        disabled={isBlockActive(editor, TopBlockTypes.PARAGRAPH)}
+      >
+        Paragraf
+      </ToolbarButton>
+      <ToolbarButton
+        onClick={() => toggleList(editor, ListBlockTypes.BULLET_LIST)}
+        active={isBlockActive(editor, ListBlockTypes.BULLET_LIST)}
+      >
+        Punktliste
+      </ToolbarButton>
+      <ToolbarButton
+        onClick={() => toggleList(editor, ListBlockTypes.NUMBERED_LIST)}
+        active={isBlockActive(editor, ListBlockTypes.NUMBERED_LIST)}
+      >
+        Nummerliste
+      </ToolbarButton>
+      <ToolbarButton
+        onClick={() => insertTable(editor)}
+        active={isTable(editor)}
+        disabled={isTable(editor)}
+      >
         Table
-      </BlockInsertkButton>
+      </ToolbarButton>
       <ToolbarButton onClick={() => insertTableRow(editor)}>Table row</ToolbarButton>
     </section>
   );
 };
 
 interface BlockButtonProps {
-  block: Blocks;
+  block: BlockTypes;
   children: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
-
-const BlockTogglekButton = ({ block, onClick, children }: BlockButtonProps) => {
-  const editor = useSlate();
-  const isActive = isBlockActive(editor, block);
-  return (
-    <ToolbarButton active={isActive} onClick={onClick ?? (() => toggleBlock(editor, block))}>
-      {children}
-    </ToolbarButton>
-  );
-};
-
-const BlockInsertkButton = ({ block, onClick, children }: BlockButtonProps) => {
-  const editor = useSlate();
-  const isActive = isBlockActive(editor, block);
-  return (
-    <ToolbarButton
-      active={isActive}
-      disabled={isActive}
-      onClick={onClick ?? (() => toggleBlock(editor, block))}
-    >
-      {children}
-    </ToolbarButton>
-  );
-};
 
 interface MarkButtonProps {
   mark: Marks;
@@ -76,6 +82,22 @@ const MarkButton = ({ mark, children }: MarkButtonProps) => {
   return (
     <ToolbarButton active={isMarkActive(editor, mark)} onClick={() => toggleMark(editor, mark)}>
       {children}
+    </ToolbarButton>
+  );
+};
+
+interface ToggleHeadingButtonProps {
+  level: HeadingLevel;
+}
+
+const ToggleHeadingButton = ({ level }: ToggleHeadingButtonProps) => {
+  const editor = useSlate();
+  return (
+    <ToolbarButton
+      active={isHeadingActive(editor, level)}
+      onClick={() => toggleHeading(editor, level)}
+    >
+      {`H${level}`}
     </ToolbarButton>
   );
 };

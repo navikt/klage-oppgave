@@ -1,5 +1,6 @@
 import { Point, Range, Editor, Element as SlateElement } from "slate";
 import { ReactEditor } from "slate-react";
+import { NestedBlockTypes, TopBlockTypes } from "./types";
 
 export const withTables = (editor: ReactEditor) => {
   const { deleteBackward, deleteForward, insertBreak } = editor;
@@ -9,7 +10,10 @@ export const withTables = (editor: ReactEditor) => {
 
     if (selection && Range.isCollapsed(selection)) {
       const [cell] = Editor.nodes(editor, {
-        match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "table-cell",
+        match: (n) =>
+          !Editor.isEditor(n) &&
+          SlateElement.isElement(n) &&
+          n.type === NestedBlockTypes.TABLE_CELL,
       });
 
       if (cell) {
@@ -30,7 +34,10 @@ export const withTables = (editor: ReactEditor) => {
 
     if (selection && Range.isCollapsed(selection)) {
       const [cell] = Editor.nodes(editor, {
-        match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "table-cell",
+        match: (n) =>
+          !Editor.isEditor(n) &&
+          SlateElement.isElement(n) &&
+          n.type === NestedBlockTypes.TABLE_CELL,
       });
 
       if (cell) {
@@ -51,7 +58,8 @@ export const withTables = (editor: ReactEditor) => {
 
     if (selection) {
       const [table] = Editor.nodes(editor, {
-        match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "table",
+        match: (n) =>
+          !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === TopBlockTypes.TABLE,
       });
 
       if (table) {
