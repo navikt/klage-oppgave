@@ -128,7 +128,9 @@ const setup = (authClient) => {
       },
       onError: function onError(err, req, res) {
         res.status(500);
-        res.json({ error: "Kunne ikke koble til API" });
+        res.json({
+          error: "Kunne ikke koble til API. Reason: " + JSON.stringify(err),
+        });
       },
       logLevel: "debug",
       changeOrigin: true,
