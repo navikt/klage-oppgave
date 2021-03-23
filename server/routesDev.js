@@ -59,7 +59,7 @@ const setup = (authClient) => {
     cacheMiddleWare,
     createProxyMiddleware({
       target: "http://apimock:3000",
-      //target: "https://klage-oppgave-api.dev.nav.no/",
+      //target: "https://kabal-api.dev.nav.no/",
       pathRewrite: {
         "^/api": "",
       },

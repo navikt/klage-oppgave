@@ -114,7 +114,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [meg]);
 
   /** UTVIDET PROJEKSJON
-   * Med dette flagget kommer det persondata fra klage-oppgave-API. Dette skal skrus
+   * Med dette flagget kommer det persondata fra kabal-api. Dette skal skrus
    * på for "MINE OPPGAVER" og dersom det er skrudd på i featuretoggles.
    */
   const [visFnr, settVisFnr] = useState<boolean>(false);

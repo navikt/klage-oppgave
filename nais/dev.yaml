@@ -22,11 +22,11 @@ spec:
     outbound:
       rules:
         - application: klage-redis-fe
-        - application: klage-oppgave-api
+        - application: kabal-api
       external:
         - host: login.microsoftonline.com
         - host: klage-oppgave.dev.nav.no
-        - host: klage-oppgave-api.dev.nav.no
+        - host: kabal-api.dev.nav.no
   ingresses:
   {{#each ingresses as |url|}}
      - {{url}}

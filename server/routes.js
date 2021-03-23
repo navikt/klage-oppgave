@@ -122,7 +122,7 @@ const setup = (authClient) => {
     "/api",
     // cacheMiddleWare,
     createProxyMiddleware({
-      target: "http://klage-oppgave-api",
+      target: "http://kabal-api",
       pathRewrite: {
         "^/api": "",
       },

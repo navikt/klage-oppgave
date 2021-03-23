@@ -35,10 +35,9 @@ let downstream_api = envVar({
   name: "DOWNSTREAM_API_URL",
   required: false,
 });
-if (!downstream_api)
-  downstream_api = "https://klage-oppgave-api.intern.nav.no/";
+if (!downstream_api) downstream_api = "https://kabal-api.intern.nav.no/";
 if (server.cluster === "dev-gcp") {
-  downstream_api = "https://klage-oppgave-api.dev.nav.no/";
+  downstream_api = "https://kabal-api.dev.nav.no/";
 }
 
 let api_client_id = envVar({

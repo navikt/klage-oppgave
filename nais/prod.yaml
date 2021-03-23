@@ -18,13 +18,13 @@ spec:
     outbound:
       rules:
         - application: klage-redis-fe
-        - application: klage-oppgave-api
+        - application: kabal-api
           cluster: prod-gcp
           namespace: klage
       external:
         - host: login.microsoftonline.com
         - host: klage-oppgave.intern.nav.no
-        - host: klage-oppgave-api.intern.nav.no
+        - host: kabal-api.intern.nav.no
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
