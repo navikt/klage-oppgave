@@ -144,6 +144,17 @@ export const insertTable = (editor: ReactEditor) => {
   // ]);
 };
 
+export const isParagraph = (editor: ReactEditor) => {
+  if (editor.selection === null) {
+    return false;
+  }
+  const node = Node.get(editor, editor.selection.focus.path.slice(0, 1));
+  if (Editor.isEditor(node)) {
+    return false;
+  }
+  return node.type === TopBlockTypes.PARAGRAPH;
+};
+
 export const setParagraph = (editor: ReactEditor) =>
   Transforms.setNodes(editor, { type: TopBlockTypes.PARAGRAPH });
 

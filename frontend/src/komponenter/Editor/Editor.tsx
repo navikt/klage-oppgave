@@ -164,22 +164,30 @@ const KlageEditor = () => {
                   !Editor.isBlock(editor, selectedLeaf) &&
                   selectedLeaf.text.startsWith("-") === true
                 ) {
-                  Transforms.setNodes(
-                    editor,
-                    { type: ListBlockTypes.BULLET_LIST },
-                    {
-                      match: (n) => Editor.isBlock(editor, n) && n.type === TopBlockTypes.PARAGRAPH,
-                    }
-                  );
-                  Transforms.insertNodes(editor, {
-                    type: ListBlockTypes.BULLET_LIST,
-                    children: [
+                  if (selectedElement.type === TopBlockTypes.PARAGRAPH) {
+                    event.preventDefault();
+                    const textArray = selectedElement.children;
+                    const first = textArray[0];
+                    const rest = textArray.slice(1);
+                    const children = [
                       {
-                        type: NestedBlockTypes.LIST_ITEM,
-                        children: [{ text: selectedLeaf.text.substring(1).trimStart() }],
+                        ...first,
+                        text: first.text.substring(1),
                       },
-                    ],
-                  });
+                      ...rest,
+                    ];
+
+                    Transforms.removeNodes(editor, { at: editor.selection.focus });
+                    Transforms.insertNodes(editor, {
+                      type: ListBlockTypes.BULLET_LIST,
+                      children: [
+                        {
+                          type: NestedBlockTypes.LIST_ITEM,
+                          children,
+                        },
+                      ],
+                    });
+                  }
                 }
               }
 
