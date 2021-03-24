@@ -2,6 +2,7 @@ import { Editor, Transforms, Node, Element as SlateElement, Path, Descendant } f
 import { ReactEditor } from "slate-react";
 import {
   BlockTypes,
+  FormattedText,
   Heading,
   HeadingLevel,
   LeafType,
@@ -14,6 +15,13 @@ import {
 
 export const isLeaf = (element: Descendant): element is LeafType =>
   typeof element["type"] === "undefined";
+
+export const toggleBlockQuote = (editor: ReactEditor) => {
+  const isBlockQuote = isBlockActive(editor, TopBlockTypes.BLOCK_QUOTE);
+  Transforms.setNodes(editor, {
+    type: isBlockQuote ? TopBlockTypes.PARAGRAPH : TopBlockTypes.BLOCK_QUOTE,
+  });
+};
 
 // export const toggleBlock = (editor: ReactEditor, format: BlockTypes) => {
 //   const isActive = isBlockActive(editor, format);
@@ -207,6 +215,33 @@ export const insertTableRow = (editor: ReactEditor) => {
   //   },
   //   { at: p.path }
   // );
+};
+
+export const convertToList = (
+  editor: ReactEditor,
+  textArray: FormattedText[],
+  listType: ListBlockTypes
+) => {
+  const first = textArray[0];
+  const rest = textArray.slice(1);
+  const children = [
+    {
+      ...first,
+      text: first.text.substring(1).trimLeft(),
+    },
+    ...rest,
+  ];
+
+  Transforms.removeNodes(editor, { at: editor.selection?.focus });
+  Transforms.insertNodes(editor, {
+    type: listType,
+    children: [
+      {
+        type: NestedBlockTypes.LIST_ITEM,
+        children,
+      },
+    ],
+  });
 };
 
 export const isBlockActive = (editor: ReactEditor, format: BlockTypes) => {

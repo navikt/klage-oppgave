@@ -4,6 +4,7 @@ import { isHeading, isStandardText } from "./blocks";
 import { StandardTextElement } from "./StandardText";
 import { Table } from "./Table";
 import { ListBlockTypes, NestedBlockTypes, TopBlockTypes } from "./types";
+import "./Element.less";
 
 export const Element = (props: RenderElementProps) => {
   const { attributes, children, element } = props;

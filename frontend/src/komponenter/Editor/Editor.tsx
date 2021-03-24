@@ -4,7 +4,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { createEditor, Descendant, Transforms, Node, Range, Editor } from "slate";
 // Import the Slate components and React plugin.
 import { Slate, Editable, RenderElementProps, RenderLeafProps, withReact } from "slate-react";
-import { isLeaf } from "./blocks";
+import { convertToList, isLeaf } from "./blocks";
 import { Element } from "./Element";
 import { Leaf } from "./Leaf";
 import { Marks, toggleMark } from "./marks";
@@ -29,11 +29,11 @@ const KlageEditor = () => {
       children: [
         { text: "En paragraf med " },
         { text: "bold", bold: true },
-        { text: ", " },
+        { text: " (ctrl/cmd + b), " },
         { text: "kursiv", italic: true },
-        { text: " og " },
+        { text: " (ctrl/cmd + i) og " },
         { text: "understreking", underline: true },
-        { text: "." },
+        { text: " (ctrl/cmd + u)." },
       ],
     },
     {
@@ -139,7 +139,7 @@ const KlageEditor = () => {
 
               // Enter trigger.
               if (event.key === "Enter") {
-                if (selectedElement.type === "heading") {
+                if (selectedElement.type === TopBlockTypes.HEADING) {
                   event.preventDefault();
 
                   if (
@@ -158,36 +158,20 @@ const KlageEditor = () => {
                 }
               }
 
-              // Space trigger
-              if (event.key === " ") {
-                if (
-                  !Editor.isBlock(editor, selectedLeaf) &&
-                  selectedLeaf.text.startsWith("-") === true
+              // Paragraph triggers
+              if (
+                selectedElement.type === TopBlockTypes.PARAGRAPH &&
+                !Editor.isBlock(editor, selectedLeaf)
+              ) {
+                if (selectedLeaf.text.startsWith("-") === true && event.key === " ") {
+                  event.preventDefault();
+                  convertToList(editor, selectedElement.children, ListBlockTypes.BULLET_LIST);
+                } else if (
+                  selectedLeaf.text.startsWith("1") &&
+                  (event.key === "." || event.key === ")")
                 ) {
-                  if (selectedElement.type === TopBlockTypes.PARAGRAPH) {
-                    event.preventDefault();
-                    const textArray = selectedElement.children;
-                    const first = textArray[0];
-                    const rest = textArray.slice(1);
-                    const children = [
-                      {
-                        ...first,
-                        text: first.text.substring(1),
-                      },
-                      ...rest,
-                    ];
-
-                    Transforms.removeNodes(editor, { at: editor.selection.focus });
-                    Transforms.insertNodes(editor, {
-                      type: ListBlockTypes.BULLET_LIST,
-                      children: [
-                        {
-                          type: NestedBlockTypes.LIST_ITEM,
-                          children,
-                        },
-                      ],
-                    });
-                  }
+                  event.preventDefault();
+                  convertToList(editor, selectedElement.children, ListBlockTypes.NUMBERED_LIST);
                 }
               }
 

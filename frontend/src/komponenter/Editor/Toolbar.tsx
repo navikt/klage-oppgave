@@ -9,6 +9,7 @@ import {
   isHeadingActive,
   isTable,
   setParagraph,
+  toggleBlockQuote,
   toggleHeading,
   toggleList,
 } from "./blocks";
@@ -41,6 +42,12 @@ export const Toolbar = () => {
         disabled={isBlockActive(editor, TopBlockTypes.PARAGRAPH)}
       >
         Paragraf
+      </ToolbarButton>
+      <ToolbarButton
+        onClick={() => toggleBlockQuote(editor)}
+        active={isBlockActive(editor, TopBlockTypes.BLOCK_QUOTE)}
+      >
+        Block quote
       </ToolbarButton>
       <ToolbarButton
         onClick={() => toggleList(editor, ListBlockTypes.BULLET_LIST)}
