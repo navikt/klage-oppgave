@@ -1,7 +1,7 @@
 # KABAL
 
 Appen kan nås i dev her:
-https://klage-oppgave.dev.nav.no/
+https://kabal.dev.nav.no/
 
 ### Utvikling
 

@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
 //@ts-ignore
 import ExtLink from "../extlink.svg";
-import KlageDokumenter from "./KlageDokumenter";
 import React from "react";
 import { temaOversettelse } from "../../domene/forkortelser";
 
