@@ -1,7 +1,4 @@
 {
-  "ingresses": [
-    "https://klage-oppgave.dev-gcp.nais.io",
-    "https://klage-oppgave.dev.nav.no"
-  ],
+  "ingresses": ["https://kabal.dev-gcp.nais.io", "https://kabal.dev.nav.no"],
   "env": {}
 }

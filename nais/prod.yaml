@@ -23,7 +23,6 @@ spec:
           namespace: klage
       external:
         - host: login.microsoftonline.com
-        - host: klage-oppgave.intern.nav.no
         - host: kabal-api.intern.nav.no
   ingresses:
   {{#each ingresses as |url|}}

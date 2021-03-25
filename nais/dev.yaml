@@ -25,7 +25,6 @@ spec:
         - application: kabal-api
       external:
         - host: login.microsoftonline.com
-        - host: klage-oppgave.dev.nav.no
         - host: kabal-api.dev.nav.no
   ingresses:
   {{#each ingresses as |url|}}
