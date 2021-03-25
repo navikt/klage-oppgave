@@ -218,7 +218,7 @@ export const nullstillDokumenter = createAction("klagebehandling/NULLSTILL_DOKUM
 //==========
 // Epos
 //==========
-const klageUrl = (id: string) => `/api/klagebehandlinger/${id}`;
+const klageUrl = (id: string) => `/api/klagebehandlinger/${id}/detaljer`;
 var resultData: IKlage;
 const R = require("ramda");
 
