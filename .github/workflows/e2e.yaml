@@ -2,9 +2,6 @@ name: Kjør akseptansetest
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - e2e
 
 jobs:
   acceptance-tests:
@@ -18,7 +15,7 @@ jobs:
         name: Run tests
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e:9597a900c07b5c684f707b2e9ca8af271a71da80
+          IMAGE: docker.pkg.github.com/navikt/klage-oppgave-e2e:latest
           CLUSTER: dev-gcp
           VARS: nais/jobvars.yml
           RESOURCE: nais/e2ejob.yml
