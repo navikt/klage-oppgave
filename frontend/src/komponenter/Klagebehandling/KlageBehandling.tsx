@@ -12,6 +12,7 @@ import KlageMeny from "./KlageMeny";
 import Klagen from "./Klagen";
 import Dokumenter from "./Dokumenter";
 import NavFrontendSpinner from "nav-frontend-spinner";
+import EksterneLenker from "./EksterneLenker";
 
 function UtarbeideVedtak() {
   return <>Utarbeide Vedtak</>;
@@ -78,11 +79,10 @@ export default function Klagebehandling() {
       <>
         <div className="klagebehandling__informasjon">
           <div className="rad">FORNAVN ETTERNAVN {klage.foedselsnummer} </div>
+          <EksterneLenker klage_state={klage_state} id={klage_state.oppgaveId} />
         </div>
 
         {showDebug && <Debug state={klage} />}
-
-        <KlageMeny klage_state={klage_state} id={klage_state.oppgaveId} />
 
         {klage_state.aktivSide === "klagen" && <Klagen />}
         {klage_state.aktivSide === "dokumenter" && <Dokumenter />}

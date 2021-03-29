@@ -57,31 +57,46 @@ app.get("/kodeverk", (req, res) => {
   res.send(kodeverk);
 });
 
-app.get("/klagebehandlinger/:id", async (req, res) => {
+app.get("/klagebehandlinger/:id/detaljer", async (req, res) => {
   res.send({
-    id: "e1335d60-015a-487b-9bf3-9032a175a158",
-    klageInnsendtdato: null,
-    fraNAVEnhet: "4416",
-    mottattFoersteinstans: "2019-08-22",
-    foedselsnummer: "29125639036",
+    id: "61db624d-88fb-4422-abdd-93f8e58f760f",
+    klageInnsendtdato: "2021-02-01",
+    fraNAVEnhet: "0104",
+    mottattFoersteinstans: "2021-02-02",
+    foedselsnummer: "27458422236",
     tema: "SYK",
     sakstype: "Klage",
-    mottatt: "2021-01-26",
-    startet: null,
+    mottatt: "2021-03-25",
+    startet: "2021-03-25",
     avsluttet: null,
-    frist: "2019-12-05",
-    tildeltSaksbehandlerident: null,
+    frist: "2021-08-02",
+    tildeltSaksbehandlerident: "Z994488",
     hjemler: [
       {
         kapittel: 8,
-        paragraf: 14,
+        paragraf: 21,
         ledd: null,
         bokstav: null,
-        original: "8-14",
+        original: "8-21",
+      },
+      {
+        kapittel: 8,
+        paragraf: 4,
+        ledd: null,
+        bokstav: null,
+        original: "8-4",
       },
     ],
-    modified: "2021-01-26T22:09:35.041601",
-    created: "2021-01-26T22:09:35.041607",
+    modified: "2021-03-26T15:50:50.126524",
+    created: "2021-03-25T14:48:38.131717",
+    fraSaksbehandlerident: "Z994674",
+    grunn: null,
+    eoes: null,
+    raadfoertMedLege: null,
+    internVurdering: null,
+    sendTilbakemelding: null,
+    tilbakemelding: null,
+    klagebehandlingVersjon: 5,
   });
 });
 app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
