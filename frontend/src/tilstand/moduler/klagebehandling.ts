@@ -31,6 +31,7 @@ export interface IHjemmel {
 export interface IKlage {
   id: string;
   klageLastet: boolean;
+  lasterDokumenter: boolean;
   hasMore: boolean;
   klageLastingFeilet: boolean;
   dokumenterAlleHentet: boolean;
@@ -87,6 +88,7 @@ export const klageSlice = createSlice({
   initialState: {
     id: "",
     klageLastet: false,
+    lasterDokumenter: false,
     klageLastingFeilet: false,
     dokumenterAlleHentet: false,
     dokumenterTilordnedeHentet: false,
@@ -128,6 +130,7 @@ export const klageSlice = createSlice({
     },
     LASTER_DOKUMENTER: (state, action: PayloadAction<boolean>) => {
       state.dokumenterAlleHentet = action.payload;
+      state.lasterDokumenter = true;
       return state;
     },
     NULLSTILL_DOKUMENTER: (state, action: PayloadAction<boolean>) => {
@@ -139,6 +142,7 @@ export const klageSlice = createSlice({
     DOKUMENTER_ALLE_HENTET: (state, action: PayloadAction<IKlage>) => {
       const { historyNavigate } = action.payload;
       state.dokumenterAlleHentet = true;
+      state.lasterDokumenter = false;
 
       if (!state.pageRefs) {
         state.pageRefs = [];
@@ -151,6 +155,8 @@ export const klageSlice = createSlice({
         }
       }
       state.pageReference = action.payload.pageReference;
+      state.hasMore = false;
+
       if (action.payload.pageReference) {
         state.pageIdx = state.pageRefs.indexOf(action.payload.pageReference);
         state.hasMore = true;

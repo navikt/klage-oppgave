@@ -91,25 +91,3 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
     </div>
   );
 }
-/*
-Erstatt med load on scroll
-
-            <div className={"dokument-tabell__paginator"}>
-                <button
-                    className={"knapp__lenke"}
-                    onClick={() => hentForrige(klage.pageRefs[klage.pageIdx - 2])}
-                    disabled={klage.pageIdx === 0}
-                >
-                    Forrige
-                </button>
-                <button
-                    className={"knapp__lenke"}
-                    onClick={() => hentNeste(klage.pageReference)}
-                    disabled={!klage.pageReference}
-                >
-                    Neste
-                </button>
-            </div>
-
-
- */

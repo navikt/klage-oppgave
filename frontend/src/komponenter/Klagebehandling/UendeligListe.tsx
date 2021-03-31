@@ -52,28 +52,22 @@ function loadItems(prevArray: Item[] = [], startCursor = 0): Promise<Item[]> {
 
 function UendeligListe({ scrollContainer }: { scrollContainer: any }) {
   const [loading, setLoading] = React.useState(false);
-  const [items, setItems] = React.useState<Item[]>([]);
   const klage: IKlage = useSelector(velgKlage);
   const dispatch = useDispatch();
 
   function hentNeste(ref: string | null) {
-    //dispatch(lasterDokumenter(false));
+    dispatch(lasterDokumenter(false));
     dispatch(hentDokumentAlleHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
   }
 
   function handleLoadMore() {
     setLoading(true);
     hentNeste(klage.pageReference);
-
-    loadItems(items, items.length).then((newArray) => {
-      setLoading(false);
-      setItems(newArray);
-    });
   }
 
   const infiniteRef = useInfiniteScroll<HTMLUListElement>({
-    loading,
-    hasNextPage: klage.hasMore && !loading,
+    loading: klage.lasterDokumenter,
+    hasNextPage: klage.hasMore,
     onLoadMore: handleLoadMore,
     scrollContainer,
   });
