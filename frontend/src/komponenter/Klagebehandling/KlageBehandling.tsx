@@ -84,6 +84,8 @@ export default function Klagebehandling() {
 
         {showDebug && <Debug state={klage} />}
 
+        <Dokumenter />
+
         {klage_state.aktivSide === "klagen" && <Klagen />}
         {klage_state.aktivSide === "dokumenter" && <Dokumenter />}
         {klage_state.aktivSide === "utarbeidevedtak" && <UtarbeideVedtak />}

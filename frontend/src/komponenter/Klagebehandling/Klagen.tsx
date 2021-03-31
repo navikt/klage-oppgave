@@ -215,26 +215,8 @@ function TyperTemaerOgHjemler() {
 export default function Klagen() {
   return (
     <div className={"klage_og_detaljer"}>
-      <div className={"klage__boks xl"}>
-        <h1>Behandlingsdetaljer</h1>
-
-        <TyperTemaerOgHjemler />
-        <Datoer />
-        <FraNavEnhet />
-        <OversendtKA />
-      </div>
-
-      <div className={"klage__boks md"}>
-        <h1>Sjekkliste</h1>
-        <Sjekkliste />
-      </div>
-      <div className={"klage__boks md"}>
-        <h1>Utarbeide vedtak</h1>
-        <Utfall />
-        <HjemmelBasis />
-      </div>
-      <div className={"klage__boks md "}>
-        <h1>Dokumenter knyttet til klagen</h1>
+      <div className={"klagebehandling_grid"}>
+        <div className={"grid1"}></div>
       </div>
     </div>
   );

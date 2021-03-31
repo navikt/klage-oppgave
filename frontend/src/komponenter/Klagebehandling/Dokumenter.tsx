@@ -1,3 +1,5 @@
+import useInfiniteScroll from "react-infinite-scroll-hook";
+
 import {
   hentDokumentAlleHandling,
   hentDokumentTilordnedeHandling,
@@ -9,10 +11,23 @@ import {
 } from "../../tilstand/moduler/klagebehandling";
 import { useDispatch, useSelector } from "react-redux";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../domene/datofunksjoner";
 import { Document as PDFDocument } from "react-pdf";
+import UendeligListe from "./UendeligListe";
+import styled from "styled-components";
+
+interface ListContainerProps {
+  scrollable: boolean;
+}
+
+const ListeBoks = styled.div<ListContainerProps>`
+  max-height: ${(props) => (props.scrollable ? "600px" : "auto")};
+  max-width: ${(props) => (props.scrollable ? "600px" : "auto")};
+  overflow: auto;
+  background-color: #e4e4e4;
+`;
 
 export default function Dokumenter() {
   const [aktivtDokument, settaktivtDokument] = useState(0);
@@ -67,71 +82,34 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
   if (!klage.dokumenter || !klage.dokumenterAlleHentet) {
     return <NavFrontendSpinner />;
   }
+
   return (
     <div>
-      <table className={"dokument-tabell"} cellPadding={0} cellSpacing={0}>
-        <thead>
-          <tr>
-            <th>Dokumentbeskrivelse</th>
-            <th>Tema</th>
-            <th>Registrert</th>
-            <th>Knytt til klagen</th>
-          </tr>
-        </thead>
-        <tbody>
-          {klage.dokumenter.map((dokument: any, idx: number) => (
-            <tr
-              key={`${idx}_${dokument.dokumentInfoId}`}
-              onClick={() =>
-                dokument.harTilgangTilArkivvariant &&
-                hentPreview(klage.id, dokument.journalpostId, dokument.dokumentInfoId)
-              }
-            >
-              <td>
-                <button
-                  onClick={() => settaktivtDokument(dokument.dokumentInfoId)}
-                  className={"knapp__lenke"}
-                >
-                  {dokument.tittel}
-                </button>
-              </td>
-              <td>
-                <div
-                  className={`etikett etikett--mw etikett--info etikett--${dokument.tema
-                    .split(" ")[0]
-                    .toLowerCase()}`}
-                >
-                  {dokument.tema}
-                </div>
-              </td>
-              <td className={"liten"}>{formattedDate(dokument.registrert)}</td>
-              <td>
-                <input
-                  type={"checkbox"}
-                  disabled={!dokument.harTilgangTilArkivvariant}
-                  onClick={() => tilordneDokument(klage.id, dokument.journalpostId)}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className={"dokument-tabell__paginator"}>
-        <button
-          className={"knapp__lenke"}
-          onClick={() => hentForrige(klage.pageRefs[klage.pageIdx - 2])}
-          disabled={klage.pageIdx === 0}
-        >
-          Forrige
-        </button>
-        <button
-          className={"knapp__lenke"}
-          onClick={() => hentNeste(klage.pageReference)}
-          disabled={!klage.pageReference}
-        >
-          Neste
-        </button>
-      </div>
+      <ListeBoks scrollable={true}>
+        <UendeligListe scrollContainer={"parent"} />
+      </ListeBoks>
     </div>
   );
 }
+/*
+Erstatt med load on scroll
+
+            <div className={"dokument-tabell__paginator"}>
+                <button
+                    className={"knapp__lenke"}
+                    onClick={() => hentForrige(klage.pageRefs[klage.pageIdx - 2])}
+                    disabled={klage.pageIdx === 0}
+                >
+                    Forrige
+                </button>
+                <button
+                    className={"knapp__lenke"}
+                    onClick={() => hentNeste(klage.pageReference)}
+                    disabled={!klage.pageReference}
+                >
+                    Neste
+                </button>
+            </div>
+
+
+ */

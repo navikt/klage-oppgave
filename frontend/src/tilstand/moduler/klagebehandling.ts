@@ -31,6 +31,7 @@ export interface IHjemmel {
 export interface IKlage {
   id: string;
   klageLastet: boolean;
+  hasMore: boolean;
   klageLastingFeilet: boolean;
   dokumenterAlleHentet: boolean;
   dokumenterTilordnedeHentet: boolean;
@@ -103,6 +104,7 @@ export const klageSlice = createSlice({
     pageReference: "",
     historyNavigate: false,
     pageRefs: [null],
+    hasMore: false,
     pageIdx: 0,
     hjemler: [],
     currentPDF: "",
@@ -149,9 +151,13 @@ export const klageSlice = createSlice({
         }
       }
       state.pageReference = action.payload.pageReference;
-      if (action.payload.pageReference)
+      if (action.payload.pageReference) {
         state.pageIdx = state.pageRefs.indexOf(action.payload.pageReference);
-      state.dokumenter = action.payload.dokumenter;
+        state.hasMore = true;
+      }
+
+      if (!state.dokumenter) state.dokumenter = action.payload.dokumenter;
+      else state.dokumenter = state.dokumenter.concat(action.payload.dokumenter);
       return state;
     },
     DOKUMENTER_TILORDNEDE_HENTET: (state, action: PayloadAction<IKlage>) => {
