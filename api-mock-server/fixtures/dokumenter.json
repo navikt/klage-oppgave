@@ -1,8 +1,8 @@
 {
   "dokumenter": [
     {
-      "journalpostId": "478525781",
-      "dokumentInfoId": "498841366",
+      "journalpostId": "1",
+      "dokumentInfoId": "1",
       "tittel": "MASKERT_FELT",
       "tema": "Sykepenger",
       "registrert": "2020-06-09",
@@ -11,8 +11,8 @@
       "vedlegg": []
     },
     {
-      "journalpostId": "475414179",
-      "dokumentInfoId": "495438268",
+      "journalpostId": "2",
+      "dokumentInfoId": "2",
       "tittel": "MASKERT_FELT",
       "tema": "Sykepenger",
       "registrert": "2020-04-28",
@@ -21,8 +21,8 @@
       "vedlegg": []
     },
     {
-      "journalpostId": "475153772",
-      "dokumentInfoId": "495135445",
+      "journalpostId": "3",
+      "dokumentInfoId": "3",
       "tittel": "MASKERT_FELT",
       "tema": "Sykepenger",
       "registrert": "2020-04-23",
@@ -31,8 +31,8 @@
       "vedlegg": []
     },
     {
-      "journalpostId": "463601608",
-      "dokumentInfoId": "481749202",
+      "journalpostId": "4",
+      "dokumentInfoId": "4",
       "tittel": "MASKERT_FELT",
       "tema": "Medlemskap",
       "registrert": "2019-12-23",
@@ -41,8 +41,8 @@
       "vedlegg": []
     },
     {
-      "journalpostId": "461881792",
-      "dokumentInfoId": "479649771",
+      "journalpostId": "5",
+      "dokumentInfoId": "5",
       "tittel": "MASKERT_FELT",
       "tema": "Sykepenger",
       "registrert": "2019-11-28",
@@ -51,8 +51,8 @@
       "vedlegg": []
     },
     {
-      "journalpostId": "461660111",
-      "dokumentInfoId": "479414012",
+      "journalpostId": "6",
+      "dokumentInfoId": "6",
       "tittel": "MASKERT_FELT",
       "tema": "Medlemskap",
       "registrert": "2019-11-25",
@@ -61,8 +61,8 @@
       "vedlegg": []
     },
     {
-      "journalpostId": "459429548",
-      "dokumentInfoId": "477024426",
+      "journalpostId": "7",
+      "dokumentInfoId": "7",
       "tittel": "MASKERT_FELT",
       "tema": "Sykepenger",
       "registrert": "2019-10-21",
@@ -71,8 +71,8 @@
       "vedlegg": []
     },
     {
-      "journalpostId": "456186094",
-      "dokumentInfoId": "473423306",
+      "journalpostId": "8",
+      "dokumentInfoId": "8",
       "tittel": "MASKERT_FELT",
       "tema": "Sykepenger",
       "registrert": "2019-08-27",
@@ -81,8 +81,8 @@
       "vedlegg": []
     },
     {
-      "journalpostId": "455379252",
-      "dokumentInfoId": "472449504",
+      "journalpostId": "9",
+      "dokumentInfoId": "9",
       "tittel": "MASKERT_FELT",
       "tema": "Medlemskap",
       "registrert": "2019-08-12",
@@ -91,12 +91,402 @@
       "vedlegg": []
     },
     {
-      "journalpostId": "451644720",
-      "dokumentInfoId": "467938299",
+      "journalpostId": "10",
+      "dokumentInfoId": "10",
       "tittel": "MASKERT_FELT",
       "tema": "Sykepenger",
       "registrert": "2019-05-29",
       "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "11",
+      "dokumentInfoId": "11",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2020-06-09",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "12",
+      "dokumentInfoId": "12",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2020-04-28",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "13",
+      "dokumentInfoId": "13",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2020-04-23",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "14",
+      "dokumentInfoId": "14",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "2019-12-23",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "15",
+      "dokumentInfoId": "15",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2019-11-28",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "16",
+      "dokumentInfoId": "16",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "2019-11-25",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "17",
+      "dokumentInfoId": "17",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2019-10-21",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "18",
+      "dokumentInfoId": "18",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2019-08-27",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "19",
+      "dokumentInfoId": "19",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "2019-08-12",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "20",
+      "dokumentInfoId": "20",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2019-05-29",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "21",
+      "dokumentInfoId": "21",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2020-06-09",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "22",
+      "dokumentInfoId": "22",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2020-04-28",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "23",
+      "dokumentInfoId": "23",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2020-04-23",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "24",
+      "dokumentInfoId": "24",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "2019-12-23",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "25",
+      "dokumentInfoId": "25",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2019-11-28",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "26",
+      "dokumentInfoId": "26",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "2019-11-25",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "27",
+      "dokumentInfoId": "27",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2019-10-21",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "28",
+      "dokumentInfoId": "28",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "2019-08-27",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "29",
+      "dokumentInfoId": "29",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "2019-08-12",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "30",
+      "dokumentInfoId": "30",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "3019-05-29",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "31",
+      "dokumentInfoId": "31",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "3020-06-09",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "32",
+      "dokumentInfoId": "32",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "3020-04-28",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "33",
+      "dokumentInfoId": "33",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "3020-04-23",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "34",
+      "dokumentInfoId": "34",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "3019-12-23",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "35",
+      "dokumentInfoId": "35",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "3019-11-28",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "36",
+      "dokumentInfoId": "36",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "3019-11-25",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "37",
+      "dokumentInfoId": "37",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "3019-10-21",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "38",
+      "dokumentInfoId": "38",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "3019-08-27",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "39",
+      "dokumentInfoId": "39",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "3019-08-12",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "40",
+      "dokumentInfoId": "40",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "4019-05-29",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "41",
+      "dokumentInfoId": "41",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "4020-06-09",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "42",
+      "dokumentInfoId": "42",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "4020-04-28",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "43",
+      "dokumentInfoId": "43",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "4020-04-23",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "44",
+      "dokumentInfoId": "44",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "4019-12-23",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "45",
+      "dokumentInfoId": "45",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "4019-11-28",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "46",
+      "dokumentInfoId": "46",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "4019-11-25",
+      "harTilgangTilArkivvariant": false,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "47",
+      "dokumentInfoId": "47",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "4019-10-21",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "48",
+      "dokumentInfoId": "48",
+      "tittel": "MASKERT_FELT",
+      "tema": "Sykepenger",
+      "registrert": "4019-08-27",
+      "harTilgangTilArkivvariant": true,
+      "valgt": false,
+      "vedlegg": []
+    },
+    {
+      "journalpostId": "49",
+      "dokumentInfoId": "49",
+      "tittel": "MASKERT_FELT",
+      "tema": "Medlemskap",
+      "registrert": "4019-08-12",
+      "harTilgangTilArkivvariant": false,
       "valgt": false,
       "vedlegg": []
     }

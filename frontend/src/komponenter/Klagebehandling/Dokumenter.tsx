@@ -15,18 +15,15 @@ import React, { useEffect, useRef, useState } from "react";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../domene/datofunksjoner";
 import { Document as PDFDocument } from "react-pdf";
-import UendeligListe from "./UendeligListe";
 import styled from "styled-components";
+import { useLoadItems } from "./utils";
+import { List, ListItem, Loading } from "./List";
 
-interface ListContainerProps {
-  scrollable: boolean;
-}
-
-const ListeBoks = styled.div<ListContainerProps>`
-  max-height: ${(props) => (props.scrollable ? "600px" : "auto")};
-  max-width: ${(props) => (props.scrollable ? "600px" : "auto")};
+const ListContainer = styled.div`
+  max-height: 400px;
+  max-width: 500px;
   overflow: auto;
-  background-color: #e4e4e4;
+  background-color: #fafafa;
 `;
 
 export default function Dokumenter() {
@@ -43,18 +40,34 @@ export default function Dokumenter() {
   );
 }
 
-function DokumentTabell(props: { settaktivtDokument: Function }) {
-  const dispatch = useDispatch();
-  const klage: IKlage = useSelector(velgKlage);
-  const { settaktivtDokument } = props;
+export interface Item {
+  id: string;
+  journalpostId: string;
+  dokumentInfoId: string;
+}
 
-  function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
-    dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
-  }
+function DokumentTabell(props: { settaktivtDokument: Function }) {
+  const klage: IKlage = useSelector(velgKlage);
+  const dispatch = useDispatch();
+  const { loading, hasNextPage, error, loadMore } = useLoadItems();
+
+  const [liste, setListe] = React.useState<Item[]>([]);
+
+  const [infiniteRef, { rootRef }] = useInfiniteScroll({
+    loading: klage.lasterDokumenter,
+    hasNextPage: klage.hasMore,
+    onLoadMore: handleLoadMore,
+    disabled: !!error,
+    rootMargin: "0px 0px 200px 0px",
+  });
 
   function hentNeste(ref: string | null) {
     dispatch(lasterDokumenter(false));
     dispatch(hentDokumentAlleHandling({ id: klage.id, ref: ref ?? null, antall: 10 }));
+  }
+
+  function handleLoadMore() {
+    hentNeste(klage.pageReference);
   }
 
   useEffect(() => {
@@ -63,31 +76,48 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
     dispatch(hentDokumentTilordnedeHandling({ id: klage.id }));
   }, []);
 
-  function hentForrige(ref: string | null) {
-    dispatch(lasterDokumenter(false));
-    dispatch(
-      hentDokumentAlleHandling({
-        id: klage.id,
-        ref: ref ?? null,
-        antall: 10,
-        historyNavigate: true,
-      })
-    );
-  }
+  useEffect(() => {
+    if (klage.dokumenter) {
+      let startCursor = liste.length;
+      let ARRAY_SIZE = klage.dokumenter.length;
+      let newArray: Item[] = [];
+      let j = 0;
+      for (let i = startCursor; i < startCursor + ARRAY_SIZE; i++) {
+        newArray = [...newArray, klage.dokumenter[j++]];
+      }
+      setListe(newArray);
+      //setListe((current) => [...current, ...newArray]);
+    }
+  }, [klage.dokumenter]);
 
-  function tilordneDokument(behandlingId: string, journalpostId: string) {
-    dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId }));
-  }
+  /*  const klage: IKlage = useSelector(velgKlage);
+       const { settaktivtDokument } = props;
+
+       function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
+         dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
+       }
+
+       function tilordneDokument(behandlingId: string, journalpostId: string) {
+         dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId }));
+       }
+       */
 
   if (!klage.dokumenter || !klage.dokumenterAlleHentet) {
     return <NavFrontendSpinner />;
   }
 
   return (
-    <div>
-      <ListeBoks scrollable={true}>
-        <UendeligListe scrollContainer={"parent"} />
-      </ListeBoks>
-    </div>
+    <ListContainer ref={rootRef}>
+      <List>
+        {liste.map((item: any) => (
+          <ListItem key={item.journalpostId + item.dokumentInfoId}>{item.tittel}</ListItem>
+        ))}
+        {klage.hasMore && (
+          <ListItem ref={infiniteRef}>
+            <Loading />
+          </ListItem>
+        )}
+      </List>
+    </ListContainer>
   );
 }

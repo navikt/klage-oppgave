@@ -162,8 +162,10 @@ export const klageSlice = createSlice({
         state.hasMore = true;
       }
 
-      if (!state.dokumenter) state.dokumenter = action.payload.dokumenter;
-      else state.dokumenter = state.dokumenter.concat(action.payload.dokumenter);
+      let nyDokumentliste = [];
+      if (!state.dokumenter) nyDokumentliste = action.payload.dokumenter;
+      else nyDokumentliste = state.dokumenter.concat(action.payload.dokumenter);
+      state.dokumenter = nyDokumentliste;
       return state;
     },
     DOKUMENTER_TILORDNEDE_HENTET: (state, action: PayloadAction<IKlage>) => {
