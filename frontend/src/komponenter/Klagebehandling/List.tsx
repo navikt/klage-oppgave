@@ -41,5 +41,5 @@ const LoadingRoot = styled.div`
 `;
 
 export function Loading() {
-  return <LoadingRoot>Loading...</LoadingRoot>;
+  return <LoadingRoot>Henter flere dokumenter...</LoadingRoot>;
 }

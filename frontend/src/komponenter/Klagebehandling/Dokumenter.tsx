@@ -20,10 +20,19 @@ import { useLoadItems } from "./utils";
 import { List, ListItem, Loading } from "./List";
 
 const ListContainer = styled.div`
-  max-height: 400px;
+  max-height: 500px;
   max-width: 500px;
   overflow: auto;
   background-color: #fafafa;
+`;
+
+const DokumenterTittel = styled.h1`
+  font-size: 24px;
+  font-weight: bold;
+`;
+const DokumenterContainer = styled.div`
+  margin: 0.5em 1em;
+  background: white;
 `;
 
 export default function Dokumenter() {
@@ -79,45 +88,47 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
   useEffect(() => {
     if (klage.dokumenter) {
       let startCursor = liste.length;
-      let ARRAY_SIZE = klage.dokumenter.length;
       let newArray: Item[] = [];
       let j = 0;
-      for (let i = startCursor; i < startCursor + ARRAY_SIZE; i++) {
+      for (let i = startCursor; i < startCursor + klage.dokumenter.length; i++) {
         newArray = [...newArray, klage.dokumenter[j++]];
       }
       setListe(newArray);
-      //setListe((current) => [...current, ...newArray]);
     }
   }, [klage.dokumenter]);
 
   /*  const klage: IKlage = useSelector(velgKlage);
-       const { settaktivtDokument } = props;
+         const { settaktivtDokument } = props;
 
-       function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
-         dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
-       }
+         function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
+           dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
+         }
 
-       function tilordneDokument(behandlingId: string, journalpostId: string) {
-         dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId }));
-       }
-       */
+         function tilordneDokument(behandlingId: string, journalpostId: string) {
+           dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId }));
+         }
+         */
 
-  if (!klage.dokumenter || !klage.dokumenterAlleHentet) {
+  if (!klage.dokumenter) {
     return <NavFrontendSpinner />;
   }
-
   return (
-    <ListContainer ref={rootRef}>
-      <List>
-        {liste.map((item: any) => (
-          <ListItem key={item.journalpostId + item.dokumentInfoId}>{item.tittel}</ListItem>
-        ))}
-        {klage.hasMore && (
-          <ListItem ref={infiniteRef}>
-            <Loading />
-          </ListItem>
-        )}
-      </List>
-    </ListContainer>
+    <DokumenterContainer>
+      <DokumenterTittel>Dokumenter</DokumenterTittel>
+      <button>Vis kun tilknyttede</button>
+
+      <ListContainer ref={rootRef}>
+        <List>
+          {liste.map((item: any) => (
+            <ListItem key={item.journalpostId + item.dokumentInfoId}>{item.tittel}</ListItem>
+          ))}
+          {klage.hasMore && (
+            <ListItem ref={infiniteRef}>
+              <Loading />
+            </ListItem>
+          )}
+        </List>
+      </ListContainer>
+    </DokumenterContainer>
   );
 }
