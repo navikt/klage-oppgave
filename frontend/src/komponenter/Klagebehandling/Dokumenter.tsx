@@ -19,20 +19,45 @@ import styled from "styled-components";
 import { useLoadItems } from "./utils";
 import { List, ListItem, Loading } from "./List";
 
-const ListContainer = styled.div`
+const ListeContainer = styled.div`
   max-height: 500px;
-  max-width: 500px;
   overflow: auto;
-  background-color: #fafafa;
+  z-index: 5;
 `;
 
-const DokumenterTittel = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
-`;
 const DokumenterContainer = styled.div`
   margin: 0.5em 1em;
   background: white;
+`;
+const DokumenterTittel = styled.h1`
+  padding: 0 0.5em;
+  font-size: 24px;
+  font-weight: bold;
+`;
+
+const VisTilknyttedeKnapp = styled.button`
+  margin: 0 0.75em;
+  padding: 0.3em 0.55em;
+  background: white;
+  font-size: 0.9em;
+  color: #0067c5;
+  border: 1px solid #0067c5;
+`;
+
+const TilordneSjekkboks = styled.input`
+  padding: 0.3em 0.55em;
+  background: white;
+  font-size: 0.9em;
+  color: #0067c5;
+  border: 1px solid #0067c5;
+`;
+
+const DokumentRad = styled.ul`
+  list-style: none;
+  margin: 0;
+  display: flex;
+  padding: 0;
+  justify-content: space-between;
 `;
 
 export default function Dokumenter() {
@@ -98,16 +123,16 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
   }, [klage.dokumenter]);
 
   /*  const klage: IKlage = useSelector(velgKlage);
-         const { settaktivtDokument } = props;
+           const { settaktivtDokument } = props;
 
-         function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
-           dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
-         }
+           function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
+             dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
+           }
+           */
 
-         function tilordneDokument(behandlingId: string, journalpostId: string) {
-           dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId }));
-         }
-         */
+  function tilordneDokument(behandlingId: string, journalpostId: string) {
+    dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId }));
+  }
 
   if (!klage.dokumenter) {
     return <NavFrontendSpinner />;
@@ -115,12 +140,31 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
   return (
     <DokumenterContainer>
       <DokumenterTittel>Dokumenter</DokumenterTittel>
-      <button>Vis kun tilknyttede</button>
+      <VisTilknyttedeKnapp>Vis kun tilknyttede</VisTilknyttedeKnapp>
 
-      <ListContainer ref={rootRef}>
+      <ListeContainer ref={rootRef}>
         <List>
           {liste.map((item: any) => (
-            <ListItem key={item.journalpostId + item.dokumentInfoId}>{item.tittel}</ListItem>
+            <ListItem key={item.journalpostId + item.dokumentInfoId}>
+              <DokumentRad>
+                <li>{item.tittel}</li>
+                <li
+                  className={`etikett etikett--mw etikett--info etikett--${item.tema
+                    .split(" ")[0]
+                    .toLowerCase()}`}
+                >
+                  {item.tema}
+                </li>
+                <li className={"liten"}>{formattedDate(item.registrert)}</li>
+                <li>
+                  <TilordneSjekkboks
+                    type={"checkbox"}
+                    className={"input__checkbox"}
+                    onClick={() => tilordneDokument(klage.id, item.journalpostId)}
+                  />
+                </li>
+              </DokumentRad>
+            </ListItem>
           ))}
           {klage.hasMore && (
             <ListItem ref={infiniteRef}>
@@ -128,7 +172,7 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
             </ListItem>
           )}
         </List>
-      </ListContainer>
+      </ListeContainer>
     </DokumenterContainer>
   );
 }
