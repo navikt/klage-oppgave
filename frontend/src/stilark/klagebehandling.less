@@ -71,7 +71,6 @@ nav.klage__nav {
 
 ul.klage__lenker {
   grid-area: lenker;
-  margin: @margin-default 0;
   list-style: none;
   justify-content: space-evenly;
   display: flex;
@@ -395,4 +394,55 @@ table.dokument-tabell {
   padding: 0.5em;
   display: flex;
   justify-content: space-between;
+}
+
+@toggle-w: 42px;
+@toggle-h: 22px;
+
+.toggle-container {
+  display: inline-block;
+  width: @toggle-w;
+  height: @toggle-h;
+  position: relative;
+  cursor: pointer;
+  background-color: #78706a;
+  transition: border-color 300ms;
+  border-radius: 8px;
+
+  .real-checkbox {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    border-radius: 3px;
+
+    & + .toggle-button {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transition: all 300ms;
+      border-radius: 3px;
+
+      &::before {
+        content: "";
+        cursor: pointer;
+        display: inline-block;
+        width: calc(@toggle-w / 2);
+        height: @toggle-h;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        transition: all 300ms ease-in-out;
+      }
+    }
+
+    &:checked + .toggle-button {
+      background-color: #0c5ea8;
+      border-radius: 8px;
+
+      &::before {
+        margin-left: @toggle-h;
+      }
+    }
+  }
 }

@@ -13,6 +13,13 @@ import Klagen from "./Klagen";
 import Dokumenter from "./Dokumenter";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
+import styled from "styled-components";
+
+const Kontrollpanel = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5em;
+`;
 
 function UtarbeideVedtak() {
   return <>Utarbeide Vedtak</>;
@@ -24,6 +31,15 @@ function KvalitetsVurdering() {
 
 function Oppgave() {
   return <>Oppgave</>;
+}
+
+function ToggleKnapp() {
+  return (
+    <label htmlFor="toggle" className="toggle-container">
+      <input type="checkbox" id="toggle" className="real-checkbox" />
+      <div className="toggle-button" />
+    </label>
+  );
 }
 
 export default function Klagebehandling() {
@@ -77,10 +93,14 @@ export default function Klagebehandling() {
   return (
     <Oppsett visMeny={false} customClass={"bg_lysgraa"}>
       <>
-        <div className="klagebehandling__informasjon">
-          <div className="rad">FORNAVN ETTERNAVN {klage.foedselsnummer} </div>
+        <Kontrollpanel>
+          <div>FORNAVN ETTERNAVN {klage.foedselsnummer} </div>
+          <ToggleKnapp />
+          <div> ToggleDokumenter</div>
+          <div>ToggleDetaljer</div>
+          <div>ToggleVedtak</div>
           <EksterneLenker klage_state={klage_state} id={klage_state.oppgaveId} />
-        </div>
+        </Kontrollpanel>
 
         {showDebug && <Debug state={klage} />}
 
