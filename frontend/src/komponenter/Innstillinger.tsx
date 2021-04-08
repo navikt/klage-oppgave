@@ -12,7 +12,11 @@ import {
   velgMeg,
   valgtEnhet,
 } from "../tilstand/moduler/meg.velgere";
-import { hentInnstillingerHandling, settInnstillingerHandling } from "../tilstand/moduler/meg";
+import {
+  Faner,
+  hentInnstillingerHandling,
+  settInnstillingerHandling,
+} from "../tilstand/moduler/meg";
 import { GyldigeHjemler, GyldigeTemaer } from "../domene/filtre";
 
 function initState(filter: Array<string> | undefined) {
@@ -28,6 +32,7 @@ function initState(filter: Array<string> | undefined) {
 const Innstillinger = (): JSX.Element => {
   const dispatch = useDispatch();
   const filtrering = useSelector(velgFiltrering);
+  const faner = {};
   const meg = useSelector(velgMeg);
   const enheter = useSelector(velgEnheter);
   const innstillinger = useSelector(velgInnstillinger);
@@ -38,6 +43,7 @@ const Innstillinger = (): JSX.Element => {
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
   const [temaFilter, settTemaFilter] = useState<temaType[] | undefined>(undefined);
   const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
+  const [aktiveFaner, settAktiveFaner] = useState<Faner>(faner);
   const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
   const valgtEnhetIdx = useSelector(valgtEnhet);
   const kodeverk = useSelector(velgKodeverk);
@@ -80,6 +86,7 @@ const Innstillinger = (): JSX.Element => {
           aktiveHjemler,
           aktiveTyper,
           aktiveTemaer,
+          aktiveFaner,
         },
       })
     );

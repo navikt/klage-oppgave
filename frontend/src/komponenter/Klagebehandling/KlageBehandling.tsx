@@ -8,12 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { hentKlageHandling, IKlage } from "../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
 import Debug from "../Tabell/Debug";
-import KlageMeny from "./KlageMeny";
-import Klagen from "./Klagen";
 import Dokumenter from "./Dokumenter";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
+import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
 
 const Kontrollpanel = styled.div`
   display: flex;
@@ -35,11 +34,22 @@ function Oppgave() {
   return <>Oppgave</>;
 }
 
-function ToggleKnapp({ label }: { label: string }) {
+function ToggleKnapp({
+  id,
+  label,
+  checked,
+}: {
+  id: string;
+  label: string;
+  checked: { checked?: boolean | undefined } | boolean;
+}) {
   return (
     <label htmlFor="toggle" className="toggle-flex">
       <div className="toggle-container">
-        <input type="checkbox" id="toggle" className="real-checkbox" />
+        {checked && (
+          <input type="checkbox" id={id} defaultChecked={true} className="real-checkbox" />
+        )}
+        {!checked && <input type="checkbox" id={id} className="real-checkbox" />}
         <div className="toggle-button" />
       </div>
       <div className={"toggle-label"}>{label}</div>
@@ -52,6 +62,8 @@ export default function Klagebehandling() {
   const location = useLocation();
   const dispatch = useDispatch();
   const klage: IKlage = useSelector(velgKlage);
+  const innstillinger = useSelector(velgInnstillinger);
+  console.debug({ innstillinger });
 
   const [showDebug, setDebug] = useState(false);
   useEffect(() => {
@@ -100,9 +112,22 @@ export default function Klagebehandling() {
       <>
         <Kontrollpanel>
           <div>FORNAVN ETTERNAVN {klage.foedselsnummer} </div>
-          <ToggleKnapp label={"Dokumenter"} />
-          <ToggleKnapp label={"Detaljer"} />
-          <ToggleKnapp label={"Vedtak"} />
+
+          <ToggleKnapp
+            id={"dokumenter"}
+            label={"Dokumenter"}
+            checked={innstillinger?.aktiveFaner?.dokumenter || true}
+          />
+          <ToggleKnapp
+            id={"detaljer"}
+            label={"Detaljer"}
+            checked={innstillinger?.aktiveFaner?.detaljer || true}
+          />
+          <ToggleKnapp
+            id={"vedtak"}
+            label={"Vedtak"}
+            checked={innstillinger?.aktiveFaner?.vedtak || false}
+          />
           <EksterneLenker klage_state={klage_state} id={klage_state.oppgaveId} />
         </Kontrollpanel>
 

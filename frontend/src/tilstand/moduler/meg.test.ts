@@ -143,6 +143,7 @@ describe("'Meg' epos", () => {
           aktiveHjemler: [{ navn: "8-1", label: "8-1" }],
           aktiveTemaer: [{ navn: "SYK", label: "Sykepenger" }],
           aktiveTyper: [{ navn: "test-enhet", label: "42" }],
+          aktiveFaner: { dokumenter: { checked: true } },
         };
         const reducerResponse = hentetInnstillingerHandling(mockedResponse);
 

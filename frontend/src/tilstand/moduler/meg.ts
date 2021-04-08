@@ -14,7 +14,7 @@ import {
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod, AjaxObservable, ajaxPost } from "rxjs/internal-compatibility";
-import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
+import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling, temaType } from "./oppgave";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { ReactFragment, ReactNode } from "react";
 
@@ -46,12 +46,28 @@ export interface IEnhetData {
   lovligeTemaer?: [Filter];
 }
 
+export interface Faner {
+  /**
+   * ID til fane, og hvorvidt den er aktiv eller ikke.
+   */
+  dokumenter?: {
+    checked?: boolean;
+  };
+  detaljer?: {
+    checked?: boolean;
+  };
+  vedtak?: {
+    checked?: boolean;
+  };
+}
+
 interface GraphOgEnhet extends Graphdata, Array<IEnhetData> {}
 
 export interface IInnstillinger {
   aktiveHjemler: Array<Filter>;
   aktiveTemaer: Array<Filter>;
   aktiveTyper: Array<Filter>;
+  aktiveFaner: Faner;
 }
 
 export interface IInnstillingerPayload {
@@ -61,8 +77,10 @@ export interface IInnstillingerPayload {
     aktiveHjemler?: Array<Filter>;
     aktiveTemaer?: Array<Filter>;
     aktiveTyper?: Array<Filter>;
+    aktiveFaner: Faner;
   };
 }
+
 export interface IHentInnstilingerPayload {
   navIdent: string;
   enhetId: string;
