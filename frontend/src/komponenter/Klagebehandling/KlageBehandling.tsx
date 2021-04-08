@@ -12,10 +12,7 @@ import KlageMeny from "./KlageMeny";
 import Klagen from "./Klagen";
 import Dokumenter from "./Dokumenter";
 import NavFrontendSpinner from "nav-frontend-spinner";
-
-function UtarbeideVedtak() {
-  return <>Utarbeide Vedtak</>;
-}
+import UtarbeideVedtak from "./UtarbeideVedtak";
 
 function KvalitetsVurdering() {
   return <>Kvalitetsvurdering</>;
@@ -86,7 +83,7 @@ export default function Klagebehandling() {
 
         {klage_state.aktivSide === "klagen" && <Klagen />}
         {klage_state.aktivSide === "dokumenter" && <Dokumenter />}
-        {klage_state.aktivSide === "utarbeidevedtak" && <UtarbeideVedtak />}
+        {klage_state.aktivSide === "utarbeidevedtak" && <UtarbeideVedtak klage={klage} />}
         {klage_state.aktivSide === "kvalitetsvurdering" && <KvalitetsVurdering />}
         {klage_state.aktivSide === "oppgave" && <Oppgave />}
       </>
