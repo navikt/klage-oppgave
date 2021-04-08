@@ -396,8 +396,8 @@ table.dokument-tabell {
   justify-content: space-between;
 }
 
-@toggle-w: 42px;
-@toggle-h: 22px;
+@toggle-w: 53px;
+@toggle-h: 30px;
 
 .toggle-container {
   display: inline-block;
@@ -420,19 +420,28 @@ table.dokument-tabell {
       left: 0;
       right: 0;
       bottom: 0;
-      transition: all 300ms;
+      transition: all 100ms;
       border-radius: 3px;
 
       &::before {
         content: "";
         cursor: pointer;
         display: inline-block;
-        width: calc(@toggle-w / 2);
-        height: @toggle-h;
+        width: 24px;
+        height: 24px;
+        margin-top: 3px;
+        margin-left: 3px;
         background-color: white;
         border-radius: 8px;
         box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-        transition: all 300ms ease-in-out;
+        transition: all 100ms ease-in-out;
+      }
+      &::after {
+        content: "\1F44E";
+        color: white;
+        position: absolute;
+        top: 7px;
+        right: 2px;
       }
     }
 
@@ -441,7 +450,14 @@ table.dokument-tabell {
       border-radius: 8px;
 
       &::before {
-        margin-left: @toggle-h;
+        margin-left: calc(@toggle-h - 4px);
+      }
+      &::after {
+        content: "\1F44C";
+        color: white;
+        position: absolute;
+        top: 3px;
+        left: 2px;
       }
     }
   }
