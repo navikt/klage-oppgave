@@ -216,7 +216,7 @@ export default function Klagen() {
   return (
     <div className={"klage_og_detaljer"}>
       <div className={"klagebehandling_grid"}>
-        <div className={"grid1"}></div>
+        <div className={"grid1"}>test</div>
       </div>
     </div>
   );

@@ -18,7 +18,9 @@ import styled from "styled-components";
 const Kontrollpanel = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 0.5em;
+  margin: 0;
+  padding: 0.5em;
+  background: #f8f8f8;
 `;
 
 function UtarbeideVedtak() {
@@ -33,11 +35,14 @@ function Oppgave() {
   return <>Oppgave</>;
 }
 
-function ToggleKnapp() {
+function ToggleKnapp({ label }: { label: string }) {
   return (
-    <label htmlFor="toggle" className="toggle-container">
-      <input type="checkbox" id="toggle" className="real-checkbox" />
-      <div className="toggle-button" />
+    <label htmlFor="toggle" className="toggle-flex">
+      <div className="toggle-container">
+        <input type="checkbox" id="toggle" className="real-checkbox" />
+        <div className="toggle-button" />
+      </div>
+      <div className={"toggle-label"}>{label}</div>
     </label>
   );
 }
@@ -95,22 +100,15 @@ export default function Klagebehandling() {
       <>
         <Kontrollpanel>
           <div>FORNAVN ETTERNAVN {klage.foedselsnummer} </div>
-          <ToggleKnapp />
-          <div> ToggleDokumenter</div>
-          <div>ToggleDetaljer</div>
-          <div>ToggleVedtak</div>
+          <ToggleKnapp label={"Dokumenter"} />
+          <ToggleKnapp label={"Detaljer"} />
+          <ToggleKnapp label={"Vedtak"} />
           <EksterneLenker klage_state={klage_state} id={klage_state.oppgaveId} />
         </Kontrollpanel>
 
         {showDebug && <Debug state={klage} />}
 
         <Dokumenter />
-
-        {klage_state.aktivSide === "klagen" && <Klagen />}
-        {klage_state.aktivSide === "dokumenter" && <Dokumenter />}
-        {klage_state.aktivSide === "utarbeidevedtak" && <UtarbeideVedtak />}
-        {klage_state.aktivSide === "kvalitetsvurdering" && <KvalitetsVurdering />}
-        {klage_state.aktivSide === "oppgave" && <Oppgave />}
       </>
     </Oppsett>
   );
