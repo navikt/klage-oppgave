@@ -205,7 +205,7 @@ export default function Klagebehandling() {
 
         {showDebug && <Debug state={klage} />}
 
-        <Dokumenter />
+        <Dokumenter skjult={!faner.dokumenter.checked} />
       </>
     </Oppsett>
   );

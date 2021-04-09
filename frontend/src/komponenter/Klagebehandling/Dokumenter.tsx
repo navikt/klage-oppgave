@@ -63,18 +63,21 @@ const DokumentRad = styled.ul`
   justify-content: space-between;
 `;
 
-export default function Dokumenter() {
+export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [aktivtDokument, settaktivtDokument] = useState(0);
   const klage: IKlage = useSelector(velgKlage);
 
-  return (
-    <div className={"dokument-wrapper"}>
-      <DokumentTabell settaktivtDokument={settaktivtDokument} />
-      <div className={"preview"}>
-        <PDFDocument file={klage.currentPDF} />
+  if (skjult) {
+    return null;
+  } else
+    return (
+      <div className={"dokument-wrapper"}>
+        <DokumentTabell settaktivtDokument={settaktivtDokument} />
+        <div className={"preview"}>
+          <PDFDocument file={klage.currentPDF} />
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 export interface Item {
