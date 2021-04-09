@@ -36,20 +36,25 @@ function Oppgave() {
 
 function ToggleKnapp({
   id,
+  clickFn,
   label,
-  checked,
+  faner,
 }: {
   id: string;
+  clickFn: Function;
   label: string;
-  checked: { checked?: boolean | undefined } | boolean;
+  faner: any;
 }) {
   return (
     <label htmlFor="toggle" className="toggle-flex">
-      <div className="toggle-container">
-        {checked && (
-          <input type="checkbox" id={id} defaultChecked={true} className="real-checkbox" />
-        )}
-        {!checked && <input type="checkbox" id={id} className="real-checkbox" />}
+      <div className="toggle-container" onClick={() => clickFn(id)}>
+        <input
+          type="checkbox"
+          readOnly={true}
+          checked={faner[id].checked}
+          id={id}
+          className="real-checkbox"
+        />
         <div className="toggle-button" />
       </div>
       <div className={"toggle-label"}>{label}</div>
@@ -63,7 +68,27 @@ export default function Klagebehandling() {
   const dispatch = useDispatch();
   const klage: IKlage = useSelector(velgKlage);
   const innstillinger = useSelector(velgInnstillinger);
-  console.debug({ innstillinger });
+
+  function toggleFane(id: string) {
+    settAktiveFaner({
+      ...faner,
+      [id]: {
+        checked: !faner[id].checked,
+      },
+    });
+  }
+
+  const [faner, settAktiveFaner] = useState({
+    detaljer: {
+      checked: innstillinger?.aktiveFaner?.detaljer?.checked || true,
+    },
+    dokumenter: {
+      checked: innstillinger?.aktiveFaner?.dokumenter?.checked || true,
+    },
+    vedtak: {
+      checked: innstillinger?.aktiveFaner?.vedtak?.checked || true,
+    },
+  });
 
   const [showDebug, setDebug] = useState(false);
   useEffect(() => {
@@ -73,6 +98,24 @@ export default function Klagebehandling() {
       }
     });
   });
+
+  useEffect(() => {
+    settAktiveFaner({
+      detaljer: {
+        checked: innstillinger?.aktiveFaner?.detaljer?.checked || true,
+      },
+      dokumenter: {
+        checked: innstillinger?.aktiveFaner?.dokumenter?.checked || true,
+      },
+      vedtak: {
+        checked: innstillinger?.aktiveFaner?.vedtak?.checked || true,
+      },
+    });
+  }, [innstillinger?.aktiveFaner]);
+
+  useEffect(() => {
+    console.debug({ faner });
+  }, [faner]);
 
   useEffect(() => {
     console.debug("henter", klage_state.oppgaveId);
@@ -116,17 +159,20 @@ export default function Klagebehandling() {
           <ToggleKnapp
             id={"dokumenter"}
             label={"Dokumenter"}
-            checked={innstillinger?.aktiveFaner?.dokumenter || true}
+            clickFn={() => toggleFane("dokumenter")}
+            faner={faner}
           />
           <ToggleKnapp
             id={"detaljer"}
             label={"Detaljer"}
-            checked={innstillinger?.aktiveFaner?.detaljer || true}
+            clickFn={() => toggleFane("detaljer")}
+            faner={faner}
           />
           <ToggleKnapp
             id={"vedtak"}
             label={"Vedtak"}
-            checked={innstillinger?.aktiveFaner?.vedtak || false}
+            clickFn={() => toggleFane("vedtak")}
+            faner={faner}
           />
           <EksterneLenker klage_state={klage_state} id={klage_state.oppgaveId} />
         </Kontrollpanel>

@@ -5,8 +5,10 @@ https://kabal.dev.nav.no/
 
 ### Utvikling
 
-Kjør opp med docker-compose:
+Gå inn i de ulike prosjektene (/server, /api-mock-server, /frontend) og kjør `npm install`
+
+Kjør så opp med docker-compose:
 
 `docker-compose up --build`
 
-og start http://localhost:8060
+og gå til http://localhost:8060 i nettleseren

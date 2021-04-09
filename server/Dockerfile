@@ -3,7 +3,6 @@ ENV NODE_ENV development
 
 WORKDIR /usr/src/app
 COPY . .
-COPY package.json package.json
 
 RUN npm install
 
