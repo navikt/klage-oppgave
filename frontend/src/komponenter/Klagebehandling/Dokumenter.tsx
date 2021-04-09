@@ -67,17 +67,14 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [aktivtDokument, settaktivtDokument] = useState(0);
   const klage: IKlage = useSelector(velgKlage);
 
-  if (skjult) {
-    return null;
-  } else
-    return (
-      <div className={"dokument-wrapper"}>
-        <DokumentTabell settaktivtDokument={settaktivtDokument} />
-        <div className={"preview"}>
-          <PDFDocument file={klage.currentPDF} />
-        </div>
+  return (
+    <div className={`dokument-wrapper ${skjult ? "skjult" : ""}`}>
+      <DokumentTabell settaktivtDokument={settaktivtDokument} />
+      <div className={"preview"}>
+        <PDFDocument file={klage.currentPDF} />
       </div>
-    );
+    </div>
+  );
 }
 
 export interface Item {
@@ -127,14 +124,6 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
       setListe(newArray);
     }
   }, [klage.dokumenter]);
-
-  /*  const klage: IKlage = useSelector(velgKlage);
-           const { settaktivtDokument } = props;
-
-           function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
-             dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
-           }
-           */
 
   function tilordneDokument(behandlingId: string, journalpostId: string) {
     dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId }));
