@@ -8,7 +8,11 @@ import styled from "styled-components";
 const Knapper = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 0.5em 0 0.2em 0;
+  border: 1px solid #e7e9e9;
+  border-right: 0;
+  border-bottom: 0;
+  border-top: 0;
+  padding: 1em;
 `;
 const Lenke = styled.a`
   margin: 0 0.25em 0 0.5em;
@@ -20,6 +24,7 @@ const Ikon = styled.img`
   position: absolute;
   margin: 0.35em 0 0 0.15em;
 `;
+
 const Knapperad = styled.div`
   display: block;
   width: 100%;

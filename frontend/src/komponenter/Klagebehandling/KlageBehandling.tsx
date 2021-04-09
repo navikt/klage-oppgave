@@ -17,19 +17,30 @@ import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
 const Kontrollpanel = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 0;
-  padding: 0.5em;
   background: #f8f8f8;
 `;
 
 const Knapper = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 0.5em 0 0.2em 0;
 `;
 const Person = styled.div`
-  display: block;
-  margin: 0.5em 0 0.2em 0;
+  border: 1px solid #e7e9e9;
+  border-left: 0;
+  border-bottom: 0;
+  border-top: 0;
+  display: flex;
+  flex-flow: row;
+  padding: 0.5em 1em;
+`;
+const Navn = styled.div`
+  display: inline-flex;
+  padding: 0.5em 0 0.5em 0.5em;
+  font-weight: bold;
+`;
+const Personnummer = styled.div`
+  display: inline-flex;
+  padding: 0.5em 0.5em 0.5em 0em;
 `;
 
 function UtarbeideVedtak() {
@@ -163,7 +174,10 @@ export default function Klagebehandling() {
     <Oppsett visMeny={false} customClass={"bg_lysgraa"}>
       <>
         <Kontrollpanel>
-          <Person>FORNAVN ETTERNAVN {klage.foedselsnummer} </Person>
+          <Person>
+            <Navn>FORNAVN ETTERNAVN </Navn>
+            <Personnummer> / {klage.foedselsnummer}</Personnummer>
+          </Person>
 
           <Knapper>
             <ToggleKnapp
