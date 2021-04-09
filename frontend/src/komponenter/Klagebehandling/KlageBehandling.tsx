@@ -22,6 +22,16 @@ const Kontrollpanel = styled.div`
   background: #f8f8f8;
 `;
 
+const Knapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5em 0 0.2em 0;
+`;
+const Person = styled.div`
+  display: block;
+  margin: 0.5em 0 0.2em 0;
+`;
+
 function UtarbeideVedtak() {
   return <>Utarbeide Vedtak</>;
 }
@@ -57,7 +67,7 @@ function ToggleKnapp({
         />
         <div className="toggle-button" />
       </div>
-      <div className={"toggle-label"}>{label}</div>
+      <div className={`toggle-label ${faner[id].checked ? "fet" : ""}`}>{label}</div>
     </label>
   );
 }
@@ -118,7 +128,6 @@ export default function Klagebehandling() {
   }, [faner]);
 
   useEffect(() => {
-    console.debug("henter", klage_state.oppgaveId);
     if (klage_state.oppgaveId != 0 && klage_state.oppgaveId.length > 0) {
       dispatch(hentKlageHandling(klage_state.oppgaveId));
     }
@@ -154,26 +163,29 @@ export default function Klagebehandling() {
     <Oppsett visMeny={false} customClass={"bg_lysgraa"}>
       <>
         <Kontrollpanel>
-          <div>FORNAVN ETTERNAVN {klage.foedselsnummer} </div>
+          <Person>FORNAVN ETTERNAVN {klage.foedselsnummer} </Person>
 
-          <ToggleKnapp
-            id={"dokumenter"}
-            label={"Dokumenter"}
-            clickFn={() => toggleFane("dokumenter")}
-            faner={faner}
-          />
-          <ToggleKnapp
-            id={"detaljer"}
-            label={"Detaljer"}
-            clickFn={() => toggleFane("detaljer")}
-            faner={faner}
-          />
-          <ToggleKnapp
-            id={"vedtak"}
-            label={"Vedtak"}
-            clickFn={() => toggleFane("vedtak")}
-            faner={faner}
-          />
+          <Knapper>
+            <ToggleKnapp
+              id={"dokumenter"}
+              label={"Dokumenter"}
+              clickFn={() => toggleFane("dokumenter")}
+              faner={faner}
+            />
+            <ToggleKnapp
+              id={"detaljer"}
+              label={"Detaljer"}
+              clickFn={() => toggleFane("detaljer")}
+              faner={faner}
+            />
+            <ToggleKnapp
+              id={"vedtak"}
+              label={"Fullfør vedtak"}
+              clickFn={() => toggleFane("vedtak")}
+              faner={faner}
+            />
+          </Knapper>
+
           <EksterneLenker klage_state={klage_state} id={klage_state.oppgaveId} />
         </Kontrollpanel>
 

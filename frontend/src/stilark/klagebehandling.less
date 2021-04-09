@@ -400,11 +400,17 @@ table.dokument-tabell {
 @toggle-h: 30px;
 
 .toggle-label {
-  padding: 0.25em 0 0 0.25em;
+  padding: 0.25em 0.75em 0 0.4em;
+
+  &.fet {
+    font-weight: bold;
+  }
 }
+
 .toggle-flex {
   display: flex;
   flex-flow: row;
+  justify-content: space-around;
 }
 
 .toggle-container {
@@ -444,6 +450,7 @@ table.dokument-tabell {
         box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         transition: all 100ms ease-in-out;
       }
+
       &::after {
         content: "\2717";
         color: white;
@@ -460,6 +467,7 @@ table.dokument-tabell {
       &::before {
         margin-left: calc(@toggle-h - 4px);
       }
+
       &::after {
         content: "\2714";
         color: white;

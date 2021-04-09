@@ -4,6 +4,27 @@ import classNames from "classnames";
 //@ts-ignore
 import ExtLink from "../extlink.svg";
 import React from "react";
+import styled from "styled-components";
+const Knapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5em 0 0.2em 0;
+`;
+const Lenke = styled.a`
+  margin: 0 0.25em 0 0.5em;
+  white-space: nowrap;
+  text-decoration: none;
+  color: black;
+`;
+const Ikon = styled.img`
+  position: absolute;
+  margin: 0.35em 0 0 0.15em;
+`;
+const Knapperad = styled.div`
+  display: block;
+  width: 100%;
+  margin: 0 0.5em;
+`;
 
 export default function EksterneLenker({
   klage_state,
@@ -13,79 +34,75 @@ export default function EksterneLenker({
   id: string;
 }) {
   return (
-    <>
-      <div>
-        <a
+    <Knapper>
+      <Knapperad>
+        <Lenke
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
-          className=""
         >
           Gosys
-        </a>
+        </Lenke>
         <a
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
-          className=""
         >
-          <img alt="Ekstern lenke" src={ExtLink} />
+          <Ikon alt="Ekstern lenke" src={ExtLink} />
         </a>
-      </div>
-      <div>
-        <a
+      </Knapperad>
+
+      <Knapperad>
+        <Lenke
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
-          className=""
         >
           Vedtaksløsning og sak
-        </a>
+        </Lenke>
         <a
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
           className=""
         >
-          <img alt="Ekstern lenke" src={ExtLink} />
+          <Ikon alt="Ekstern lenke" src={ExtLink} />
         </a>
-      </div>
-      <div>
-        <a
+      </Knapperad>
+
+      <Knapperad>
+        <Lenke
           target="_blank"
-          aria-label={"Ekstern lenke til Gosys for denne personen"}
+          aria-label={"Ekstern lenke til A-inntekt for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
-          className=""
         >
           A-inntekt
-        </a>
+        </Lenke>
         <a
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
-          className=""
         >
-          <img alt="Ekstern lenke" src={ExtLink} />
+          <Ikon alt="Ekstern lenke" src={ExtLink} />
         </a>
-      </div>
-      <div>
-        <a
+      </Knapperad>
+
+      <Knapperad>
+        <Lenke
           target="_blank"
-          aria-label={"Ekstern lenke til Gosys for denne personen"}
+          aria-label={"Ekstern lenke til Modia for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
-          className=""
         >
           Modia
-        </a>
+        </Lenke>
         <a
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
-          className=""
         >
-          <img alt="Ekstern lenke" src={ExtLink} />
+          <Ikon alt="Ekstern lenke" src={ExtLink} />
         </a>
-      </div>
-    </>
+      </Knapperad>
+    </Knapper>
   );
 }
