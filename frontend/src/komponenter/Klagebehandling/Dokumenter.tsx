@@ -46,19 +46,51 @@ const VisTilknyttedeKnapp = styled.button`
 `;
 
 const TilordneSjekkboks = styled.input`
-  padding: 0.3em 0.55em;
-  background: white;
-  font-size: 0.9em;
-  color: #0067c5;
   border: 1px solid #0067c5;
+  width: 24px;
+  height: 24px;
+  background: #0067c5;
+  margin: 0px 8px;
+
+  &:after {
+    transform: translateX(-50%);
+    border-radius: 4px;
+  }
 `;
 
 const DokumentRad = styled.ul`
   list-style: none;
   margin: 0;
-  display: flex;
   padding: 0;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 8em 3em;
+  grid-template-rows: 1fr;
+`;
+
+const DokumentTittel = styled.li`
+  color: #0067c5;
+`;
+
+const DokumentTema = styled.li`
+  max-width: 8em;
+`;
+
+const TemaText = styled.div`
+  max-width: 8em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+`;
+const DokumentDato = styled.li`
+  max-width: 8em;
+  text-align: center;
+  font-size: 0.9em;
+`;
+
+const DokumentSjekkboks = styled.li`
+  max-width: 2em;
+  text-align: right;
 `;
 
 export default function Dokumenter({ skjult }: { skjult: boolean }) {
@@ -140,22 +172,21 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
           {liste.map((item: any) => (
             <ListItem key={item.journalpostId + item.dokumentInfoId}>
               <DokumentRad>
-                <li>{item.tittel}</li>
-                <li
+                <DokumentTittel>{item.tittel}</DokumentTittel>
+                <DokumentTema
                   className={`etikett etikett--mw etikett--info etikett--${item.tema
                     .split(" ")[0]
                     .toLowerCase()}`}
                 >
-                  {item.tema}
-                </li>
-                <li className={"liten"}>{formattedDate(item.registrert)}</li>
-                <li>
+                  <TemaText>{item.tema}</TemaText>
+                </DokumentTema>
+                <DokumentDato className={"liten"}>{formattedDate(item.registrert)}</DokumentDato>
+                <DokumentSjekkboks>
                   <TilordneSjekkboks
                     type={"checkbox"}
-                    className={"input__checkbox"}
                     onClick={() => tilordneDokument(klage.id, item.journalpostId)}
                   />
-                </li>
+                </DokumentSjekkboks>
               </DokumentRad>
             </ListItem>
           ))}

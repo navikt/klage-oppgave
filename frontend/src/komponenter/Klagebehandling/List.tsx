@@ -14,8 +14,7 @@ export const List = styled.ul<ListProps>`
 `;
 
 export const ListItem = styled.li`
-  background-color: #fafafa;
-  border: 1px solid #99b4c0;
+  border-top: 1px solid #c6c2bf;
   padding: 8px;
   margin: 4px;
 `;

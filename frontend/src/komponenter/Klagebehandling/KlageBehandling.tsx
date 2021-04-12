@@ -19,15 +19,19 @@ import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
 
-const Ikon = styled.img`
+const IkonHake = styled.img`
   position: absolute;
   display: ${(props) => props.theme.display};
   margin: 0.25em 0 0 -2em;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
 `;
-const XIkon = styled.img`
+const IkonLukk = styled.img`
   position: absolute;
   display: ${(props) => props.theme.display};
   margin: 0.25em 0 0 0.2em;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
 `;
 
 const Kontrollpanel = styled.div`
@@ -57,6 +61,9 @@ const Navn = styled.div`
 const Personnummer = styled.div`
   display: inline-flex;
   padding: 0.5em 0;
+`;
+const SjekkboksLabel = styled.div`
+  z-index: 5;
 `;
 
 function UtarbeideVedtak() {
@@ -93,19 +100,21 @@ function ToggleKnapp({
           className="real-checkbox"
         />
         <div className="toggle-button">
-          <Ikon
-            alt="Slå på"
+          <IkonHake
+            alt="Slå av fane"
             src={HakeSVG}
             theme={{ display: faner[id].checked ? "unset" : "none" }}
           />
-          <XIkon
-            alt="Slå av"
+          <IkonLukk
+            alt="Slå på fane"
             src={CloseSVG}
             theme={{ display: !faner[id].checked ? "unset" : "none" }}
           />
         </div>
       </div>
-      <div className={`toggle-label ${faner[id].checked ? "fet" : ""}`}>{label}</div>
+      <SjekkboksLabel className={`toggle-label ${faner[id].checked ? "fet" : ""}`}>
+        {label}
+      </SjekkboksLabel>
     </label>
   );
 }
@@ -160,10 +169,6 @@ export default function Klagebehandling() {
       },
     });
   }, [innstillinger?.aktiveFaner]);
-
-  useEffect(() => {
-    console.debug({ faner });
-  }, [faner]);
 
   useEffect(() => {
     if (klage_state.oppgaveId != 0 && klage_state.oppgaveId.length > 0) {
