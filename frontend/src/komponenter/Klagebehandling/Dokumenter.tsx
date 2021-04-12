@@ -110,7 +110,14 @@ export interface Item {
 }
 
 function sjekkErTilordnet(klage: any, item: any): boolean {
-  return true;
+  let res = klage.dokumenterTilordnede.filter(
+    (klage: any) =>
+      klage.journalpostId === item.journalpostId && klage.dokumentInfoId === item.dokumentInfoId
+  );
+  if (res.length) {
+    return true;
+  }
+  return false;
 }
 
 function DokumentTabell(props: { settaktivtDokument: Function }) {
@@ -158,6 +165,7 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
   function tilordneDokument(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
     dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
+
   function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
     dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
