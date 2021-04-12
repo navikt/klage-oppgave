@@ -419,6 +419,7 @@ export function TilordneKlageDokumentEpos(
         {
           id: action.payload.id,
           journalpostId: action.payload.journalpostId,
+          dokumentInfoId: action.payload.dokumentInfoId,
         },
         { "Content-Type": "application/json" }
       )

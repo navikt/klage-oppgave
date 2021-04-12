@@ -45,16 +45,12 @@ const VisTilknyttedeKnapp = styled.button`
   border: 1px solid #0067c5;
 `;
 
-const TilordneSjekkboks = styled.input`
-  border: 1px solid #0067c5;
+const Sjekkboks = styled.input`
   width: 24px;
   height: 24px;
-  background: #0067c5;
   margin: 0px 8px;
-
-  &:after {
-    transform: translateX(-50%);
-    border-radius: 4px;
+  &:checked {
+    background-color: rgb(12, 94, 168);
   }
 `;
 
@@ -155,8 +151,8 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
     }
   }, [klage.dokumenter]);
 
-  function tilordneDokument(behandlingId: string, journalpostId: string) {
-    dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId }));
+  function tilordneDokument(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
+    dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
 
   if (!klage.dokumenter) {
@@ -182,9 +178,11 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
                 </DokumentTema>
                 <DokumentDato className={"liten"}>{formattedDate(item.registrert)}</DokumentDato>
                 <DokumentSjekkboks>
-                  <TilordneSjekkboks
+                  <Sjekkboks
                     type={"checkbox"}
-                    onClick={() => tilordneDokument(klage.id, item.journalpostId)}
+                    onClick={() =>
+                      tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId)
+                    }
                   />
                 </DokumentSjekkboks>
               </DokumentRad>
