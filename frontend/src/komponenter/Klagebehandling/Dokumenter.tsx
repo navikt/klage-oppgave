@@ -155,7 +155,6 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
     dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
   function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
-    debugger;
     dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
 
@@ -185,6 +184,11 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
                 <DokumentSjekkboks>
                   <Sjekkboks
                     type={"checkbox"}
+                    defaultChecked={klage.dokumenterTilordnede.filter(
+                      (dok: any) =>
+                        dok.journalpostId == item.journalpostId &&
+                        dok.dokumentInfoId == item.dokumentInfoId
+                    )}
                     onClick={() =>
                       tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId)
                     }
