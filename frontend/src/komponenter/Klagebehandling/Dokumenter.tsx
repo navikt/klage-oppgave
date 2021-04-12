@@ -110,6 +110,9 @@ export interface Item {
 }
 
 function sjekkErTilordnet(klage: any, item: any): boolean {
+  if (!klage.dokumenterTilordnede) {
+    return false;
+  }
   let res = klage.dokumenterTilordnede.filter(
     (klage: any) =>
       klage.journalpostId === item.journalpostId && klage.dokumentInfoId === item.dokumentInfoId
