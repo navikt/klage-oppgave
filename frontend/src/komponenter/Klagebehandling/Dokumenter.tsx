@@ -109,6 +109,10 @@ export interface Item {
   dokumentInfoId: string;
 }
 
+function sjekkErTilordnet(klage: any, item: any): boolean {
+  return true;
+}
+
 function DokumentTabell(props: { settaktivtDokument: Function }) {
   const klage: IKlage = useSelector(velgKlage);
   const dispatch = useDispatch();
@@ -184,12 +188,8 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
                 <DokumentSjekkboks>
                   <Sjekkboks
                     type={"checkbox"}
-                    defaultChecked={klage.dokumenterTilordnede.filter(
-                      (dok: any) =>
-                        dok.journalpostId == item.journalpostId &&
-                        dok.dokumentInfoId == item.dokumentInfoId
-                    )}
-                    onClick={() =>
+                    checked={sjekkErTilordnet(klage, item)}
+                    onChange={() =>
                       tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId)
                     }
                   />
