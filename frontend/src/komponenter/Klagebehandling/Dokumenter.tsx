@@ -20,9 +20,8 @@ import { useLoadItems } from "./utils";
 import { List, ListItem, Loading } from "./List";
 
 const ListeContainer = styled.div`
-  max-height: 68vh;
+  max-height: 500px;
   overflow: auto;
-  z-index: 5;
 `;
 
 const DokumenterContainer = styled.div`
@@ -30,7 +29,6 @@ const DokumenterContainer = styled.div`
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
-  height: 80vh;
 `;
 const DokumenterTittel = styled.h1`
   padding: 0 0.5em;

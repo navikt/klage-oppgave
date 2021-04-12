@@ -5,6 +5,7 @@ import classNames from "classnames";
 import ExtLink from "../extlink.svg";
 import React from "react";
 import styled from "styled-components";
+
 const Knapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -19,6 +20,9 @@ const Lenke = styled.a`
   white-space: nowrap;
   text-decoration: none;
   color: black;
+`;
+const Lenke2 = styled.a`
+  position: relative;
 `;
 const Ikon = styled.img`
   position: absolute;
@@ -48,13 +52,13 @@ export default function EksterneLenker({
         >
           Gosys
         </Lenke>
-        <a
+        <Lenke2
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
         >
           <Ikon alt="Ekstern lenke" src={ExtLink} />
-        </a>
+        </Lenke2>
       </Knapperad>
 
       <Knapperad>
@@ -65,14 +69,13 @@ export default function EksterneLenker({
         >
           Vedtaksløsning og sak
         </Lenke>
-        <a
+        <Lenke2
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
-          className=""
         >
           <Ikon alt="Ekstern lenke" src={ExtLink} />
-        </a>
+        </Lenke2>
       </Knapperad>
 
       <Knapperad>
@@ -83,13 +86,13 @@ export default function EksterneLenker({
         >
           A-inntekt
         </Lenke>
-        <a
+        <Lenke2
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
         >
           <Ikon alt="Ekstern lenke" src={ExtLink} />
-        </a>
+        </Lenke2>
       </Knapperad>
 
       <Knapperad>
@@ -100,13 +103,13 @@ export default function EksterneLenker({
         >
           Modia
         </Lenke>
-        <a
+        <Lenke2
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
         >
           <Ikon alt="Ekstern lenke" src={ExtLink} />
-        </a>
+        </Lenke2>
       </Knapperad>
     </Knapper>
   );

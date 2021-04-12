@@ -399,11 +399,11 @@ table.dokument-tabell {
   justify-content: space-between;
 }
 
-@toggle-w: 53px;
-@toggle-h: 30px;
+@toggle-w: 38px;
+@toggle-h: 20px;
 
 .toggle-label {
-  padding: 0.25em 0.75em 0 0.4em;
+  padding: 0 0.75em 0 0.4em;
 
   &.fet {
     font-weight: bold;
@@ -414,7 +414,7 @@ table.dokument-tabell {
   display: flex;
   flex-flow: row;
   justify-content: space-around;
-  padding: 0.5em;
+  padding: 1em;
 }
 
 .toggle-container {
@@ -425,7 +425,7 @@ table.dokument-tabell {
   cursor: pointer;
   background-color: #78706a;
   transition: border-color 300ms;
-  border-radius: 8px;
+  border-radius: 6px;
 
   .real-checkbox {
     position: absolute;
@@ -445,39 +445,39 @@ table.dokument-tabell {
         content: "";
         cursor: pointer;
         display: inline-block;
-        width: 24px;
-        height: 24px;
-        margin-top: 3px;
-        margin-left: 3px;
+        width: 16px;
+        height: 16px;
+        margin-top: 2px;
+        margin-left: 2px;
         background-color: white;
-        border-radius: 8px;
+        border-radius: 5px;
         box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         transition: all 100ms ease-in-out;
       }
 
       &::after {
-        content: "\2717";
+        content: "";
         color: white;
         position: absolute;
-        top: 4px;
-        right: 9px;
+        top: 0;
+        right: 4px;
       }
     }
 
     &:checked + .toggle-button {
       background-color: #0c5ea8;
-      border-radius: 8px;
+      border-radius: 6px;
 
       &::before {
-        margin-left: calc(@toggle-h - 4px);
+        margin-left: calc(@toggle-w / 2 + 1px);
       }
 
       &::after {
-        content: "\2714";
+        content: "";
         color: white;
         position: absolute;
-        top: 5px;
-        left: 7px;
+        top: 0;
+        left: 2px;
       }
     }
   }

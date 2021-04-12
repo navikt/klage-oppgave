@@ -1,6 +1,11 @@
 import React, { useEffect, useReducer, useState } from "react";
 import Oppsett from "../Oppsett";
 import "../../stilark/klagebehandling.less";
+// @ts-ignore
+import CloseSVG from "../cancel.svg";
+// @ts-ignore
+import HakeSVG from "../hake.svg";
+
 import { NavLink, useLocation, useParams } from "react-router-dom";
 import klageReducer, { IKlageState } from "../klage-reducer";
 import qs from "qs";
@@ -13,6 +18,17 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
+
+const Ikon = styled.img`
+  position: absolute;
+  display: ${(props) => props.theme.display};
+  margin: 0.25em 0 0 -2em;
+`;
+const XIkon = styled.img`
+  position: absolute;
+  display: ${(props) => props.theme.display};
+  margin: 0.25em 0 0 0.2em;
+`;
 
 const Kontrollpanel = styled.div`
   display: flex;
@@ -35,12 +51,12 @@ const Person = styled.div`
 `;
 const Navn = styled.div`
   display: inline-flex;
-  padding: 0.5em 0 0.5em 0.5em;
+  padding: 0.5em 0;
   font-weight: bold;
 `;
 const Personnummer = styled.div`
   display: inline-flex;
-  padding: 0.5em 0.5em 0.5em 0em;
+  padding: 0.5em 0;
 `;
 
 function UtarbeideVedtak() {
@@ -76,7 +92,18 @@ function ToggleKnapp({
           id={id}
           className="real-checkbox"
         />
-        <div className="toggle-button" />
+        <div className="toggle-button">
+          <Ikon
+            alt="Slå på"
+            src={HakeSVG}
+            theme={{ display: faner[id].checked ? "unset" : "none" }}
+          />
+          <XIkon
+            alt="Slå av"
+            src={CloseSVG}
+            theme={{ display: !faner[id].checked ? "unset" : "none" }}
+          />
+        </div>
       </div>
       <div className={`toggle-label ${faner[id].checked ? "fet" : ""}`}>{label}</div>
     </label>
