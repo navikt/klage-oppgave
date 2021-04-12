@@ -154,6 +154,10 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
   function tilordneDokument(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
     dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
+  function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
+    debugger;
+    dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
+  }
 
   if (!klage.dokumenter) {
     return <NavFrontendSpinner />;
@@ -170,6 +174,7 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
               <DokumentRad>
                 <DokumentTittel>{item.tittel}</DokumentTittel>
                 <DokumentTema
+                  onClick={() => hentPreview(klage.id, item.journalpostId, item.dokumentInfoId)}
                   className={`etikett etikett--mw etikett--info etikett--${item.tema
                     .split(" ")[0]
                     .toLowerCase()}`}
