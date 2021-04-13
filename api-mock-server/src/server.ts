@@ -154,6 +154,18 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
   res.send(result);
 });
 
+app.get(
+  "/klagebehandlinger/:id/journalposter/:journalPostId/dokumenter/:dokumentInfoId",
+  async (req, res) => {
+    let fs = require("fs");
+    let path = require("path");
+    let data = fs.readFileSync(
+      path.resolve(__dirname, "../fixtures/testdocument.pdf")
+    );
+    res.send(data);
+  }
+);
+
 app.get("/ansatte/:id/klagebehandlinger", async (req, res) => {
   const result = await filtrerOppgaver({
     navIdent: req.params?.id,

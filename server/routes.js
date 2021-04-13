@@ -118,6 +118,10 @@ const setup = (authClient) => {
     }
   });
 
+  const onProxyRes = function (proxyRes, req, res) {
+    console.log(res);
+  };
+
   router.use(
     "/api",
     // cacheMiddleWare,
@@ -132,6 +136,7 @@ const setup = (authClient) => {
           error: "Kunne ikke koble til API. Reason: " + JSON.stringify(err),
         });
       },
+      onProxyRes,
       logLevel: "debug",
       changeOrigin: true,
     })
