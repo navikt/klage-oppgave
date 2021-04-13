@@ -124,7 +124,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
     <div className={`dokument-wrapper ${skjult ? "skjult" : ""}`}>
       <DokumentTabell settaktivtDokument={settaktivtDokument} />
       <div className={"preview"}>
-        <PDFDocument file={klage.currentPDF.data} />
+        <PDFDocument file={{ url: klage.currentPDF }} />
       </div>
     </div>
   );

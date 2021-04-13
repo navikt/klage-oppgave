@@ -1,6 +1,6 @@
 import { App } from "@tinyhttp/app";
 import { logger } from "@tinyhttp/logger";
-
+import { cors } from "@tinyhttp/cors";
 let bodyParser = require("body-parser");
 
 import {
@@ -12,6 +12,7 @@ import {
 import { OppgaveQuery } from "./types";
 
 const app = new App()
+  .use(cors({ origin: "*" }))
   .use(logger())
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }));

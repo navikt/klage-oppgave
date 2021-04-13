@@ -211,7 +211,7 @@ export const feiletHandling = createAction<string>("klagebehandling/FEILET");
 export const hentPreviewHandling = createAction<IDokumentPayload>(
   "klagebehandling/HENT_DOKUMENT_FORHANDSVISNING"
 );
-export const hentetPreviewHandling = createAction<ArrayBufferLike>(
+export const hentetPreviewHandling = createAction<string>(
   "klagebehandling/HENTET_DOKUMENT_FORHANDSVISNING"
 );
 
@@ -352,7 +352,7 @@ export function HentDokumentForhandsvisningEpos(
         .pipe(
           timeout(5000),
           map((response) => {
-            return hentetPreviewHandling(response.response);
+            return hentetPreviewHandling(response.xhr.responseURL);
           })
         )
         .pipe(

@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@tinyhttp/app": "^1.0.3",
+    "@tinyhttp/cors": "^1.2.5",
     "@tinyhttp/logger": "^1.0.3",
     "@types/cors": "^2.8.8",
     "@types/event-stream": "^3.3.34",
