@@ -351,14 +351,11 @@ export function HentDokumentForhandsvisningEpos(
       })
         .pipe(
           timeout(5000),
-          map(async (response) => {
-            return await fetch(response.xhr.responseURL).then((data) => data.arrayBuffer());
-          })
-        )
-        .pipe(
-          map((data) => {
-            console.debug("hentetPreviewHandling", data);
-            return hentetPreviewHandling(data as any);
+          map((response) => {
+            //let buf= fetch(response.xhr.responseURL).then((data) => data.arrayBuffer());
+            //console.debug({buf});
+            console.debug(response.response.data);
+            return hentetPreviewHandling("");
           })
         )
         .pipe(

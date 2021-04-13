@@ -15,7 +15,7 @@ import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
 import React, { useEffect, useRef, useState } from "react";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../domene/datofunksjoner";
-import { Document as PDFDocument } from "react-pdf";
+import { Document as PDFDocument } from "react-pdf/dist/esm/entry.webpack";
 import styled from "styled-components";
 import { useLoadItems } from "./utils";
 import { List, ListItem, Loading } from "./List";
@@ -90,15 +90,40 @@ const DokumentSjekkboks = styled.li`
   text-align: right;
 `;
 
+function str2ab(str: string) {
+  if (!str) return null;
+  var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+  var bufView = new Uint16Array(buf);
+  for (var i = 0, strLen = str.length; i < strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return buf;
+}
+function ab2str(buf: any) {
+  if (!buf) return null;
+
+  // @ts-ignore
+  return String.fromCharCode.apply(null, new Uint16Array(buf));
+}
+
 export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [aktivtDokument, settaktivtDokument] = useState(0);
   const klage: IKlage = useSelector(velgKlage);
+
+  const [pdf, setPdf] = useState(null);
+  useEffect(() => {
+    fetch(klage.currentPDF)
+      .then((data) => data.json())
+      .then((pdf) => {
+        setPdf(pdf);
+      });
+  });
 
   return (
     <div className={`dokument-wrapper ${skjult ? "skjult" : ""}`}>
       <DokumentTabell settaktivtDokument={settaktivtDokument} />
       <div className={"preview"}>
-        <PDFDocument file={klage.currentPDF} />
+        <PDFDocument file={pdf} />
       </div>
     </div>
   );
