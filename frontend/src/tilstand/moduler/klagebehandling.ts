@@ -177,8 +177,16 @@ export const klageSlice = createSlice({
       console.debug(action.payload);
       return state;
     },
-    DOKUMENT_FRADELT: (state, action: PayloadAction<any>) => {
+    DOKUMENT_FRADELT: (
+      state,
+      action: PayloadAction<{ journalpostId: string; dokumentInfoId: string; payload: any }>
+    ) => {
       console.debug(action.payload);
+      state.dokumenterTilordnede = state.dokumenterTilordnede.filter(
+        (dok: any) =>
+          dok.journalpostId !== action.payload.journalpostId &&
+          dok.dokumentInfoId !== action.payload.dokumentInfoId
+      );
       return state;
     },
     FEILET: (state, action: PayloadAction<string>) => {
@@ -228,9 +236,11 @@ export const tilordneDokumenterHandling = createAction<Partial<Partial<IDokument
 export const fradelDokumenterHandling = createAction<Partial<Partial<IDokumentPayload>>>(
   "klagebehandling/FRADEL_DOKUMENT"
 );
-export const fradeltDokumentHandling = createAction<Partial<any>>(
-  "klagebehandling/DOKUMENT_FRADELT"
-);
+export const fradeltDokumentHandling = createAction<{
+  journalpostId: string;
+  dokumentInfoId: string;
+  payload: any;
+}>("klagebehandling/DOKUMENT_FRADELT");
 export const tilordnetDokumentHandling = createAction<Partial<any>>(
   "klagebehandling/DOKUMENT_TILORDNET"
 );
@@ -341,8 +351,8 @@ export function HentDokumentForhandsvisningEpos(
       })
         .pipe(
           timeout(5000),
-          map((response) => {
-            return fetch(response.xhr.responseURL).then((data) => data.arrayBuffer());
+          map(async (response) => {
+            return await fetch(response.xhr.responseURL).then((data) => data.arrayBuffer());
           })
         )
         .pipe(
@@ -463,7 +473,13 @@ export function FradelKlageDokumentEpos(
       const url = `/api/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
       return ajaxDelete(url)
         .pipe(
-          map((payload: { response: IInnstillinger }) => fradeltDokumentHandling(payload.response))
+          map((payload: { response: IInnstillinger }) =>
+            fradeltDokumentHandling({
+              journalpostId: action.payload.journalpostId,
+              dokumentInfoId: action.payload.dokumentInfoId,
+              payload: payload.response,
+            })
+          )
         )
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 0 })),
