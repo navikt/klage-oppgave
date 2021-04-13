@@ -106,9 +106,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
         {`/api/klagebehandlinger/${klage.id}/journalposter/${journalpostId}/dokumenter/${dokumentInfoId}`}
         {aktivtDokument ? (
           <PDFDocument
-            file={{
-              url: `/api/klagebehandlinger/${klage.id}/journalposter/${journalpostId}/dokumenter/${dokumentInfoId}`,
-            }}
+            file={`/api/klagebehandlinger/${klage.id}/journalposter/${journalpostId}/dokumenter/${dokumentInfoId}`}
           />
         ) : null}
       </div>
