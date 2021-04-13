@@ -1,7 +1,7 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, of } from "rxjs";
+import { concat, Observable, of } from "rxjs";
 import {
   catchError,
   map,
@@ -12,7 +12,7 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { AjaxCreationMethod, ajaxGet } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { OppgaveParams, oppgaveRequest } from "./oppgave";
 import { IInnstillinger, sattInnstillinger, settInnstillingerHandling } from "./meg";
@@ -327,7 +327,7 @@ export function HentDokumentForhandsvisningEpos(
     mergeMap(([action, state]) => {
       let url = `/api/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
       return get(url, {
-        type: "text/plain",
+        responseType: "arraybuffer",
         contentType: "application/pdf",
       })
         .pipe(
