@@ -17,11 +17,13 @@ let morgan = require("morgan");
 const server = express();
 const port = config.server.port;
 
+/*
 const speedLimiter = slowDown({
   windowMs: 15 * 60 * 1000, // 15 minutes
   delayAfter: 100, // allow 100 requests per 15 minutes, then...
   delayMs: 500, // begin adding 500ms of delay per request above 100:
 });
+*/
 
 async function startApp() {
   try {
@@ -38,7 +40,7 @@ async function startApp() {
     );
     session.setup(server);
 
-    server.use(speedLimiter);
+    //server.use(speedLimiter);
 
     // setup sane defaults for CORS and HTTP headers
     server.use(
@@ -47,6 +49,8 @@ async function startApp() {
       })
     );
     server.use(cors);
+
+    morganBody(server);
 
     if (process.env.NODE_ENV === "production") {
       server.use(passport.initialize());
