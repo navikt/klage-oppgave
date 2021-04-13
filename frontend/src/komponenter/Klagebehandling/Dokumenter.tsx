@@ -1,6 +1,7 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
 
 import {
+  fradelDokumenterHandling,
   hentDokumentAlleHandling,
   hentDokumentTilordnedeHandling,
   hentPreviewHandling,
@@ -169,6 +170,10 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
     dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
 
+  function fradelDokument(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
+    dispatch(fradelDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
+  }
+
   function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
     dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
@@ -200,9 +205,13 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
                   <Sjekkboks
                     type={"checkbox"}
                     checked={sjekkErTilordnet(klage, item)}
-                    onClick={() =>
-                      tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId)
-                    }
+                    onClick={() => {
+                      if (sjekkErTilordnet(klage, item)) {
+                        return fradelDokument(klage.id, item.journalpostId, item.dokumentInfoId);
+                      } else {
+                        return tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId);
+                      }
+                    }}
                   />
                 </DokumentSjekkboks>
               </DokumentRad>

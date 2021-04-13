@@ -16,6 +16,7 @@ import token, { EXPIRE_EPICS } from "./moduler/token";
 const epics: Array<(
   $action: ActionsObservable<PayloadAction<any>>,
   $state: StateObservable<RootStateOrAny>,
+  ajaxDelete: AjaxCreationMethod,
   getJSON: AjaxCreationMethod,
   put: AjaxCreationMethod,
   post: AjaxCreationMethod

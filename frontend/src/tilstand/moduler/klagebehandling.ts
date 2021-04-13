@@ -12,9 +12,8 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { AjaxCreationMethod, ajaxGet } from "rxjs/internal-compatibility";
+import { AjaxCreationMethod, ajaxDelete } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
-import { OppgaveParams, oppgaveRequest } from "./oppgave";
 import { IInnstillinger, sattInnstillinger, settInnstillingerHandling } from "./meg";
 
 //==========
@@ -178,6 +177,10 @@ export const klageSlice = createSlice({
       console.debug(action.payload);
       return state;
     },
+    DOKUMENT_FRADELT: (state, action: PayloadAction<any>) => {
+      console.debug(action.payload);
+      return state;
+    },
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
       state.klageLastet = true;
@@ -221,6 +224,12 @@ export const hentDokumentTilordnedeHandling = createAction<Partial<IDokumentPara
 
 export const tilordneDokumenterHandling = createAction<Partial<Partial<IDokumentPayload>>>(
   "klagebehandling/TILORDNE_DOKUMENT"
+);
+export const fradelDokumenterHandling = createAction<Partial<Partial<IDokumentPayload>>>(
+  "klagebehandling/FRADEL_DOKUMENT"
+);
+export const fradeltDokumentHandling = createAction<Partial<any>>(
+  "klagebehandling/DOKUMENT_FRADELT"
 );
 export const tilordnetDokumentHandling = createAction<Partial<any>>(
   "klagebehandling/DOKUMENT_TILORDNET"
@@ -446,10 +455,45 @@ export function TilordneKlageDokumentEpos(
   );
 }
 
+export function FradelKlageDokumentEpos(
+  action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
+  state$: StateObservable<RootStateOrAny>
+) {
+  return action$.pipe(
+    ofType(fradelDokumenterHandling.type),
+    switchMap((action) => {
+      const url = `/api/klagebehandlinger/${action.payload.id}/dokumenter`;
+      return ajaxDelete(url, {
+        id: action.payload.id,
+        journalpostId: action.payload.journalpostId,
+        dokumentInfoId: action.payload.dokumentInfoId,
+      })
+        .pipe(
+          map((payload: { response: IInnstillinger }) => fradeltDokumentHandling(payload.response))
+        )
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 0 })),
+          catchError((error) => {
+            console.debug(error);
+            return concat([
+              feiletHandling(error.response.detail),
+              toasterSett({
+                display: true,
+                feilmelding: `Fradeling av dokument feilet: (${error.response.detail})`,
+              }),
+              toasterSkjul(),
+            ]);
+          })
+        );
+    })
+  );
+}
+
 export const KLAGEBEHANDLING_EPICS = [
   klagebehandlingEpos,
   klagebehandlingDokumenterTilordnedeEpos,
   klagebehandlingDokumenterAlleEpos,
   TilordneKlageDokumentEpos,
+  FradelKlageDokumentEpos,
   HentDokumentForhandsvisningEpos,
 ];
