@@ -460,7 +460,7 @@ export function FradelKlageDokumentEpos(
   return action$.pipe(
     ofType(fradelDokumenterHandling.type),
     switchMap((action) => {
-      const url = `/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
+      const url = `/api/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
       return ajaxDelete(url)
         .pipe(
           map((payload: { response: IInnstillinger }) => fradeltDokumentHandling(payload.response))

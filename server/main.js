@@ -8,7 +8,7 @@ let helmet = require("helmet");
 let passport = require("passport");
 let session = require("./session");
 let bodyParser = require("body-parser");
-let slowDown = require("express-slow-down");
+//let slowDown = require("express-slow-down");
 
 // for debugging during development
 let morganBody = require("morgan-body");

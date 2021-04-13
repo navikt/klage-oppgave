@@ -120,11 +120,11 @@ const setup = (authClient) => {
 
   const onProxyReq = function (proxyRes, req, res) {
     console.log("onProxyReq");
-    console.log(req);
+    console.log(req.originalUrl);
   };
   const onProxyRes = function (proxyRes, req, res) {
     console.log("onProxyRes");
-    console.log(res);
+    console.log(res.originalUrl);
   };
 
   router.use(
