@@ -200,7 +200,7 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
                   <Sjekkboks
                     type={"checkbox"}
                     checked={sjekkErTilordnet(klage, item)}
-                    onChange={() =>
+                    onClick={() =>
                       tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId)
                     }
                   />
