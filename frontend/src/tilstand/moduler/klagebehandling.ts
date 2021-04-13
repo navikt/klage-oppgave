@@ -355,7 +355,10 @@ export function HentDokumentForhandsvisningEpos(
             //let buf= fetch(response.xhr.responseURL).then((data) => data.arrayBuffer());
             //console.debug({buf});
             console.debug(response.response.data);
-            return hentetPreviewHandling("");
+            // @ts-ignore
+            return hentetPreviewHandling(
+              String.fromCharCode.apply(null, new Uint16Array(response.response.data))
+            );
           })
         )
         .pipe(

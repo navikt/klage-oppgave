@@ -15,7 +15,7 @@ import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
 import React, { useEffect, useRef, useState } from "react";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../domene/datofunksjoner";
-import { Document as PDFDocument } from "react-pdf/dist/esm/entry.webpack";
+import { Document as PDFDocument } from "react-pdf";
 import styled from "styled-components";
 import { useLoadItems } from "./utils";
 import { List, ListItem, Loading } from "./List";
@@ -112,18 +112,20 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
 
   const [pdf, setPdf] = useState(null);
   useEffect(() => {
-    fetch(klage.currentPDF)
+    /*fetch(klage.currentPDF)
       .then((data) => data.json())
       .then((pdf) => {
         setPdf(pdf);
       });
+    */
   });
 
   return (
     <div className={`dokument-wrapper ${skjult ? "skjult" : ""}`}>
       <DokumentTabell settaktivtDokument={settaktivtDokument} />
       <div className={"preview"}>
-        <PDFDocument file={pdf} />
+        {klage.currentPDF}
+        <PDFDocument file={str2ab(klage.currentPDF)} />
       </div>
     </div>
   );
