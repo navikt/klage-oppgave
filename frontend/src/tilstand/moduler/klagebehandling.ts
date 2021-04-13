@@ -211,7 +211,7 @@ export const feiletHandling = createAction<string>("klagebehandling/FEILET");
 export const hentPreviewHandling = createAction<IDokumentPayload>(
   "klagebehandling/HENT_DOKUMENT_FORHANDSVISNING"
 );
-export const hentetPreviewHandling = createAction<string>(
+export const hentetPreviewHandling = createAction<ArrayBufferLike>(
   "klagebehandling/HENTET_DOKUMENT_FORHANDSVISNING"
 );
 
@@ -352,23 +352,17 @@ export function HentDokumentForhandsvisningEpos(
         .pipe(
           timeout(5000),
           map((response) => {
-            //let buf= fetch(response.xhr.responseURL).then((data) => data.arrayBuffer());
-            //console.debug({buf});
-            console.debug(response.response.data);
-            // @ts-ignore
-            return hentetPreviewHandling(
-              String.fromCharCode.apply(null, new Uint16Array(response.response.data))
-            );
+            return hentetPreviewHandling(response.response);
           })
         )
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
             return concat([
-              feiletHandling(error.response.detail),
+              feiletHandling(error),
               toasterSett({
                 display: true,
-                feilmelding: `Henting av forhåndsvisningsdokument feilet: ${error.response.detail}`,
+                feilmelding: `Henting av forhåndsvisningsdokument feilet: ${error}`,
               }),
               toasterSkjul(),
             ]);
