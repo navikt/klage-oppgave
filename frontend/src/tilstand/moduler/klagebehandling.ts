@@ -342,9 +342,7 @@ export function HentDokumentForhandsvisningEpos(
         .pipe(
           timeout(5000),
           map((response) => {
-            console.debug("henter preview1");
-            console.debug(response);
-            return response;
+            return fetch(response.xhr.responseURL).then((data) => data);
           })
         )
         .pipe(
