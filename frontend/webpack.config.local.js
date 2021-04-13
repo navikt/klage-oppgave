@@ -61,18 +61,18 @@ module.exports = {
     contentBase: path.resolve(__dirname, "public"),
     hot: true,
     host: "0.0.0.0",
-    port: 8060,
+    port: 8061,
     historyApiFallback: true,
     proxy: {
       "/api": {
-        target: "http://apimock:3000",
+        target: "http://localhost:3000",
         pathRewrite: { "^/api": "" },
       },
       "/internal": {
-        target: "http://nodefront:8090",
+        target: "http://localhost:8090",
       },
       "/me": {
-        target: "http://apimock:3000",
+        target: "http://localhost:3000",
       },
     },
   },

@@ -9,6 +9,7 @@
     "build:html": "copyfiles -f ./public/index.html dist",
     "build": "npm run build:js && npm run build:html",
     "start": "env-cmd -f .env.development webpack-dev-server --config ./webpack.config.js --mode development",
+    "local": "env-cmd -f .env.development webpack-dev-server --config ./webpack.config.local.js --mode development",
     "test": "jest",
     "testcov": "jest --coverage --no-cache",
     "lint": "npx eslint src --ext .js,.jsx --color"

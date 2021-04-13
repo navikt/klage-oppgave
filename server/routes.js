@@ -150,7 +150,7 @@ const setup = (authClient) => {
       .sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
   });
 
-  router.get("/pdf.worker.js", (req, res) => {
+  router.get("/internal/pdf.worker.js", (req, res) => {
     return res
       .status(200)
       .sendFile(path.resolve(__dirname, "../frontend/dist/pdf.worker.js"));
