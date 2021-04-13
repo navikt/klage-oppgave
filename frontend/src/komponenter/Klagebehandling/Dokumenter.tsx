@@ -90,41 +90,27 @@ const DokumentSjekkboks = styled.li`
   text-align: right;
 `;
 
-function str2ab(str: string) {
-  if (!str) return null;
-  var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-  var bufView = new Uint16Array(buf);
-  for (var i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i);
-  }
-  return buf;
-}
-function ab2str(buf: any) {
-  if (!buf) return null;
-
-  // @ts-ignore
-  return String.fromCharCode.apply(null, new Uint16Array(buf));
-}
-
 export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [aktivtDokument, settaktivtDokument] = useState(0);
+  const [journalpostId, settjournalpostId] = useState(0);
+  const [dokumentInfoId, settdokumentInfoId] = useState(0);
   const klage: IKlage = useSelector(velgKlage);
-
-  const [pdf, setPdf] = useState(null);
-  useEffect(() => {
-    /*fetch(klage.currentPDF)
-      .then((data) => data.json())
-      .then((pdf) => {
-        setPdf(pdf);
-      });
-    */
-  });
-
   return (
     <div className={`dokument-wrapper ${skjult ? "skjult" : ""}`}>
-      <DokumentTabell settaktivtDokument={settaktivtDokument} />
+      <DokumentTabell
+        settaktivtDokument={settaktivtDokument}
+        settjournalpostId={settjournalpostId}
+        settdokumentInfoId={settdokumentInfoId}
+      />
       <div className={"preview"}>
-        <PDFDocument file={{ url: klage.currentPDF }} />
+        {`/api/klagebehandlinger/${klage.id}/journalposter/${journalpostId}/dokumenter/${dokumentInfoId}`}
+        {aktivtDokument ? (
+          <PDFDocument
+            file={{
+              url: `/api/klagebehandlinger/${klage.id}/journalposter/${journalpostId}/dokumenter/${dokumentInfoId}`,
+            }}
+          />
+        ) : null}
       </div>
     </div>
   );
@@ -150,7 +136,11 @@ function sjekkErTilordnet(klage: any, item: any): boolean {
   return false;
 }
 
-function DokumentTabell(props: { settaktivtDokument: Function }) {
+function DokumentTabell(props: {
+  settaktivtDokument: Function;
+  settdokumentInfoId: Function;
+  settjournalpostId: Function;
+}) {
   const klage: IKlage = useSelector(velgKlage);
   const dispatch = useDispatch();
   const { loading, hasNextPage, error, loadMore } = useLoadItems();
@@ -219,7 +209,11 @@ function DokumentTabell(props: { settaktivtDokument: Function }) {
               <DokumentRad>
                 <DokumentTittel>{item.tittel}</DokumentTittel>
                 <DokumentTema
-                  onClick={() => hentPreview(klage.id, item.journalpostId, item.dokumentInfoId)}
+                  onClick={() => {
+                    props.settdokumentInfoId(item.dokumentInfoId);
+                    props.settjournalpostId(item.journalpostId);
+                    return hentPreview(klage.id, item.journalpostId, item.dokumentInfoId);
+                  }}
                   className={`etikett etikett--mw etikett--info etikett--${item.tema
                     .split(" ")[0]
                     .toLowerCase()}`}
