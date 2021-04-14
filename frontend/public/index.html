@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="no"></html>
-<html>
+<html lang="no">
   <head>
     <meta charset="UTF-8" />
+    <base href="/" />
     <title>NAV Klage Oppgave</title>
     <style>
       html,
@@ -13,6 +13,7 @@
         width: 100%;
         overflow-x: hidden;
       }
+
       #app {
         display: flex;
         flex-flow: column;
@@ -21,6 +22,7 @@
   </head>
   <body>
     <div id="app"></div>
+    <script type="application/javascript" src="/pdf.worker.js"></script>
     <script type="application/javascript" src="/bundle.js"></script>
   </body>
 </html>

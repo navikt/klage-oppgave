@@ -15,6 +15,7 @@ import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod, ajaxDelete } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { IInnstillinger, sattInnstillinger, settInnstillingerHandling } from "./meg";
+import { SETT } from "./router";
 
 //==========
 // Interfaces
@@ -342,32 +343,9 @@ export function HentDokumentForhandsvisningEpos(
 ) {
   return action$.pipe(
     ofType(hentPreviewHandling.type),
-    withLatestFrom(state$),
-    mergeMap(([action, state]) => {
+    map((action) => {
       let url = `/api/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
-      return get(url, {
-        responseType: "arraybuffer",
-        contentType: "application/pdf",
-      })
-        .pipe(
-          timeout(5000),
-          map((response) => {
-            return hentetPreviewHandling(response.xhr.responseURL);
-          })
-        )
-        .pipe(
-          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
-          catchError((error) => {
-            return concat([
-              feiletHandling(error),
-              toasterSett({
-                display: true,
-                feilmelding: `Henting av forhåndsvisningsdokument feilet: ${error}`,
-              }),
-              toasterSkjul(),
-            ]);
-          })
-        );
+      return hentetPreviewHandling(url);
     })
   );
 }

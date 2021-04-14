@@ -146,14 +146,10 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
 });
 
 app.get(
-  "/klagebehandlinger/:id/journalposter/:journalPostId/dokumenter/:dokumentInfoId",
-  async (req, res) => {
-    let fs = require("fs");
+  "/klagebehandlinger/:id/journalposter/:journalPostId/dokumenter/:dokumentId",
+  (req, res) => {
     let path = require("path");
-    let data = fs.readFileSync(
-      path.resolve(__dirname, "../fixtures/testdocument.pdf")
-    );
-    res.send(data);
+    res.sendFile(path.resolve(__dirname, "../fixtures/testdocument.pdf"));
   }
 );
 

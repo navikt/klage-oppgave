@@ -1,5 +1,4 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
-
 import {
   fradelDokumenterHandling,
   hentDokumentAlleHandling,
@@ -15,10 +14,11 @@ import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
 import React, { useEffect, useRef, useState } from "react";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../domene/datofunksjoner";
-import { Document as PDFDocument } from "react-pdf";
 import styled from "styled-components";
 import { useLoadItems } from "./utils";
 import { List, ListItem, Loading } from "./List";
+
+import { Document, Page } from "react-pdf";
 
 const ListeContainer = styled.div`
   max-height: 500px;
@@ -95,6 +95,22 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [journalpostId, settjournalpostId] = useState(0);
   const [dokumentInfoId, settdokumentInfoId] = useState(0);
   const klage: IKlage = useSelector(velgKlage);
+  const [file, setFile] = useState(null);
+  const [numPages, setNumPages] = useState(0);
+
+  function onFileChange(event: any) {
+    setFile(event.target.files[0]);
+  }
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
+  }
+
+  const options = {
+    cMapUrl: "cmaps/",
+    cMapPacked: true,
+  };
+
   return (
     <div className={`dokument-wrapper ${skjult ? "skjult" : ""}`}>
       <DokumentTabell
@@ -103,12 +119,11 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
         settdokumentInfoId={settdokumentInfoId}
       />
       <div className={"preview"}>
-        {`/api/klagebehandlinger/${klage.id}/journalposter/${journalpostId}/dokumenter/${dokumentInfoId}`}
-        {aktivtDokument ? (
-          <PDFDocument
-            file={`/api/klagebehandlinger/${klage.id}/journalposter/${journalpostId}/dokumenter/${dokumentInfoId}`}
-          />
-        ) : null}
+        <Document file={klage.currentPDF} onLoadSuccess={onDocumentLoadSuccess} options={options}>
+          {Array.from(new Array(numPages), (el, index) => (
+            <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+          ))}
+        </Document>
       </div>
     </div>
   );
@@ -120,6 +135,11 @@ export interface Item {
   dokumentInfoId: string;
 }
 
+/*
+ <Document
+            file={`/api/klagebehandlinger/${klage.id}/journalposter/${journalpostId}/dokumenter/${dokumentInfoId}`}
+          />
+ */
 function sjekkErTilordnet(klage: any, item: any): boolean {
   if (!klage.dokumenterTilordnede) {
     return false;
@@ -188,7 +208,14 @@ function DokumentTabell(props: {
     dispatch(fradelDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
 
-  function hentPreview(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
+  function hentPreview(
+    behandlingId: string,
+    journalpostId: string,
+    dokumentInfoId: string,
+    props: any
+  ) {
+    props.settdokumentInfoId(dokumentInfoId);
+    props.settjournalpostId(journalpostId);
     dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
 
@@ -207,11 +234,9 @@ function DokumentTabell(props: {
               <DokumentRad>
                 <DokumentTittel>{item.tittel}</DokumentTittel>
                 <DokumentTema
-                  onClick={() => {
-                    props.settdokumentInfoId(item.dokumentInfoId);
-                    props.settjournalpostId(item.journalpostId);
-                    return hentPreview(klage.id, item.journalpostId, item.dokumentInfoId);
-                  }}
+                  onClick={() =>
+                    hentPreview(klage.id, item.journalpostId, item.dokumentInfoId, props)
+                  }
                   className={`etikett etikett--mw etikett--info etikett--${item.tema
                     .split(" ")[0]
                     .toLowerCase()}`}
@@ -223,7 +248,7 @@ function DokumentTabell(props: {
                   <Sjekkboks
                     type={"checkbox"}
                     checked={sjekkErTilordnet(klage, item)}
-                    onClick={() => {
+                    onChange={() => {
                       if (sjekkErTilordnet(klage, item)) {
                         return fradelDokument(klage.id, item.journalpostId, item.dokumentInfoId);
                       } else {

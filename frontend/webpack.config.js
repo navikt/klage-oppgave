@@ -3,7 +3,6 @@ const path = require("path");
 module.exports = {
   entry: {
     main: "./src/index.tsx",
-    "pdf.worker": "./node_modules/pdfjs-dist/es5/build/pdf.worker.entry.js",
   },
   module: {
     rules: [
@@ -16,6 +15,10 @@ module.exports = {
         test: /\.tsx?$/,
         loader: "ts-loader",
         exclude: /node_modules/,
+      },
+      {
+        test: /\.worker\.js$/,
+        use: { loader: "worker-loader" },
       },
       {
         test: /\.less$/,
