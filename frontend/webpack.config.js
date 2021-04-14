@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const CopyPlugin = require("copy-webpack-plugin");
 const path = require("path");
 module.exports = {
   entry: {
@@ -59,7 +60,17 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "node_modules/pdfjs-dist/build/pdf.worker.js",
+          to: "pdf.worker.js",
+        },
+      ],
+    }),
+  ],
   devServer: {
     contentBase: path.resolve(__dirname, "public"),
     hot: true,

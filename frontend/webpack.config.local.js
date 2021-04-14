@@ -1,9 +1,9 @@
 const webpack = require("webpack");
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   entry: {
     main: "./src/index.tsx",
-    "pdf.worker": "./node_modules/pdfjs-dist/es5/build/pdf.worker.entry.js",
   },
   module: {
     rules: [
@@ -56,7 +56,17 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "node_modules/pdfjs-dist/build/pdf.worker.js",
+          to: "pdf.worker.js",
+        },
+      ],
+    }),
+  ],
   devServer: {
     contentBase: path.resolve(__dirname, "public"),
     hot: true,
