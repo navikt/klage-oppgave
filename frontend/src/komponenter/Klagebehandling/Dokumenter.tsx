@@ -21,7 +21,7 @@ import { List, ListItem, Loading } from "./List";
 import { Document, Page } from "react-pdf";
 
 const ListeContainer = styled.div`
-  max-height: 500px;
+  max-height: 70vh;
   overflow: auto;
 `;
 
@@ -31,6 +31,7 @@ const DokumenterContainer = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
 `;
+
 const DokumenterTittel = styled.h1`
   padding: 0 0.5em;
   font-size: 24px;
@@ -90,6 +91,18 @@ const DokumentSjekkboks = styled.li`
   text-align: right;
 `;
 
+const PreviewContainer = styled.div`
+  display: ${(props) => props.theme.display};
+  margin: 0.25em;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  max-width: 40em;
+`;
+const Preview = styled.div`
+  height: 100%;
+`;
+
 export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [aktivtDokument, settaktivtDokument] = useState(0);
   const [journalpostId, settjournalpostId] = useState(0);
@@ -118,13 +131,15 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
         settjournalpostId={settjournalpostId}
         settdokumentInfoId={settdokumentInfoId}
       />
-      <div className={"preview"}>
-        <Document file={klage.currentPDF} onLoadSuccess={onDocumentLoadSuccess} options={options}>
-          {Array.from(new Array(numPages), (el, index) => (
-            <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-          ))}
-        </Document>
-      </div>
+      <PreviewContainer theme={{ display: klage.currentPDF ? "unset" : "none" }}>
+        <Preview>
+          <Document file={klage.currentPDF} onLoadSuccess={onDocumentLoadSuccess} options={options}>
+            {Array.from(new Array(numPages), (el, index) => (
+              <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+            ))}
+          </Document>
+        </Preview>
+      </PreviewContainer>
     </div>
   );
 }
