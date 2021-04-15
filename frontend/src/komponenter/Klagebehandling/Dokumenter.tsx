@@ -109,7 +109,7 @@ const Preview = styled.div`
 const PreviewTitle = styled.div`
   background: #cde7d8;
   display: flex;
-  padding: 1em;
+  padding: 1em 0 1em 0.5em;
   justify-content: space-between;
 `;
 const SVGIkon = styled.img`
@@ -330,7 +330,20 @@ function DokumentTabell(props: {
                 >
                   <TemaText>{item.tema}</TemaText>
                 </DokumentTema>
-                <DokumentDato className={"liten"}>{formattedDate(item.registrert)}</DokumentDato>
+                <DokumentDato
+                  onClick={() =>
+                    hentPreview({
+                      behandlingId: klage.id,
+                      journalpostId: item.journalpostId,
+                      dokumentInfoId: item.dokumentInfoId,
+                      dokumentTittel: item.tittel,
+                      props: props,
+                    })
+                  }
+                  className={"liten"}
+                >
+                  {formattedDate(item.registrert)}
+                </DokumentDato>
                 <DokumentSjekkboks>
                   <Sjekkboks
                     type={"checkbox"}
