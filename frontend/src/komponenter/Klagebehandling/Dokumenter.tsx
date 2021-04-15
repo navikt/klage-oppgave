@@ -19,6 +19,10 @@ import { useLoadItems } from "./utils";
 import { List, ListItem, Loading } from "./List";
 
 import { Document, Page } from "react-pdf";
+// @ts-ignore
+import CloseSVG from "../cancelblack.svg";
+// @ts-ignore
+import ExtLink from "../extlink.svg";
 
 const ListeContainer = styled.div`
   max-height: 70vh;
@@ -102,10 +106,26 @@ const PreviewContainer = styled.div`
 const Preview = styled.div`
   height: 100%;
 `;
+const PreviewTitle = styled.div`
+  background: #cde7d8;
+  display: flex;
+  padding: 1em;
+  justify-content: space-between;
+`;
+const SVGIkon = styled.img`
+  color: black;
+  margin: 0.25em 1em 0 0.2em;
+  -webkit-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
 
 export default function Dokumenter({ skjult }: { skjult: boolean }) {
-  const [aktivtDokument, settaktivtDokument] = useState(0);
+  const [aktivPDF, settAktivPDF] = useState(false);
   const [journalpostId, settjournalpostId] = useState(0);
+  const [dokumentTittel, settdokumentTittel] = useState("");
   const [dokumentInfoId, settdokumentInfoId] = useState(0);
   const klage: IKlage = useSelector(velgKlage);
   const [file, setFile] = useState(null);
@@ -127,12 +147,26 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
   return (
     <div className={`dokument-wrapper ${skjult ? "skjult" : ""}`}>
       <DokumentTabell
-        settaktivtDokument={settaktivtDokument}
+        settAktivPDF={settAktivPDF}
         settjournalpostId={settjournalpostId}
+        settdokumentTittel={settdokumentTittel}
         settdokumentInfoId={settdokumentInfoId}
       />
-      <PreviewContainer theme={{ display: klage.currentPDF ? "unset" : "none" }}>
+      <PreviewContainer theme={{ display: aktivPDF ? "unset" : "none" }}>
         <Preview>
+          <PreviewTitle>
+            {dokumentTittel}
+            <div>
+              <a href={klage.currentPDF} target={"_blank"}>
+                <SVGIkon alt="Ekstern lenke" src={ExtLink} />
+              </a>
+              <SVGIkon
+                alt="Lukk forhåndsvisning"
+                src={CloseSVG}
+                onClick={() => settAktivPDF(false)}
+              />
+            </div>
+          </PreviewTitle>
           <Document file={klage.currentPDF} onLoadSuccess={onDocumentLoadSuccess} options={options}>
             {Array.from(new Array(numPages), (el, index) => (
               <Page key={`page_${index + 1}`} pageNumber={index + 1} />
@@ -170,8 +204,9 @@ function sjekkErTilordnet(klage: any, item: any): boolean {
 }
 
 function DokumentTabell(props: {
-  settaktivtDokument: Function;
+  settAktivPDF: Function;
   settdokumentInfoId: Function;
+  settdokumentTittel: Function;
   settjournalpostId: Function;
 }) {
   const klage: IKlage = useSelector(velgKlage);
@@ -223,13 +258,22 @@ function DokumentTabell(props: {
     dispatch(fradelDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
 
-  function hentPreview(
-    behandlingId: string,
-    journalpostId: string,
-    dokumentInfoId: string,
-    props: any
-  ) {
+  function hentPreview({
+    behandlingId,
+    journalpostId,
+    dokumentTittel,
+    dokumentInfoId,
+    props,
+  }: {
+    behandlingId: string;
+    journalpostId: string;
+    dokumentTittel: string;
+    dokumentInfoId: string;
+    props: any;
+  }) {
+    props.settAktivPDF(true);
     props.settdokumentInfoId(dokumentInfoId);
+    props.settdokumentTittel(dokumentTittel);
     props.settjournalpostId(journalpostId);
     dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
@@ -249,14 +293,26 @@ function DokumentTabell(props: {
               <DokumentRad>
                 <DokumentTittel
                   onClick={() =>
-                    hentPreview(klage.id, item.journalpostId, item.dokumentInfoId, props)
+                    hentPreview({
+                      behandlingId: klage.id,
+                      journalpostId: item.journalpostId,
+                      dokumentInfoId: item.dokumentInfoId,
+                      dokumentTittel: item.tittel,
+                      props: props,
+                    })
                   }
                 >
                   {item.tittel}
                 </DokumentTittel>
                 <DokumentTema
                   onClick={() =>
-                    hentPreview(klage.id, item.journalpostId, item.dokumentInfoId, props)
+                    hentPreview({
+                      behandlingId: klage.id,
+                      journalpostId: item.journalpostId,
+                      dokumentInfoId: item.dokumentInfoId,
+                      dokumentTittel: item.tittel,
+                      props: props,
+                    })
                   }
                   className={`etikett etikett--mw etikett--info etikett--${item.tema
                     .split(" ")[0]
