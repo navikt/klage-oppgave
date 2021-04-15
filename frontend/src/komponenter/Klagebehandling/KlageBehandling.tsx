@@ -78,6 +78,19 @@ function Oppgave() {
   return <>Oppgave</>;
 }
 
+const FeilmeldingInformasjon = styled.div`
+  background-color: #f8f8f8;
+  display: flex;
+  height: 4em;
+  font-size: 1.1em;
+  justify-content: space-between;
+
+  &.rad {
+    margin-top: 1.5em;
+    padding: 0 0 0 1em;
+  }
+`;
+
 function ToggleKnapp({
   id,
   clickFn,
@@ -195,9 +208,12 @@ export default function Klagebehandling() {
   if (klage.klageLastet && klage.klageLastingFeilet) {
     return (
       <Oppsett visMeny={false}>
-        <div className="klagebehandling__informasjon" style={{ padding: "5em" }}>
-          Klage kunne ikke hentes...
-        </div>
+        <FeilmeldingInformasjon className="klagebehandling__informasjon" style={{ padding: "5em" }}>
+          <div>Klage kunne ikke hentes...</div>
+          <div>
+            <NavLink to={"/mineoppgaver"}>Tilbake til Mine Oppgaver</NavLink>
+          </div>
+        </FeilmeldingInformasjon>
       </Oppsett>
     );
   }
