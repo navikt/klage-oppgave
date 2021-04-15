@@ -247,7 +247,13 @@ function DokumentTabell(props: {
           {liste.map((item: any) => (
             <ListItem key={item.journalpostId + item.dokumentInfoId}>
               <DokumentRad>
-                <DokumentTittel>{item.tittel}</DokumentTittel>
+                <DokumentTittel
+                  onClick={() =>
+                    hentPreview(klage.id, item.journalpostId, item.dokumentInfoId, props)
+                  }
+                >
+                  {item.tittel}
+                </DokumentTittel>
                 <DokumentTema
                   onClick={() =>
                     hentPreview(klage.id, item.journalpostId, item.dokumentInfoId, props)
