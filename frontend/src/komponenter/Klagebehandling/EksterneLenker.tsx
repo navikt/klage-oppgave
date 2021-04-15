@@ -2,7 +2,7 @@ import { IKlageState } from "../klage-reducer";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 //@ts-ignore
-import ExtLink from "../extlink.svg";
+import ExtLink from "../extlinkblue.svg";
 import React from "react";
 import styled from "styled-components";
 

@@ -120,8 +120,18 @@ const SVGIkon = styled.img`
   &:hover {
     transform: scale(1.1);
   }
+  width: 1em;
+  height: 1em;
 `;
-
+const EksternalSVGIkon = styled.img`
+  color: black;
+  margin: 0.25em 1em 0 0.2em;
+  -webkit-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
 export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [aktivPDF, settAktivPDF] = useState(false);
   const [journalpostId, settjournalpostId] = useState(0);
@@ -158,7 +168,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
             {dokumentTittel}
             <div>
               <a href={klage.currentPDF} target={"_blank"}>
-                <SVGIkon alt="Ekstern lenke" src={ExtLink} />
+                <EksternalSVGIkon alt="Ekstern lenke" src={ExtLink} />
               </a>
               <SVGIkon
                 alt="Lukk forhåndsvisning"
