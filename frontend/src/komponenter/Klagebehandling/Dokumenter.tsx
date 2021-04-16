@@ -25,15 +25,38 @@ import CloseSVG from "../cancelblack.svg";
 import ExtLink from "../extlink.svg";
 
 const ListeContainer = styled.div`
+  display: ${(props) => props.theme.display};
   max-height: 70vh;
   overflow: auto;
 `;
+const TilknyttedeContainer = styled.div`
+  display: ${(props) => props.theme.display};
+`;
+const Tilknyttet = styled.div`
+  padding: 0.5em 1em;
+`;
+const TilknyttetDato = styled.div`
+  font-size: 12px;
+`;
+const TilknyttetTittel = styled.div`
+  font-size: 16px;
+  color: #0067c5;
+`;
 
+const DokumentContainer = styled.div`
+  display: ${(props) => props.theme.display};
+  grid-template-columns: 1fr 1fr 1fr;
+
+  &.skjult {
+    display: none;
+  }
+`;
 const DokumenterContainer = styled.div`
   margin: 0.25em;
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
+  width: ${(props) => props.theme.width};
 `;
 
 const DokumenterTittel = styled.h1`
@@ -43,12 +66,19 @@ const DokumenterTittel = styled.h1`
 `;
 
 const VisTilknyttedeKnapp = styled.button`
+  display: ${(props) => props.theme.display};
   margin: 0 0.75em;
   padding: 0.3em 0.55em;
   background: white;
   font-size: 0.9em;
   color: #0067c5;
   border: 1px solid #0067c5;
+  :hover {
+    background: #eee;
+  }
+  :click {
+    background: red;
+  }
 `;
 
 const Sjekkboks = styled.input`
@@ -155,7 +185,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
   };
 
   return (
-    <div className={`dokument-wrapper ${skjult ? "skjult" : ""}`}>
+    <DokumentContainer theme={{ display: !skjult ? "grid" : "none" }}>
       <DokumentTabell
         settAktivPDF={settAktivPDF}
         settjournalpostId={settjournalpostId}
@@ -184,7 +214,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
           </Document>
         </Preview>
       </PreviewContainer>
-    </div>
+    </DokumentContainer>
   );
 }
 
@@ -288,15 +318,57 @@ function DokumentTabell(props: {
     dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
 
+  const [visFullContainer, settvisFullContainer] = useState(true);
+
   if (!klage.dokumenter) {
     return <NavFrontendSpinner />;
   }
   return (
-    <DokumenterContainer>
+    <DokumenterContainer theme={{ width: visFullContainer ? "40em" : "15em" }}>
       <DokumenterTittel>Dokumenter</DokumenterTittel>
-      <VisTilknyttedeKnapp>Vis kun tilknyttede</VisTilknyttedeKnapp>
+      <VisTilknyttedeKnapp
+        theme={{ display: visFullContainer ? "unset" : "none" }}
+        onClick={() => {
+          settvisFullContainer(!visFullContainer);
+        }}
+      >
+        Vis kun tilknyttede
+      </VisTilknyttedeKnapp>
+      <VisTilknyttedeKnapp
+        theme={{ display: !visFullContainer ? "unset" : "none" }}
+        onClick={() => {
+          settvisFullContainer(!visFullContainer);
+        }}
+      >
+        Se alle dokumenter
+      </VisTilknyttedeKnapp>
 
-      <ListeContainer ref={rootRef}>
+      <TilknyttedeContainer theme={{ display: !visFullContainer ? "unset" : "none" }}>
+        {liste.map((item: any) => {
+          if (sjekkErTilordnet(klage, item)) {
+            return (
+              <Tilknyttet>
+                <TilknyttetDato>{formattedDate(item.registrert)}</TilknyttetDato>
+                <TilknyttetTittel
+                  onClick={() =>
+                    hentPreview({
+                      behandlingId: klage.id,
+                      journalpostId: item.journalpostId,
+                      dokumentInfoId: item.dokumentInfoId,
+                      dokumentTittel: item.tittel,
+                      props: props,
+                    })
+                  }
+                >
+                  {item.tittel}
+                </TilknyttetTittel>
+              </Tilknyttet>
+            );
+          }
+        })}
+      </TilknyttedeContainer>
+
+      <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "unset" : "none" }}>
         <List>
           {liste.map((item: any) => (
             <ListItem key={item.journalpostId + item.dokumentInfoId}>
