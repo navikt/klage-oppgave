@@ -126,8 +126,8 @@ function ToggleKnapp({
   faner: any;
 }) {
   return (
-    <label htmlFor="toggle" className="toggle-flex">
-      <div className="toggle-container" onClick={() => clickFn(id)}>
+    <label htmlFor="toggle" className="toggle-flex" onClick={() => clickFn(id)}>
+      <div className="toggle-container">
         <input
           type="checkbox"
           readOnly={true}
