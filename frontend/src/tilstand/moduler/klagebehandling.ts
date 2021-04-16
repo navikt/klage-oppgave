@@ -55,6 +55,7 @@ export interface IKlage {
   dokumenter?: any;
   dokumenterTilordnede?: any;
   currentPDF: string;
+  dokumenterOppdatert: string;
 }
 
 interface IKlagePayload {
@@ -108,6 +109,7 @@ export const klageSlice = createSlice({
     pageRefs: [null],
     hasMore: false,
     pageIdx: 0,
+    dokumenterOppdatert: "",
     hjemler: [],
     currentPDF: "",
   } as IKlage,
@@ -143,6 +145,7 @@ export const klageSlice = createSlice({
       const { historyNavigate } = action.payload;
       state.dokumenterAlleHentet = true;
       state.lasterDokumenter = false;
+      state.dokumenterOppdatert = new Date().getTime().toString();
 
       if (!state.pageRefs) {
         state.pageRefs = [];
@@ -175,14 +178,14 @@ export const klageSlice = createSlice({
       return state;
     },
     DOKUMENT_TILORDNET: (state, action: PayloadAction<any>) => {
-      console.debug(action.payload);
+      state.dokumenterOppdatert = new Date().getTime().toString();
       return state;
     },
     DOKUMENT_FRADELT: (
       state,
       action: PayloadAction<{ journalpostId: string; dokumentInfoId: string; payload: any }>
     ) => {
-      console.debug(action.payload);
+      state.dokumenterOppdatert = new Date().getTime().toString();
       state.dokumenterTilordnede = state.dokumenterTilordnede.filter(
         (dok: any) =>
           dok.journalpostId !== action.payload.journalpostId &&

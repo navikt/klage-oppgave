@@ -224,11 +224,6 @@ export interface Item {
   dokumentInfoId: string;
 }
 
-/*
- <Document
-            file={`/api/klagebehandlinger/${klage.id}/journalposter/${journalpostId}/dokumenter/${dokumentInfoId}`}
-          />
- */
 function sjekkErTilordnet(klage: any, item: any): boolean {
   if (!klage.dokumenterTilordnede) {
     return false;
@@ -297,6 +292,10 @@ function DokumentTabell(props: {
   function fradelDokument(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
     dispatch(fradelDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
+
+  useEffect(() => {
+    dispatch(hentDokumentTilordnedeHandling({ id: klage.id }));
+  }, [klage.dokumenterOppdatert]);
 
   function hentPreview({
     behandlingId,

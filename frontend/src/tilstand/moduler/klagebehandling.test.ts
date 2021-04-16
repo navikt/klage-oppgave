@@ -51,6 +51,7 @@ describe("Oppgave epos", () => {
           historyNavigate: false,
           hasMore: true,
           currentPDF: "",
+          dokumenterOppdatert: "",
           klageLastingFeilet: false,
           lasterDokumenter: false,
           klageLastet: false,
