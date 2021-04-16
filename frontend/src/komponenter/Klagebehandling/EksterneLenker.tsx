@@ -31,7 +31,7 @@ const Lenke2 = styled.a`
 `;
 const Ikon = styled.img`
   position: absolute;
-  margin: 0.35em 0 0 0.15em;
+  margin: 2px 0 0 0.15em;
 `;
 
 const Knapperad = styled.div`
@@ -40,6 +40,7 @@ const Knapperad = styled.div`
   margin: 0 0.5em 0 0;
   text-align: center;
   width: 7em;
+  white-space: nowrap;
 `;
 
 export default function EksterneLenker({
