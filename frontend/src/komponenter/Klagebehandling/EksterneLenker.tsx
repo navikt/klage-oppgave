@@ -8,12 +8,17 @@ import styled from "styled-components";
 
 const Knapper = styled.div`
   display: flex;
+  grid-area: Knapper;
   justify-content: space-between;
   border: 1px solid #e7e9e9;
   border-right: 0;
   border-bottom: 0;
   border-top: 0;
   padding: 1em;
+  @media screen and (max-width: 1400px) {
+    padding: 1em 0 0 0;
+    border: none;
+  }
 `;
 const Lenke = styled.a`
   margin: 0 0.25em 0 0.5em;
@@ -32,7 +37,9 @@ const Ikon = styled.img`
 const Knapperad = styled.div`
   display: block;
   width: 100%;
-  margin: 0 0.5em;
+  margin: 0 0.5em 0 0;
+  text-align: center;
+  width: 7em;
 `;
 
 export default function EksterneLenker({
@@ -67,7 +74,7 @@ export default function EksterneLenker({
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`/gosys/personoversikt/fnr=`}
         >
-          Vedtaksløsning og sak
+          Vedtaksløsning
         </Lenke>
         <Lenke2
           target="_blank"

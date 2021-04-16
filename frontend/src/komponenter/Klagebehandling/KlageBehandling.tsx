@@ -35,32 +35,55 @@ const IkonLukk = styled.img`
 `;
 
 const Kontrollpanel = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
   background: #f8f8f8;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-areas: "Person Toggles Toggles Knapper";
+
+  @media screen and (max-width: 1400px) {
+    grid-template-areas:
+      "Person Person Knapper Knapper"
+      "Toggles Toggles Toggles Toggles";
+  }
+
+  @media screen and (max-width: 950px) {
+    grid-template-areas:
+      "Person Knapper Knapper Knapper"
+      "Toggles Toggles Toggles Toggles";
+  }
 `;
 
 const Knapper = styled.div`
   display: flex;
+  grid-area: Toggles;
   justify-content: space-between;
+  max-width: 35em;
+  justify-self: center;
+  @media screen and (max-width: 1400px) {
+    justify-content: flex-start;
+    justify-self: flex-start;
+  }
 `;
 const Person = styled.div`
   border: 1px solid #e7e9e9;
   border-left: 0;
+  grid-area: Person;
   border-bottom: 0;
   border-top: 0;
-  display: flex;
-  flex-flow: row;
+  margin: 0.5em 1em;
+  white-space: nowrap;
   padding: 0.5em 1em;
+  @media screen and (max-width: 1400px) {
+    padding: 0.5em 0 0 0;
+    border: none;
+  }
 `;
-const Navn = styled.div`
-  display: inline-flex;
-  padding: 0.5em 0;
+const Navn = styled.span`
   font-weight: bold;
+  padding-right: 0.1em;
 `;
-const Personnummer = styled.div`
-  display: inline-flex;
-  padding: 0.5em 0;
+const Personnummer = styled.span`
+  padding-left: 0.1em;
 `;
 const SjekkboksLabel = styled.div`
   z-index: 5;
@@ -223,8 +246,9 @@ export default function Klagebehandling() {
       <>
         <Kontrollpanel>
           <Person>
-            <Navn>FORNAVN ETTERNAVN </Navn>
-            <Personnummer> / {klage.foedselsnummer}</Personnummer>
+            <Navn>FORNAVN ETTERNAVN</Navn>
+            <span>/</span>
+            <Personnummer>{klage.foedselsnummer}</Personnummer>
           </Person>
 
           <Knapper>
