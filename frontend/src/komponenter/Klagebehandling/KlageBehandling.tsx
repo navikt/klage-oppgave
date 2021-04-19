@@ -18,6 +18,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
+import Detaljer from "./Detaljer";
 
 const IkonHake = styled.img`
   position: absolute;
@@ -278,6 +279,7 @@ export default function Klagebehandling() {
         {showDebug && <Debug state={klage} />}
 
         <Dokumenter skjult={!faner.dokumenter.checked} />
+        <Detaljer skjult={!faner.detaljer.checked} />
       </>
     </Oppsett>
   );

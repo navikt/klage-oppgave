@@ -8,6 +8,16 @@ import { temaOversettelse } from "../../domene/forkortelser";
 
 // @ts-ignore
 import Kalender from "../../komponenter/kalender.svg";
+import styled from "styled-components";
+
+const KlageContainer = styled.div`
+  display: ${(props) => props.theme.display};
+  grid-template-columns: 1fr 1fr 1fr;
+
+  &.skjult {
+    display: none;
+  }
+`;
 
 function FraNavEnhet() {
   const klage: IKlage = useSelector(velgKlage);
@@ -212,12 +222,35 @@ function TyperTemaerOgHjemler() {
   );
 }
 
-export default function Klagen() {
+export default function Detaljer({ skjult }: { skjult: boolean }) {
   return (
-    <div className={"klage_og_detaljer"}>
-      <div className={"klagebehandling_grid"}>
-        <div className={"grid1"}>test</div>
+    <KlageContainer theme={{ display: !skjult ? "grid" : "none" }}>
+      <div className={"klage_og_detaljer"}>
+        <div className={"klage__boks xl"}>
+          <h1>Behandlingsdetaljer</h1>
+
+          <TyperTemaerOgHjemler />
+          <Datoer />
+          <FraNavEnhet />
+          <OversendtKA />
+        </div>
+
+        <div className={"klage__boks md"}>
+          <h1>Sjekkliste</h1>
+          <Sjekkliste />
+        </div>
+        <div className={"klage__boks md"}>
+          <h1>Utarbeide vedtak</h1>
+          <Utfall />
+          <HjemmelBasis />
+        </div>
+        <div className={"klage__boks md "}>
+          <h1>Dokumenter knyttet til klagen</h1>
+          <div className={"klagebehandling_grid"}>
+            <div className={"grid1"}></div>
+          </div>
+        </div>
       </div>
-    </div>
+    </KlageContainer>
   );
 }

@@ -67,7 +67,7 @@ const DokumenterTittel = styled.h1`
 
 const VisTilknyttedeKnapp = styled.button`
   display: ${(props) => props.theme.display};
-  margin: 0 0.75em;
+  margin: 0 0.75em 1em 0.75em;
   padding: 0.3em 0.55em;
   background: white;
   font-size: 0.9em;
