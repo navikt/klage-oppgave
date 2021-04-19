@@ -29,15 +29,19 @@ const ListeContainer = styled.div`
   max-height: 70vh;
   overflow: auto;
 `;
+
 const TilknyttedeContainer = styled.div`
   display: ${(props) => props.theme.display};
 `;
+
 const Tilknyttet = styled.div`
   padding: 0.5em 1em;
 `;
+
 const TilknyttetDato = styled.div`
   font-size: 12px;
 `;
+
 const TilknyttetTittel = styled.div`
   font-size: 16px;
   color: #0067c5;
@@ -367,7 +371,7 @@ function DokumentTabell(props: {
         })}
       </TilknyttedeContainer>
 
-      <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "unset" : "none" }}>
+      <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "block" : "none" }}>
         <List>
           {liste.map((item: any) => (
             <ListItem key={item.journalpostId + item.dokumentInfoId}>

@@ -38,6 +38,26 @@ async function hentOppgaver() {
   });
 }
 
+async function hentDokumenter(offset: number) {
+  const sqlite3 = require("sqlite3");
+  let db = new sqlite3.Database("./oppgaver.db");
+  let sql = `SELECT journalpostId, dokumentInfoId, tittel, tema, registrert, harTilgangTilArkivvariant, valgt FROM Dokumenter LIMIT ${offset},10`;
+  return new Promise((resolve, reject) => {
+    db.all(sql, (err: any, rad: any) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(rad);
+    });
+    db.close((err: { message: string }) => {
+      if (err) {
+        console.error(err.message);
+      }
+      console.log("Close the database connection.");
+    });
+  });
+}
+
 app.get("/kodeverk", (req, res) => {
   let data = require("fs")
     .readFileSync(
@@ -115,13 +135,10 @@ app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
     pageReference = null;
   }
 
-  let data = fs
-    .readFileSync(path.resolve(__dirname, "../fixtures/dokumenter.json"))
-    .toString("utf8");
-  let dokumenter = JSON.parse(data);
+  let data = await hentDokumenter(start);
   res.send({
     forrigeSide,
-    dokumenter: dokumenter.dokumenter.slice(start, 10 + start),
+    dokumenter: data,
     pageReference,
   });
 });

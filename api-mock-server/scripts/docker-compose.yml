@@ -4,7 +4,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    command: bash -c 'ruby genererOppgaver.rb oppgaver.db'
+    command: bash -c 'ruby genererOppgaver.rb oppgaver.db && ruby lagDokumenter.rb oppgaver.db'
     working_dir: /usr/app/
     volumes:
       - ./:/usr/app/
