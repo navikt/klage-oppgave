@@ -194,7 +194,7 @@ const EksternalSVGIkon = styled.img`
   }
 `;
 const PDFContainer = styled.div`
-  max-height: 100vh;
+  max-height: calc(100vh + 4em);
   min-height: 70vh;
   overflow: auto;
 
