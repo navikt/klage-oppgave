@@ -387,7 +387,7 @@ function DokumentTabell(props: {
                     })
                   }
                 >
-                  {item.tittel}
+                  {item.tittel} ({item.vedlegg.length} vedlegg)
                 </DokumentTittel>
                 <DokumentTema
                   onClick={() =>
@@ -432,6 +432,7 @@ function DokumentTabell(props: {
                     }}
                   />
                 </DokumentSjekkboks>
+                {item.vedlegg.length > 0 && <div>Vedlegg</div>}
               </DokumentRad>
             </ListItem>
           ))}

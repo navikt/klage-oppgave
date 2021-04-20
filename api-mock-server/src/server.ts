@@ -1,8 +1,6 @@
 import { App } from "@tinyhttp/app";
 import { logger } from "@tinyhttp/logger";
 import { cors } from "@tinyhttp/cors";
-let bodyParser = require("body-parser");
-
 import {
   filtrerOppgaver,
   fradelSaksbehandler,
@@ -10,6 +8,8 @@ import {
   tildelSaksbehandler,
 } from "./oppgaver";
 import { OppgaveQuery } from "./types";
+
+let bodyParser = require("body-parser");
 
 const app = new App()
   .use(cors({ origin: "*" }))
@@ -42,6 +42,42 @@ async function hentDokumenter(offset: number) {
   const sqlite3 = require("sqlite3");
   let db = new sqlite3.Database("./oppgaver.db");
   let sql = `SELECT journalpostId, dokumentInfoId, tittel, tema, registrert, harTilgangTilArkivvariant, valgt FROM Dokumenter LIMIT ${offset},10`;
+
+  let dokumenter = await new Promise((resolve, reject) => {
+    db.all(sql, (err: any, rad: any) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(rad);
+    });
+    db.close((err: { message: string }) => {
+      if (err) {
+        console.error(err.message);
+      }
+      console.log("Close the database connection.");
+    });
+  });
+  /*
+  // @ts-ignore
+  let dokMedVedlegg = await dokumenter.map(async (dok: any) => {
+    let vedlegg = await hentVedlegg();
+    return vedlegg;
+  });
+*/
+  let i = 0;
+  for (; i < 10; i++) {
+    // @ts-ignore
+    dokumenter[i].vedlegg = await hentVedlegg();
+  }
+
+  return dokumenter;
+}
+async function hentVedlegg() {
+  const sqlite3 = require("sqlite3");
+  let db = new sqlite3.Database("./oppgaver.db");
+  let limit = Math.floor(Math.random() * 2);
+  let sql = `SELECT dokumentInfoId, tittel,harTilgangTilArkivvariant, valgt FROM Vedlegg ORDER BY RANDOM() LIMIT ${limit}`;
+
   return new Promise((resolve, reject) => {
     db.all(sql, (err: any, rad: any) => {
       if (err) {
