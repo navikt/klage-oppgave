@@ -26,7 +26,8 @@ import ExtLink from "../extlink.svg";
 
 const ListeContainer = styled.div`
   display: ${(props) => props.theme.display};
-  max-height: 70vh;
+  max-height: 100vh;
+  min-height: 70vh;
   overflow: auto;
 `;
 
@@ -49,7 +50,7 @@ const TilknyttetTittel = styled.div`
 
 const DokumentContainer = styled.div`
   display: ${(props) => props.theme.display};
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: ${(props) => props.theme.dokumentgrid};
 
   &.skjult {
     display: none;
@@ -193,6 +194,10 @@ const EksternalSVGIkon = styled.img`
   }
 `;
 const PDFContainer = styled.div`
+  max-height: 100vh;
+  min-height: 70vh;
+  overflow: auto;
+
   .react-pdf {
     &__Document {
       display: flex;
@@ -230,12 +235,15 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
     cMapPacked: true,
   };
 
+  const [dokumentgrid, settDokumentgrid] = useState("1fr 1fr 1fr");
+
   return (
-    <DokumentContainer theme={{ display: !skjult ? "grid" : "none" }}>
+    <DokumentContainer theme={{ display: !skjult ? "grid" : "none", dokumentgrid }}>
       <DokumentTabell
         settAktivPDF={settAktivPDF}
         settjournalpostId={settjournalpostId}
         settdokumentTittel={settdokumentTittel}
+        settDokumentGrid={settDokumentgrid}
         settdokumentInfoId={settdokumentInfoId}
       />
       <PreviewContainer theme={{ display: aktivPDF ? "unset" : "none" }}>
@@ -255,8 +263,9 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
           </PreviewTitle>
           <Document file={klage.currentPDF} onLoadSuccess={onDocumentLoadSuccess} options={options}>
             <PDFContainer>
-              <Page key={`page_${1}`} pageNumber={1} />
-              {/*<Page key={`page_${index + 1}`} pageNumber={index + 1} />*/}
+              {Array.from(new Array(numPages), (el, index) => (
+                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+              ))}
             </PDFContainer>
           </Document>
         </Preview>
@@ -288,6 +297,7 @@ function DokumentTabell(props: {
   settAktivPDF: Function;
   settdokumentInfoId: Function;
   settdokumentTittel: Function;
+  settDokumentGrid: Function;
   settjournalpostId: Function;
 }) {
   const klage: IKlage = useSelector(velgKlage);
@@ -374,7 +384,8 @@ function DokumentTabell(props: {
       <VisTilknyttedeKnapp
         theme={{ display: visFullContainer ? "unset" : "none" }}
         onClick={() => {
-          settvisFullContainer(!visFullContainer);
+          settvisFullContainer(false);
+          props.settDokumentGrid("15.5em 1fr 1fr");
         }}
       >
         Vis kun tilknyttede
@@ -382,7 +393,8 @@ function DokumentTabell(props: {
       <VisTilknyttedeKnapp
         theme={{ display: !visFullContainer ? "unset" : "none" }}
         onClick={() => {
-          settvisFullContainer(!visFullContainer);
+          settvisFullContainer(true);
+          props.settDokumentGrid("1fr 1fr 1fr");
         }}
       >
         Se alle dokumenter
