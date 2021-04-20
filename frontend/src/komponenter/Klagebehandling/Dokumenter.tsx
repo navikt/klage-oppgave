@@ -51,14 +51,14 @@ const TilknyttetTittel = styled.div`
 const DokumentContainer = styled.div`
   display: ${(props) => props.theme.display};
   grid-template-columns: ${(props) => props.theme.dokumentgrid};
-
+  margin: 0 0.25em 0 0;
   &.skjult {
     display: none;
   }
 `;
 
 const DokumenterContainer = styled.div`
-  margin: 0.25em 0.1em 0.25em 0.25em;
+  margin: 0.25em 0.25em 0.25em 0.25em;
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
@@ -116,6 +116,7 @@ const DokumentTittel = styled.li`
 const DokumentTema = styled.li`
   width: 8em;
   grid-area: tema;
+  max-height: 2em;
 `;
 
 const TemaText = styled.div`
@@ -235,7 +236,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
     cMapPacked: true,
   };
 
-  const [dokumentgrid, settDokumentgrid] = useState("1fr 1fr 1fr");
+  const [dokumentgrid, settDokumentgrid] = useState("1fr 1fr 1fr 1fr");
 
   return (
     <DokumentContainer theme={{ display: !skjult ? "grid" : "none", dokumentgrid }}>
@@ -261,7 +262,12 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
               />
             </div>
           </PreviewTitle>
-          <Document file={klage.currentPDF} onLoadSuccess={onDocumentLoadSuccess} options={options}>
+          <Document
+            file={klage.currentPDF}
+            onLoadSuccess={onDocumentLoadSuccess}
+            options={options}
+            loading={<NavFrontendSpinner />}
+          >
             <PDFContainer>
               {Array.from(new Array(numPages), (el, index) => (
                 <Page key={`page_${index + 1}`} pageNumber={index + 1} />
@@ -385,7 +391,7 @@ function DokumentTabell(props: {
         theme={{ display: visFullContainer ? "unset" : "none" }}
         onClick={() => {
           settvisFullContainer(false);
-          props.settDokumentGrid("15.5em 1fr 1fr");
+          props.settDokumentGrid("15.5em 1fr 1fr 1fr");
         }}
       >
         Vis kun tilknyttede
@@ -394,7 +400,7 @@ function DokumentTabell(props: {
         theme={{ display: !visFullContainer ? "unset" : "none" }}
         onClick={() => {
           settvisFullContainer(true);
-          props.settDokumentGrid("1fr 1fr 1fr");
+          props.settDokumentGrid("1fr 1fr 1fr 1fr");
         }}
       >
         Se alle dokumenter
