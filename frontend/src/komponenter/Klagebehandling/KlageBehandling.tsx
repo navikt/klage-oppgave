@@ -35,6 +35,8 @@ const IkonLukk = styled.img`
   -webkit-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
 `;
+import FullfoerVedtak from "./FullfoerVedtak";
+import { File } from "forhandsvisningsfil";
 
 const Kontrollpanel = styled.div`
   display: grid;
@@ -105,10 +107,6 @@ const Personnummer = styled.span`
 const SjekkboksLabel = styled.div`
   z-index: 5;
 `;
-
-function UtarbeideVedtak() {
-  return <>Utarbeide Vedtak</>;
-}
 
 function KvalitetsVurdering() {
   return <>Kvalitetsvurdering</>;
@@ -200,6 +198,7 @@ export default function Klagebehandling() {
   const klage: IKlage = useSelector(velgKlage);
   const kodeverk = useSelector(velgKodeverk);
   const innstillinger = useSelector(velgInnstillinger);
+  const [files, setFiles] = useState<File[]>([]); // TODO
 
   const [kodeverkLaster, settKodeverkLaster] = useState<boolean>(true);
 
@@ -331,6 +330,7 @@ export default function Klagebehandling() {
         <Dokumenter skjult={!faner.dokumenter.checked} />
 
         <Behandlingsskjema skjult={!faner.detaljer.checked} />
+        <FullfoerVedtak files={[]} setFiles={setFiles} skjult={!faner.vedtak.checked} />
       </>
     </Oppsett>
   );

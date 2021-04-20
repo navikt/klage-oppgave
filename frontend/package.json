@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Webpack setup for frontendprosjekter",
   "main": "index.tsx",
+  "typings": "lib",
   "scripts": {
     "clean": "rimraf dist",
     "build:js": "webpack --config ./webpack.config.js --mode production",
