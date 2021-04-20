@@ -55,8 +55,9 @@ const DokumentContainer = styled.div`
     display: none;
   }
 `;
+
 const DokumenterContainer = styled.div`
-  margin: 0.25em;
+  margin: 0.25em 0.1em 0.25em 0.25em;
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
@@ -99,16 +100,21 @@ const DokumentRad = styled.ul`
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr 8em 3em;
+  grid-template-areas:
+    "tittel tema dato sjekkboks"
+    "vedlegg vedlegg vedlegg vedlegg";
   grid-template-rows: 1fr;
 `;
 
 const DokumentTittel = styled.li`
   color: #0067c5;
+  grid-area: tittel;
+  width: 11em;
 `;
 
 const DokumentTema = styled.li`
-  max-width: 8em;
+  width: 8em;
+  grid-area: tema;
 `;
 
 const TemaText = styled.div`
@@ -122,21 +128,41 @@ const DokumentDato = styled.li`
   max-width: 8em;
   text-align: center;
   font-size: 0.9em;
+  grid-area: dato;
 `;
 
 const DokumentSjekkboks = styled.li`
-  max-width: 2em;
+  width: 100%;
   text-align: right;
+  grid-area: sjekkboks;
 `;
 
+const VedleggContainer = styled.div`
+  grid-area: vedlegg;
+`;
+
+const VedleggRad = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const VedleggTittel = styled.li`
+  color: #0067c5;
+  margin: 0 0 0 2em;
+  min-width: 15em;
+`;
 const PreviewContainer = styled.div`
   display: ${(props) => props.theme.display};
-  margin: 0.25em;
+  margin: 0.25em 0;
   background: white;
   border-radius: 4px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   max-width: 40em;
 `;
+
 const Preview = styled.div`
   height: 100%;
 `;
@@ -166,6 +192,23 @@ const EksternalSVGIkon = styled.img`
     transform: scale(1.1);
   }
 `;
+const PDFContainer = styled.div`
+  .react-pdf {
+    &__Document {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__Page {
+      max-width: calc(~"100% - 1em");
+      canvas {
+        height: auto !important;
+      }
+    }
+  }
+`;
+
 export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [aktivPDF, settAktivPDF] = useState(false);
   const [journalpostId, settjournalpostId] = useState(0);
@@ -182,7 +225,6 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
   }
-
   const options = {
     cMapUrl: "cmaps/",
     cMapPacked: true,
@@ -212,9 +254,10 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
             </div>
           </PreviewTitle>
           <Document file={klage.currentPDF} onLoadSuccess={onDocumentLoadSuccess} options={options}>
-            {Array.from(new Array(numPages), (el, index) => (
-              <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-            ))}
+            <PDFContainer>
+              <Page key={`page_${1}`} pageNumber={1} />
+              {/*<Page key={`page_${index + 1}`} pageNumber={index + 1} />*/}
+            </PDFContainer>
           </Document>
         </Preview>
       </PreviewContainer>
@@ -228,13 +271,12 @@ export interface Item {
   dokumentInfoId: string;
 }
 
-function sjekkErTilordnet(klage: any, item: any): boolean {
+function sjekkErTilordnet(klage: any, journalpostId: string, dokumentInfoId: string): boolean {
   if (!klage.dokumenterTilordnede) {
     return false;
   }
   let res = klage.dokumenterTilordnede.filter(
-    (klage: any) =>
-      klage.journalpostId === item.journalpostId && klage.dokumentInfoId === item.dokumentInfoId
+    (klage: any) => klage.journalpostId === journalpostId && klage.dokumentInfoId === dokumentInfoId
   );
   if (res.length) {
     return true;
@@ -348,7 +390,7 @@ function DokumentTabell(props: {
 
       <TilknyttedeContainer theme={{ display: !visFullContainer ? "unset" : "none" }}>
         {liste.map((item: any) => {
-          if (sjekkErTilordnet(klage, item)) {
+          if (sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)) {
             return (
               <Tilknyttet>
                 <TilknyttetDato>{formattedDate(item.registrert)}</TilknyttetDato>
@@ -371,7 +413,7 @@ function DokumentTabell(props: {
         })}
       </TilknyttedeContainer>
 
-      <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "block" : "none" }}>
+      <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "grid" : "none" }}>
         <List>
           {liste.map((item: any) => (
             <ListItem key={item.journalpostId + item.dokumentInfoId}>
@@ -387,7 +429,7 @@ function DokumentTabell(props: {
                     })
                   }
                 >
-                  {item.tittel} ({item.vedlegg.length} vedlegg)
+                  {item.tittel}
                 </DokumentTittel>
                 <DokumentTema
                   onClick={() =>
@@ -422,9 +464,9 @@ function DokumentTabell(props: {
                 <DokumentSjekkboks>
                   <Sjekkboks
                     type={"checkbox"}
-                    checked={sjekkErTilordnet(klage, item)}
+                    checked={sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)}
                     onChange={() => {
-                      if (sjekkErTilordnet(klage, item)) {
+                      if (sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)) {
                         return fradelDokument(klage.id, item.journalpostId, item.dokumentInfoId);
                       } else {
                         return tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId);
@@ -432,7 +474,54 @@ function DokumentTabell(props: {
                     }}
                   />
                 </DokumentSjekkboks>
-                {item.vedlegg.length > 0 && <div>Vedlegg</div>}
+                {item.vedlegg.length > 0 && (
+                  <VedleggContainer>
+                    {item.vedlegg.map((vedlegg: any, idx: number) => (
+                      <VedleggRad key={`vedlegg-${idx}${item.dokumentInfoId}`}>
+                        <VedleggTittel
+                          onClick={() =>
+                            hentPreview({
+                              behandlingId: klage.id,
+                              journalpostId: item.journalpostId,
+                              dokumentInfoId: vedlegg.dokumentInfoId,
+                              dokumentTittel: vedlegg.tittel,
+                              props: props,
+                            })
+                          }
+                        >
+                          {vedlegg.tittel}
+                        </VedleggTittel>
+                        <DokumentSjekkboks>
+                          <Sjekkboks
+                            type={"checkbox"}
+                            checked={sjekkErTilordnet(
+                              klage,
+                              item.journalpostId,
+                              vedlegg.dokumentInfoId
+                            )}
+                            onChange={() => {
+                              if (
+                                sjekkErTilordnet(klage, item.journalpostId, vedlegg.dokumentInfoId)
+                              ) {
+                                return fradelDokument(
+                                  klage.id,
+                                  item.journalpostId,
+                                  vedlegg.dokumentInfoId
+                                );
+                              } else {
+                                return tilordneDokument(
+                                  klage.id,
+                                  item.journalpostId,
+                                  vedlegg.dokumentInfoId
+                                );
+                              }
+                            }}
+                          />
+                        </DokumentSjekkboks>
+                      </VedleggRad>
+                    ))}
+                  </VedleggContainer>
+                )}
               </DokumentRad>
             </ListItem>
           ))}

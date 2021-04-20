@@ -57,13 +57,7 @@ async function hentDokumenter(offset: number) {
       console.log("Close the database connection.");
     });
   });
-  /*
-  // @ts-ignore
-  let dokMedVedlegg = await dokumenter.map(async (dok: any) => {
-    let vedlegg = await hentVedlegg();
-    return vedlegg;
-  });
-*/
+
   let i = 0;
   for (; i < 10; i++) {
     // @ts-ignore
@@ -75,7 +69,7 @@ async function hentDokumenter(offset: number) {
 async function hentVedlegg() {
   const sqlite3 = require("sqlite3");
   let db = new sqlite3.Database("./oppgaver.db");
-  let limit = Math.floor(Math.random() * 2);
+  let limit = Math.floor(Math.random() * 4);
   let sql = `SELECT dokumentInfoId, tittel,harTilgangTilArkivvariant, valgt FROM Vedlegg ORDER BY RANDOM() LIMIT ${limit}`;
 
   return new Promise((resolve, reject) => {
