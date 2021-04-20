@@ -17,12 +17,31 @@ import { formattedDate } from "../../domene/datofunksjoner";
 import styled from "styled-components";
 import { useLoadItems } from "./utils";
 import { List, ListItem, Loading } from "./List";
+import "./sjekkboks.less";
 
 import { Document, Page } from "react-pdf";
 // @ts-ignore
 import CloseSVG from "../cancelblack.svg";
 // @ts-ignore
 import ExtLink from "../extlink.svg";
+
+export interface IDokument {
+  journalpostId: string;
+  dokumentInfoId: string;
+  tittel: string;
+  tema: string;
+  registrert: number;
+  harTilgangTilArkivvariant: boolean;
+  valgt: boolean;
+  vedlegg: Array<IVedlegg>;
+}
+
+export interface IVedlegg {
+  dokumentInfoId: string;
+  tittel: string;
+  harTilgangTilArkivvariant: boolean;
+  valgt: boolean;
+}
 
 const ListeContainer = styled.div`
   display: ${(props) => props.theme.display};
@@ -88,12 +107,12 @@ const VisTilknyttedeKnapp = styled.button`
 `;
 
 const Sjekkboks = styled.input`
-  width: 24px;
-  height: 24px;
-  margin: 0px 8px;
-  &:checked {
-    background-color: rgb(12, 94, 168);
-  }
+  display: none;
+`;
+
+const RightAlign = styled.div`
+  display: flex;
+  justify-content: right;
 `;
 
 const DokumentRad = styled.ul`
@@ -231,6 +250,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
   }
+
   const options = {
     cMapUrl: "cmaps/",
     cMapPacked: true,
@@ -310,7 +330,7 @@ function DokumentTabell(props: {
   const dispatch = useDispatch();
   const { loading, hasNextPage, error, loadMore } = useLoadItems();
 
-  const [liste, setListe] = React.useState<Item[]>([]);
+  const [liste, setListe] = React.useState<IDokument[]>([]);
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: klage.lasterDokumenter,
@@ -338,7 +358,7 @@ function DokumentTabell(props: {
   useEffect(() => {
     if (klage.dokumenter) {
       let startCursor = liste.length;
-      let newArray: Item[] = [];
+      let newArray: IDokument[] = [];
       let j = 0;
       for (let i = startCursor; i < startCursor + klage.dokumenter.length; i++) {
         newArray = [...newArray, klage.dokumenter[j++]];
@@ -433,7 +453,7 @@ function DokumentTabell(props: {
 
       <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "grid" : "none" }}>
         <List>
-          {liste.map((item: any) => (
+          {liste.map((item: IDokument) => (
             <ListItem key={item.journalpostId + item.dokumentInfoId}>
               <DokumentRad>
                 <DokumentTittel
@@ -442,7 +462,7 @@ function DokumentTabell(props: {
                       behandlingId: klage.id,
                       journalpostId: item.journalpostId,
                       dokumentInfoId: item.dokumentInfoId,
-                      dokumentTittel: item.tittel,
+                      dokumentTittel: item.tittel!,
                       props: props,
                     })
                   }
@@ -455,12 +475,12 @@ function DokumentTabell(props: {
                       behandlingId: klage.id,
                       journalpostId: item.journalpostId,
                       dokumentInfoId: item.dokumentInfoId,
-                      dokumentTittel: item.tittel,
+                      dokumentTittel: item.tittel!,
                       props: props,
                     })
                   }
-                  className={`etikett etikett--mw etikett--info etikett--${item.tema
-                    .split(" ")[0]
+                  className={`etikett etikett--mw etikett--info etikett--${item
+                    .tema!.split(" ")[0]
                     .toLowerCase()}`}
                 >
                   <TemaText>{item.tema}</TemaText>
@@ -471,7 +491,7 @@ function DokumentTabell(props: {
                       behandlingId: klage.id,
                       journalpostId: item.journalpostId,
                       dokumentInfoId: item.dokumentInfoId,
-                      dokumentTittel: item.tittel,
+                      dokumentTittel: item.tittel!,
                       props: props,
                     })
                   }
@@ -479,18 +499,31 @@ function DokumentTabell(props: {
                 >
                   {formattedDate(item.registrert)}
                 </DokumentDato>
+
                 <DokumentSjekkboks>
-                  <Sjekkboks
-                    type={"checkbox"}
-                    checked={sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)}
-                    onChange={() => {
-                      if (sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)) {
-                        return fradelDokument(klage.id, item.journalpostId, item.dokumentInfoId);
-                      } else {
-                        return tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId);
+                  <RightAlign>
+                    <Sjekkboks
+                      type={"checkbox"}
+                      id={item.journalpostId + item.dokumentInfoId}
+                      disabled={item.harTilgangTilArkivvariant}
+                      checked={
+                        item.valgt ??
+                        sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)
                       }
-                    }}
-                  />
+                      onChange={() => {
+                        if (sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)) {
+                          return fradelDokument(klage.id, item.journalpostId, item.dokumentInfoId);
+                        } else {
+                          return tilordneDokument(
+                            klage.id,
+                            item.journalpostId,
+                            item.dokumentInfoId
+                          );
+                        }
+                      }}
+                    />
+                    <label htmlFor={item.journalpostId + item.dokumentInfoId} />
+                  </RightAlign>
                 </DokumentSjekkboks>
                 {item.vedlegg.length > 0 && (
                   <VedleggContainer>
@@ -509,32 +542,41 @@ function DokumentTabell(props: {
                         >
                           {vedlegg.tittel}
                         </VedleggTittel>
+
                         <DokumentSjekkboks>
-                          <Sjekkboks
-                            type={"checkbox"}
-                            checked={sjekkErTilordnet(
-                              klage,
-                              item.journalpostId,
-                              vedlegg.dokumentInfoId
-                            )}
-                            onChange={() => {
-                              if (
+                          <RightAlign>
+                            <Sjekkboks
+                              id={idx + item.dokumentInfoId}
+                              type={"checkbox"}
+                              checked={
+                                item.valgt ??
                                 sjekkErTilordnet(klage, item.journalpostId, vedlegg.dokumentInfoId)
-                              ) {
-                                return fradelDokument(
-                                  klage.id,
-                                  item.journalpostId,
-                                  vedlegg.dokumentInfoId
-                                );
-                              } else {
-                                return tilordneDokument(
-                                  klage.id,
-                                  item.journalpostId,
-                                  vedlegg.dokumentInfoId
-                                );
                               }
-                            }}
-                          />
+                              disabled={item.harTilgangTilArkivvariant}
+                              onChange={() => {
+                                if (
+                                  sjekkErTilordnet(
+                                    klage,
+                                    item.journalpostId,
+                                    vedlegg.dokumentInfoId
+                                  )
+                                ) {
+                                  return fradelDokument(
+                                    klage.id,
+                                    item.journalpostId,
+                                    vedlegg.dokumentInfoId
+                                  );
+                                } else {
+                                  return tilordneDokument(
+                                    klage.id,
+                                    item.journalpostId,
+                                    vedlegg.dokumentInfoId
+                                  );
+                                }
+                              }}
+                            />
+                            <label htmlFor={idx + item.dokumentInfoId} />
+                          </RightAlign>
                         </DokumentSjekkboks>
                       </VedleggRad>
                     ))}

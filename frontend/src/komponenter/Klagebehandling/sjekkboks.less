@@ -1,0 +1,37 @@
+input[type="checkbox"] {
+  display: none;
+}
+
+label:before {
+  border: 1px solid #0067c5;
+  height: 16px;
+  width: 16px;
+  display: block;
+  cursor: pointer;
+  border-radius: 0.25em;
+}
+input[type="checkbox"] + label:before {
+  content: "";
+  background: #fff;
+  color: white;
+  font-size: 14px;
+  line-height: 11px;
+  text-align: center;
+}
+input[type="checkbox"]:checked + label:before {
+  content: "";
+  background: #0067c5;
+  color: white;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+}
+input[type="checkbox"]:disabled + label:before {
+  color: white;
+  border-color: #111;
+  background: #555;
+}
+
+input[type="checkbox"]:checked + label:before {
+  content: "✓";
+}
