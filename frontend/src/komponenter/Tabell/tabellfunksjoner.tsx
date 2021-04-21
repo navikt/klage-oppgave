@@ -127,21 +127,10 @@ const OppgaveTabellRad = ({
               {" "}
               {person?.fnr || "<mangler>"}
             </NavLink>
-            <a
-              target="_blank"
-              aria-label={"Ekstern lenke til Gosys for denne personen"}
-              href={`${gosysEnvironment(window.location.hostname)}/gosys/personoversikt/fnr=${
-                person?.fnr
-              }`}
-              className="gosys-lenke"
-            >
-              GS <img alt="Ekstern lenke" src={PilOppHoeyre} />
-            </a>
           </div>
         </td>
       )}
       <td>{formattedDate(frist as number)}</td>
-      <td>{formattedDate(mottatt as number)}</td>
       {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave}
       {location.pathname.startsWith("/mineoppgaver") && curriedVisHandlinger}
     </tr>

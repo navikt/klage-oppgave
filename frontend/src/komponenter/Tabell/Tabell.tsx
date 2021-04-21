@@ -500,20 +500,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
               </div>
             </th>
 
-            <th
-              role="columnheader"
-              aria-sort={sorteringFrist === "stigende" ? "ascending" : "descending"}
-            >
-              <div
-                className={`sortHeader larger ${
-                  filter_state.transformasjoner.sortering.type === "mottatt" ? "" : "inaktiv"
-                } 
-                            ${sorteringMottatt === "stigende" ? "ascending" : "descending"}`}
-                onClick={skiftSorteringMottatt}
-              >
-                Mottatt
-              </div>
-            </th>
             <th />
           </tr>
         </thead>
@@ -524,7 +510,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
             filter_state?.projeksjon || visFnr
           )}
           <tr>
-            <td colSpan={visFnr ? 9 : 7}>
+            <td colSpan={visFnr ? 8 : 6}>
               <div className="table-lbl">
                 <div className="antall-saker">{visAntallTreff(klagebehandlinger)}</div>
                 <div className={"paginering"}>
@@ -539,9 +525,11 @@ const OppgaveTabell: React.FunctionComponent = () => {
           </tr>
         </tbody>
       </table>
-      <div style={{ margin: "1em 2em" }}>
-        Antall oppgaver med utgåtte frister: {klagebehandlinger.meta.utgaatteFrister}
-      </div>
+      {location.pathname.startsWith("/oppgaver") ? (
+        <div style={{ margin: "1em 2em" }}>
+          Antall oppgaver med utgåtte frister: {klagebehandlinger.meta.utgaatteFrister}
+        </div>
+      ) : null}
     </>
   );
 };
