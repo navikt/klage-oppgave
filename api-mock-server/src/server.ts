@@ -234,14 +234,14 @@ app.get("/ansatte/:id/enheter", async (req, res) => {
 app.get("/featuretoggle/:feature", (req, res) => {
   if (req.params?.feature === "klage.generellTilgang")
     res.status(200).send("true");
-  else res.status(500).send("false");
+  else res.status(200).send("false");
 });
 
 app.get("/aapenfeaturetoggle/:feature", (req, res) => {
   console.log(req.params?.feature);
   if (req.params?.feature === "klage.generellTilgang")
     res.status(200).send("true");
-  else res.status(500).send("false");
+  else res.status(200).send("false");
 });
 
 app.post(

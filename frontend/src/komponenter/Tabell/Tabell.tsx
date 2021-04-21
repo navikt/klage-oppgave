@@ -129,8 +129,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
   useEffect(() => {
     const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.listFnr");
     if (tilgangEnabled?.isEnabled !== undefined) {
-      settVisFnr(tilgangEnabled.isEnabled);
-      filter_dispatch({ type: "sett_projeksjon", payload: tilgangEnabled.isEnabled });
+      if (!location.pathname.startsWith("/mineoppgaver")) {
+        settVisFnr(tilgangEnabled.isEnabled);
+        filter_dispatch({ type: "sett_projeksjon", payload: tilgangEnabled.isEnabled });
+      }
     }
   }, [featureToggles]);
 
