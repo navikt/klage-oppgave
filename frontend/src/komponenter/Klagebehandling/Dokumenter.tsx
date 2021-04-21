@@ -58,7 +58,7 @@ const DokumenterContainer = styled.div`
 
 const ListeContainer = styled.div`
   display: ${(props) => props.theme.display};
-  height: calc(100% - 4.5em);
+  height: 100%;
   overflow: auto;
 `;
 
@@ -94,6 +94,13 @@ const DokumentContainer = styled.div`
   &.skjult {
     display: none;
   }
+`;
+
+const DokumenterNav = styled.div`
+  position: sticky;
+  z-index: 10;
+  background: white;
+  top: 0;
 `;
 
 const DokumenterTittel = styled.h1`
@@ -450,27 +457,28 @@ function DokumentTabell(props: {
   }
   return (
     <DokumenterContainer theme={{ width: visFullContainer ? "40em" : "15em" }}>
-      <DokumenterTittel>Dokumenter</DokumenterTittel>
-      <VisTilknyttedeKnapp
-        theme={{ display: visFullContainer ? "unset" : "none" }}
-        onClick={() => {
-          settvisFullContainer(false);
-          props.settDokumentGrid("15.5em 1fr 1fr 1fr");
-        }}
-      >
-        Vis kun tilknyttede
-      </VisTilknyttedeKnapp>
-      <VisTilknyttedeKnapp
-        theme={{ display: !visFullContainer ? "unset" : "none" }}
-        onClick={() => {
-          settvisFullContainer(true);
-          props.settDokumentGrid("1fr 1fr 1fr 1fr");
-        }}
-      >
-        Se alle dokumenter
-      </VisTilknyttedeKnapp>
-
       <TilknyttedeContainer theme={{ display: !visFullContainer ? "unset" : "none" }}>
+        <DokumenterNav>
+          <DokumenterTittel>Dokumenter</DokumenterTittel>
+          <VisTilknyttedeKnapp
+            theme={{ display: visFullContainer ? "unset" : "none" }}
+            onClick={() => {
+              settvisFullContainer(false);
+              props.settDokumentGrid("15.5em 1fr 1fr 1fr");
+            }}
+          >
+            Vis kun tilknyttede
+          </VisTilknyttedeKnapp>
+          <VisTilknyttedeKnapp
+            theme={{ display: !visFullContainer ? "unset" : "none" }}
+            onClick={() => {
+              settvisFullContainer(true);
+              props.settDokumentGrid("1fr 1fr 1fr 1fr");
+            }}
+          >
+            Se alle dokumenter
+          </VisTilknyttedeKnapp>
+        </DokumenterNav>
         {liste.map((item: any) => {
           if (sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)) {
             return (
@@ -496,6 +504,27 @@ function DokumentTabell(props: {
       </TilknyttedeContainer>
 
       <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "grid" : "none" }}>
+        <DokumenterNav>
+          <DokumenterTittel>Dokumenter</DokumenterTittel>
+          <VisTilknyttedeKnapp
+            theme={{ display: visFullContainer ? "unset" : "none" }}
+            onClick={() => {
+              settvisFullContainer(false);
+              props.settDokumentGrid("15.5em 1fr 1fr 1fr");
+            }}
+          >
+            Vis kun tilknyttede
+          </VisTilknyttedeKnapp>
+          <VisTilknyttedeKnapp
+            theme={{ display: !visFullContainer ? "unset" : "none" }}
+            onClick={() => {
+              settvisFullContainer(true);
+              props.settDokumentGrid("1fr 1fr 1fr 1fr");
+            }}
+          >
+            Se alle dokumenter
+          </VisTilknyttedeKnapp>
+        </DokumenterNav>
         <List>
           {liste.map((item: IDokument) => (
             <ListItem key={item.journalpostId + item.dokumentInfoId}>
