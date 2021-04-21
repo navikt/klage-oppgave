@@ -113,6 +113,7 @@ const Sjekkboks = styled.input`
 const RightAlign = styled.div`
   display: flex;
   justify-content: right;
+  float: right; //for safari
 `;
 
 const DokumentRad = styled.ul`
@@ -217,6 +218,7 @@ const PDFContainer = styled.div`
   max-height: calc(100vh + 4em);
   min-height: 70vh;
   overflow: auto;
+  overflow-x: hidden; // for safari
 
   .react-pdf {
     &__Document {
@@ -304,6 +306,19 @@ export interface Item {
   id: string;
   journalpostId: string;
   dokumentInfoId: string;
+}
+
+function itemClicked(
+  journalpostId: string,
+  dokumentInfoId: string,
+  items: Array<Partial<IDokument>>
+) {
+  return (
+    items.filter(
+      (it: Partial<IDokument>) =>
+        it.journalpostId === journalpostId && it.dokumentInfoId === dokumentInfoId
+    ).length > 0
+  );
 }
 
 function sjekkErTilordnet(klage: any, journalpostId: string, dokumentInfoId: string): boolean {
@@ -400,6 +415,12 @@ function DokumentTabell(props: {
   }
 
   const [visFullContainer, settvisFullContainer] = useState(true);
+
+  const [clickedItems, setclickedItems] = useState<Array<IDokument>>([]);
+
+  useEffect(() => {
+    console.debug(clickedItems);
+  }, [clickedItems]);
 
   if (!klage.dokumenter) {
     return <NavFrontendSpinner />;
@@ -507,22 +528,34 @@ function DokumentTabell(props: {
                       id={item.journalpostId + item.dokumentInfoId}
                       disabled={item.harTilgangTilArkivvariant}
                       checked={
+                        itemClicked(item.journalpostId, item.dokumentInfoId, clickedItems) ??
                         item.valgt ??
                         sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)
                       }
-                      onChange={() => {
-                        if (sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)) {
-                          return fradelDokument(klage.id, item.journalpostId, item.dokumentInfoId);
-                        } else {
-                          return tilordneDokument(
-                            klage.id,
-                            item.journalpostId,
-                            item.dokumentInfoId
-                          );
-                        }
+                      onChange={(e: any) => {
+                        console.debug("changed", e);
                       }}
                     />
-                    <label htmlFor={item.journalpostId + item.dokumentInfoId} />
+                    <label
+                      onClick={() => {
+                        if (itemClicked(item.journalpostId, item.dokumentInfoId, clickedItems))
+                          setclickedItems(
+                            clickedItems.filter(
+                              (it: Partial<IDokument>) =>
+                                it.journalpostId !== item.journalpostId &&
+                                it.dokumentInfoId !== item.dokumentInfoId
+                            )
+                          );
+                        else setclickedItems(clickedItems.concat([item]));
+
+                        if (item.valgt) {
+                          fradelDokument(klage.id, item.journalpostId, item.dokumentInfoId);
+                        } else {
+                          tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId);
+                        }
+                      }}
+                      htmlFor={item.journalpostId + item.dokumentInfoId}
+                    />
                   </RightAlign>
                 </DokumentSjekkboks>
                 {item.vedlegg.length > 0 && (

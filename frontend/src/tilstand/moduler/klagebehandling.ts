@@ -282,10 +282,10 @@ export function klagebehandlingEpos(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
             return concat([
-              feiletHandling(error.response.detail),
+              feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
                 display: true,
-                feilmelding: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error.response.detail}`,
+                feilmelding: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error?.response?.detail}`,
               }),
               toasterSkjul(),
             ]);
@@ -326,10 +326,10 @@ export function klagebehandlingDokumenterAlleEpos(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
           catchError((error) => {
             return concat([
-              feiletHandling(error.response.detail),
+              feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
                 display: true,
-                feilmelding: `Henting av dokumenter feilet: ${error.response.detail}`,
+                feilmelding: `Henting av dokumenter feilet: ${error?.response?.detail}`,
               }),
               toasterSkjul(),
             ]);
@@ -425,10 +425,10 @@ export function TilordneKlageDokumentEpos(
           catchError((error) => {
             console.debug(error);
             return concat([
-              feiletHandling(error.response.detail),
+              feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
                 display: true,
-                feilmelding: `Tilordning av dokument feilet: (${error.response.detail})`,
+                feilmelding: `Tilordning av dokument feilet: (${error?.response?.detail})`,
               }),
               toasterSkjul(),
             ]);
@@ -461,10 +461,10 @@ export function FradelKlageDokumentEpos(
           catchError((error) => {
             console.debug(error);
             return concat([
-              feiletHandling(error.response.detail),
+              feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
                 display: true,
-                feilmelding: `Fradeling av dokument feilet: (${error.response.detail})`,
+                feilmelding: `Fradeling av dokument feilet: (${error?.response?.detail ?? error})`,
               }),
               toasterSkjul(),
             ]);
