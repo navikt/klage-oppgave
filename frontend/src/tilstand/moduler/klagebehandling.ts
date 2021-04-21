@@ -41,7 +41,7 @@ export interface IKlage {
   mottattFoersteinstans: string;
   foedselsnummer: string;
   tema: string;
-  sakstype: string;
+  type: string;
   mottatt: string;
   startet?: string;
   avsluttet?: string;
@@ -98,7 +98,7 @@ export const klageSlice = createSlice({
     mottattFoersteinstans: "",
     foedselsnummer: "",
     tema: "",
-    sakstype: "",
+    type: "",
     mottatt: "",
     startet: undefined,
     avsluttet: undefined,

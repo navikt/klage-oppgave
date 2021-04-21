@@ -66,6 +66,7 @@ async function hentDokumenter(offset: number) {
 
   return dokumenter;
 }
+
 async function hentVedlegg() {
   const sqlite3 = require("sqlite3");
   let db = new sqlite3.Database("./oppgaver.db");
@@ -106,7 +107,7 @@ app.get("/klagebehandlinger/:id/detaljer", async (req, res) => {
     mottattFoersteinstans: "2021-02-02",
     foedselsnummer: "27458422236",
     tema: "SYK",
-    sakstype: "Klage",
+    type: "Klage",
     mottatt: "2021-03-25",
     startet: "2021-03-25",
     avsluttet: null,
@@ -231,11 +232,16 @@ app.get("/ansatte/:id/enheter", async (req, res) => {
 });
 
 app.get("/featuretoggle/:feature", (req, res) => {
-  res.status(200).send("true");
+  if (req.params?.feature === "klage.generellTilgang")
+    res.status(200).send("true");
+  else res.status(500).send("false");
 });
 
 app.get("/aapenfeaturetoggle/:feature", (req, res) => {
-  res.status(200).send("true");
+  console.log(req.params?.feature);
+  if (req.params?.feature === "klage.generellTilgang")
+    res.status(200).send("true");
+  else res.status(500).send("false");
 });
 
 app.post(

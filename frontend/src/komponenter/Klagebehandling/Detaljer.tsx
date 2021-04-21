@@ -191,7 +191,7 @@ function TyperTemaerOgHjemler() {
         Type:
         <ul className={"detaljliste"}>
           <li>
-            <div className={"etikett etikett--type"}>{klage.sakstype}</div>
+            <div className={"etikett etikett--type"}>{klage.type}</div>
           </li>
         </ul>
       </div>

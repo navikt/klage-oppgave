@@ -262,6 +262,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   useEffect(() => {
     if (meg.id) {
       if (location.pathname.startsWith("/mineoppgaver") && !filter_state.tildeltSaksbehandler) {
+        settVisFnr(true);
         filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: meg.id });
       } else if (!location.pathname.startsWith("/mineoppgaver")) {
         filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: undefined });

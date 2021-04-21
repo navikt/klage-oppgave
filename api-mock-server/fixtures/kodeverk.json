@@ -63,7 +63,7 @@
       "beskrivelse": "Saken handler ikke om trygdemedisinske vurderinger"
     }
   ],
-  "sakstype": [
+  "type": [
     { "id": "ae0058", "navn": "Klage", "beskrivelse": null },
     { "id": "ae0046", "navn": "Anke", "beskrivelse": null },
     { "id": "ae0047", "navn": "Gjenopptak", "beskrivelse": null },

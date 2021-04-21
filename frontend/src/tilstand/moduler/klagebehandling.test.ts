@@ -43,7 +43,7 @@ describe("Oppgave epos", () => {
           mottattFoersteinstans: "2019-08-22",
           foedselsnummer: "29125639036",
           tema: "SYK",
-          sakstype: "Klage",
+          type: "Klage",
           mottatt: "2021-01-26",
           frist: "2019-12-05",
           pageReference: "id...",
