@@ -52,17 +52,19 @@ const DokumenterContainer = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   width: ${(props) => props.theme.width};
+  overflow: hidden;
+  position: relative;
 `;
 
 const ListeContainer = styled.div`
   display: ${(props) => props.theme.display};
-  max-height: ${maxHeight};
+  height: calc(100% - 4.5em);
   overflow: auto;
 `;
 
 const TilknyttedeContainer = styled.div`
   display: ${(props) => props.theme.display};
-  max-height: ${maxHeight};
+  height: 100%;
   overflow: auto;
 `;
 
@@ -84,8 +86,7 @@ const DokumentContainer = styled.div`
   grid-template-columns: ${(props) => props.theme.dokumentgrid};
   margin: 0 0.25em 0 0;
   height: calc(100% - 50px);
-  max-height: 40em;
-
+  max-height: 100%;
   @media screen and (max-width: 1400px) {
     height: calc(100% - 100px);
   }
@@ -96,9 +97,9 @@ const DokumentContainer = styled.div`
 `;
 
 const DokumenterTittel = styled.h1`
-  padding: 0 0.5em;
-  font-size: 24px;
-  height: 25px;
+  padding: 0 0 0 0.5em;
+  font-size: 1.5em;
+  height: 1.25em;
   font-weight: bold;
 `;
 
@@ -106,7 +107,7 @@ const VisTilknyttedeKnapp = styled.button`
   display: ${(props) => props.theme.display};
   margin: 0 0.75em 1em 0.75em;
   padding: 0.3em 0.55em;
-  height: 25px;
+  height: 2em;
   background: white;
   font-size: 0.9em;
   color: #0067c5;
@@ -191,24 +192,32 @@ const VedleggTittel = styled.li`
 `;
 const PreviewContainer = styled.div`
   display: ${(props) => props.theme.display};
-  margin: 0.25em 0;
+  margin: 0.25em 0.25em 0.25em 0.25em;
   background: white;
-  border-radius: 4px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  max-width: 40em;
-  max-height: 40em;
+  border-radius: 4px;
+  width: 40em;
+  overflow: hidden;
+  position: relative;
 `;
 
 const Preview = styled.div`
   height: 100%;
+  overflow: auto;
+  overflow-x: hidden;
+  position: relative;
 `;
 const PreviewTitle = styled.div`
   background: #cde7d8;
   display: flex;
+  position: sticky;
+  top: 0;
   padding: 1em 0 1em 0.5em;
+  z-index: 10;
   justify-content: space-between;
   height: 3.5em;
 `;
+
 const SVGIkon = styled.img`
   color: black;
   margin: 0.25em 1em 0 0.2em;
@@ -229,8 +238,8 @@ const EksternalSVGIkon = styled.img`
     transform: scale(1.1);
   }
 `;
+
 const PDFContainer = styled.div`
-  max-height: 36em;
   overflow: auto;
   overflow-x: hidden; // for safari
 
