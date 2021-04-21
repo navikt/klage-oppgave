@@ -40,17 +40,17 @@ const Kontrollpanel = styled.div`
   background: #f8f8f8;
   grid-template-columns: repeat(4, 1fr);
   grid-template-areas: "Person Toggles Toggles Knapper";
-  height: 50px;
+  height: 3em;
 
   @media screen and (max-width: 1400px) {
-    height: 100px;
+    height: 6.25em;
     grid-template-areas:
       "Person Person Knapper Knapper"
       "Toggles Toggles Toggles Toggles";
   }
 
   @media screen and (max-width: 950px) {
-    height: 100px;
+    height: 6.25em;
     grid-template-areas:
       "Person Knapper Knapper Knapper"
       "Toggles Toggles Toggles Toggles";

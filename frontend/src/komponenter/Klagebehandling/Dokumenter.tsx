@@ -85,10 +85,10 @@ const DokumentContainer = styled.div`
   display: ${(props) => props.theme.display};
   grid-template-columns: ${(props) => props.theme.dokumentgrid};
   margin: 0 0.25em 0 0;
-  height: calc(100% - 50px);
+  height: calc(100% - 3em);
   max-height: 100%;
   @media screen and (max-width: 1400px) {
-    height: calc(100% - 100px);
+    height: calc(100% - 6.25em);
   }
 
   &.skjult {
