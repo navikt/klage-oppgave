@@ -43,15 +43,27 @@ export interface IVedlegg {
   valgt: boolean;
 }
 
+const maxHeight = "33em";
+const infiniteBottomMargin = "600px";
+
+const DokumenterContainer = styled.div`
+  margin: 0.25em 0.25em 0.25em 0.25em;
+  background: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  width: ${(props) => props.theme.width};
+`;
+
 const ListeContainer = styled.div`
   display: ${(props) => props.theme.display};
-  max-height: 100vh;
-  min-height: 70vh;
+  max-height: ${maxHeight};
   overflow: auto;
 `;
 
 const TilknyttedeContainer = styled.div`
   display: ${(props) => props.theme.display};
+  max-height: ${maxHeight};
+  overflow: auto;
 `;
 
 const Tilknyttet = styled.div`
@@ -71,22 +83,22 @@ const DokumentContainer = styled.div`
   display: ${(props) => props.theme.display};
   grid-template-columns: ${(props) => props.theme.dokumentgrid};
   margin: 0 0.25em 0 0;
+  height: calc(100% - 50px);
+  max-height: 40em;
+
+  @media screen and (max-width: 1400px) {
+    height: calc(100% - 100px);
+  }
+
   &.skjult {
     display: none;
   }
 `;
 
-const DokumenterContainer = styled.div`
-  margin: 0.25em 0.25em 0.25em 0.25em;
-  background: white;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 4px;
-  width: ${(props) => props.theme.width};
-`;
-
 const DokumenterTittel = styled.h1`
   padding: 0 0.5em;
   font-size: 24px;
+  height: 25px;
   font-weight: bold;
 `;
 
@@ -94,6 +106,7 @@ const VisTilknyttedeKnapp = styled.button`
   display: ${(props) => props.theme.display};
   margin: 0 0.75em 1em 0.75em;
   padding: 0.3em 0.55em;
+  height: 25px;
   background: white;
   font-size: 0.9em;
   color: #0067c5;
@@ -183,6 +196,7 @@ const PreviewContainer = styled.div`
   border-radius: 4px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   max-width: 40em;
+  max-height: 40em;
 `;
 
 const Preview = styled.div`
@@ -193,6 +207,7 @@ const PreviewTitle = styled.div`
   display: flex;
   padding: 1em 0 1em 0.5em;
   justify-content: space-between;
+  height: 3.5em;
 `;
 const SVGIkon = styled.img`
   color: black;
@@ -215,8 +230,7 @@ const EksternalSVGIkon = styled.img`
   }
 `;
 const PDFContainer = styled.div`
-  max-height: calc(100vh + 4em);
-  min-height: 70vh;
+  max-height: 36em;
   overflow: auto;
   overflow-x: hidden; // for safari
 
@@ -352,7 +366,7 @@ function DokumentTabell(props: {
     hasNextPage: klage.hasMore,
     onLoadMore: handleLoadMore,
     disabled: !!error,
-    rootMargin: "0px 0px 200px 0px",
+    rootMargin: `0px 0px ${infiniteBottomMargin} 0px`,
   });
 
   function hentNeste(ref: string | null) {

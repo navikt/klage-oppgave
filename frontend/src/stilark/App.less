@@ -33,7 +33,12 @@ body {
 
 .content {
   grid-area: content;
+  height: calc(100vh - 180px - 2em);
+  &.uten-nav {
+    height: calc(100vh - 100px) !important;
+  }
 }
+
 .main {
   width: 100%;
   display: block;
@@ -42,12 +47,14 @@ body {
 .main-nav {
   grid-area: nav;
   margin: 1em 0;
+  height: 80px;
 }
 
 .main-footer {
   grid-area: footer;
   color: black;
   padding: 1em;
+  height: 50px;
   background: whitesmoke;
   text-align: center;
   font-variant: all-small-caps;

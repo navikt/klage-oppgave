@@ -40,14 +40,17 @@ const Kontrollpanel = styled.div`
   background: #f8f8f8;
   grid-template-columns: repeat(4, 1fr);
   grid-template-areas: "Person Toggles Toggles Knapper";
+  height: 50px;
 
   @media screen and (max-width: 1400px) {
+    height: 100px;
     grid-template-areas:
       "Person Person Knapper Knapper"
       "Toggles Toggles Toggles Toggles";
   }
 
   @media screen and (max-width: 950px) {
+    height: 100px;
     grid-template-areas:
       "Person Knapper Knapper Knapper"
       "Toggles Toggles Toggles Toggles";
@@ -243,7 +246,7 @@ export default function Klagebehandling() {
   }
 
   return (
-    <Oppsett visMeny={false} customClass={"bg_lysgraa"}>
+    <Oppsett visMeny={false} customClass={"bg_lysgraa"} contentClass={"uten-nav"}>
       <>
         <Kontrollpanel>
           <Person>

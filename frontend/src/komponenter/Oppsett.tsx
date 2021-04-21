@@ -5,6 +5,7 @@ import Alertstripe from "nav-frontend-alertstriper";
 interface LayoutType {
   visMeny: boolean;
   customClass?: string;
+  contentClass?: string;
   children: JSX.Element;
 }
 
@@ -22,7 +23,7 @@ import { hentExpiry } from "../tilstand/moduler/token";
 import { kodeverkRequest } from "../tilstand/moduler/oppgave";
 import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 
-export default function Oppsett({ visMeny, customClass, children }: LayoutType) {
+export default function Oppsett({ visMeny, customClass, contentClass, children }: LayoutType) {
   const person = useSelector(velgMeg);
   const visFeilmelding = useSelector(velgToaster);
   const expireTime = useSelector(velgExpire);
@@ -100,7 +101,7 @@ export default function Oppsett({ visMeny, customClass, children }: LayoutType) 
             </Alertstripe>
           )}
         </div>
-        <article className="content">{children}</article>
+        <article className={`content ${contentClass}`}>{children}</article>
       </main>
       <footer className="main-footer">Klagesaksbehandling</footer>
     </>
