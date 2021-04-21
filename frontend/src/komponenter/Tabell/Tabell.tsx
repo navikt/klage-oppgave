@@ -117,7 +117,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
    * Med dette flagget kommer det persondata fra kabal-api. Dette skal skrus
    * på for "MINE OPPGAVER" og dersom det er skrudd på i featuretoggles.
    */
-  const [visFnr, settVisFnr] = useState<boolean>(false);
+  const [visFnr, settVisFnr] = useState<boolean>(location.pathname.startsWith("/mineoppgaver"));
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.listFnr"));
   }, []);
@@ -261,8 +261,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
   };
   useEffect(() => {
     if (meg.id) {
-      if (location.pathname.startsWith("/mineoppgaver") && !filter_state.tildeltSaksbehandler) {
+      if (location.pathname.startsWith("/mineoppgaver")) {
         settVisFnr(true);
+      }
+      if (location.pathname.startsWith("/mineoppgaver") && !filter_state.tildeltSaksbehandler) {
         filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: meg.id });
       } else if (!location.pathname.startsWith("/mineoppgaver")) {
         filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: undefined });
