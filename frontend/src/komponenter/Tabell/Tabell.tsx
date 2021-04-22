@@ -265,6 +265,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     if (meg.id) {
       if (location.pathname.startsWith("/mineoppgaver")) {
         settVisFnr(true);
+        filter_dispatch({ type: "sett_projeksjon", payload: true });
       }
       if (location.pathname.startsWith("/mineoppgaver") && !filter_state.tildeltSaksbehandler) {
         filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: meg.id });
