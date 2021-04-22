@@ -41,14 +41,13 @@ const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: num
 
   return (
     <td className="knapp-med-handlingsoverlegg">
-      <a
-        href="#"
+      <button
         data-testid={`endreknapp${it++}`}
         onClick={() => settVisHandlinger(!viserHandlinger)}
         className={classNames({ skjult: viserHandlinger })}
       >
         Endre
-      </a>
+      </button>
       <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
         <div>
           <Knapp
