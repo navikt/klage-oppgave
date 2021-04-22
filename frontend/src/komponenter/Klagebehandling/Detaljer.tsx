@@ -10,7 +10,7 @@ import { temaOversettelse } from "../../domene/forkortelser";
 import Kalender from "../../komponenter/kalender.svg";
 import styled from "styled-components";
 
-const KlageContainer = styled.div`
+const KlageKontainer = styled.div`
   display: ${(props) => props.theme.display};
   grid-template-columns: 1fr 1fr 1fr;
 
@@ -224,7 +224,7 @@ function TyperTemaerOgHjemler() {
 
 export default function Detaljer({ skjult }: { skjult: boolean }) {
   return (
-    <KlageContainer theme={{ display: !skjult ? "grid" : "none" }}>
+    <KlageKontainer theme={{ display: !skjult ? "grid" : "none" }}>
       <div className={"klage_og_detaljer"}>
         <div className={"klage__boks xl"}>
           <h1>Behandlingsdetaljer</h1>
@@ -251,6 +251,6 @@ export default function Detaljer({ skjult }: { skjult: boolean }) {
           </div>
         </div>
       </div>
-    </KlageContainer>
+    </KlageKontainer>
   );
 }

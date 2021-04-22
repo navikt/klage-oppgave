@@ -46,7 +46,7 @@ export interface IVedlegg {
 const maxHeight = "33em";
 const infiniteBottomMargin = "600px";
 
-const DokumenterContainer = styled.div`
+const DokumenterKontainer = styled.div`
   margin: 0.25em 0.25em 0.25em 0.25em;
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -56,14 +56,14 @@ const DokumenterContainer = styled.div`
   position: relative;
 `;
 
-const ListeContainer = styled.div`
+const DokumenterFullvisning = styled.div`
   display: ${(props) => props.theme.display};
   height: 100%;
   overflow: auto;
   flex-flow: column;
 `;
 
-const TilknyttedeContainer = styled.div`
+const DokumenterMinivisning = styled.div`
   display: ${(props) => props.theme.display};
   height: 100%;
   overflow: auto;
@@ -82,7 +82,7 @@ const TilknyttetTittel = styled.div`
   color: #0067c5;
 `;
 
-const DokumentContainer = styled.div`
+const DokumentKontainer = styled.div`
   display: ${(props) => props.theme.display};
   grid-template-columns: ${(props) => props.theme.dokumentgrid};
   margin: 0 0.25em 0 0;
@@ -181,7 +181,7 @@ const DokumentSjekkboks = styled.li`
   grid-area: sjekkboks;
 `;
 
-const VedleggContainer = styled.div`
+const VedleggKontainer = styled.div`
   grid-area: vedlegg;
 `;
 
@@ -198,7 +198,7 @@ const VedleggTittel = styled.li`
   margin: 0 0 0 2em;
   min-width: 15em;
 `;
-const PreviewContainer = styled.div`
+const PreviewKontainer = styled.div`
   display: ${(props) => props.theme.display};
   margin: 0.25em 0.25em 0.25em 0.25em;
   background: white;
@@ -247,7 +247,7 @@ const EksternalSVGIkon = styled.img`
   }
 `;
 
-const PDFContainer = styled.div`
+const PDFKontainer = styled.div`
   overflow: auto;
   overflow-x: hidden; // for safari
 
@@ -292,7 +292,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [dokumentgrid, settDokumentgrid] = useState("1fr 1fr 1fr 1fr");
 
   return (
-    <DokumentContainer theme={{ display: !skjult ? "grid" : "none", dokumentgrid }}>
+    <DokumentKontainer theme={{ display: !skjult ? "grid" : "none", dokumentgrid }}>
       <DokumentTabell
         settAktivPDF={settAktivPDF}
         settjournalpostId={settjournalpostId}
@@ -300,7 +300,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
         settDokumentGrid={settDokumentgrid}
         settdokumentInfoId={settdokumentInfoId}
       />
-      <PreviewContainer theme={{ display: aktivPDF ? "unset" : "none" }}>
+      <PreviewKontainer theme={{ display: aktivPDF ? "unset" : "none" }}>
         <Preview>
           <PreviewTitle>
             {dokumentTittel}
@@ -321,15 +321,15 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
             options={options}
             loading={<NavFrontendSpinner />}
           >
-            <PDFContainer>
+            <PDFKontainer>
               {Array.from(new Array(numPages), (el, index) => (
                 <Page key={`page_${index + 1}`} pageNumber={index + 1} />
               ))}
-            </PDFContainer>
+            </PDFKontainer>
           </Document>
         </Preview>
-      </PreviewContainer>
-    </DokumentContainer>
+      </PreviewKontainer>
+    </DokumentKontainer>
   );
 }
 
@@ -445,8 +445,7 @@ function DokumentTabell(props: {
     dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
   }
 
-  const [visFullContainer, settvisFullContainer] = useState(true);
-
+  const [visFullKontainer, settvisFullKontainer] = useState(true);
   const [clickedItems, setclickedItems] = useState<Array<IDokument>>([]);
 
   useEffect(() => {
@@ -457,23 +456,23 @@ function DokumentTabell(props: {
     return <NavFrontendSpinner />;
   }
   return (
-    <DokumenterContainer theme={{ width: visFullContainer ? "40em" : "15em" }}>
-      <TilknyttedeContainer theme={{ display: !visFullContainer ? "unset" : "none" }}>
+    <DokumenterKontainer theme={{ width: visFullKontainer ? "40em" : "15em" }}>
+      <DokumenterMinivisning theme={{ display: !visFullKontainer ? "unset" : "none" }}>
         <DokumenterNav>
           <DokumenterTittel>Dokumenter</DokumenterTittel>
           <VisTilknyttedeKnapp
-            theme={{ display: visFullContainer ? "unset" : "none" }}
+            theme={{ display: visFullKontainer ? "unset" : "none" }}
             onClick={() => {
-              settvisFullContainer(false);
+              settvisFullKontainer(false);
               props.settDokumentGrid("15.5em 1fr 1fr 1fr");
             }}
           >
             Vis kun tilknyttede
           </VisTilknyttedeKnapp>
           <VisTilknyttedeKnapp
-            theme={{ display: !visFullContainer ? "unset" : "none" }}
+            theme={{ display: !visFullKontainer ? "unset" : "none" }}
             onClick={() => {
-              settvisFullContainer(true);
+              settvisFullKontainer(true);
               props.settDokumentGrid("1fr 1fr 1fr 1fr");
             }}
           >
@@ -502,24 +501,24 @@ function DokumentTabell(props: {
             );
           }
         })}
-      </TilknyttedeContainer>
+      </DokumenterMinivisning>
 
-      <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "flex" : "none" }}>
+      <DokumenterFullvisning ref={rootRef} theme={{ display: visFullKontainer ? "flex" : "none" }}>
         <DokumenterNav>
           <DokumenterTittel>Dokumenter</DokumenterTittel>
           <VisTilknyttedeKnapp
-            theme={{ display: visFullContainer ? "unset" : "none" }}
+            theme={{ display: visFullKontainer ? "unset" : "none" }}
             onClick={() => {
-              settvisFullContainer(false);
+              settvisFullKontainer(false);
               props.settDokumentGrid("15.5em 1fr 1fr 1fr");
             }}
           >
             Vis kun tilknyttede
           </VisTilknyttedeKnapp>
           <VisTilknyttedeKnapp
-            theme={{ display: !visFullContainer ? "unset" : "none" }}
+            theme={{ display: !visFullKontainer ? "unset" : "none" }}
             onClick={() => {
-              settvisFullContainer(true);
+              settvisFullKontainer(true);
               props.settDokumentGrid("1fr 1fr 1fr 1fr");
             }}
           >
@@ -612,7 +611,7 @@ function DokumentTabell(props: {
                   </RightAlign>
                 </DokumentSjekkboks>
                 {item.vedlegg.length > 0 && (
-                  <VedleggContainer>
+                  <VedleggKontainer>
                     {item.vedlegg.map((vedlegg: any, idx: number) => (
                       <VedleggRad key={`vedlegg-${idx}${item.dokumentInfoId}`}>
                         <VedleggTittel
@@ -666,7 +665,7 @@ function DokumentTabell(props: {
                         </DokumentSjekkboks>
                       </VedleggRad>
                     ))}
-                  </VedleggContainer>
+                  </VedleggKontainer>
                 )}
               </DokumentRad>
             </ListItem>
@@ -677,7 +676,7 @@ function DokumentTabell(props: {
             </ListItem>
           )}
         </List>
-      </ListeContainer>
-    </DokumenterContainer>
+      </DokumenterFullvisning>
+    </DokumenterKontainer>
   );
 }

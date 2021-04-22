@@ -131,7 +131,7 @@ function ToggleKnapp({
 }) {
   return (
     <label htmlFor="toggle" className="toggle-flex" onClick={() => clickFn(id)}>
-      <div className="toggle-container">
+      <div className="toggle-kontainer">
         <input
           type="checkbox"
           readOnly={true}

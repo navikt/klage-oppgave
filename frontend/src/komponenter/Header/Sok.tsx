@@ -26,7 +26,7 @@ export const Sok = ({ onSok }: SokProps) => {
   };
 
   return (
-    <div className={"sok__container"}>
+    <div className={"sok__kontainer"}>
       <input
         className={"sok__sokefelt"}
         onChange={onChange}

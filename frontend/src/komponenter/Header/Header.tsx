@@ -90,7 +90,7 @@ export const Header = ({ tittel, children, brukerinfo }: HeaderProps) => {
   const history = useHistory();
 
   return (
-    <header className={"header__container"}>
+    <header className={"header__kontainer"}>
       <div className={"header__rad pointer"} onClick={() => history.push(`/`)}>
         <h1 className={"header__tittel"}>{tittel}</h1>
         <div className={"header__avdeler skjult"} />

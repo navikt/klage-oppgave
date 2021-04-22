@@ -71,7 +71,7 @@ export default function Oppsett({ visMeny, customClass, contentClass, children }
   }
   return (
     <>
-      <main className={`main container ${customClass}`} data-testid="klagesiden">
+      <main className={`main kontainer ${customClass}`} data-testid="klagesiden">
         <Header tittel="KABAL" brukerinfo={{ navn: person.navn, ident: person.id }}>
           {/* <Sok onSok={() => Promise.resolve("test")} /> */}
         </Header>

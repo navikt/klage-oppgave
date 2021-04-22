@@ -266,6 +266,17 @@ const OppgaveTabell: React.FunctionComponent = () => {
       if (location.pathname.startsWith("/mineoppgaver")) {
         settVisFnr(true);
         filter_dispatch({ type: "sett_projeksjon", payload: true });
+      } else {
+        const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.listFnr");
+        if (tilgangEnabled?.isEnabled !== undefined) {
+          if (!location.pathname.startsWith("/mineoppgaver")) {
+            settVisFnr(tilgangEnabled.isEnabled);
+            filter_dispatch({ type: "sett_projeksjon", payload: tilgangEnabled.isEnabled });
+          }
+        } else {
+          settVisFnr(false);
+          filter_dispatch({ type: "sett_projeksjon", payload: false });
+        }
       }
       if (location.pathname.startsWith("/mineoppgaver") && !filter_state.tildeltSaksbehandler) {
         filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: meg.id });
