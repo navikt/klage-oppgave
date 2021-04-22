@@ -154,7 +154,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
         if (tema !== "SYK") {
           let kodeverkTema = kodeverk.tema.filter((t: any) => t.id === tema)[0];
-          lovligeTemaer.push({ label: kodeverkTema.navn, value: kodeverkTema.id });
+          if (kodeverkTema.length)
+            lovligeTemaer.push({ label: kodeverkTema?.navn, value: kodeverkTema?.id });
         }
       });
     }
