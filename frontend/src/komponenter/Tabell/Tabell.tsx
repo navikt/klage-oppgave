@@ -37,8 +37,14 @@ import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
 
 import filterReducer from "./filterReducer";
 import Debug from "./Debug";
+import styled from "styled-components";
 
 const R = require("ramda");
+
+const Feil = styled.div`
+  display: block;
+  margin: 0 1em;
+`;
 
 const OppgaveTabell: React.FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -154,6 +160,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
         if (tema !== "SYK") {
           let kodeverkTema = kodeverk.tema.filter((t: any) => t.id === tema)[0];
+          console.log(kodeverk);
           if (kodeverkTema.length)
             lovligeTemaer.push({ label: kodeverkTema?.navn, value: kodeverkTema?.id });
         }
@@ -427,10 +434,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   if (klagebehandlinger.meta.feilmelding) {
     return (
-      <div className={"feil"}>
+      <Feil>
         <h1>{klagebehandlinger.meta.feilmelding}</h1>
         <div>Vennligst forsøk igjen litt senere...</div>
-      </div>
+      </Feil>
     );
   }
   if (sideLaster) {
