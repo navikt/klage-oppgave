@@ -573,7 +573,7 @@ function DokumentTabell(props: {
                   {formattedDate(item.registrert)}
                 </DokumentDato>
 
-                <DokumentSjekkboks>
+                <DokumentSjekkboks className={"dokument-sjekkboks"}>
                   <RightAlign>
                     <Sjekkboks
                       type={"checkbox"}
@@ -628,7 +628,7 @@ function DokumentTabell(props: {
                           {vedlegg.tittel}
                         </VedleggTittel>
 
-                        <DokumentSjekkboks>
+                        <DokumentSjekkboks className={"dokument-sjekkboks"}>
                           <RightAlign>
                             <Sjekkboks
                               id={idx + item.dokumentInfoId}

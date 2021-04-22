@@ -1,37 +1,42 @@
-input[type="checkbox"] {
-  display: none;
-}
+.dokument-sjekkboks {
+  input[type="checkbox"] {
+    display: none;
+  }
 
-label:before {
-  border: 1px solid #0c5ea8;
-  height: 16px;
-  width: 16px;
-  display: block;
-  cursor: pointer;
-  border-radius: 0.25em;
-}
-input[type="checkbox"] + label:before {
-  content: "";
-  background: #fff;
-  color: white;
-  font-size: 14px;
-  line-height: 11px;
-  text-align: center;
-}
-input[type="checkbox"]:checked + label:before {
-  content: "";
-  background: #0c5ea8;
-  color: white;
-  font-size: 14px;
-  line-height: 17px;
-  text-align: center;
-}
-input[type="checkbox"]:disabled + label:before {
-  color: white;
-  border-color: #78706a;
-  background: #78706a;
-}
+  label:before {
+    border: 1px solid #0c5ea8;
+    height: 16px;
+    width: 16px;
+    display: block;
+    cursor: pointer;
+    border-radius: 0.25em;
+  }
 
-input[type="checkbox"]:checked + label:before {
-  content: "✓";
+  input[type="checkbox"] + label:before {
+    content: "";
+    background: #fff;
+    color: white;
+    font-size: 14px;
+    line-height: 11px;
+    text-align: center;
+  }
+
+  input[type="checkbox"]:checked + label:before {
+    content: "";
+    background: #0c5ea8;
+    color: white;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+  }
+
+  input[type="checkbox"]:disabled + label:before {
+    color: white;
+    border-color: #78706a;
+    background: #78706a;
+  }
+
+  input[type="checkbox"]:checked + label:before {
+    content: "✓";
+  }
 }
