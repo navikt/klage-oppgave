@@ -60,6 +60,7 @@ const ListeContainer = styled.div`
   display: ${(props) => props.theme.display};
   height: 100%;
   overflow: auto;
+  flex-flow: column;
 `;
 
 const TilknyttedeContainer = styled.div`
@@ -503,7 +504,7 @@ function DokumentTabell(props: {
         })}
       </TilknyttedeContainer>
 
-      <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "grid" : "none" }}>
+      <ListeContainer ref={rootRef} theme={{ display: visFullContainer ? "flex" : "none" }}>
         <DokumenterNav>
           <DokumenterTittel>Dokumenter</DokumenterTittel>
           <VisTilknyttedeKnapp
