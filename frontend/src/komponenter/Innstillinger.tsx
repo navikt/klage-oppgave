@@ -59,9 +59,9 @@ const Innstillinger = (): JSX.Element => {
     let lovligeTemaer = [{ label: "Sykepenger", value: "43" } as Filter];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
-        if (tema !== "43" && kodeverk?.tema) {
+        if (tema.toString() !== "43" && kodeverk?.tema) {
           let kodeverkTema = kodeverk.tema.filter(
-            (t: IKodeverkVerdi) => t.id.toString() === tema
+            (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
           )[0];
           if (kodeverkTema?.id)
             lovligeTemaer.push({
