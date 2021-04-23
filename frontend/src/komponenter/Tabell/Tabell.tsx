@@ -165,7 +165,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
         if (tema !== "43" && kodeverk?.tema) {
           console.debug(kodeverk.tema);
           let kodeverkTema = kodeverk.tema.filter(
-            (t: IKodeverkVerdi) => t.id.toString() === tema
+            (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
           )[0];
           if (kodeverkTema?.id)
             lovligeTemaer.push({
