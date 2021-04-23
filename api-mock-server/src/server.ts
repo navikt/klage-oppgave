@@ -106,7 +106,7 @@ app.get("/klagebehandlinger/:id/detaljer", async (req, res) => {
     fraNAVEnhet: "0104",
     mottattFoersteinstans: "2021-02-02",
     foedselsnummer: "27458422236",
-    tema: "SYK",
+    tema: "43",
     type: "Klage",
     mottatt: "2021-03-25",
     startet: "2021-03-25",
@@ -225,9 +225,9 @@ app.get("/ansatte/:id/enheter", async (req, res) => {
     {
       id: "4291",
       navn: "NAV Klageinstans Oslo og Akershus",
-      lovligeTemaer: ["SYK", "PEN", "GOS", "DAG"],
+      lovligeTemaer: ["43", "30", "56", "7"],
     },
-    { id: "0118", navn: "NAV Aremark", lovligeTemaer: ["PEN"] },
+    { id: "0118", navn: "NAV Aremark", lovligeTemaer: ["30"] },
   ]);
 });
 

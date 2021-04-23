@@ -42,7 +42,7 @@ services:
     build:
       context: ./api-mock-server/scripts
       dockerfile: Dockerfile
-    command: bash -c 'ruby ./api-mock-server/scripts/genererOppgaver.rb ./api-mock-server/oppgaver.db'
+    command: bash -c 'ruby ./api-mock-server/scripts/genererOppgaver.rb ./api-mock-server/oppgaver.db ./api-mock-server/fixtures/kodeverk.json && ruby ./api-mock-server/scripts/lagDokumenter.rb ./api-mock-server/oppgaver.db'
     working_dir: /usr/app/
     volumes:
       - ./:/usr/app/

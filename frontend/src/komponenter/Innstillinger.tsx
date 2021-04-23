@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Oppsett from "./Oppsett";
 import FiltrerbarHeader, { settFilter } from "./Tabell/FiltrerbarHeader";
-import { Filter, temaType } from "../tilstand/moduler/oppgave";
+import { Filter, IKodeverkVerdi, temaType } from "../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import { velgFiltrering, velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
@@ -17,7 +17,6 @@ import {
   hentInnstillingerHandling,
   settInnstillingerHandling,
 } from "../tilstand/moduler/meg";
-import { GyldigeHjemler, GyldigeTemaer } from "../domene/filtre";
 
 function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
@@ -45,6 +44,9 @@ const Innstillinger = (): JSX.Element => {
   const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
   const [aktiveFaner, settAktiveFaner] = useState<Faner>(faner);
   const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
+  const [gyldigeHjemler, settGyldigeHjemler] = useState<Filter[]>([]);
+  const [gyldigeTyper, settGyldigeTyper] = useState<Filter[]>([]);
+
   const valgtEnhetIdx = useSelector(valgtEnhet);
   const kodeverk = useSelector(velgKodeverk);
 
@@ -54,16 +56,38 @@ const Innstillinger = (): JSX.Element => {
   }, [meg.id, valgtEnhetIdx, reload]);
 
   useEffect(() => {
-    let lovligeTemaer = [{ label: "Sykepenger", value: "SYK" } as Filter];
+    let lovligeTemaer = [{ label: "Sykepenger", value: "43" } as Filter];
     if (enheter.length > 0) {
-      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: any) => {
-        if (tema !== "SYK") {
-          let kodeverkTema = kodeverk.tema.filter((t: any) => t.id === tema)[0];
-          lovligeTemaer.push({ label: kodeverkTema.navn, value: kodeverkTema.id });
+      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
+        if (tema !== "43" && kodeverk?.tema) {
+          let kodeverkTema = kodeverk.tema.filter(
+            (t: IKodeverkVerdi) => t.id.toString() === tema
+          )[0];
+          if (kodeverkTema?.id)
+            lovligeTemaer.push({
+              label: kodeverkTema?.beskrivelse,
+              value: kodeverkTema?.id.toString(),
+            });
         }
       });
     }
     settLovligeTemaer(lovligeTemaer);
+
+    let hjemler: Filter[] = [];
+    if (kodeverk.hjemmel) {
+      kodeverk.hjemmel.map((hjemmel: IKodeverkVerdi) => {
+        hjemler.push({ label: hjemmel.beskrivelse, value: hjemmel.id.toString() });
+      });
+      settGyldigeHjemler(hjemler);
+    }
+
+    let typer: Filter[] = [];
+    if (kodeverk.type) {
+      kodeverk.type.map((verdi: IKodeverkVerdi) => {
+        typer.push({ label: verdi.beskrivelse, value: verdi.id.toString() });
+      });
+      settGyldigeTyper(typer);
+    }
   }, [enheter, valgtEnhetIdx, reload]);
 
   useEffect(() => {
@@ -72,7 +96,7 @@ const Innstillinger = (): JSX.Element => {
     settAktiveTemaer(
       (innstillinger?.aktiveTemaer ?? [])
         .filter((tema: Filter) => tema.label !== "Sykepenger")
-        .concat([{ label: "Sykepenger", value: "SYK" }])
+        .concat([{ label: "Sykepenger", value: "43" }])
     );
   }, [innstillinger, meg.id, reload]);
 
@@ -133,11 +157,7 @@ const Innstillinger = (): JSX.Element => {
                 onFilter={(filter, velgAlleEllerIngen) =>
                   settFilter(settAktiveTyper, filter, aktiveTyper, velgAlleEllerIngen)
                 }
-                filtre={[
-                  { label: "Klage", value: "ae0058" },
-                  { label: "Anke", value: "ae0046" },
-                  { label: "Feilutbetaling", value: "ae0161" },
-                ]}
+                filtre={gyldigeTyper}
                 dispatchFunc={filtrerType}
                 aktiveFiltere={aktiveTyper}
               >
@@ -159,7 +179,7 @@ const Innstillinger = (): JSX.Element => {
                 onFilter={(filter, velgAlleEllerIngen) =>
                   settFilter(settAktiveHjemler, filter, aktiveHjemler, velgAlleEllerIngen)
                 }
-                filtre={GyldigeHjemler}
+                filtre={gyldigeHjemler}
                 dispatchFunc={filtrerHjemmel}
                 aktiveFiltere={aktiveHjemler}
               >

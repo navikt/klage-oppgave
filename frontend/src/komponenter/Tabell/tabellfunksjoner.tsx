@@ -1,7 +1,11 @@
-import { OppgaveRad, OppgaveRader, OppgaveRadMedFunksjoner } from "../../tilstand/moduler/oppgave";
-import React, { useEffect, useRef, useState } from "react";
+import {
+  IKodeverkVerdi,
+  OppgaveRad,
+  OppgaveRader,
+  OppgaveRadMedFunksjoner,
+} from "../../tilstand/moduler/oppgave";
+import React, { useRef, useState } from "react";
 import EtikettBase from "nav-frontend-etiketter";
-import { typeOversettelse, temaOversettelse } from "../../domene/forkortelser";
 import { Knapp } from "nav-frontend-knapper";
 import classNames from "classnames";
 import { useOnInteractOutside } from "./FiltrerbarHeader";
@@ -12,6 +16,7 @@ import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 import PilOppHoeyre from "../../komponenter/arrow.svg";
 import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { formattedDate } from "../../domene/datofunksjoner";
+import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
 
 const R = require("ramda");
 
@@ -21,7 +26,6 @@ const velgOppgave = R.curry((settValgtOppgave: Function, id: string, versjon: nu
 
 const gosysEnvironment = (hostname: string) => {
   if (hostname === "localhost") {
-    //muligens sette opp en local mock?
     return "http://localhost:3000";
   } else if (hostname.indexOf("dev.nav.no") !== -1) {
     return "https://gosys.nais.preprod.local";
@@ -91,6 +95,8 @@ const OppgaveTabellRad = ({
   const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id);
   const curriedVisHandlinger = visHandlinger(fradelOppgave)(id)(versjon);
   const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id)(versjon);
+  const kodeverk = useSelector(velgKodeverk);
+
   const location = useLocation();
   const history = useHistory();
 
@@ -102,17 +108,26 @@ const OppgaveTabellRad = ({
     <tr className="table-filter">
       <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${type}`}>
-          {typeOversettelse(type)}
+          {kodeverk?.type
+            ? kodeverk?.type?.filter((h: IKodeverkVerdi) => h.id == Number(type))[0]?.beskrivelse ??
+              `ukjent type ${type}`
+            : "mangler"}
         </EtikettBase>
       </td>
       <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${tema}`}>
-          {temaOversettelse(tema)}
+          {kodeverk?.tema
+            ? kodeverk?.tema?.filter((h: IKodeverkVerdi) => h.id == Number(tema))[0]?.beskrivelse ??
+              `ukjent tema ${tema}`
+            : "mangler"}
         </EtikettBase>
       </td>
       <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${hjemmel}`}>
-          {hjemmel || "mangler"}
+          {kodeverk?.hjemmel
+            ? kodeverk?.hjemmel?.filter((h: IKodeverkVerdi) => h.id == Number(hjemmel))[0]
+                ?.beskrivelse ?? `ukjent hjemmel ${hjemmel}`
+            : "mangler"}
         </EtikettBase>
       </td>
 

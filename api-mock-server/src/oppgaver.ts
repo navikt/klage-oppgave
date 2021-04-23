@@ -133,6 +133,16 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     navIdent,
     tildeltSaksbehandler,
   } = query;
+  console.log({
+    typer,
+    temaer,
+    hjemler,
+    antall,
+    start,
+    rekkefoelge,
+    navIdent,
+    tildeltSaksbehandler,
+  });
   let filterTyper = typer?.split(",");
   let filterTemaer = temaer?.split(",");
   let filterHjemler = hjemler?.replace(/ og /, ",").split(",");
@@ -187,7 +197,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
       if ("undefined" === typeof tildeltSaksbehandler)
         resolve(
           rader.map((rad: any) => ({
-            totaltAntall: rad.totaltAntall,
+            totaltAntall: rad.totaltAntall ?? 0,
             id: rad.id,
             type: rad.type,
             hjemmel: rad.hjemmel,
@@ -200,7 +210,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
       else
         resolve(
           rader.map((rad: any) => ({
-            totaltAntall: rad.totaltAntall,
+            totaltAntall: rad.totaltAntall ?? 0,
             id: rad.id,
             type: rad.type,
             hjemmel: rad.hjemmel,

@@ -65,7 +65,7 @@ describe("tester oppgavehenting", () => {
     let query = {
       antall: 5,
       start: 0,
-      temaer: "SYK",
+      temaer: "43",
       rekkefoelge: "SYNKENDE" as "SYNKENDE",
       navIdent: "ZATHRAS",
     };

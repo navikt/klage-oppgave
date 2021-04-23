@@ -49,15 +49,18 @@ end
 
 
 def tilfeldigTema()
-  r = rand(3)
+  r = rand(4)
   if r == 0
-    return "SYK"
+    return "43"
   end
   if r == 1
-    return "DAG"
+    return "30"
   end
   if r == 2
-    return "FOR"
+    return "56"
+  end
+  if r == 2
+    return "7"
   end
 end
 
@@ -65,19 +68,26 @@ def nestenTilfeldigSaksbehandler()
   return rand(15) <= 1 ?  "Z994488" : Faker::Internet.username(specifier: 6..8)
 end
 
-def nestenTilfeldigHjemmel()
-  return rand(2) == 1 ? "8-" + Faker::Number.number(digits: 2).to_s : ""
+def tilfeldigHjemmel()
+    kodeverk = JSON.parse(File.read(ARGV[1]))
+    rndId = rand(0...kodeverk["hjemmel"].length-1)
+    return kodeverk["hjemmel"][rndId]["id"];
+end
+
+def tilfeldigType()
+    kodeverk = JSON.parse(File.read(ARGV[1]))
+    return kodeverk["type"][rand(0...1)]["id"].to_s;
 end
 
 def lagData()
   id = Faker::Number.number(digits: 7)
-  type = rand(2) == 1 ? "ae0058" : "ae0046"
+  type = tilfeldigType()
   tema = tilfeldigTema()
   frist = Faker::Date.backward(days: 365)
   mottatt = Faker::Date.backward(days: 365)
-  hjemmel = nestenTilfeldigHjemmel()
+  hjemmel = tilfeldigHjemmel()
   fnr = Faker::Number.number(digits: 11)
-  navn = Faker::Movies::PrincessBride.character
+  navn = Faker::Movies::StarWars.character
   versjon = Faker::Number.number(digits: 2)
   insert_oppgave(id, type, tema, hjemmel, frist, mottatt, nestenTilfeldigSaksbehandler(), fnr, navn, versjon)
 end

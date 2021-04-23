@@ -42,7 +42,7 @@ describe("Oppgave epos", () => {
           fraNAVEnhet: "4416",
           mottattFoersteinstans: "2019-08-22",
           foedselsnummer: "29125639036",
-          tema: "SYK",
+          tema: "43",
           type: "Klage",
           mottatt: "2021-01-26",
           frist: "2019-12-05",

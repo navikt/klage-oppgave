@@ -1,7 +1,7 @@
 FROM ruby:latest
 
 WORKDIR /usr/app/
-COPY . . 
+COPY . .
 
 RUN bundle install -j 8
 

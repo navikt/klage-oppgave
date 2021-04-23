@@ -42,7 +42,12 @@ export interface Filter {
    * filtere i samme kolonne.
    */
   label: ReactNode;
-  value?: string | temaType;
+  value?: string;
+}
+export interface IKodeverkVerdi {
+  id: number;
+  navn: string;
+  beskrivelse: string;
 }
 
 export interface Filtrering {
@@ -76,7 +81,7 @@ export interface OppgaveRader {
 export interface Transformasjoner {
   filtrering: {
     typer: string[] | Filter[];
-    temaer: temaType[] | Filter[];
+    temaer: string[] | Filter[];
     hjemler: string[] | Filter[];
   };
   sortering: {
@@ -91,7 +96,11 @@ export type OppgaveState = {
   transformasjoner: Transformasjoner;
   meta: Metadata;
   lasterData: boolean;
-  kodeverk: any;
+  kodeverk: {
+    id?: number;
+    navn?: string;
+    beskrivelse?: string;
+  };
 };
 
 export interface RaderMedMetadata {
@@ -216,7 +225,7 @@ export interface OppgaveParams {
   transformasjoner: Transformasjoner;
 }
 
-export type temaType = "FOR" | "DAG" | "SYK" | undefined;
+export type temaType = "FOR" | "DAG" | "43" | undefined;
 
 export default oppgaveSlice.reducer;
 
@@ -260,7 +269,7 @@ export function buildQuery(url: string, data: OppgaveParams) {
   } else query.push(`erTildeltSaksbehandler=false`);
   query.push(`enhetId=${data.enhetId}`);
   let result = `${url}?${filters}&${R.compose(R.join("&"))(query)}`;
-  result = result.replace("Sykepenger", "SYK"); //WIP for endring av dataparametre i API
+  result = result.replace("Sykepenger", "43"); //WIP for endring av dataparametre i API
   return result;
 }
 

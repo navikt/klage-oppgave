@@ -1,6 +1,6 @@
 export const temaOversettelse = (tema: string): string => {
   switch (tema) {
-    case "SYK":
+    case "43":
       return "Sykepenger";
     case "DAG":
       return "Dagpenger";

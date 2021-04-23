@@ -479,27 +479,26 @@ function DokumentTabell(props: {
             Se alle dokumenter
           </VisTilknyttedeKnapp>
         </DokumenterNav>
-        {liste.map((item: any) => {
-          if (sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)) {
-            return (
-              <Tilknyttet>
-                <TilknyttetDato>{formattedDate(item.registrert)}</TilknyttetDato>
-                <TilknyttetTittel
-                  onClick={() =>
-                    hentPreview({
-                      behandlingId: klage.id,
-                      journalpostId: item.journalpostId,
-                      dokumentInfoId: item.dokumentInfoId,
-                      dokumentTittel: item.tittel,
-                      props: props,
-                    })
-                  }
-                >
-                  {item.tittel}
-                </TilknyttetTittel>
-              </Tilknyttet>
-            );
-          }
+
+        {klage.dokumenterTilordnede.map((item: any) => {
+          return (
+            <Tilknyttet key={item.journalpostId + item.dokumentInfoId}>
+              <TilknyttetDato>{formattedDate(item.registrert)}</TilknyttetDato>
+              <TilknyttetTittel
+                onClick={() =>
+                  hentPreview({
+                    behandlingId: klage.id,
+                    journalpostId: item.journalpostId,
+                    dokumentInfoId: item.dokumentInfoId,
+                    dokumentTittel: item.tittel,
+                    props: props,
+                  })
+                }
+              >
+                {item.tittel}
+              </TilknyttetTittel>
+            </Tilknyttet>
+          );
         })}
       </DokumenterMinivisning>
 
@@ -513,7 +512,7 @@ function DokumentTabell(props: {
               props.settDokumentGrid("15.5em 1fr 1fr 1fr");
             }}
           >
-            Vis kun tilknyttede
+            Vis kun tilknyttede ({klage.dokumenterTilordnede?.length ?? "0"})
           </VisTilknyttedeKnapp>
           <VisTilknyttedeKnapp
             theme={{ display: !visFullKontainer ? "unset" : "none" }}

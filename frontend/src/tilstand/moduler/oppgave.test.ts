@@ -53,13 +53,13 @@ describe("Oppgave epos", () => {
         filtrering: {
           typer: [],
           hjemler: [],
-          temaer: [("SYK" as unknown) as temaType, ("DAG" as unknown) as temaType],
+          temaer: ["43", "44"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/klagebehandlinger?temaer=SYK%2CDAG&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?temaer=43%2C44&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -78,13 +78,13 @@ describe("Oppgave epos", () => {
         filtrering: {
           typer: ["Klage"],
           hjemler: [],
-          temaer: [("SYK" as unknown) as temaType, ("DAG" as unknown) as temaType],
+          temaer: ["43", "44"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/klagebehandlinger?typer=Klage&temaer=SYK%2CDAG&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?typer=Klage&temaer=43%2C44&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -103,13 +103,13 @@ describe("Oppgave epos", () => {
         filtrering: {
           typer: ["Feilutbetaling"],
           hjemler: [],
-          temaer: [("SYK" as unknown) as temaType, ("DAG" as unknown) as temaType],
+          temaer: ["43", "44"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/klagebehandlinger?typer=Feilutbetaling&temaer=SYK%2CDAG&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?typer=Feilutbetaling&temaer=43%2C44&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -130,13 +130,13 @@ describe("Oppgave epos", () => {
         filtrering: {
           typer: ["klage"],
           hjemler: [],
-          temaer: [("SYK" as unknown) as temaType, ("DAG" as unknown) as temaType],
+          temaer: ["43", "44"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/klagebehandlinger?typer=klage&temaer=SYK%2CDAG&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&tildeltSaksbehandler=ZATHRAS&erTildeltSaksbehandler=true&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?typer=klage&temaer=43%2C44&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&projeksjon=UTVIDET&tildeltSaksbehandler=ZATHRAS&erTildeltSaksbehandler=true&enhetId=42"
     );
   });
 
@@ -154,14 +154,14 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: [],
-          temaer: [("SYK" as unknown) as temaType, ("DAG" as unknown) as temaType],
+          temaer: ["43", "44"],
           hjemler: ["8-12", "9-31"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/klagebehandlinger?temaer=SYK%2CDAG&hjemler=8-12%2C9-31&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?temaer=43%2C44&hjemler=8-12%2C9-31&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -179,14 +179,14 @@ describe("Oppgave epos", () => {
         },
         filtrering: {
           typer: [],
-          temaer: [("SYK" as unknown) as temaType, ("DAG" as unknown) as temaType],
+          temaer: ["43", "44"],
           hjemler: ["8-2, 8-13 og 8-49", "8-19", "8-16"],
         },
       },
     };
     const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
     expect(url).toStrictEqual(
-      "/ansatte/ZATHRAS/klagebehandlinger?temaer=SYK%2CDAG&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
+      "/ansatte/ZATHRAS/klagebehandlinger?temaer=43%2C44&hjemler=8-2%2C8-13%2C8-49%2C8-19%2C8-16&antall=2&start=0&sortering=FRIST&rekkefoelge=STIGENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
 
@@ -447,7 +447,7 @@ describe("Oppgave epos", () => {
                 mottatt: "synkende" as "synkende",
               },
               filtrering: {
-                temaer: [("SYK" as unknown) as temaType],
+                temaer: ["43"],
                 typer: [],
                 hjemler: [],
               },
@@ -459,15 +459,15 @@ describe("Oppgave epos", () => {
           start: 0,
           antall: 2,
           klagebehandlinger: [
-            { frist: "2019-09-12", tema: "SYK", hjemmel: "8-4" },
-            { frist: "2020-11-15", tema: "SYK", hjemmel: "10-12" },
+            { frist: "2019-09-12", tema: "43", hjemmel: "8-4" },
+            { frist: "2020-11-15", tema: "43", hjemmel: "10-12" },
           ],
           transformasjoner: {
             sortering: {
               frist: "synkende",
             },
             filtrering: {
-              temaer: [("SYK" as unknown) as temaType],
+              temaer: ["43"],
             },
           },
         };
@@ -479,10 +479,10 @@ describe("Oppgave epos", () => {
         const initState = {
           klagebehandlinger: {
             rader: [
-              { frist: "2019-09-12", tema: "SYK", hjemmel: "8-4" },
-              { frist: "2020-11-15", tema: "SYK", hjemmel: "10-12" },
+              { frist: "2019-09-12", tema: "43", hjemmel: "8-4" },
+              { frist: "2020-11-15", tema: "43", hjemmel: "10-12" },
               { frist: "2018-12-21", tema: "FOR", hjemmel: "9-11" },
-              { frist: "2019-11-13", tema: "SYK", hjemmel: "10-1" },
+              { frist: "2019-11-13", tema: "43", hjemmel: "10-1" },
               { frist: "2018-12-21", tema: "DAG", hjemmel: "mangler" },
             ],
           },
@@ -537,10 +537,10 @@ describe("Oppgave epos", () => {
           start: 0,
           antall: 5,
           klagebehandlinger: [
-            { frist: "2019-09-12", tema: "SYK", hjemmel: "8-2" },
-            { frist: "2020-11-15", tema: "SYK", hjemmel: "8-13" },
-            { frist: "2020-11-15", tema: "SYK", hjemmel: "8-49" },
-            { frist: "2020-11-15", tema: "SYK", hjemmel: "8-19" },
+            { frist: "2019-09-12", tema: "43", hjemmel: "8-2" },
+            { frist: "2020-11-15", tema: "43", hjemmel: "8-13" },
+            { frist: "2020-11-15", tema: "43", hjemmel: "8-49" },
+            { frist: "2020-11-15", tema: "43", hjemmel: "8-19" },
           ],
           transformasjoner: inputValues.a.payload.transformasjoner,
         };
@@ -552,13 +552,13 @@ describe("Oppgave epos", () => {
         const initState = {
           klagebehandlinger: {
             rader: [
-              { frist: "2019-09-12", tema: "SYK", hjemmel: "8-2" },
-              { frist: "2020-11-15", tema: "SYK", hjemmel: "8-13" },
-              { frist: "2020-11-15", tema: "SYK", hjemmel: "8-49" },
-              { frist: "2020-11-15", tema: "SYK", hjemmel: "8-19" },
-              { frist: "2020-11-15", tema: "SYK", hjemmel: "10-12" },
+              { frist: "2019-09-12", tema: "43", hjemmel: "8-2" },
+              { frist: "2020-11-15", tema: "43", hjemmel: "8-13" },
+              { frist: "2020-11-15", tema: "43", hjemmel: "8-49" },
+              { frist: "2020-11-15", tema: "43", hjemmel: "8-19" },
+              { frist: "2020-11-15", tema: "43", hjemmel: "10-12" },
               { frist: "2018-12-21", tema: "FOR", hjemmel: "9-11" },
-              { frist: "2019-11-13", tema: "SYK", hjemmel: "10-1" },
+              { frist: "2019-11-13", tema: "43", hjemmel: "10-1" },
               { frist: "2018-12-21", tema: "DAG", hjemmel: "mangler" },
             ],
           },

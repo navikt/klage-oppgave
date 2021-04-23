@@ -74,7 +74,7 @@ describe("'Meg' epos", () => {
             {
               id: "42",
               navn: "test",
-              lovligeTemaer: [{ label: "test", value: "test" }],
+              lovligeTemaer: [{ label: "test", value: "5" }],
             },
           ],
         });
@@ -83,7 +83,7 @@ describe("'Meg' epos", () => {
           {
             navn: "test",
             id: "42",
-            lovligeTemaer: [{ label: "test", value: "test" }],
+            lovligeTemaer: [{ label: "test", value: "5" }],
           },
         ]);
 
@@ -94,7 +94,7 @@ describe("'Meg' epos", () => {
                 {
                   navn: "test",
                   id: "42",
-                  lovligeTemaer: [{ label: "test", value: "test" }],
+                  lovligeTemaer: [{ label: "test", value: "5" }],
                 },
               ]);
             } else {
@@ -141,7 +141,7 @@ describe("'Meg' epos", () => {
         };
         const mockedResponse = {
           aktiveHjemler: [{ navn: "8-1", label: "8-1" }],
-          aktiveTemaer: [{ navn: "SYK", label: "Sykepenger" }],
+          aktiveTemaer: [{ navn: "43", label: "Sykepenger" }],
           aktiveTyper: [{ navn: "test-enhet", label: "42" }],
           aktiveFaner: { dokumenter: { checked: true } },
         };
