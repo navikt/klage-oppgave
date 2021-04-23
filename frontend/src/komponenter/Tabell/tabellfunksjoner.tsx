@@ -124,9 +124,11 @@ const OppgaveTabellRad = ({
       </td>
       <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${hjemmel}`}>
-          {kodeverk?.hjemmel
-            ? kodeverk?.hjemmel?.filter((h: IKodeverkVerdi) => h.id == Number(hjemmel))[0]
-                ?.beskrivelse ?? `ukjent hjemmel ${hjemmel}`
+          {hjemmel
+            ? kodeverk?.hjemmel
+              ? kodeverk?.hjemmel?.filter((h: IKodeverkVerdi) => h.id == Number(hjemmel))[0]
+                  ?.beskrivelse ?? `ukjent hjemmel ${hjemmel}`
+              : "mangler"
             : "mangler"}
         </EtikettBase>
       </td>
