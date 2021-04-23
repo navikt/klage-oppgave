@@ -158,9 +158,12 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   useEffect(() => {
     let lovligeTemaer = [{ label: "Sykepenger", value: "43" } as Filter];
+    console.debug(enheter);
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
+        console.debug({ lovligTema: tema });
         if (tema !== "43" && kodeverk?.tema) {
+          console.debug(kodeverk.tema);
           let kodeverkTema = kodeverk.tema.filter(
             (t: IKodeverkVerdi) => t.id.toString() === tema
           )[0];
