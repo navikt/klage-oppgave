@@ -267,6 +267,11 @@ const PDFKontainer = styled.div`
   }
 `;
 
+const Feil = styled.div`
+  display: block;
+  margin: 1em;
+`;
+
 export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [aktivPDF, settAktivPDF] = useState(false);
   const [journalpostId, settjournalpostId] = useState(0);
@@ -319,6 +324,7 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
             file={klage.currentPDF}
             onLoadSuccess={onDocumentLoadSuccess}
             options={options}
+            error={<Feil>Kunne ikke hente PDF</Feil>}
             loading={<NavFrontendSpinner />}
           >
             <PDFKontainer>
