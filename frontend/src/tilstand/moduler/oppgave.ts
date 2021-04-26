@@ -45,7 +45,7 @@ export interface Filter {
   value?: string;
 }
 export interface IKodeverkVerdi {
-  id: number;
+  id: string;
   navn: string;
   beskrivelse: string;
 }

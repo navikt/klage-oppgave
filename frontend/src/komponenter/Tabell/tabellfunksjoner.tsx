@@ -109,7 +109,7 @@ const OppgaveTabellRad = ({
       <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${type}`}>
           {kodeverk?.type
-            ? kodeverk?.type?.filter((h: IKodeverkVerdi) => h.id == Number(type))[0]?.beskrivelse ??
+            ? kodeverk?.type?.filter((h: IKodeverkVerdi) => h.id == type)[0]?.beskrivelse ??
               `ukjent type ${type}`
             : "mangler"}
         </EtikettBase>
@@ -117,7 +117,7 @@ const OppgaveTabellRad = ({
       <td onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${tema}`}>
           {kodeverk?.tema
-            ? kodeverk?.tema?.filter((h: IKodeverkVerdi) => h.id == Number(tema))[0]?.beskrivelse ??
+            ? kodeverk?.tema?.filter((h: IKodeverkVerdi) => h.id == tema)[0]?.beskrivelse ??
               `ukjent tema ${tema}`
             : "mangler"}
         </EtikettBase>
@@ -126,8 +126,8 @@ const OppgaveTabellRad = ({
         <EtikettBase type="info" className={`etikett-${hjemmel}`}>
           {hjemmel
             ? kodeverk?.hjemmel
-              ? kodeverk?.hjemmel?.filter((h: IKodeverkVerdi) => h.id == Number(hjemmel))[0]
-                  ?.beskrivelse ?? `ukjent hjemmel ${hjemmel}`
+              ? kodeverk?.hjemmel?.filter((h: IKodeverkVerdi) => h.id == hjemmel)[0]?.beskrivelse ??
+                `ukjent hjemmel ${hjemmel}`
               : "mangler"
             : "mangler"}
         </EtikettBase>
