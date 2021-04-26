@@ -486,7 +486,7 @@ function DokumentTabell(props: {
           </VisTilknyttedeKnapp>
         </DokumenterNav>
 
-        {klage.dokumenterTilordnede.map((item: any) => {
+        {klage?.dokumenterTilordnede.map((item: any) => {
           return (
             <Tilknyttet key={item.journalpostId + item.dokumentInfoId}>
               <TilknyttetDato>{formattedDate(item.registrert)}</TilknyttetDato>
