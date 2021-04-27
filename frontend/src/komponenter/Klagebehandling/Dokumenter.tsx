@@ -359,7 +359,7 @@ function itemClicked(
 }
 
 function sjekkErTilordnet(klage: any, journalpostId: string, dokumentInfoId: string): boolean {
-  if (!klage.dokumenterTilordnede) {
+  if (!klage?.dokumenterTilordnede) {
     return false;
   }
   let res = klage.dokumenterTilordnede.filter(
@@ -486,26 +486,27 @@ function DokumentTabell(props: {
           </VisTilknyttedeKnapp>
         </DokumenterNav>
 
-        {klage?.dokumenterTilordnede.map((item: any) => {
-          return (
-            <Tilknyttet key={item.journalpostId + item.dokumentInfoId}>
-              <TilknyttetDato>{formattedDate(item.registrert)}</TilknyttetDato>
-              <TilknyttetTittel
-                onClick={() =>
-                  hentPreview({
-                    behandlingId: klage.id,
-                    journalpostId: item.journalpostId,
-                    dokumentInfoId: item.dokumentInfoId,
-                    dokumentTittel: item.tittel,
-                    props: props,
-                  })
-                }
-              >
-                {item.tittel}
-              </TilknyttetTittel>
-            </Tilknyttet>
-          );
-        })}
+        {klage?.dokumenterTilordnede &&
+          klage.dokumenterTilordnede.map((item: any) => {
+            return (
+              <Tilknyttet key={item.journalpostId + item.dokumentInfoId}>
+                <TilknyttetDato>{formattedDate(item.registrert)}</TilknyttetDato>
+                <TilknyttetTittel
+                  onClick={() =>
+                    hentPreview({
+                      behandlingId: klage.id,
+                      journalpostId: item.journalpostId,
+                      dokumentInfoId: item.dokumentInfoId,
+                      dokumentTittel: item.tittel,
+                      props: props,
+                    })
+                  }
+                >
+                  {item.tittel}
+                </TilknyttetTittel>
+              </Tilknyttet>
+            );
+          })}
       </DokumenterMinivisning>
 
       <DokumenterFullvisning ref={rootRef} theme={{ display: visFullKontainer ? "flex" : "none" }}>
