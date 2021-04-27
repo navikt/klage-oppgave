@@ -89,6 +89,14 @@ const Navn = styled.span`
 const Kjonn = styled.span`
   font-weight: bold;
   padding-right: 0.1em;
+  background: #ba3a26;
+  border-radius: 50%;
+  width: 1.3em;
+  height: 1.3em;
+  color: white;
+  justify-content: center;
+  display: inline-flex;
+  margin: 0 0.25em 0 0;
 `;
 const Personnummer = styled.span`
   padding-left: 0.1em;
