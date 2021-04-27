@@ -86,6 +86,10 @@ const Navn = styled.span`
   font-weight: bold;
   padding-right: 0.1em;
 `;
+const Kjonn = styled.span`
+  font-weight: bold;
+  padding-right: 0.1em;
+`;
 const Personnummer = styled.span`
   padding-left: 0.1em;
 `;
@@ -250,7 +254,7 @@ export default function Klagebehandling() {
       <>
         <Kontrollpanel>
           <Person>
-            <Navn>{klage?.sakenGjelderKjoenn}</Navn>
+            <Kjonn>{klage?.sakenGjelderKjoenn[0]}</Kjonn>
             <Navn>{klage?.sakenGjelderNavn}</Navn>
             <span>/</span>
             <Personnummer>{klage.sakenGjelderFoedselsnummer}</Personnummer>
