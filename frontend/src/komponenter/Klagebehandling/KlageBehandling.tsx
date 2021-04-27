@@ -250,7 +250,8 @@ export default function Klagebehandling() {
       <>
         <Kontrollpanel>
           <Person>
-            <Navn>FORNAVN ETTERNAVN</Navn>
+            <Navn>{klage?.sakenGjelderKjoenn}</Navn>
+            <Navn>{klage?.sakenGjelderNavn}</Navn>
             <span>/</span>
             <Personnummer>{klage.foedselsnummer}</Personnummer>
           </Person>

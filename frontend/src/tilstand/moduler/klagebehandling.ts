@@ -30,6 +30,8 @@ export interface IHjemmel {
 
 export interface IKlage {
   id: string;
+  sakenGjelderKjoenn: string;
+  sakenGjelderNavn: string;
   klageLastet: boolean;
   lasterDokumenter: boolean;
   hasMore: boolean;
@@ -89,6 +91,8 @@ export const klageSlice = createSlice({
   initialState: {
     id: "",
     klageLastet: false,
+    sakenGjelderKjoenn: "",
+    sakenGjelderNavn: "",
     lasterDokumenter: false,
     klageLastingFeilet: false,
     dokumenterAlleHentet: false,
