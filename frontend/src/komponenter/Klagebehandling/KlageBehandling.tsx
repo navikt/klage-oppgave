@@ -253,7 +253,7 @@ export default function Klagebehandling() {
             <Navn>{klage?.sakenGjelderKjoenn}</Navn>
             <Navn>{klage?.sakenGjelderNavn}</Navn>
             <span>/</span>
-            <Personnummer>{klage.foedselsnummer}</Personnummer>
+            <Personnummer>{klage.sakenGjelderFoedselsnummer}</Personnummer>
           </Person>
 
           <Knapper>
