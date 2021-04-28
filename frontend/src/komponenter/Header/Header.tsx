@@ -7,6 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { valgtEnhet, velgEnheter, velgMeg } from "../../tilstand/moduler/meg.velgere";
 import { settEnhetHandling } from "../../tilstand/moduler/meg";
 import { useOnInteractOutside } from "../Tabell/FiltrerbarHeader";
+import styled from "styled-components";
+
+const BrukerBoks = styled.div`
+  z-index: 2;
+`;
 
 export type Brukerinfo = {
   navn: string;
@@ -48,7 +53,7 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   };
 
   return (
-    <div className={"bruker-boks"}>
+    <BrukerBoks className={"bruker-boks"}>
       <button
         className={classNames(aapen ? "header__lukkeknapp" : "header__aapneknapp")}
         onClick={() => setAapen((a) => !a)}
@@ -83,7 +88,7 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
           </div>
         </div>
       </div>
-    </div>
+    </BrukerBoks>
   );
 };
 

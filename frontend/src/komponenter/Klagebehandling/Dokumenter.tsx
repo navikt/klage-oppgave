@@ -99,7 +99,7 @@ const DokumentKontainer = styled.div`
 
 const DokumenterNav = styled.div`
   position: sticky;
-  z-index: 10;
+  z-index: 1;
   background: white;
   top: 0;
 `;
@@ -226,7 +226,7 @@ const PreviewTitle = styled.div`
   position: sticky;
   top: 0;
   padding: 1em 0 1em 0.5em;
-  z-index: 10;
+  z-index: 1;
   justify-content: space-between;
   height: 3.5em;
 `;
