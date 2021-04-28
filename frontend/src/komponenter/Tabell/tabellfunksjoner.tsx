@@ -36,13 +36,11 @@ const gosysEnvironment = (hostname: string) => {
 
 const TableRow = styled.tr`
   &:hover {
-    background: red !important;
+    background: #ddd !important;
   }
 `;
 const TableCell = styled.td`
-  &:hover {
-    background: red !important;
-  }
+  cursor: pointer !important;
 `;
 
 const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: number) => {
@@ -113,7 +111,7 @@ const OppgaveTabellRad = ({
   const history = useHistory();
 
   const rerouteToKlage = (location: any) => {
-    //if (location.pathname.startsWith("/mineoppgaver")) history.push(`/klagebehandling/${id}`);
+    if (location.pathname.startsWith("/mineoppgaver")) history.push(`/klagebehandling/${id}`);
   };
 
   return (
@@ -166,7 +164,7 @@ const OppgaveTabellRad = ({
 function tildelOppgave(settValgtOppgave: Function, id: string, versjon: number) {
   let [it] = useState(0);
   return (
-    <td>
+    <TableCell>
       <Knapp
         data-testid={`tildelknapp${it++}`}
         className={"knapp"}
@@ -174,7 +172,7 @@ function tildelOppgave(settValgtOppgave: Function, id: string, versjon: number) 
       >
         Tildel meg
       </Knapp>
-    </td>
+    </TableCell>
   );
 }
 

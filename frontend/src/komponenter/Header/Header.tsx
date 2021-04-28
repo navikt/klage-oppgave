@@ -17,6 +17,7 @@ export type Brukerinfo = {
 
 export interface HeaderProps {
   tittel: ReactNode;
+  backLink: string;
   brukerinfo: Brukerinfo;
   children?: ReactNode | ReactNode[];
 }
@@ -86,12 +87,15 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   );
 };
 
-export const Header = ({ tittel, children, brukerinfo }: HeaderProps) => {
+export const Header = ({ tittel, backLink, children, brukerinfo }: HeaderProps) => {
   const history = useHistory();
 
   return (
     <header className={"header__kontainer"}>
-      <div className={"header__rad pointer"} onClick={() => history.push(`/`)}>
+      <div
+        className={"header__rad pointer"}
+        onClick={() => history.push(backLink ? backLink : `/`)}
+      >
         <h1 className={"header__tittel"}>{tittel}</h1>
         <div className={"header__avdeler skjult"} />
         {children}

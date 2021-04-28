@@ -246,7 +246,7 @@ export default function Klagebehandling() {
 
   if (klage.klageLastet && klage.klageLastingFeilet) {
     return (
-      <Oppsett visMeny={false}>
+      <Oppsett backLink={"/mineoppgaver"} visMeny={false}>
         <FeilmeldingInformasjon className="klagebehandling__informasjon" style={{ padding: "5em" }}>
           <div>Klage kunne ikke hentes...</div>
           <div>
@@ -258,7 +258,12 @@ export default function Klagebehandling() {
   }
 
   return (
-    <Oppsett visMeny={false} customClass={"bg_lysgraa"} contentClass={"uten-nav"}>
+    <Oppsett
+      backLink={"/mineoppgaver"}
+      visMeny={false}
+      customClass={"bg_lysgraa"}
+      contentClass={"uten-nav"}
+    >
       <>
         <Kontrollpanel>
           <Person>
