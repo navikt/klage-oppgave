@@ -32,6 +32,7 @@ const Lenke2 = styled.a`
 const Ikon = styled.img`
   position: absolute;
   margin: 2px 0 0 0.15em;
+  z-index: 0;
 `;
 
 const Knapperad = styled.div`
