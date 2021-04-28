@@ -17,6 +17,7 @@ import {
   hentInnstillingerHandling,
   settInnstillingerHandling,
 } from "../tilstand/moduler/meg";
+import styled from "styled-components";
 
 function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
@@ -27,6 +28,8 @@ function initState(filter: Array<string> | undefined) {
     return { label: f, value: f };
   });
 }
+
+const TableRow = styled.td``;
 
 const Innstillinger = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -185,7 +188,7 @@ const Innstillinger = (): JSX.Element => {
           </thead>
           <tbody>
             <tr>
-              <td>
+              <TableRow>
                 {!aktiveTyper.length && <div>Ingen typer valgt</div>}
                 {aktiveTyper.map((a, idx) => (
                   <div key={`type${idx}`}>
@@ -194,9 +197,9 @@ const Innstillinger = (): JSX.Element => {
                     </EtikettBase>
                   </div>
                 ))}
-              </td>
+              </TableRow>
 
-              <td>
+              <TableRow>
                 {!aktiveTemaer.length && <div>Ingen temaer valgt</div>}
                 {aktiveTemaer.map((a, idx) => (
                   <div key={`tema${idx}`}>
@@ -205,8 +208,8 @@ const Innstillinger = (): JSX.Element => {
                     </EtikettBase>
                   </div>
                 ))}
-              </td>
-              <td>
+              </TableRow>
+              <TableRow>
                 {!aktiveHjemler.length && <div>Ingen hjemler valgt</div>}
                 {aktiveHjemler.map((a, idx) => (
                   <div key={`hjemmel${idx}`}>
@@ -215,7 +218,7 @@ const Innstillinger = (): JSX.Element => {
                     </EtikettBase>
                   </div>
                 ))}
-              </td>
+              </TableRow>
             </tr>
             <tr className={"skjult"}>
               <td colSpan={2} className={"lagre"}>

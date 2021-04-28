@@ -17,6 +17,7 @@ import PilOppHoeyre from "../../komponenter/arrow.svg";
 import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { formattedDate } from "../../domene/datofunksjoner";
 import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
+import styled from "styled-components";
 
 const R = require("ramda");
 
@@ -32,6 +33,17 @@ const gosysEnvironment = (hostname: string) => {
   }
   return "https://gosys-nais.nais.adeo.no";
 };
+
+const TableRow = styled.tr`
+  &:hover {
+    background: red !important;
+  }
+`;
+const TableCell = styled.td`
+  &:hover {
+    background: red !important;
+  }
+`;
 
 const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: number) => {
   const [viserHandlinger, settVisHandlinger] = useState(false);
@@ -105,24 +117,25 @@ const OppgaveTabellRad = ({
   };
 
   return (
-    <tr className="table-filter">
-      <td onClick={() => rerouteToKlage(location)}>
+    <TableRow className="table-filter">
+      <TableCell onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${type}`}>
           {kodeverk?.type
             ? kodeverk?.type?.filter((h: IKodeverkVerdi) => h.id == type)[0]?.beskrivelse ??
               `ukjent type ${type}`
             : "mangler"}
         </EtikettBase>
-      </td>
-      <td onClick={() => rerouteToKlage(location)}>
+      </TableCell>
+      <TableCell onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${tema}`}>
           {kodeverk?.tema
             ? kodeverk?.tema?.filter((h: IKodeverkVerdi) => h.id == tema)[0]?.beskrivelse ??
               `ukjent tema ${tema}`
             : "mangler"}
         </EtikettBase>
-      </td>
-      <td onClick={() => rerouteToKlage(location)}>
+      </TableCell>
+
+      <TableCell onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${hjemmel}`}>
           {hjemmel
             ? kodeverk?.hjemmel
@@ -131,22 +144,22 @@ const OppgaveTabellRad = ({
               : "mangler"
             : "mangler"}
         </EtikettBase>
-      </td>
+      </TableCell>
 
       {utvidetProjeksjon && (
-        <td onClick={() => rerouteToKlage(location)}>{person?.navn || "mangler"}</td>
+        <TableCell onClick={() => rerouteToKlage(location)}>{person?.navn || "mangler"}</TableCell>
       )}
       {utvidetProjeksjon && (
-        <td>
+        <TableCell>
           <div className="fnr-lenke-wrap">
             <NavLink to={`/klagebehandling/${id}&side=klagen`}> {person?.fnr || "mangler"}</NavLink>
           </div>
-        </td>
+        </TableCell>
       )}
-      <td>{frist ? formattedDate(frist as number) : <div>mangler</div>}</td>
+      <TableCell>{frist ? formattedDate(frist as number) : <div>mangler</div>}</TableCell>
       {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave}
       {location.pathname.startsWith("/mineoppgaver") && curriedVisHandlinger}
-    </tr>
+    </TableRow>
   );
 };
 
