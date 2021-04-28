@@ -141,7 +141,7 @@ const RightAlign = styled.div`
 const DokumentRad = styled.ul`
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.25em;
   display: grid;
   grid-template-areas:
     "tittel tema dato sjekkboks"
@@ -150,6 +150,7 @@ const DokumentRad = styled.ul`
 `;
 
 const DokumentTittel = styled.li`
+  cursor: pointer;
   color: #0067c5;
   grid-area: tittel;
   width: 11em;
@@ -157,6 +158,7 @@ const DokumentTittel = styled.li`
 
 const DokumentTema = styled.li`
   width: 8em;
+  cursor: pointer;
   grid-area: tema;
   max-height: 2em;
 `;
@@ -164,12 +166,14 @@ const DokumentTema = styled.li`
 const TemaText = styled.div`
   max-width: 8em;
   white-space: nowrap;
+  cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
 `;
 const DokumentDato = styled.li`
   max-width: 8em;
+  cursor: pointer;
   text-align: center;
   font-size: 0.9em;
   grid-area: dato;
@@ -197,6 +201,7 @@ const VedleggTittel = styled.li`
   color: #0067c5;
   margin: 0 0 0 2em;
   min-width: 15em;
+  cursor: pointer;
 `;
 const PreviewKontainer = styled.div`
   display: ${(props) => props.theme.display};
@@ -228,6 +233,7 @@ const PreviewTitle = styled.div`
 
 const SVGIkon = styled.img`
   color: black;
+  cursor: pointer;
   margin: 0.25em 1em 0 0.2em;
   -webkit-transition: all 0.15s ease-in-out;
   transition: all 0.15s ease-in-out;
@@ -238,6 +244,7 @@ const SVGIkon = styled.img`
   height: 1em;
 `;
 const EksternalSVGIkon = styled.img`
+  cursor: pointer;
   color: black;
   margin: 0.25em 1em 0 0.2em;
   -webkit-transition: all 0.15s ease-in-out;
