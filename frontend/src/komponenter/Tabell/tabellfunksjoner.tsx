@@ -42,6 +42,9 @@ const TableRow = styled.tr`
 const TableCell = styled.td`
   cursor: pointer !important;
 `;
+const EndreKnapp = styled.button`
+  cursor: pointer !important;
+`;
 
 const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: number) => {
   const [viserHandlinger, settVisHandlinger] = useState(false);
@@ -55,13 +58,13 @@ const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: num
 
   return (
     <td className="knapp-med-handlingsoverlegg">
-      <button
+      <EndreKnapp
         data-testid={`endreknapp${it++}`}
         onClick={() => settVisHandlinger(!viserHandlinger)}
         className={classNames({ skjult: viserHandlinger })}
       >
         Endre
-      </button>
+      </EndreKnapp>
       <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
         <div>
           <Knapp
