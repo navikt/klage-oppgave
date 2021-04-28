@@ -1,4 +1,4 @@
-import { Filter, oppgaveRequest, temaType, Transformasjoner } from "../../tilstand/moduler/oppgave";
+import { Filter, oppgaveRequest, Transformasjoner } from "../../tilstand/moduler/oppgave";
 import { useReducer } from "react";
 import { MegType } from "../../tilstand/moduler/meg";
 

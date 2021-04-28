@@ -157,10 +157,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [valgtEnhetIdx, meg.id]);
 
   useEffect(() => {
-    let lovligeTemaer = [{ label: "Sykepenger", value: "43" } as Filter];
+    let lovligeTemaer: Filter[] = [];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
-        if (tema.toString() !== "43" && kodeverk?.tema) {
+        if (kodeverk?.tema) {
           let kodeverkTema = kodeverk.tema.filter(
             (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
           )[0];
@@ -348,17 +348,16 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
     const temaer =
       (innstillinger?.aktiveTemaer &&
-        innstillinger?.aktiveTemaer.map((type) => type.value as temaType)) ||
+        innstillinger?.aktiveTemaer.map((type) => type.value as string)) ||
       [];
     if (temaer.length) {
-      filtre.temaer = (innstillinger?.aktiveTemaer ?? [])
-        .filter((tema: Filter) => tema.label !== "Sykepenger")
-        .concat([{ label: "Sykepenger", value: "43" }]);
-      settTemaFilter(temaer);
+      filtre.temaer = innstillinger.aktiveTemaer;
+      settTypeFilter(typer);
     } else {
-      filtre.temaer = [{ label: "Sykepenger", value: "43" }];
-      settTemaFilter(["Sykepenger" as temaType]);
+      filtre.temaer = [];
+      settTemaFilter(undefined);
     }
+
     filter_dispatch({ type: "sett_transformasjoner", payload: filtre });
   }, [innstillinger]);
 

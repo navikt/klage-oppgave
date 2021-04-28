@@ -14,7 +14,7 @@ import {
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod, AjaxObservable, ajaxPost } from "rxjs/internal-compatibility";
-import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling, temaType } from "./oppgave";
+import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { ReactFragment, ReactNode } from "react";
 

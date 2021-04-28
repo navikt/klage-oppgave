@@ -13,7 +13,6 @@ import {
   OppgaveState,
   OppgaveRad,
   Transformasjoner,
-  temaType,
 } from "./oppgave";
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";

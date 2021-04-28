@@ -56,10 +56,10 @@ const Innstillinger = (): JSX.Element => {
   }, [meg.id, valgtEnhetIdx, reload]);
 
   useEffect(() => {
-    let lovligeTemaer = [{ label: "Sykepenger", value: "43" } as Filter];
+    let lovligeTemaer: Filter[] = [];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
-        if (tema.toString() !== "43" && kodeverk?.tema) {
+        if (kodeverk?.tema) {
           let kodeverkTema = kodeverk.tema.filter(
             (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
           )[0];
@@ -93,11 +93,7 @@ const Innstillinger = (): JSX.Element => {
   useEffect(() => {
     settAktiveHjemler(innstillinger?.aktiveHjemler ?? []);
     settAktiveTyper(innstillinger?.aktiveTyper ?? []);
-    settAktiveTemaer(
-      (innstillinger?.aktiveTemaer ?? [])
-        .filter((tema: Filter) => tema.label !== "Sykepenger")
-        .concat([{ label: "Sykepenger", value: "43" }])
-    );
+    settAktiveTemaer(innstillinger?.aktiveTemaer ?? []);
   }, [innstillinger, meg.id, reload]);
 
   const lagreInnstillinger = () => {
@@ -209,12 +205,6 @@ const Innstillinger = (): JSX.Element => {
                     </EtikettBase>
                   </div>
                 ))}
-                <div>
-                  <small>
-                    OBS: Sykepenger er satt som forvalgt tema, så det blir aktivt selv om du
-                    forsøker å velge det bort.
-                  </small>
-                </div>
               </td>
               <td>
                 {!aktiveHjemler.length && <div>Ingen hjemler valgt</div>}
