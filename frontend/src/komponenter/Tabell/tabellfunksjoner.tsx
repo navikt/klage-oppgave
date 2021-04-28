@@ -134,15 +134,12 @@ const OppgaveTabellRad = ({
       </td>
 
       {utvidetProjeksjon && (
-        <td onClick={() => rerouteToKlage(location)}>{person?.navn || "<mangler>"}</td>
+        <td onClick={() => rerouteToKlage(location)}>{person?.navn || "mangler"}</td>
       )}
       {utvidetProjeksjon && (
         <td>
           <div className="fnr-lenke-wrap">
-            <NavLink to={`/klagebehandling/${id}&side=klagen`}>
-              {" "}
-              {person?.fnr || "<mangler>"}
-            </NavLink>
+            <NavLink to={`/klagebehandling/${id}&side=klagen`}> {person?.fnr || "mangler"}</NavLink>
           </div>
         </td>
       )}
