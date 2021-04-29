@@ -42,7 +42,7 @@ describe("Oppgave epos", () => {
           fraNAVEnhet: "4416",
           mottattFoersteinstans: "2019-08-22",
           foedselsnummer: "29125639036",
-          sakenGjelderNavn: "",
+          sakenGjelderNavn: { fornavn: "Petter" },
           sakenGjelderKjoenn: "",
           sakenGjelderFoedselsnummer: "",
           tema: "43",
@@ -63,6 +63,7 @@ describe("Oppgave epos", () => {
           pageIdx: 0,
           hjemler: [{ kapittel: 8, paragraf: 14, original: "8-14" }],
         };
+
         const reducerResponse = hentetKlageHandling(mockedResponse);
 
         const dependencies = {

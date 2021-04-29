@@ -117,6 +117,27 @@ function Oppgave() {
   return <>Oppgave</>;
 }
 
+function fornavn(klage: Partial<IKlage>) {
+  if (klage.sakenGjelderNavn?.fornavn) {
+    return klage.sakenGjelderNavn.fornavn;
+  }
+  return "";
+}
+
+function etternavn(klage: Partial<IKlage>) {
+  if (klage.sakenGjelderNavn?.etternavn) {
+    return klage.sakenGjelderNavn.etternavn.padStart(1, " ");
+  }
+  return "";
+}
+
+function mellomnavn(klage: Partial<IKlage>) {
+  if (klage.sakenGjelderNavn?.mellomnavn) {
+    return klage.sakenGjelderNavn.mellomnavn.padStart(1, " ");
+  }
+  return "";
+}
+
 const FeilmeldingInformasjon = styled.div`
   background-color: #f8f8f8;
   display: flex;
@@ -268,7 +289,7 @@ export default function Klagebehandling() {
         <Kontrollpanel>
           <Person>
             <Kjonn>{klage?.sakenGjelderKjoenn[0]}</Kjonn>
-            <Navn>{klage?.sakenGjelderNavn}</Navn>
+            <Navn>{`${fornavn(klage)} ${mellomnavn(klage)} ${etternavn(klage)}`}</Navn>
             <span>/</span>
             <Personnummer>{klage.sakenGjelderFoedselsnummer}</Personnummer>
           </Person>

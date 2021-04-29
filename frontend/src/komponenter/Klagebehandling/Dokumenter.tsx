@@ -37,6 +37,7 @@ export interface IDokument {
 }
 
 export interface IVedlegg {
+  idx?: number;
   dokumentInfoId: string;
   tittel: string;
   harTilgangTilArkivvariant: boolean;
@@ -364,6 +365,13 @@ function itemClicked(
     ).length > 0
   );
 }
+function subItemClicked(dokumentInfoId: string, idx: number, items: Array<Partial<IDokument>>) {
+  return (
+    items.filter(
+      (it: Partial<IVedlegg>, _idx: number) => it.dokumentInfoId === dokumentInfoId && idx === _idx
+    ).length > 0
+  );
+}
 
 function sjekkErTilordnet(klage: any, journalpostId: string, dokumentInfoId: string): boolean {
   if (!klage?.dokumenterTilordnede) {
@@ -460,6 +468,7 @@ function DokumentTabell(props: {
 
   const [visFullKontainer, settvisFullKontainer] = useState(true);
   const [clickedItems, setclickedItems] = useState<Array<IDokument>>([]);
+  const [clickedsubItems, setsubItemClicked] = useState<Array<IVedlegg>>([]);
 
   useEffect(() => {
     console.debug(clickedItems);
@@ -597,9 +606,6 @@ function DokumentTabell(props: {
                         item.valgt ??
                         sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)
                       }
-                      onChange={(e: any) => {
-                        console.debug("changed", e);
-                      }}
                     />
                     <label
                       onClick={() => {
@@ -647,11 +653,21 @@ function DokumentTabell(props: {
                               id={idx + item.dokumentInfoId}
                               type={"checkbox"}
                               checked={
+                                subItemClicked(vedlegg.dokumentInfoId, idx, clickedsubItems) ??
                                 item.valgt ??
                                 sjekkErTilordnet(klage, item.journalpostId, vedlegg.dokumentInfoId)
                               }
                               disabled={item.harTilgangTilArkivvariant}
-                              onChange={() => {
+                              onClick={() => {
+                                if (subItemClicked(item.dokumentInfoId, idx, clickedItems))
+                                  setsubItemClicked(
+                                    clickedsubItems.filter(
+                                      (it: Partial<IVedlegg>) =>
+                                        it.dokumentInfoId !== item.dokumentInfoId && it.idx !== idx
+                                    )
+                                  );
+                                else setsubItemClicked(clickedsubItems.concat([{ ...item, idx }]));
+
                                 if (
                                   sjekkErTilordnet(
                                     klage,

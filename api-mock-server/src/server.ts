@@ -107,7 +107,11 @@ app.get("/klagebehandlinger/:id/detaljer", async (req, res) => {
     fraNAVEnhetNavn: "NAV Moss",
     mottattFoersteinstans: "2020-08-14",
     sakenGjelderFoedselsnummer: "17457337760",
-    sakenGjelderNavn: "LEALAUS TRANFLASKE",
+    sakenGjelderNavn: {
+      fornavn: "Anders",
+      mellomnavn: "Jørgen",
+      etternavn: "Andersen",
+    },
     sakenGjelderKjoenn: "MANN",
     sakenGjelderVirksomhetsnummer: null,
     foedselsnummer: "17457337760",
@@ -243,6 +247,10 @@ app.get("/aapenfeaturetoggle/:feature", (req, res) => {
   if (req.params?.feature === "klage.generellTilgang")
     res.status(200).send("true");
   else res.status(200).send("false");
+});
+
+app.post("/klagebehandlinger/:oppgaveid/dokumenter", async (req, res) => {
+  res.status(200).send("OK");
 });
 
 app.post(

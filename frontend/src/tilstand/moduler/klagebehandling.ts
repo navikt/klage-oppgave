@@ -32,7 +32,11 @@ export interface IKlage {
   id: string;
   sakenGjelderKjoenn: string;
   sakenGjelderFoedselsnummer: string;
-  sakenGjelderNavn: string;
+  sakenGjelderNavn: {
+    fornavn?: string;
+    mellomnavn?: string;
+    etternavn?: string;
+  };
   klageLastet: boolean;
   lasterDokumenter: boolean;
   hasMore: boolean;
