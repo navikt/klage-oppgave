@@ -171,14 +171,16 @@ const OppgaveTabell: React.FunctionComponent = () => {
         }
       });
     }
-    settLovligeTemaer(lovligeTemaer);
+    if (innstillinger?.aktiveTemaer) settLovligeTemaer(innstillinger.aktiveTemaer);
+    else settLovligeTemaer(lovligeTemaer);
 
     let hjemler: Filter[] = [];
     if (kodeverk.hjemmel) {
       kodeverk.hjemmel.map((hjemmel: IKodeverkVerdi) => {
         hjemler.push({ label: hjemmel.beskrivelse, value: hjemmel.id.toString() });
       });
-      settGyldigeHjemler(hjemler);
+      if (innstillinger?.aktiveHjemler) settGyldigeHjemler(innstillinger.aktiveHjemler);
+      else settGyldigeHjemler(hjemler);
     }
 
     let typer: Filter[] = [];
@@ -186,7 +188,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
       kodeverk.type.map((verdi: IKodeverkVerdi) => {
         typer.push({ label: verdi.beskrivelse, value: verdi.id.toString() });
       });
-      settGyldigeTyper(typer);
+      if (innstillinger?.aktiveTyper) settGyldigeTyper(innstillinger.aktiveTyper);
+      else settGyldigeTyper(typer);
     }
   }, [enheter, valgtEnhetIdx, kodeverk]);
 
