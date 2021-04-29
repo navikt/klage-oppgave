@@ -4,7 +4,6 @@ import {
   IKodeverkVerdi,
   kodeverkRequest,
   oppgaveRequest,
-  temaType,
 } from "../../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
@@ -79,8 +78,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
     undefined
   );
 
-  const [temaFilter, settTemaFilter] = useState<temaType[] | undefined>(undefined);
-  const [forrigeTemaFilter, settForrigeTemaFilter] = useState<temaType[] | undefined>(undefined);
+  const [temaFilter, settTemaFilter] = useState<string[] | undefined>(undefined);
+  const [forrigeTemaFilter, settForrigeTemaFilter] = useState<string[] | undefined>(undefined);
   const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
   const [gyldigeHjemler, settGyldigeHjemler] = useState<Filter[]>([]);
   const [gyldigeTyper, settGyldigeTyper] = useState<Filter[]>([]);
@@ -159,7 +158,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   useEffect(() => {
     let lovligeTemaer: Filter[] = [];
     if (enheter.length > 0) {
-      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
+      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: string | any) => {
         if (kodeverk?.tema) {
           let kodeverkTema = kodeverk.tema.filter(
             (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
@@ -229,7 +228,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const skiftSorteringMottatt = (event: React.MouseEvent<HTMLElement | HTMLButtonElement>) =>
     R.curry(skiftSortering)("mottatt")(event);
 
-  function toValue<T>(filters: Array<string | temaType | Filter>) {
+  function toValue<T>(filters: Array<string | string | Filter>) {
     return filters.map((filter: any) => filter.value);
   }
 
@@ -447,7 +446,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     if (!filtre.length) {
       settTemaFilter(undefined);
     } else {
-      settTemaFilter(filtre.map((f) => f.value as temaType));
+      settTemaFilter(filtre.map((f) => f.value as string));
     }
     settStart(0);
     history.push(location.pathname.replace(/\d+$/, "1"));

@@ -225,7 +225,7 @@ export interface OppgaveParams {
   transformasjoner: Transformasjoner;
 }
 
-export type temaType = "FOR" | "DAG" | "43" | undefined;
+export type temaType = string | undefined;
 
 export default oppgaveSlice.reducer;
 

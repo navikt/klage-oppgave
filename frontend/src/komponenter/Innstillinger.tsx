@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Oppsett from "./Oppsett";
 import FiltrerbarHeader, { settFilter } from "./Tabell/FiltrerbarHeader";
-import { Filter, IKodeverkVerdi, temaType } from "../tilstand/moduler/oppgave";
+import { Filter, IKodeverkVerdi } from "../tilstand/moduler/oppgave";
 import { useDispatch, useSelector } from "react-redux";
 import { velgFiltrering, velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
@@ -43,7 +43,7 @@ const Innstillinger = (): JSX.Element => {
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
-  const [temaFilter, settTemaFilter] = useState<temaType[] | undefined>(undefined);
+  const [temaFilter, settTemaFilter] = useState<string[] | undefined>(undefined);
   const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
   const [aktiveFaner, settAktiveFaner] = useState<Faner>(faner);
   const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
@@ -61,7 +61,7 @@ const Innstillinger = (): JSX.Element => {
   useEffect(() => {
     let lovligeTemaer: Filter[] = [];
     if (enheter.length > 0) {
-      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: temaType | any) => {
+      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: string | any) => {
         if (kodeverk?.tema) {
           let kodeverkTema = kodeverk.tema.filter(
             (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
@@ -123,7 +123,7 @@ const Innstillinger = (): JSX.Element => {
     if (!filtre.length) {
       settTemaFilter(undefined);
     } else {
-      settTemaFilter(filtre.map((f) => f.value as temaType));
+      settTemaFilter(filtre.map((f) => f.value as string));
     }
     lagreInnstillinger();
   };
