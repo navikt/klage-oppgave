@@ -18,7 +18,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
-import Detaljer from "./Detaljer";
+import Behandlingsskjema from "./Behandlingsskjema";
 
 const IkonHake = styled.img`
   position: absolute;
@@ -210,13 +210,13 @@ export default function Klagebehandling() {
 
   const [faner, settAktiveFaner] = useState({
     detaljer: {
-      checked: innstillinger?.aktiveFaner?.detaljer?.checked || false,
+      checked: innstillinger?.aktiveFaner?.detaljer?.checked || true,
     },
     dokumenter: {
-      checked: innstillinger?.aktiveFaner?.dokumenter?.checked || true,
+      checked: innstillinger?.aktiveFaner?.dokumenter?.checked || false,
     },
     vedtak: {
-      checked: innstillinger?.aktiveFaner?.vedtak?.checked || true,
+      checked: innstillinger?.aktiveFaner?.vedtak?.checked || false,
     },
   });
 
@@ -232,13 +232,13 @@ export default function Klagebehandling() {
   useEffect(() => {
     settAktiveFaner({
       detaljer: {
-        checked: innstillinger?.aktiveFaner?.detaljer?.checked || false,
+        checked: innstillinger?.aktiveFaner?.detaljer?.checked || true,
       },
       dokumenter: {
-        checked: innstillinger?.aktiveFaner?.dokumenter?.checked || true,
+        checked: innstillinger?.aktiveFaner?.dokumenter?.checked || false,
       },
       vedtak: {
-        checked: innstillinger?.aktiveFaner?.vedtak?.checked || true,
+        checked: innstillinger?.aktiveFaner?.vedtak?.checked || false,
       },
     });
   }, [innstillinger?.aktiveFaner]);
@@ -321,7 +321,7 @@ export default function Klagebehandling() {
         {showDebug && <Debug state={klage} />}
 
         <Dokumenter skjult={!faner.dokumenter.checked} />
-        <Detaljer skjult={!faner.detaljer.checked} />
+        <Behandlingsskjema skjult={!faner.detaljer.checked} />
       </>
     </Oppsett>
   );

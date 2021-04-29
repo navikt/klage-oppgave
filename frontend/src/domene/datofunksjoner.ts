@@ -5,3 +5,5 @@ export const formattedDate = (frist: number) => {
   const da = new Intl.DateTimeFormat("nb", { day: "2-digit" }).format(utime);
   return `${da}${mo}${ye}`;
 };
+
+export type ISODate = string;
