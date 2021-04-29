@@ -18,7 +18,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
-import Behandlingsskjema from "./Behandlingsskjema";
+import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
 
 const IkonHake = styled.img`
   position: absolute;
