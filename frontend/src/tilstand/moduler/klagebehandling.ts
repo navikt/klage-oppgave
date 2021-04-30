@@ -63,6 +63,7 @@ export interface IKlage {
   dokumenterTilordnede?: any;
   currentPDF: string;
   dokumenterOppdatert: string;
+  internVurdering: null;
 }
 
 interface IKlagePayload {
@@ -122,6 +123,7 @@ export const klageSlice = createSlice({
     dokumenterOppdatert: "",
     hjemler: [],
     currentPDF: "",
+    internVurdering: null,
   } as IKlage,
   reducers: {
     HENT_KLAGE: (state, action: PayloadAction<IKlage>) => {

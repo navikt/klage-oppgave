@@ -17,3 +17,9 @@ export enum OmgjoeringsgrunnValg {
   FEIL_I_DEN_GENERELLE_LOVTOLKNINGEN = "3a Feil i den generelle lovtolkningen",
   FEIL_I_DEN_KONKRETE_RETTSANVENDELSEN = "3b Feil i den konkrete rettsanvendelsen",
 }
+
+export const utfallSomKreverOmgjoering: Utfall[] = [
+  Utfall.OPPHEVET,
+  Utfall.MEDHOLD,
+  Utfall.DELVIS_MEDHOLD,
+];

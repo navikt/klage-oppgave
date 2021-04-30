@@ -62,6 +62,7 @@ describe("Oppgave epos", () => {
           dokumenterTilordnedeHentet: false,
           pageIdx: 0,
           hjemler: [{ kapittel: 8, paragraf: 14, original: "8-14" }],
+          internVurdering: null,
         };
 
         const reducerResponse = hentetKlageHandling(mockedResponse);

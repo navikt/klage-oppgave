@@ -1,11 +1,14 @@
-import { Select } from "nav-frontend-skjema";
-import React, { useState } from "react";
+import { Select, Textarea } from "nav-frontend-skjema";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Row } from "../../../styled-components/Row";
-import { Utfall, OmgjoeringsgrunnValg } from "./UtfallEnums";
+import { IKlage } from "../../../tilstand/moduler/klagebehandling";
+import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
+import { Utfall, OmgjoeringsgrunnValg, utfallSomKreverOmgjoering } from "./UtfallEnums";
 
 interface ResultatProps {
-  utfall: string;
-  settUtfall: (utfall: string) => void;
+  utfall: Utfall;
+  settUtfall: (utfall: Utfall) => void;
 }
 function Resultat({ utfall, settUtfall }: ResultatProps) {
   return (
@@ -14,17 +17,16 @@ function Resultat({ utfall, settUtfall }: ResultatProps) {
       bredde="m"
       value={utfall}
       onChange={(e) => {
-        settUtfall(e.target.value);
+        settUtfall(e.target.value as Utfall);
       }}
     >
-      <option value={Utfall.MEDHOLD}>{Utfall.MEDHOLD}</option>
-      <option value={Utfall.TRUKKET}>{Utfall.TRUKKET}</option>
-      <option value={Utfall.RETUR}>{Utfall.RETUR}</option>
-      <option value={Utfall.OPPHEVET}>{Utfall.OPPHEVET}</option>
-      <option value={Utfall.DELVIS_MEDHOLD}>{Utfall.DELVIS_MEDHOLD}</option>
-      <option value={Utfall.OPPRETTHOLD}>{Utfall.OPPRETTHOLD}</option>
-      <option value={Utfall.UGUNST}>{Utfall.UGUNST}</option>
-      <option value={Utfall.AVVIST}>{Utfall.AVVIST}</option>
+      {Object.keys(Utfall).map((utfallKey) => {
+        return (
+          <option key={utfallKey} value={utfallKey}>
+            {Utfall[utfallKey]}
+          </option>
+        );
+      })}
     </Select>
   );
 }
@@ -66,43 +68,43 @@ function Omgjoeringsgrunn() {
         settOmgjoeringsgrunn(e.target.value);
       }}
     >
-      <option value="medhold">Medhold</option>
-      <option value="trukket">Trukket</option>
-      <option value="retur">Retur</option>
-      <option value="opphevet">Opphevet</option>
-      <option value="delvisMehold">Delvis Mehold</option>
-      <option value="oppretthold">Oppretthold</option>
-      <option value="ugunst">Ugunst (Ugyldig)</option>
-      <option value="avvist">Avvist</option>
+      {Object.keys(OmgjoeringsgrunnValg).map((omgjoeringKey) => {
+        return (
+          <option key={omgjoeringKey} value={omgjoeringKey}>
+            {OmgjoeringsgrunnValg[omgjoeringKey]}
+          </option>
+        );
+      })}
     </Select>
   );
 }
 
 function Vurdering() {
-  const [vurdering, settVurdering] = useState<string>();
+  const klage: IKlage = useSelector(velgKlage);
+  const [vurdering, settVurdering] = useState<string>(klage.internVurdering ?? "");
   return (
-    <Select
-      label="Utfall/resultat:"
-      bredde="m"
+    <Textarea
+      id="vurdering"
       value={vurdering}
+      label="Vurdering av kvalitet for intern bruk:"
+      maxLength={0}
       onChange={(e) => {
         settVurdering(e.target.value);
       }}
-    >
-      <option value="medhold">Medhold</option>
-      <option value="trukket">Trukket</option>
-      <option value="retur">Retur</option>
-      <option value="opphevet">Opphevet</option>
-      <option value="delvisMehold">Delvis Mehold</option>
-      <option value="oppretthold">Oppretthold</option>
-      <option value="ugunst">Ugunst (Ugyldig)</option>
-      <option value="avvist">Avvist</option>
-    </Select>
+      style={{
+        minHeight: "80px",
+      }}
+    />
   );
 }
 
 export function UtfallSkjema() {
-  const [utfall, settUtfall] = useState<string>(Utfall.MEDHOLD);
+  const [utfall, settUtfall] = useState<Utfall>(Utfall.MEDHOLD);
+  const [visOmgjoeringsgrunn, settVisOmgjoeringsgrunn] = useState<boolean>();
+
+  useEffect(() => {
+    settVisOmgjoeringsgrunn(utfallSomKreverOmgjoering.includes(utfall));
+  }, [utfall]);
 
   return (
     <div className={"detaljer"}>
@@ -111,6 +113,14 @@ export function UtfallSkjema() {
       </Row>
       <Row>
         <BasertPaaHjemmel />
+      </Row>
+      {visOmgjoeringsgrunn && (
+        <Row>
+          <Omgjoeringsgrunn />
+        </Row>
+      )}
+      <Row>
+        <Vurdering />
       </Row>
     </div>
   );

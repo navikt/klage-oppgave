@@ -8,18 +8,17 @@ import styled from "styled-components";
 import { Row } from "../../../styled-components/Row";
 import { Dato, Datoer } from "./Datoer";
 import { FraNavEnhet } from "./FraNavEnhet";
-import { InfofeltStatisk } from "./TekstDisplay";
+import { faaFulltNavnMedFnr, InfofeltStatisk } from "./TekstDisplay";
 import { UtfallSkjema } from "./UtfallSkjema";
 
 const KlageKontainer = styled.div`
   display: ${(props) => props.theme.display};
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.2em;
-  margin: 1em 0 1em 0;
+  gap: 0;
+  margin: 1em;
 
   @media (max-width: 1600px) {
     grid-template-columns: repeat(2, 1fr);
-    margin: 1em 0 1em 0;
   }
 `;
 
@@ -40,31 +39,17 @@ export interface CustomMaxWidthPercProps {
 const KlageBoks = styled.div`
   width: 100%;
   background: white;
-  border-radius: 0.25em;
-  margin: 0 0 0 1em;
   padding: 0.25em 1.5em;
+
+  &:not(:first-child) {
+    border-left: 1px solid #c9c9c9;
+  }
 
   h1 {
     font-size: 1.25em;
     font-weight: 600;
   }
 `;
-
-function HjemmelBasis() {
-  const klage: IKlage = useSelector(velgKlage);
-  return (
-    <div className={"detaljer"}>
-      <div style={{ marginTop: "1em" }}>
-        <span>Utfallet er basert på lovhjemmel:</span>
-        <div className={"nedtrekksboks"}>
-          <select className={"input__nedtrekk"} onChange={() => {}}>
-            <option value="Trukket">1-322</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function OversendtKA() {
   const klage: IKlage = useSelector(velgKlage);
@@ -80,7 +65,12 @@ function OversendtKA() {
 
 function Klager() {
   const klage: IKlage = useSelector(velgKlage);
-  return <InfofeltStatisk header="Klager" info={klage.sakenGjelderNavn} />;
+  return (
+    <InfofeltStatisk
+      header="Klager"
+      info={faaFulltNavnMedFnr(klage.sakenGjelderNavn, klage.sakenGjelderFoedselsnummer)}
+    />
+  );
 }
 
 function TyperTemaer() {
@@ -145,7 +135,6 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
       <KlageBoks>
         <h1>Utarbeide vedtak</h1>
         <UtfallSkjema />
-        <HjemmelBasis />
       </KlageBoks>
     </KlageKontainer>
   );

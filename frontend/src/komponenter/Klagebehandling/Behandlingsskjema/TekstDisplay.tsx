@@ -1,9 +1,9 @@
 import React from "react";
 
 interface Bruker {
-  fornavn: string | null;
-  mellomnavn: string | null;
-  etternavn: string | null;
+  fornavn?: string;
+  mellomnavn?: string;
+  etternavn?: string;
 }
 
 export function InfofeltStatisk(props: { header: string; info: string }) {
