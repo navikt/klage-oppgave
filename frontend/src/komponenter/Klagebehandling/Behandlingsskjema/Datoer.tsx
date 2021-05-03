@@ -17,25 +17,11 @@ export function Datoer() {
     klage.mottattFoersteinstans ?? null
   );
   return (
-    <div>
-      {/* <Row>
-        <Dato
-          label="Dato påklaget vedtak:"
-          dato={datoPaaklagetVedtak}
-          settDato={settDatoPaaklagetVedtak}
-        />
-      </Row>
-      <Row>
-        <Dato label="Klage innsendt:" dato={datoKlageInnsendt} settDato={settDatoKlageInnsendt} />
-      </Row> */}
-      <Row>
-        <Dato
-          label="Mottatt første instans:"
-          dato={datoMottattFoersteInstans}
-          settDato={settDatoMottattFoersteInstans}
-        />
-      </Row>
-    </div>
+    <Dato
+      label="Mottatt første instans:"
+      dato={datoMottattFoersteInstans}
+      settDato={settDatoMottattFoersteInstans}
+    />
   );
 }
 

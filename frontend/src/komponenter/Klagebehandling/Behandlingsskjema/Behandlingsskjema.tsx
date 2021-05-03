@@ -28,14 +28,6 @@ const Detaljer = styled.div`
   max-width: 25em;
 `;
 
-export interface CustomMaxWidthPercProps {
-  maxWidth?: number;
-}
-
-// const MaxWidthPercContainer = styled.div<CustomMaxWidthPercProps>`
-//   max-width: ${({ maxWidth = 0 }) => maxWidth + "%"};
-// `;
-
 const KlageBoks = styled.div`
   width: 100%;
   background: white;
@@ -48,12 +40,12 @@ const KlageBoks = styled.div`
   h1 {
     font-size: 1.25em;
     font-weight: 600;
+    margin: 16px 0;
   }
 `;
 
 function OversendtKA() {
   const klage: IKlage = useSelector(velgKlage);
-  console.log(klage);
   const [datoOversendtTilKA, settDatoOversendtTilKA] = useState<string | null>(
     klage.mottatt ?? null
   );
@@ -69,6 +61,16 @@ function Klager() {
     <InfofeltStatisk
       header="Klager"
       info={faaFulltNavnMedFnr(klage.sakenGjelderNavn, klage.sakenGjelderFoedselsnummer)}
+    />
+  );
+}
+
+function VurderingFraFoersteinstans() {
+  const klage: IKlage = useSelector(velgKlage);
+  return (
+    <InfofeltStatisk
+      header="Vurdering fra førsteinstans for intern bruk"
+      info={klage.kommentarFraFoersteinstans || "-"}
     />
   );
 }
@@ -123,17 +125,21 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
         <Row>
           <TyperTemaer />
         </Row>
-        <Datoer />
+        <Row>
+          <Datoer />
+        </Row>
         <Row>
           <FraNavEnhet />
         </Row>
         <Row>
           <OversendtKA />
         </Row>
+        <Row>
+          <VurderingFraFoersteinstans />
+        </Row>
       </KlageBoks>
 
       <KlageBoks>
-        <h1>Utarbeide vedtak</h1>
         <UtfallSkjema />
       </KlageBoks>
     </KlageKontainer>

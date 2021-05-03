@@ -210,13 +210,13 @@ export default function Klagebehandling() {
 
   const [faner, settAktiveFaner] = useState({
     detaljer: {
-      checked: innstillinger?.aktiveFaner?.detaljer?.checked || true,
+      checked: innstillinger?.aktiveFaner?.detaljer?.checked || false,
     },
     dokumenter: {
-      checked: innstillinger?.aktiveFaner?.dokumenter?.checked || false,
+      checked: innstillinger?.aktiveFaner?.dokumenter?.checked || true,
     },
     vedtak: {
-      checked: innstillinger?.aktiveFaner?.vedtak?.checked || false,
+      checked: innstillinger?.aktiveFaner?.vedtak?.checked || true,
     },
   });
 
@@ -232,13 +232,13 @@ export default function Klagebehandling() {
   useEffect(() => {
     settAktiveFaner({
       detaljer: {
-        checked: innstillinger?.aktiveFaner?.detaljer?.checked || true,
+        checked: innstillinger?.aktiveFaner?.detaljer?.checked || false,
       },
       dokumenter: {
-        checked: innstillinger?.aktiveFaner?.dokumenter?.checked || false,
+        checked: innstillinger?.aktiveFaner?.dokumenter?.checked || true,
       },
       vedtak: {
-        checked: innstillinger?.aktiveFaner?.vedtak?.checked || false,
+        checked: innstillinger?.aktiveFaner?.vedtak?.checked || true,
       },
     });
   }, [innstillinger?.aktiveFaner]);

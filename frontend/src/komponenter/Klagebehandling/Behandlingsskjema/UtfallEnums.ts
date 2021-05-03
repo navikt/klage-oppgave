@@ -18,7 +18,7 @@ export enum OmgjoeringsgrunnValg {
   FEIL_I_DEN_KONKRETE_RETTSANVENDELSEN = "3b Feil i den konkrete rettsanvendelsen",
 }
 
-export const utfallSomKreverOmgjoering: Utfall[] = [
+export const utfallSomKreverOmgjoeringsgrunn: Utfall[] = [
   Utfall.OPPHEVET,
   Utfall.MEDHOLD,
   Utfall.DELVIS_MEDHOLD,

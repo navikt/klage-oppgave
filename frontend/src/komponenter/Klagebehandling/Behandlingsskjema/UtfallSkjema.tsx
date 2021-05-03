@@ -4,8 +4,7 @@ import { useSelector } from "react-redux";
 import { Row } from "../../../styled-components/Row";
 import { IKlage } from "../../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
-import { Utfall, OmgjoeringsgrunnValg, utfallSomKreverOmgjoering } from "./UtfallEnums";
-
+import { Utfall, OmgjoeringsgrunnValg, utfallSomKreverOmgjoeringsgrunn } from "./UtfallEnums";
 interface ResultatProps {
   utfall: Utfall;
   settUtfall: (utfall: Utfall) => void;
@@ -22,7 +21,7 @@ function Resultat({ utfall, settUtfall }: ResultatProps) {
     >
       {Object.keys(Utfall).map((utfallKey) => {
         return (
-          <option key={utfallKey} value={utfallKey}>
+          <option key={utfallKey} value={Utfall[utfallKey]}>
             {Utfall[utfallKey]}
           </option>
         );
@@ -43,14 +42,7 @@ function BasertPaaHjemmel() {
         settHjemler(e.target.value);
       }}
     >
-      <option value="medhold">Medhold</option>
-      <option value="trukket">Trukket</option>
-      <option value="retur">Retur</option>
-      <option value="opphevet">Opphevet</option>
-      <option value="delvisMehold">Delvis Mehold</option>
-      <option value="oppretthold">Oppretthold</option>
-      <option value="ugunst">Ugunst (Ugyldig)</option>
-      <option value="avvist">Avvist</option>
+      <option value="todo">TODO</option>
     </Select>
   );
 }
@@ -98,12 +90,18 @@ function Vurdering() {
   );
 }
 
+function kreverOmgjoeringsgrunn(utfall: Utfall): boolean {
+  return utfallSomKreverOmgjoeringsgrunn.includes(utfall);
+}
+
 export function UtfallSkjema() {
   const [utfall, settUtfall] = useState<Utfall>(Utfall.MEDHOLD);
-  const [visOmgjoeringsgrunn, settVisOmgjoeringsgrunn] = useState<boolean>();
+  const [visOmgjoeringsgrunn, settVisOmgjoeringsgrunn] = useState<boolean>(
+    kreverOmgjoeringsgrunn(utfall)
+  );
 
   useEffect(() => {
-    settVisOmgjoeringsgrunn(utfallSomKreverOmgjoering.includes(utfall));
+    settVisOmgjoeringsgrunn(utfallSomKreverOmgjoeringsgrunn.includes(utfall));
   }, [utfall]);
 
   return (
