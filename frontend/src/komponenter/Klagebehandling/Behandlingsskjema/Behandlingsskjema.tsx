@@ -1,16 +1,16 @@
 import { IKlage } from "../../../tilstand/moduler/klagebehandling";
 import { useSelector } from "react-redux";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
-import React, { useState } from "react";
+import React from "react";
 import { temaOversettelse, typeOversettelse } from "../../../domene/forkortelser";
 
 import styled from "styled-components";
 import { HeaderRow, Row } from "../../../styled-components/Row";
-import { Dato, Datoer } from "./Datoer";
 import { FraNavEnhet } from "./FraNavEnhet";
 import { faaFulltNavnMedFnr, InfofeltStatisk } from "./TekstDisplay";
 import { UtfallSkjema } from "./UtfallSkjema";
-import { velgKodeverk } from "../../../tilstand/moduler/oppgave.velgere";
+import { OversendtKA } from "./OversendtKA";
+import { MottattFoersteinstans } from "./MottattFoersteinstans";
 
 const KlageKontainer = styled.div`
   display: ${(props) => props.theme.display};
@@ -45,17 +45,6 @@ const KlageBoks = styled.div`
   }
 `;
 
-function OversendtKA() {
-  const klage: IKlage = useSelector(velgKlage);
-  const [datoOversendtTilKA, settDatoOversendtTilKA] = useState<string | null>(
-    klage.mottatt ?? null
-  );
-
-  return (
-    <Dato label="Oversendt til KA:" dato={datoOversendtTilKA} settDato={settDatoOversendtTilKA} />
-  );
-}
-
 function Klager() {
   const klage: IKlage = useSelector(velgKlage);
   return (
@@ -78,7 +67,6 @@ function VurderingFraFoersteinstans() {
 
 function TyperTemaer() {
   const klage: IKlage = useSelector(velgKlage);
-  const kodeverk = useSelector(velgKodeverk);
 
   return (
     <Detaljer>
@@ -133,7 +121,7 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
           <TyperTemaer />
         </Row>
         <Row>
-          <Datoer />
+          <MottattFoersteinstans />
         </Row>
         <Row>
           <FraNavEnhet />
