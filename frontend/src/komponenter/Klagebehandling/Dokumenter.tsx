@@ -365,11 +365,10 @@ function itemClicked(
     ).length > 0
   );
 }
-function subItemClicked(dokumentInfoId: string, idx: number, items: Array<Partial<IDokument>>) {
+function subItemClicked(dokumentInfoId: string, idx: number, items: Array<Partial<IVedlegg>>) {
   return (
-    items.filter(
-      (it: Partial<IVedlegg>, _idx: number) => it.dokumentInfoId === dokumentInfoId && idx === _idx
-    ).length > 0
+    items.filter((it: Partial<IVedlegg>, _idx: number) => it.dokumentInfoId === dokumentInfoId)
+      .length > 0
   );
 }
 
@@ -469,6 +468,10 @@ function DokumentTabell(props: {
   const [visFullKontainer, settvisFullKontainer] = useState(true);
   const [clickedItems, setclickedItems] = useState<Array<IDokument>>([]);
   const [clickedsubItems, setsubItemClicked] = useState<Array<IVedlegg>>([]);
+
+  function clickSub(props: any) {
+    setsubItemClicked(props);
+  }
 
   useEffect(() => {
     console.debug(clickedItems);
@@ -606,6 +609,9 @@ function DokumentTabell(props: {
                         item.valgt ??
                         sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)
                       }
+                      onChange={() => {
+                        console.log("endret sjekkboks main");
+                      }}
                     />
                     <label
                       onClick={() => {
@@ -658,15 +664,28 @@ function DokumentTabell(props: {
                                 sjekkErTilordnet(klage, item.journalpostId, vedlegg.dokumentInfoId)
                               }
                               disabled={item.harTilgangTilArkivvariant}
+                              onChange={() => {
+                                console.log("endret sjekkboks sub");
+                              }}
                               onClick={() => {
-                                if (subItemClicked(item.dokumentInfoId, idx, clickedItems))
-                                  setsubItemClicked(
+                                if (subItemClicked(vedlegg.dokumentInfoId, idx, clickedsubItems))
+                                  console.debug("finnes");
+                                else
+                                  console.debug(
+                                    "finnes ikke",
+                                    vedlegg.dokumentInfoId,
+                                    idx,
+                                    clickedsubItems
+                                  );
+
+                                if (subItemClicked(vedlegg.dokumentInfoId, idx, clickedsubItems))
+                                  clickSub(
                                     clickedsubItems.filter(
                                       (it: Partial<IVedlegg>) =>
-                                        it.dokumentInfoId !== item.dokumentInfoId && it.idx !== idx
+                                        it.dokumentInfoId !== vedlegg.dokumentInfoId
                                     )
                                   );
-                                else setsubItemClicked(clickedsubItems.concat([{ ...item, idx }]));
+                                else clickSub(clickedsubItems.concat([{ ...vedlegg }]));
 
                                 if (
                                   sjekkErTilordnet(
