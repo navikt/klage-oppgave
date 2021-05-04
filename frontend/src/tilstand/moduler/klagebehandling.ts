@@ -45,6 +45,7 @@ export interface IKlage {
   dokumenterTilordnedeHentet: boolean;
   klageInnsendtdato?: string;
   fraNAVEnhet: string;
+  fraNAVEnhetNavn: string;
   mottattFoersteinstans: string;
   foedselsnummer: string;
   tema: string;
@@ -107,6 +108,7 @@ export const klageSlice = createSlice({
     dokumenterTilordnedeHentet: false,
     klageInnsendtdato: undefined,
     fraNAVEnhet: "",
+    fraNAVEnhetNavn: "",
     mottattFoersteinstans: "",
     foedselsnummer: "",
     tema: "",

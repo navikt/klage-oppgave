@@ -2,14 +2,15 @@ import { IKlage } from "../../../tilstand/moduler/klagebehandling";
 import { useSelector } from "react-redux";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
 import React, { useState } from "react";
-import { temaOversettelse } from "../../../domene/forkortelser";
+import { temaOversettelse, typeOversettelse } from "../../../domene/forkortelser";
 
 import styled from "styled-components";
-import { Row } from "../../../styled-components/Row";
+import { HeaderRow, Row } from "../../../styled-components/Row";
 import { Dato, Datoer } from "./Datoer";
 import { FraNavEnhet } from "./FraNavEnhet";
 import { faaFulltNavnMedFnr, InfofeltStatisk } from "./TekstDisplay";
 import { UtfallSkjema } from "./UtfallSkjema";
+import { velgKodeverk } from "../../../tilstand/moduler/oppgave.velgere";
 
 const KlageKontainer = styled.div`
   display: ${(props) => props.theme.display};
@@ -77,13 +78,15 @@ function VurderingFraFoersteinstans() {
 
 function TyperTemaer() {
   const klage: IKlage = useSelector(velgKlage);
+  const kodeverk = useSelector(velgKodeverk);
+
   return (
     <Detaljer>
       <div>
         <b>Type:</b>
         <ul className={"detaljliste"}>
           <li>
-            <div className={"etikett etikett--type"}>{klage.type}</div>
+            <div className={"etikett etikett--type"}>{typeOversettelse(klage.type) ?? "-"}</div>
           </li>
         </ul>
       </div>
@@ -92,7 +95,9 @@ function TyperTemaer() {
         <b>Tema:</b>
         <ul className={"detaljliste"}>
           <li>
-            <div className={"etikett etikett--sykepenger"}>{temaOversettelse(klage.tema)}</div>
+            <div className={"etikett etikett--sykepenger"}>
+              {temaOversettelse(klage.tema) ?? "-"}
+            </div>
           </li>
         </ul>
       </div>
@@ -118,7 +123,9 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
   return (
     <KlageKontainer theme={{ display: !skjult ? "grid" : "none" }}>
       <KlageBoks>
-        <h1>Behandlingsdetaljer</h1>
+        <HeaderRow>
+          <h1>Behandlingsdetaljer</h1>
+        </HeaderRow>
         <Row>
           <Klager />
         </Row>

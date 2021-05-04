@@ -1,7 +1,7 @@
 import { Select, Textarea } from "nav-frontend-skjema";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Row } from "../../../styled-components/Row";
+import { HeaderRow, Row } from "../../../styled-components/Row";
 import { IKlage } from "../../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
 import { Utfall, OmgjoeringsgrunnValg, utfallSomKreverOmgjoeringsgrunn } from "./UtfallEnums";
@@ -106,9 +106,9 @@ export function UtfallSkjema() {
 
   return (
     <div className={"detaljer"}>
-      <Row>
+      <HeaderRow>
         <Resultat utfall={utfall} settUtfall={settUtfall} />
-      </Row>
+      </HeaderRow>
       <Row>
         <BasertPaaHjemmel />
       </Row>

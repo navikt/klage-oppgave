@@ -40,6 +40,7 @@ describe("Oppgave epos", () => {
         const mockedResponse = {
           id: "64848",
           fraNAVEnhet: "4416",
+          fraNAVEnhetNavn: "NAV Trondheim",
           mottattFoersteinstans: "2019-08-22",
           foedselsnummer: "29125639036",
           sakenGjelderNavn: { fornavn: "Petter" },
