@@ -32,6 +32,14 @@ def init_oppgaver()
   end
 end
 
+def baby()
+  begin
+    ["eat", "sleep", "drit"].each do |aktivitet|
+        puts aktivitet
+    end
+end
+repeat()
+
 def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon)
   begin
 	  db = SQLite3::Database.open ARGV[0]

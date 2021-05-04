@@ -1,561 +1,813 @@
 {
   "eoes": [
     {
-      "id": 1,
+      "id": "1",
       "navn": "Riktig",
       "beskrivelse": "Problemstilling knyttet til EØS/utland er godt håndtert"
     },
     {
-      "id": 2,
+      "id": "2",
       "navn": "Ikke oppdaget",
       "beskrivelse": "Vedtaksinstansen har ikke oppdaget at saken gjelder EØS/utland"
     },
     {
-      "id": 3,
+      "id": "3",
       "navn": "Feil",
       "beskrivelse": "Vedtaksinstansen har oppdaget at saken gjelder EØS/utland, men har håndtert saken feil"
     },
     {
-      "id": 4,
+      "id": "4",
       "navn": "Uaktuelt",
       "beskrivelse": "EØS/utenlandsproblematikk er ikke relevant i saken"
     }
   ],
   "grunn": [
     {
-      "id": 1,
+      "id": "1",
       "navn": "Mangelfull utredning",
       "beskrivelse": "Mangelfull utredning"
     },
     {
-      "id": 2,
+      "id": "2",
       "navn": "Andre saksbehandlingsfeil",
       "beskrivelse": "Andre saksbehandlingsfeil"
     },
     {
-      "id": 3,
+      "id": "3",
       "navn": "Endret faktum",
       "beskrivelse": "Endret faktum"
     },
     {
-      "id": 4,
+      "id": "4",
       "navn": "Feil i bevisvurderingen",
       "beskrivelse": "Feil i bevisvurderingen"
     },
     {
-      "id": 5,
+      "id": "5",
       "navn": "Feil i den generelle lovtolkningen",
       "beskrivelse": "Feil i den generelle lovtolkningen"
     },
     {
-      "id": 6,
+      "id": "6",
       "navn": "Feil i den konkrete rettsanvendelsen",
       "beskrivelse": "Feil i den konkrete rettsanvendelsen"
     }
   ],
   "hjemmel": [
     {
-      "id": 1000,
+      "id": "1000",
       "navn": "FTL",
       "beskrivelse": "Folketrygdloven"
     },
     {
-      "id": 100000802,
+      "id": "1000.008.002",
       "navn": "FTL 8-2",
       "beskrivelse": "Folketrygdloven §8-2"
     },
     {
-      "id": 100000803,
+      "id": "1000.008.003",
       "navn": "FTL 8-3",
       "beskrivelse": "Folketrygdloven §8-3"
     },
     {
-      "id": 100000804,
+      "id": "1000.008.004",
       "navn": "FTL 8-4",
       "beskrivelse": "Folketrygdloven §8-4"
     },
     {
-      "id": 100000807,
+      "id": "1000.008.007",
       "navn": "FTL 8-7",
       "beskrivelse": "Folketrygdloven §8-7"
     },
     {
-      "id": 100000808,
+      "id": "1000.008.008",
       "navn": "FTL 8-8",
       "beskrivelse": "Folketrygdloven §8-8"
     },
     {
-      "id": 100000809,
+      "id": "1000.008.012",
       "navn": "FTL 8-12",
       "beskrivelse": "Folketrygdloven §8-12"
     },
     {
-      "id": 100000809,
+      "id": "1000.008.013",
       "navn": "FTL 8-13",
       "beskrivelse": "Folketrygdloven §8-13"
     },
     {
-      "id": 100000809,
+      "id": "1000.008.015",
       "navn": "FTL 8-15",
       "beskrivelse": "Folketrygdloven §8-15"
     },
     {
-      "id": 100000821,
+      "id": "1000.008.020",
       "navn": "FTL 8-20",
       "beskrivelse": "Folketrygdloven §8-20"
     },
     {
-      "id": 100000828,
+      "id": "1000.008.028",
       "navn": "FTL 8-28",
       "beskrivelse": "Folketrygdloven §8-28"
     },
     {
-      "id": 100000829,
+      "id": "1000.008.029",
       "navn": "FTL 8-29",
       "beskrivelse": "Folketrygdloven §8-29"
     },
     {
-      "id": 100000830,
+      "id": "1000.008.030",
       "navn": "FTL 8-30",
       "beskrivelse": "Folketrygdloven §8-30"
     },
     {
-      "id": 100000834,
+      "id": "1000.008.034",
       "navn": "FTL 8-34",
       "beskrivelse": "Folketrygdloven §8-34"
     },
     {
-      "id": 100000835,
+      "id": "1000.008.035",
       "navn": "FTL 8-35",
       "beskrivelse": "Folketrygdloven §8-35"
     },
     {
-      "id": 100000836,
+      "id": "1000.008.036",
       "navn": "FTL 8-36",
       "beskrivelse": "Folketrygdloven §8-36"
     },
     {
-      "id": 100000837,
+      "id": "1000.008.037",
       "navn": "FTL 8-37",
       "beskrivelse": "Folketrygdloven §8-37"
     },
     {
-      "id": 100000838,
+      "id": "1000.008.038",
       "navn": "FTL 8-38",
       "beskrivelse": "Folketrygdloven §8-38"
     },
     {
-      "id": 100000839,
+      "id": "1000.008.039",
       "navn": "FTL 8-39",
       "beskrivelse": "Folketrygdloven §8-39"
     },
     {
-      "id": 100000840,
+      "id": "1000.008.040",
       "navn": "FTL 8-40",
       "beskrivelse": "Folketrygdloven §8-40"
     },
     {
-      "id": 100000841,
+      "id": "1000.008.041",
       "navn": "FTL 8-41",
       "beskrivelse": "Folketrygdloven §8-41"
     },
     {
-      "id": 100000842,
+      "id": "1000.008.042",
       "navn": "FTL 8-42",
       "beskrivelse": "Folketrygdloven §8-42"
     },
     {
-      "id": 100000843,
+      "id": "1000.008.043",
       "navn": "FTL 8-43",
       "beskrivelse": "Folketrygdloven §8-43"
     },
     {
-      "id": 100000847,
+      "id": "1000.008.047",
       "navn": "FTL 8-47",
       "beskrivelse": "Folketrygdloven §8-47"
     },
     {
-      "id": 100000849,
+      "id": "1000.008.049",
       "navn": "FTL 8-49",
       "beskrivelse": "Folketrygdloven §8-49"
     },
     {
-      "id": 100000849,
+      "id": "1000.022.003",
       "navn": "FTL 22-3",
       "beskrivelse": "Folketrygdloven §22-3"
     },
     {
-      "id": 100000849,
+      "id": "1000.022.012",
       "navn": "FTL 22-12",
       "beskrivelse": "Folketrygdloven §22-12"
     },
     {
-      "id": 1000009,
+      "id": "1000.009",
       "navn": "FTL 9",
-      "beskrivelse": "Folketrygdloven §9"
+      "beskrivelse": "Folketrygdloven kapittel 9"
     },
     {
-      "id": 100000901,
-      "navn": "FTL 9-1",
-      "beskrivelse": "Folketrygdloven §9-1"
+      "id": "1000.009.002",
+      "navn": "FTL 9-2",
+      "beskrivelse": "Folketrygdloven §9-2"
+    },
+    {
+      "id": "1000.009.003",
+      "navn": "FTL 9-3",
+      "beskrivelse": "Folketrygdloven §9-3"
+    },
+    {
+      "id": "1000.009.005",
+      "navn": "FTL 9-5",
+      "beskrivelse": "Folketrygdloven §9-5"
+    },
+    {
+      "id": "1000.009.006",
+      "navn": "FTL 9-6",
+      "beskrivelse": "Folketrygdloven §9-6"
+    },
+    {
+      "id": "1000.009.010",
+      "navn": "FTL 9-10",
+      "beskrivelse": "Folketrygdloven §9-10"
+    },
+    {
+      "id": "1000.009.011",
+      "navn": "FTL 9-11",
+      "beskrivelse": "Folketrygdloven §9-11"
+    },
+    {
+      "id": "1000.009.012",
+      "navn": "FTL 9-12",
+      "beskrivelse": "Folketrygdloven §9-12"
+    },
+    {
+      "id": "1000.009.013",
+      "navn": "FTL 9-13",
+      "beskrivelse": "Folketrygdloven §9-13"
+    },
+    {
+      "id": "1000.009.014",
+      "navn": "FTL 9-14",
+      "beskrivelse": "Folketrygdloven §9-14"
+    },
+    {
+      "id": "1000.009.015",
+      "navn": "FTL 9-15",
+      "beskrivelse": "Folketrygdloven §9-15"
+    },
+    {
+      "id": "1000.009.016",
+      "navn": "FTL 9-16",
+      "beskrivelse": "Folketrygdloven §9-16"
     }
   ],
   "raadfoertMedLege": [
     {
-      "id": 1,
+      "id": "1",
       "navn": "Mangler",
       "beskrivelse": "Saken burde vært forelagt for ROL i vedtaksinstansen"
     },
     {
-      "id": 2,
+      "id": "2",
       "navn": "Riktig",
       "beskrivelse": "Saken er godt nok medisinsk opplyst med ROL-uttalelse i vedtaksinstansen/uten at ROL har blitt konsultert"
     },
     {
-      "id": 3,
+      "id": "3",
       "navn": "Mangelfull",
       "beskrivelse": "Saken er forelagt ROL i vedtaksinstans, men er fortsatt mangelfullt medisinsk vurdert"
     },
     {
-      "id": 4,
+      "id": "4",
       "navn": "Uaktuelt",
       "beskrivelse": "Saken handler ikke om trygdemedisinske vurderinger"
     }
   ],
   "type": [
     {
-      "id": 1,
+      "id": "1",
       "navn": "Klage",
       "beskrivelse": "Klage"
     },
     {
-      "id": 2,
+      "id": "2",
       "navn": "Anke",
       "beskrivelse": "Anke"
     }
   ],
   "tema": [
     {
-      "id": 1,
+      "id": "1",
       "navn": "AAP",
       "beskrivelse": "Arbeidsavklaringspenger"
     },
     {
-      "id": 2,
+      "id": "2",
       "navn": "AAR",
       "beskrivelse": "Aa-registeret"
     },
     {
-      "id": 3,
+      "id": "3",
       "navn": "AGR",
       "beskrivelse": "Ajourhold - Grunnopplysninger"
     },
     {
-      "id": 4,
+      "id": "4",
       "navn": "BAR",
       "beskrivelse": "Barnetrygd"
     },
     {
-      "id": 5,
+      "id": "5",
       "navn": "BID",
       "beskrivelse": "Bidrag"
     },
     {
-      "id": 6,
+      "id": "6",
       "navn": "BIL",
       "beskrivelse": "Bil"
     },
     {
-      "id": 7,
+      "id": "7",
       "navn": "DAG",
       "beskrivelse": "Dagpenger"
     },
     {
-      "id": 8,
+      "id": "8",
       "navn": "ENF",
       "beskrivelse": "Enslig forsørger"
     },
     {
-      "id": 9,
+      "id": "9",
       "navn": "ERS",
       "beskrivelse": "Erstatning"
     },
     {
-      "id": 10,
+      "id": "10",
       "navn": "FAR",
       "beskrivelse": "Farskap"
     },
     {
-      "id": 11,
+      "id": "11",
       "navn": "FEI",
       "beskrivelse": "Feilutbetaling"
     },
     {
-      "id": 12,
+      "id": "12",
       "navn": "FOR",
       "beskrivelse": "Foreldre- og svangerskapspenger"
     },
     {
-      "id": 13,
+      "id": "13",
       "navn": "FOS",
       "beskrivelse": "Forsikring"
     },
     {
-      "id": 14,
+      "id": "14",
       "navn": "FRI",
       "beskrivelse": "Kompensasjon for selvstendig næringsdrivende/frilansere"
     },
     {
-      "id": 15,
+      "id": "15",
       "navn": "FUL",
       "beskrivelse": "Fullmakt"
     },
     {
-      "id": 16,
+      "id": "16",
       "navn": "GEN",
       "beskrivelse": "Generell"
     },
     {
-      "id": 17,
+      "id": "17",
       "navn": "GRA",
       "beskrivelse": "Gravferdsstønad"
     },
     {
-      "id": 18,
+      "id": "18",
       "navn": "GRU",
       "beskrivelse": "Grunn- og hjelpestønad"
     },
     {
-      "id": 19,
+      "id": "19",
       "navn": "HEL",
       "beskrivelse": "Helsetjenester og ortopediske hjelpemidler"
     },
     {
-      "id": 20,
+      "id": "20",
       "navn": "HJE",
       "beskrivelse": "Hjelpemidler"
     },
     {
-      "id": 21,
+      "id": "21",
       "navn": "IAR",
       "beskrivelse": "Inkluderende arbeidsliv"
     },
     {
-      "id": 22,
+      "id": "22",
       "navn": "IND",
       "beskrivelse": "Tiltakspenger"
     },
     {
-      "id": 23,
+      "id": "23",
       "navn": "KON",
       "beskrivelse": "Kontantstøtte"
     },
     {
-      "id": 24,
+      "id": "24",
       "navn": "KTR",
       "beskrivelse": "Kontroll"
     },
     {
-      "id": 25,
+      "id": "25",
       "navn": "MED",
       "beskrivelse": "Medlemskap"
     },
     {
-      "id": 26,
+      "id": "26",
       "navn": "MOB",
       "beskrivelse": "Mobilitetsfremmende stønad"
     },
     {
-      "id": 27,
+      "id": "27",
       "navn": "OMS",
       "beskrivelse": "Omsorgspenger, pleiepenger og opplæringspenger"
     },
     {
-      "id": 28,
+      "id": "28",
       "navn": "OPA",
       "beskrivelse": "Oppfølging - Arbeidsgiver"
     },
     {
-      "id": 29,
+      "id": "29",
       "navn": "OPP",
       "beskrivelse": "Oppfølging"
     },
     {
-      "id": 30,
+      "id": "30",
       "navn": "PEN",
       "beskrivelse": "Pensjon"
     },
     {
-      "id": 31,
+      "id": "31",
       "navn": "PER",
       "beskrivelse": "Permittering og masseoppsigelser"
     },
     {
-      "id": 32,
+      "id": "32",
       "navn": "REH",
       "beskrivelse": "Rehabilitering"
     },
     {
-      "id": 33,
+      "id": "33",
       "navn": "REK",
       "beskrivelse": "Rekruttering og stilling"
     },
     {
-      "id": 34,
+      "id": "34",
       "navn": "RPO",
       "beskrivelse": "Retting av personopplysninger"
     },
     {
-      "id": 35,
+      "id": "35",
       "navn": "RVE",
       "beskrivelse": "Rettferdsvederlag"
     },
     {
-      "id": 36,
+      "id": "36",
       "navn": "SAA",
       "beskrivelse": "Sanksjon - Arbeidsgiver"
     },
     {
-      "id": 37,
+      "id": "37",
       "navn": "SAK",
       "beskrivelse": "Saksomkostninger"
     },
     {
-      "id": 38,
+      "id": "38",
       "navn": "SAP",
       "beskrivelse": "Sanksjon - Person"
     },
     {
-      "id": 39,
+      "id": "39",
       "navn": "SER",
       "beskrivelse": "Serviceklager"
     },
     {
-      "id": 40,
+      "id": "40",
       "navn": "SIK",
       "beskrivelse": "Sikkerhetstiltak"
     },
     {
-      "id": 41,
+      "id": "41",
       "navn": "STO",
       "beskrivelse": "Regnskap/utbetaling"
     },
     {
-      "id": 42,
+      "id": "42",
       "navn": "SUP",
-      "beskrivelse": "\tSupplerende stønad"
+      "beskrivelse": "Supplerende stønad"
     },
     {
-      "id": 43,
+      "id": "43",
       "navn": "SYK",
       "beskrivelse": "Sykepenger"
     },
     {
-      "id": 44,
+      "id": "44",
       "navn": "SYM",
       "beskrivelse": "Sykmeldinger"
     },
     {
-      "id": 45,
+      "id": "45",
       "navn": "TIL",
       "beskrivelse": "Tiltak"
     },
     {
-      "id": 46,
+      "id": "46",
       "navn": "TRK",
       "beskrivelse": "Trekkhåndtering"
     },
     {
-      "id": 47,
+      "id": "47",
       "navn": "TRY",
       "beskrivelse": "Trygdeavgift"
     },
     {
-      "id": 48,
+      "id": "48",
       "navn": "TSO",
       "beskrivelse": "Tilleggsstønad"
     },
     {
-      "id": 49,
+      "id": "49",
       "navn": "TSR",
       "beskrivelse": "Tilleggsstønad arbeidssøkere"
     },
     {
-      "id": 50,
+      "id": "50",
       "navn": "UFM",
       "beskrivelse": "Unntak fra medlemskap"
     },
     {
-      "id": 51,
+      "id": "51",
       "navn": "UFO",
       "beskrivelse": "Uføretrygd"
     },
     {
-      "id": 52,
+      "id": "52",
       "navn": "UKJ",
       "beskrivelse": "Ukjent"
     },
     {
-      "id": 53,
+      "id": "53",
       "navn": "VEN",
       "beskrivelse": "Ventelønn"
     },
     {
-      "id": 54,
+      "id": "54",
       "navn": "YRA",
       "beskrivelse": "Yrkesrettet attføring"
     },
     {
-      "id": 55,
+      "id": "55",
       "navn": "YRK",
       "beskrivelse": "Yrkesskade / Menerstatning"
     },
     {
-      "id": 56,
+      "id": "56",
       "navn": "GOS",
       "beskrivelse": "Gosys"
     }
   ],
   "utfall": [
     {
-      "id": 1,
+      "id": "1",
       "navn": "Trukket",
       "beskrivelse": "Trukket"
     },
     {
-      "id": 2,
+      "id": "2",
       "navn": "Retur",
       "beskrivelse": "Retur"
     },
     {
-      "id": 3,
+      "id": "3",
       "navn": "Opphevet",
       "beskrivelse": "Opphevet"
     },
     {
-      "id": 4,
+      "id": "4",
       "navn": "Medhold",
       "beskrivelse": "Medhold"
     },
     {
-      "id": 5,
+      "id": "5",
       "navn": "Delvis medhold",
       "beskrivelse": "Delvis medhold"
     },
     {
-      "id": 6,
+      "id": "6",
       "navn": "Opprettholdt",
       "beskrivelse": "Opprettholdt"
     },
     {
-      "id": 7,
+      "id": "7",
       "navn": "Ugunst (Ugyldig)",
       "beskrivelse": "Ugunst (Ugyldig)"
     },
     {
-      "id": 8,
+      "id": "8",
       "navn": "Avvist",
       "beskrivelse": "Avvist"
+    }
+  ],
+  "hjemlerPerTema": [
+    {
+      "temaId": "27",
+      "hjemler": [
+        {
+          "id": "1000.009",
+          "navn": "FTL 9",
+          "beskrivelse": "Folketrygdloven kapittel 9"
+        },
+        {
+          "id": "1000.009.002",
+          "navn": "FTL 9-2",
+          "beskrivelse": "Folketrygdloven §9-2"
+        },
+        {
+          "id": "1000.009.003",
+          "navn": "FTL 9-3",
+          "beskrivelse": "Folketrygdloven §9-3"
+        },
+        {
+          "id": "1000.009.005",
+          "navn": "FTL 9-5",
+          "beskrivelse": "Folketrygdloven §9-5"
+        },
+        {
+          "id": "1000.009.006",
+          "navn": "FTL 9-6",
+          "beskrivelse": "Folketrygdloven §9-6"
+        },
+        {
+          "id": "1000.009.010",
+          "navn": "FTL 9-10",
+          "beskrivelse": "Folketrygdloven §9-10"
+        },
+        {
+          "id": "1000.009.011",
+          "navn": "FTL 9-11",
+          "beskrivelse": "Folketrygdloven §9-11"
+        },
+        {
+          "id": "1000.009.012",
+          "navn": "FTL 9-12",
+          "beskrivelse": "Folketrygdloven §9-12"
+        },
+        {
+          "id": "1000.009.013",
+          "navn": "FTL 9-13",
+          "beskrivelse": "Folketrygdloven §9-13"
+        },
+        {
+          "id": "1000.009.014",
+          "navn": "FTL 9-14",
+          "beskrivelse": "Folketrygdloven §9-14"
+        },
+        {
+          "id": "1000.009.015",
+          "navn": "FTL 9-15",
+          "beskrivelse": "Folketrygdloven §9-15"
+        },
+        {
+          "id": "1000.009.016",
+          "navn": "FTL 9-16",
+          "beskrivelse": "Folketrygdloven §9-16"
+        },
+        {
+          "id": "1000",
+          "navn": "FTL",
+          "beskrivelse": "Folketrygdloven"
+        }
+      ]
+    },
+    {
+      "temaId": "43",
+      "hjemler": [
+        {
+          "id": "1000.008.002",
+          "navn": "FTL 8-2",
+          "beskrivelse": "Folketrygdloven §8-2"
+        },
+        {
+          "id": "1000.008.003",
+          "navn": "FTL 8-3",
+          "beskrivelse": "Folketrygdloven §8-3"
+        },
+        {
+          "id": "1000.008.004",
+          "navn": "FTL 8-4",
+          "beskrivelse": "Folketrygdloven §8-4"
+        },
+        {
+          "id": "1000.008.007",
+          "navn": "FTL 8-7",
+          "beskrivelse": "Folketrygdloven §8-7"
+        },
+        {
+          "id": "1000.008.008",
+          "navn": "FTL 8-8",
+          "beskrivelse": "Folketrygdloven §8-8"
+        },
+        {
+          "id": "1000.008.012",
+          "navn": "FTL 8-12",
+          "beskrivelse": "Folketrygdloven §8-12"
+        },
+        {
+          "id": "1000.008.013",
+          "navn": "FTL 8-13",
+          "beskrivelse": "Folketrygdloven §8-13"
+        },
+        {
+          "id": "1000.008.015",
+          "navn": "FTL 8-15",
+          "beskrivelse": "Folketrygdloven §8-15"
+        },
+        {
+          "id": "1000.008.020",
+          "navn": "FTL 8-20",
+          "beskrivelse": "Folketrygdloven §8-20"
+        },
+        {
+          "id": "1000.008.028",
+          "navn": "FTL 8-28",
+          "beskrivelse": "Folketrygdloven §8-28"
+        },
+        {
+          "id": "1000.008.029",
+          "navn": "FTL 8-29",
+          "beskrivelse": "Folketrygdloven §8-29"
+        },
+        {
+          "id": "1000.008.030",
+          "navn": "FTL 8-30",
+          "beskrivelse": "Folketrygdloven §8-30"
+        },
+        {
+          "id": "1000.008.034",
+          "navn": "FTL 8-34",
+          "beskrivelse": "Folketrygdloven §8-34"
+        },
+        {
+          "id": "1000.008.035",
+          "navn": "FTL 8-35",
+          "beskrivelse": "Folketrygdloven §8-35"
+        },
+        {
+          "id": "1000.008.036",
+          "navn": "FTL 8-36",
+          "beskrivelse": "Folketrygdloven §8-36"
+        },
+        {
+          "id": "1000.008.037",
+          "navn": "FTL 8-37",
+          "beskrivelse": "Folketrygdloven §8-37"
+        },
+        {
+          "id": "1000.008.038",
+          "navn": "FTL 8-38",
+          "beskrivelse": "Folketrygdloven §8-38"
+        },
+        {
+          "id": "1000.008.039",
+          "navn": "FTL 8-39",
+          "beskrivelse": "Folketrygdloven §8-39"
+        },
+        {
+          "id": "1000.008.040",
+          "navn": "FTL 8-40",
+          "beskrivelse": "Folketrygdloven §8-40"
+        },
+        {
+          "id": "1000.008.041",
+          "navn": "FTL 8-41",
+          "beskrivelse": "Folketrygdloven §8-41"
+        },
+        {
+          "id": "1000.008.042",
+          "navn": "FTL 8-42",
+          "beskrivelse": "Folketrygdloven §8-42"
+        },
+        {
+          "id": "1000.008.043",
+          "navn": "FTL 8-43",
+          "beskrivelse": "Folketrygdloven §8-43"
+        },
+        {
+          "id": "1000.008.047",
+          "navn": "FTL 8-47",
+          "beskrivelse": "Folketrygdloven §8-47"
+        },
+        {
+          "id": "1000.008.049",
+          "navn": "FTL 8-49",
+          "beskrivelse": "Folketrygdloven §8-49"
+        },
+        {
+          "id": "1000",
+          "navn": "FTL",
+          "beskrivelse": "Folketrygdloven"
+        }
+      ]
     }
   ]
 }

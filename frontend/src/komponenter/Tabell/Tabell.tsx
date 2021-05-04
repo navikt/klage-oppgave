@@ -175,12 +175,27 @@ const OppgaveTabell: React.FunctionComponent = () => {
     else settLovligeTemaer(lovligeTemaer);
 
     let hjemler: Filter[] = [];
-    if (kodeverk.hjemmel) {
+    if (innstillinger?.aktiveTemaer) {
+      console.log("innstillinger?.aktiveTemaer", innstillinger?.aktiveTemaer);
+      let temahjemler: IKodeverkVerdi[] = [];
+      innstillinger.aktiveTemaer.map((tema: Filter) => {
+        temahjemler = temahjemler.concat(
+          kodeverk.hjemlerPerTema.filter((_hjemler: any) => _hjemler.temaId === tema.value!)[0]
+            ?.hjemler || []
+        );
+      });
+      hjemler = [];
+      temahjemler.forEach((hjemmel: IKodeverkVerdi) => {
+        hjemler.push({ label: hjemmel.beskrivelse, value: hjemmel.id.toString() });
+      });
+      settGyldigeHjemler(hjemler);
+    } else if (innstillinger?.aktiveHjemler) {
+      settGyldigeHjemler(innstillinger.aktiveHjemler);
+    } else if (kodeverk.hjemmel) {
       kodeverk.hjemmel.map((hjemmel: IKodeverkVerdi) => {
         hjemler.push({ label: hjemmel.beskrivelse, value: hjemmel.id.toString() });
       });
-      if (innstillinger?.aktiveHjemler) settGyldigeHjemler(innstillinger.aktiveHjemler);
-      else settGyldigeHjemler(hjemler);
+      settGyldigeHjemler(hjemler);
     }
 
     let typer: Filter[] = [];
