@@ -5,8 +5,8 @@ import { HeaderRow, Row } from "../../../styled-components/Row";
 import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
 import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
+import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
 import { Resultat } from "./Resultat";
-import { OmgjoeringsgrunnValg } from "./UtfallEnums";
 
 function BasertPaaHjemmel() {
   const [hjemler, settHjemler] = useState<string>();
@@ -21,30 +21,6 @@ function BasertPaaHjemmel() {
       }}
     >
       <option value="todo">TODO</option>
-    </Select>
-  );
-}
-
-function Omgjoeringsgrunn() {
-  const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<string>(
-    OmgjoeringsgrunnValg.MANGELFULL_UTREDNING
-  );
-  return (
-    <Select
-      label="Omgjøringsgrunn:"
-      bredde="l"
-      value={omgjoeringsgrunn}
-      onChange={(e) => {
-        settOmgjoeringsgrunn(e.target.value);
-      }}
-    >
-      {Object.keys(OmgjoeringsgrunnValg).map((omgjoeringKey) => {
-        return (
-          <option key={omgjoeringKey} value={omgjoeringKey}>
-            {OmgjoeringsgrunnValg[omgjoeringKey]}
-          </option>
-        );
-      })}
     </Select>
   );
 }
@@ -69,25 +45,30 @@ function Vurdering() {
 }
 
 export function UtfallSkjema({ kodeverk }: { kodeverk: any }) {
+  const [utfall, settUtfall] = useState<IKodeverkVerdi>(kodeverk.utfall[1]);
+  const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(null);
+  const [gyldigeOmgjoeringsgrunner, settGyldigeOmgjoeringsgrunner] = useState<IKodeverkVerdi[]>(
+    faaOmgjoeringsgrunner(utfall)
+  );
+
   function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi): IKodeverkVerdi[] {
     return kodeverk.grunnerPerUtfall.find((obj: GrunnerPerUtfall) => obj.utfallId == utfall.id)
       .grunner;
   }
 
   function visOmgjoeringsgrunner(): boolean {
-    return omgjoeringsgrunner.length > 0;
+    return gyldigeOmgjoeringsgrunner.length > 0;
   }
 
   function velgUtfall(utfall: IKodeverkVerdi) {
     settUtfall(utfall);
     const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
-    settOmgjoeringsgrunner(omgjoeringsgrunner);
+    settGyldigeOmgjoeringsgrunner(omgjoeringsgrunner);
   }
 
-  const [utfall, settUtfall] = useState<IKodeverkVerdi>(kodeverk.utfall[1]);
-  const [omgjoeringsgrunner, settOmgjoeringsgrunner] = useState<IKodeverkVerdi[]>(
-    faaOmgjoeringsgrunner(utfall)
-  );
+  function velgOmgjoeringsgrunn(omgjoeringsgrunn: IKodeverkVerdi) {
+    settOmgjoeringsgrunn(omgjoeringsgrunn);
+  }
 
   return (
     <div className={"detaljer"}>
@@ -99,7 +80,11 @@ export function UtfallSkjema({ kodeverk }: { kodeverk: any }) {
       </Row>
       {visOmgjoeringsgrunner() && (
         <Row>
-          <Omgjoeringsgrunn />
+          <Omgjoeringsgrunn
+            gyldigeOmgjoeringsgrunner={gyldigeOmgjoeringsgrunner}
+            omgjoeringsgrunn={omgjoeringsgrunn}
+            velgOmgjoeringsgrunn={velgOmgjoeringsgrunn}
+          />
         </Row>
       )}
       <Row>
