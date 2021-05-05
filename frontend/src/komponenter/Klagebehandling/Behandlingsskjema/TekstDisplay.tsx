@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 interface Bruker {
   fornavn?: string;
@@ -6,13 +7,18 @@ interface Bruker {
   etternavn?: string;
 }
 
+const Info = styled.div`
+  p {
+    margin: 0;
+  }
+`;
+
 export function InfofeltStatisk(props: { header: string; info: string }) {
   return (
-    <div>
+    <Info>
       <b>{props.header}:</b>
-      <br />
-      {props.info}
-    </div>
+      <p>{props.info}</p>
+    </Info>
   );
 }
 

@@ -14,13 +14,9 @@ import { MottattFoersteinstans } from "./MottattFoersteinstans";
 
 const KlageKontainer = styled.div`
   display: ${(props) => props.theme.display};
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0;
   margin: 1em;
-
-  @media (max-width: 1600px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 `;
 
 const Detaljer = styled.div`
@@ -107,7 +103,13 @@ function TyperTemaer() {
   );
 }
 
-export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
+export default function Behandlingsskjema({
+  skjult,
+  kodeverk,
+}: {
+  skjult: boolean;
+  kodeverk: any;
+}) {
   return (
     <KlageKontainer theme={{ display: !skjult ? "grid" : "none" }}>
       <KlageBoks>
@@ -135,7 +137,7 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
       </KlageBoks>
 
       <KlageBoks>
-        <UtfallSkjema />
+        <UtfallSkjema kodeverk={kodeverk} />
       </KlageBoks>
     </KlageKontainer>
   );

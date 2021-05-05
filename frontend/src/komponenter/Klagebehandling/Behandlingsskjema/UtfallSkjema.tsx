@@ -1,34 +1,12 @@
 import { Select, Textarea } from "nav-frontend-skjema";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { HeaderRow, Row } from "../../../styled-components/Row";
-import { IKlage } from "../../../tilstand/moduler/klagebehandling";
+import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
-import { Utfall, OmgjoeringsgrunnValg, utfallSomKreverOmgjoeringsgrunn } from "./UtfallEnums";
-interface ResultatProps {
-  utfall: Utfall;
-  settUtfall: (utfall: Utfall) => void;
-}
-function Resultat({ utfall, settUtfall }: ResultatProps) {
-  return (
-    <Select
-      label="Utfall/resultat:"
-      bredde="m"
-      value={utfall}
-      onChange={(e) => {
-        settUtfall(e.target.value as Utfall);
-      }}
-    >
-      {Object.keys(Utfall).map((utfallKey) => {
-        return (
-          <option key={utfallKey} value={Utfall[utfallKey]}>
-            {Utfall[utfallKey]}
-          </option>
-        );
-      })}
-    </Select>
-  );
-}
+import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
+import { Resultat } from "./Resultat";
+import { OmgjoeringsgrunnValg } from "./UtfallEnums";
 
 function BasertPaaHjemmel() {
   const [hjemler, settHjemler] = useState<string>();
@@ -54,7 +32,7 @@ function Omgjoeringsgrunn() {
   return (
     <Select
       label="Omgjøringsgrunn:"
-      bredde="m"
+      bredde="l"
       value={omgjoeringsgrunn}
       onChange={(e) => {
         settOmgjoeringsgrunn(e.target.value);
@@ -90,29 +68,36 @@ function Vurdering() {
   );
 }
 
-function kreverOmgjoeringsgrunn(utfall: Utfall): boolean {
-  return utfallSomKreverOmgjoeringsgrunn.includes(utfall);
-}
+export function UtfallSkjema({ kodeverk }: { kodeverk: any }) {
+  function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi): IKodeverkVerdi[] {
+    return kodeverk.grunnerPerUtfall.find((obj: GrunnerPerUtfall) => obj.utfallId == utfall.id)
+      .grunner;
+  }
 
-export function UtfallSkjema() {
-  const [utfall, settUtfall] = useState<Utfall>(Utfall.MEDHOLD);
-  const [visOmgjoeringsgrunn, settVisOmgjoeringsgrunn] = useState<boolean>(
-    kreverOmgjoeringsgrunn(utfall)
+  function visOmgjoeringsgrunner(): boolean {
+    return omgjoeringsgrunner.length > 0;
+  }
+
+  function velgUtfall(utfall: IKodeverkVerdi) {
+    settUtfall(utfall);
+    const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
+    settOmgjoeringsgrunner(omgjoeringsgrunner);
+  }
+
+  const [utfall, settUtfall] = useState<IKodeverkVerdi>(kodeverk.utfall[1]);
+  const [omgjoeringsgrunner, settOmgjoeringsgrunner] = useState<IKodeverkVerdi[]>(
+    faaOmgjoeringsgrunner(utfall)
   );
-
-  useEffect(() => {
-    settVisOmgjoeringsgrunn(utfallSomKreverOmgjoeringsgrunn.includes(utfall));
-  }, [utfall]);
 
   return (
     <div className={"detaljer"}>
       <HeaderRow>
-        <Resultat utfall={utfall} settUtfall={settUtfall} />
+        <Resultat utfallAlternativer={kodeverk.utfall} utfall={utfall} velgUtfall={velgUtfall} />
       </HeaderRow>
       <Row>
         <BasertPaaHjemmel />
       </Row>
-      {visOmgjoeringsgrunn && (
+      {visOmgjoeringsgrunner() && (
         <Row>
           <Omgjoeringsgrunn />
         </Row>

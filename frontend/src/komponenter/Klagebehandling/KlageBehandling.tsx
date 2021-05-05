@@ -19,6 +19,7 @@ import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
 import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
+import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
 
 const IkonHake = styled.img`
   position: absolute;
@@ -197,7 +198,10 @@ export default function Klagebehandling() {
   const location = useLocation();
   const dispatch = useDispatch();
   const klage: IKlage = useSelector(velgKlage);
+  const kodeverk = useSelector(velgKodeverk);
   const innstillinger = useSelector(velgInnstillinger);
+
+  const [kodeverkLaster, settKodeverkLaster] = useState<boolean>(true);
 
   function toggleFane(id: string) {
     settAktiveFaner({
@@ -256,6 +260,10 @@ export default function Klagebehandling() {
     if (id) klage_dispatch({ type: "sett_oppgave_id", payload: id });
     if (params.side) klage_dispatch({ type: "sett_aktiv_side", payload: params.side });
   }, [location]);
+
+  useEffect(() => {
+    settKodeverkLaster(Object.keys(kodeverk).length === 0);
+  }, [kodeverk]);
 
   if (!klage_state.oppgaveId || !klage.klageLastet) {
     return (
@@ -321,7 +329,11 @@ export default function Klagebehandling() {
         {showDebug && <Debug state={klage} />}
 
         <Dokumenter skjult={!faner.dokumenter.checked} />
-        <Behandlingsskjema skjult={!faner.detaljer.checked} />
+        {kodeverkLaster ? (
+          <NavFrontendSpinner />
+        ) : (
+          <Behandlingsskjema skjult={!faner.detaljer.checked} kodeverk={kodeverk} />
+        )}
       </>
     </Oppsett>
   );

@@ -16,6 +16,7 @@ import { AjaxCreationMethod, ajaxDelete } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { IInnstillinger, sattInnstillinger, settInnstillingerHandling } from "./meg";
 import { SETT } from "./router";
+import { IKodeverkVerdi } from "./oppgave";
 
 //==========
 // Interfaces
@@ -66,6 +67,20 @@ export interface IKlage {
   dokumenterOppdatert: string;
   internVurdering: string;
   kommentarFraFoersteinstans: string;
+  vedtak: Array<Vedtak>;
+}
+
+export interface Vedtak {
+  brevMottakere: string[];
+  hjemler: string[];
+  id: string;
+  utfall: string | null;
+  grunn: string | null;
+}
+
+export interface GrunnerPerUtfall {
+  utfallId: string;
+  grunner: IKodeverkVerdi[];
 }
 
 interface IKlagePayload {
@@ -128,6 +143,15 @@ export const klageSlice = createSlice({
     currentPDF: "",
     internVurdering: "",
     kommentarFraFoersteinstans: "",
+    vedtak: [
+      {
+        brevMottakere: [],
+        hjemler: [],
+        id: "214d1485-5a26-4aec-86e4-19395fa54f87",
+        utfall: null,
+        grunn: null,
+      },
+    ],
   } as IKlage,
   reducers: {
     HENT_KLAGE: (state, action: PayloadAction<IKlage>) => {

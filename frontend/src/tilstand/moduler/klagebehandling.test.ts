@@ -65,6 +65,15 @@ describe("Oppgave epos", () => {
           hjemler: [{ kapittel: 8, paragraf: 14, original: "8-14" }],
           internVurdering: "",
           kommentarFraFoersteinstans: "",
+          vedtak: [
+            {
+              brevMottakere: [],
+              hjemler: [],
+              id: "214d1485-5a26-4aec-86e4-19395fa54f87",
+              utfall: null,
+              grunn: null,
+            },
+          ],
         };
 
         const reducerResponse = hentetKlageHandling(mockedResponse);
