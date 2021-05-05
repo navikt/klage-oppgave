@@ -512,6 +512,7 @@ function DokumentTabell(props: {
                 <TilknyttetDato>{formattedDate(item.registrert)}</TilknyttetDato>
                 <TilknyttetTittel
                   onClick={() =>
+                    item.harTilgangTilArkivvariant &&
                     hentPreview({
                       behandlingId: klage.id,
                       journalpostId: item.journalpostId,
@@ -556,6 +557,7 @@ function DokumentTabell(props: {
               <DokumentRad>
                 <DokumentTittel
                   onClick={() =>
+                    item.harTilgangTilArkivvariant &&
                     hentPreview({
                       behandlingId: klage.id,
                       journalpostId: item.journalpostId,
@@ -569,6 +571,7 @@ function DokumentTabell(props: {
                 </DokumentTittel>
                 <DokumentTema
                   onClick={() =>
+                    item.harTilgangTilArkivvariant &&
                     hentPreview({
                       behandlingId: klage.id,
                       journalpostId: item.journalpostId,
@@ -585,13 +588,15 @@ function DokumentTabell(props: {
                 </DokumentTema>
                 <DokumentDato
                   onClick={() =>
-                    hentPreview({
-                      behandlingId: klage.id,
-                      journalpostId: item.journalpostId,
-                      dokumentInfoId: item.dokumentInfoId,
-                      dokumentTittel: item.tittel!,
-                      props: props,
-                    })
+                    item.harTilgangTilArkivvariant
+                      ? hentPreview({
+                          behandlingId: klage.id,
+                          journalpostId: item.journalpostId,
+                          dokumentInfoId: item.dokumentInfoId,
+                          dokumentTittel: item.tittel!,
+                          props: props,
+                        })
+                      : console.error("har ikke tilgang")
                   }
                   className={"liten"}
                 >
@@ -603,11 +608,12 @@ function DokumentTabell(props: {
                     <Sjekkboks
                       type={"checkbox"}
                       id={item.journalpostId + item.dokumentInfoId}
-                      disabled={item.harTilgangTilArkivvariant}
+                      disabled={!item.harTilgangTilArkivvariant}
                       checked={
-                        itemClicked(item.journalpostId, item.dokumentInfoId, clickedItems) ??
-                        item.valgt ??
-                        sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId)
+                        item.harTilgangTilArkivvariant &&
+                        (itemClicked(item.journalpostId, item.dokumentInfoId, clickedItems) ??
+                          item.valgt ??
+                          sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId))
                       }
                       onChange={() => {
                         console.log("endret sjekkboks main");
@@ -641,13 +647,15 @@ function DokumentTabell(props: {
                       <VedleggRad key={`vedlegg-${idx}${item.dokumentInfoId}`}>
                         <VedleggTittel
                           onClick={() =>
-                            hentPreview({
-                              behandlingId: klage.id,
-                              journalpostId: item.journalpostId,
-                              dokumentInfoId: vedlegg.dokumentInfoId,
-                              dokumentTittel: vedlegg.tittel,
-                              props: props,
-                            })
+                            item.harTilgangTilArkivvariant
+                              ? hentPreview({
+                                  behandlingId: klage.id,
+                                  journalpostId: item.journalpostId,
+                                  dokumentInfoId: vedlegg.dokumentInfoId,
+                                  dokumentTittel: vedlegg.tittel,
+                                  props: props,
+                                })
+                              : console.error("ingen tilgang")
                           }
                         >
                           {vedlegg.tittel}
@@ -659,11 +667,16 @@ function DokumentTabell(props: {
                               id={idx + item.dokumentInfoId}
                               type={"checkbox"}
                               checked={
-                                subItemClicked(vedlegg.dokumentInfoId, idx, clickedsubItems) ??
-                                item.valgt ??
-                                sjekkErTilordnet(klage, item.journalpostId, vedlegg.dokumentInfoId)
+                                item.harTilgangTilArkivvariant &&
+                                (subItemClicked(vedlegg.dokumentInfoId, idx, clickedsubItems) ??
+                                  item.valgt ??
+                                  sjekkErTilordnet(
+                                    klage,
+                                    item.journalpostId,
+                                    vedlegg.dokumentInfoId
+                                  ))
                               }
-                              disabled={item.harTilgangTilArkivvariant}
+                              disabled={!item.harTilgangTilArkivvariant}
                               onChange={() => {
                                 console.log("endret sjekkboks sub");
                               }}
