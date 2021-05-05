@@ -6,7 +6,7 @@ import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandl
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
 import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
-import { Resultat } from "./Resultat";
+import { Utfall } from "./Utfall";
 
 function BasertPaaHjemmel() {
   const [hjemler, settHjemler] = useState<string>();
@@ -45,10 +45,16 @@ function Vurdering() {
 }
 
 export function UtfallSkjema({ kodeverk }: { kodeverk: any }) {
-  const [utfall, settUtfall] = useState<IKodeverkVerdi>(kodeverk.utfall[1]);
-  const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(null);
+  const klage: IKlage = useSelector(velgKlage);
+
+  const [utfall, settUtfall] = useState<IKodeverkVerdi>(
+    faaUtfalllObjekt(klage.vedtak[0].utfall) ?? kodeverk.utfall[0]
+  );
   const [gyldigeOmgjoeringsgrunner, settGyldigeOmgjoeringsgrunner] = useState<IKodeverkVerdi[]>(
     faaOmgjoeringsgrunner(utfall)
+  );
+  const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(
+    faaOmgjoeringsgrunnObjekt(klage.vedtak[0].grunn) ?? gyldigeOmgjoeringsgrunner[0]
   );
 
   function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi): IKodeverkVerdi[] {
@@ -70,10 +76,26 @@ export function UtfallSkjema({ kodeverk }: { kodeverk: any }) {
     settOmgjoeringsgrunn(omgjoeringsgrunn);
   }
 
+  function faaUtfalllObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
+    if (!utfallnavn) {
+      return null;
+    }
+    return kodeverk.utfall.find((obj: IKodeverkVerdi) => obj.navn === utfallnavn) ?? null;
+  }
+
+  function faaOmgjoeringsgrunnObjekt(omgjoeringnavn: string | null): IKodeverkVerdi | null {
+    if (!omgjoeringnavn) {
+      return null;
+    }
+    return (
+      gyldigeOmgjoeringsgrunner.find((obj: IKodeverkVerdi) => obj.navn === omgjoeringnavn) ?? null
+    );
+  }
+
   return (
     <div className={"detaljer"}>
       <HeaderRow>
-        <Resultat utfallAlternativer={kodeverk.utfall} utfall={utfall} velgUtfall={velgUtfall} />
+        <Utfall utfallAlternativer={kodeverk.utfall} utfall={utfall} velgUtfall={velgUtfall} />
       </HeaderRow>
       <Row>
         <BasertPaaHjemmel />

@@ -85,20 +85,6 @@ function TyperTemaer() {
           </li>
         </ul>
       </div>
-
-      {/* <div>
-        Hjemmel:
-        <ul className={"detaljliste"}>
-          {klage.hjemler.length === 0 && <div>Ingen satt</div>}
-          {klage.hjemler.map((hjemmel: any, idx: number) => (
-            <li key={`hjemmel${idx}`}>
-              <div className={"etikett etikett-Sykepenger etikett--hjemmel"}>
-                {hjemmel.original || "ikke satt"}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div> */}
     </Detaljer>
   );
 }

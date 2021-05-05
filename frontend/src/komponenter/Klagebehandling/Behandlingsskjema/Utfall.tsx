@@ -7,12 +7,12 @@ interface ResultatProps {
   utfall: IKodeverkVerdi;
   velgUtfall: (utfall: IKodeverkVerdi) => void;
 }
-export function Resultat({ utfallAlternativer, utfall, velgUtfall }: ResultatProps) {
+export function Utfall({ utfallAlternativer, utfall, velgUtfall }: ResultatProps) {
   return (
     <Select
       label="Utfall/resultat:"
       bredde="m"
-      value={utfallAlternativer.findIndex((obj: IKodeverkVerdi) => obj.id === utfall.id)}
+      value={"" + utfallAlternativer.findIndex((obj: IKodeverkVerdi) => obj.id === utfall.id)}
       onChange={(e) => {
         const valgtUtfall = utfallAlternativer[e.target.value];
         velgUtfall(valgtUtfall);
