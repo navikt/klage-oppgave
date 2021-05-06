@@ -466,16 +466,6 @@ function DokumentTabell(props: {
   }
 
   const [visFullKontainer, settvisFullKontainer] = useState(true);
-  const [clickedItems, setclickedItems] = useState<Array<IDokument>>([]);
-  const [clickedsubItems, setsubItemClicked] = useState<Array<IVedlegg>>([]);
-
-  function clickSub(props: any) {
-    setsubItemClicked(props);
-  }
-
-  useEffect(() => {
-    console.debug(clickedItems);
-  }, [clickedItems]);
 
   if (!klage.dokumenter) {
     return <NavFrontendSpinner />;
@@ -609,28 +599,13 @@ function DokumentTabell(props: {
                       type={"checkbox"}
                       id={item.journalpostId + item.dokumentInfoId}
                       disabled={!item.harTilgangTilArkivvariant}
-                      checked={
-                        item.harTilgangTilArkivvariant &&
-                        (itemClicked(item.journalpostId, item.dokumentInfoId, clickedItems) ??
-                          item.valgt ??
-                          sjekkErTilordnet(klage, item.journalpostId, item.dokumentInfoId))
-                      }
+                      checked={item.valgt}
                       onChange={() => {
                         console.log("endret sjekkboks main");
                       }}
                     />
                     <label
                       onClick={() => {
-                        if (itemClicked(item.journalpostId, item.dokumentInfoId, clickedItems))
-                          setclickedItems(
-                            clickedItems.filter(
-                              (it: Partial<IDokument>) =>
-                                it.journalpostId !== item.journalpostId &&
-                                it.dokumentInfoId !== item.dokumentInfoId
-                            )
-                          );
-                        else setclickedItems(clickedItems.concat([item]));
-
                         if (item.valgt) {
                           fradelDokument(klage.id, item.journalpostId, item.dokumentInfoId);
                         } else {
@@ -666,47 +641,13 @@ function DokumentTabell(props: {
                             <Sjekkboks
                               id={idx + item.dokumentInfoId}
                               type={"checkbox"}
-                              checked={
-                                item.harTilgangTilArkivvariant &&
-                                (subItemClicked(vedlegg.dokumentInfoId, idx, clickedsubItems) ??
-                                  item.valgt ??
-                                  sjekkErTilordnet(
-                                    klage,
-                                    item.journalpostId,
-                                    vedlegg.dokumentInfoId
-                                  ))
-                              }
+                              checked={vedlegg.valgt}
                               disabled={!item.harTilgangTilArkivvariant}
                               onChange={() => {
                                 console.log("endret sjekkboks sub");
                               }}
                               onClick={() => {
-                                if (subItemClicked(vedlegg.dokumentInfoId, idx, clickedsubItems))
-                                  console.debug("finnes");
-                                else
-                                  console.debug(
-                                    "finnes ikke",
-                                    vedlegg.dokumentInfoId,
-                                    idx,
-                                    clickedsubItems
-                                  );
-
-                                if (subItemClicked(vedlegg.dokumentInfoId, idx, clickedsubItems))
-                                  clickSub(
-                                    clickedsubItems.filter(
-                                      (it: Partial<IVedlegg>) =>
-                                        it.dokumentInfoId !== vedlegg.dokumentInfoId
-                                    )
-                                  );
-                                else clickSub(clickedsubItems.concat([{ ...vedlegg }]));
-
-                                if (
-                                  sjekkErTilordnet(
-                                    klage,
-                                    item.journalpostId,
-                                    vedlegg.dokumentInfoId
-                                  )
-                                ) {
+                                if (vedlegg.valgt) {
                                   return fradelDokument(
                                     klage.id,
                                     item.journalpostId,

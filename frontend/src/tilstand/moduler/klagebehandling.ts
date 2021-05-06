@@ -189,6 +189,10 @@ export const klageSlice = createSlice({
     },
     DOKUMENT_TILORDNET: (state, action: PayloadAction<any>) => {
       state.dokumenterOppdatert = new Date().getTime().toString();
+      console.log(action);
+      state.dokumenter.map((dok: any) => {
+        console.log(dok);
+      });
       return state;
     },
     DOKUMENT_FRADELT: (
@@ -427,7 +431,7 @@ export function TilordneKlageDokumentEpos(
       )
         .pipe(
           map((payload: { response: IInnstillinger }) =>
-            tilordnetDokumentHandling(payload.response)
+            concat([tilordnetDokumentHandling(payload.response)])
           )
         )
         .pipe(
