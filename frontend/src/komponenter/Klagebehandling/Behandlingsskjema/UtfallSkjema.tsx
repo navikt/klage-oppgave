@@ -7,6 +7,7 @@ import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
 import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
 import { Utfall } from "./Utfall";
+import { velgKodeverk } from "../../../tilstand/moduler/oppgave.velgere";
 
 function BasertPaaHjemmel() {
   const [hjemler, settHjemler] = useState<string>();
@@ -44,7 +45,8 @@ function Vurdering() {
   );
 }
 
-export function UtfallSkjema({ kodeverk }: { kodeverk: any }) {
+export function UtfallSkjema() {
+  const kodeverk = useSelector(velgKodeverk);
   const klage: IKlage = useSelector(velgKlage);
 
   const [utfall, settUtfall] = useState<IKodeverkVerdi>(

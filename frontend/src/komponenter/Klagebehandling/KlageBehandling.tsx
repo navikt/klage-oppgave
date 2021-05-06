@@ -329,11 +329,8 @@ export default function Klagebehandling() {
         {showDebug && <Debug state={klage} />}
 
         <Dokumenter skjult={!faner.dokumenter.checked} />
-        {kodeverkLaster ? (
-          <NavFrontendSpinner />
-        ) : (
-          <Behandlingsskjema skjult={!faner.detaljer.checked} kodeverk={kodeverk} />
-        )}
+
+        <Behandlingsskjema skjult={!faner.detaljer.checked} />
       </>
     </Oppsett>
   );

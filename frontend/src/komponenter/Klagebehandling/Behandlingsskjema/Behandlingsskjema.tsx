@@ -89,13 +89,7 @@ function TyperTemaer() {
   );
 }
 
-export default function Behandlingsskjema({
-  skjult,
-  kodeverk,
-}: {
-  skjult: boolean;
-  kodeverk: any;
-}) {
+export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
   return (
     <KlageKontainer theme={{ display: !skjult ? "grid" : "none" }}>
       <KlageBoks>
@@ -123,7 +117,7 @@ export default function Behandlingsskjema({
       </KlageBoks>
 
       <KlageBoks>
-        <UtfallSkjema kodeverk={kodeverk} />
+        <UtfallSkjema />
       </KlageBoks>
     </KlageKontainer>
   );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Header } from "./Header/Header";
 import Alertstripe from "nav-frontend-alertstriper";
+const R = require("ramda");
 
 interface LayoutType {
   visMeny: boolean;
@@ -73,9 +74,10 @@ export default function Oppsett({
   if (!generellTilgang) {
     return <div>Beklager, men din bruker har ikke tilgang til denne siden</div>;
   }
-  if (!kodeverk) {
+  if (R.isEmpty()(kodeverk)) {
     return <NavFrontendSpinner />;
   }
+
   return (
     <>
       <main className={`main kontainer ${customClass}`} data-testid="klagesiden">
