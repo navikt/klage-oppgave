@@ -431,7 +431,7 @@ export function TilordneKlageDokumentEpos(
       )
         .pipe(
           map((payload: { response: IInnstillinger }) =>
-            concat([tilordnetDokumentHandling(payload.response)])
+            tilordnetDokumentHandling(payload.response)
           )
         )
         .pipe(
