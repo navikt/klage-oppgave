@@ -422,9 +422,8 @@ function DokumentTabell(props: {
   }, []);
 
   useEffect(() => {
-    handleLoadMore();
     dispatch(hentDokumentTilordnedeHandling({ id: klage.id }));
-  }, [klage.dokumenterOppdatert]);
+  }, []);
 
   useEffect(() => {
     if (klage.dokumenter) {
