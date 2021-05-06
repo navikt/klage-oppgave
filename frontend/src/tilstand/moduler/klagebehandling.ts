@@ -189,9 +189,9 @@ export const klageSlice = createSlice({
     },
     DOKUMENT_TILORDNET: (state, action: PayloadAction<any>) => {
       state.dokumenterOppdatert = new Date().getTime().toString();
-      console.log(action);
+      console.log(action.payload);
       state.dokumenter.map((dok: any) => {
-        console.log(dok);
+        console.log({ dok });
       });
       return state;
     },
