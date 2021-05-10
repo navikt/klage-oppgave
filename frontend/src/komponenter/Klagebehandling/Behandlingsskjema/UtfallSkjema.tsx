@@ -1,6 +1,6 @@
 import { Select, Textarea } from "nav-frontend-skjema";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { HeaderRow, Row } from "../../../styled-components/Row";
 import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
@@ -8,6 +8,7 @@ import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
 import { Utfall } from "./Utfall";
 import { velgKodeverk } from "../../../tilstand/moduler/oppgave.velgere";
+import { lagreUtfall } from "../../../tilstand/moduler/behandlingsskjema";
 
 function BasertPaaHjemmel() {
   const [hjemler, settHjemler] = useState<string>();
@@ -48,6 +49,7 @@ function Vurdering() {
 export function UtfallSkjema() {
   const kodeverk = useSelector(velgKodeverk);
   const klage: IKlage = useSelector(velgKlage);
+  const dispatch = useDispatch();
 
   const [utfall, settUtfall] = useState<IKodeverkVerdi>(
     faaUtfalllObjekt(klage.vedtak[0].utfall) ?? kodeverk.utfall[0]
@@ -70,6 +72,14 @@ export function UtfallSkjema() {
 
   function velgUtfall(utfall: IKodeverkVerdi) {
     settUtfall(utfall);
+    console.log(utfall);
+    dispatch(
+      lagreUtfall({
+        klagebehandlingid: klage.id,
+        vedtakid: klage.vedtak[0].id,
+        utfall: utfall.navn,
+      })
+    );
     const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
     settGyldigeOmgjoeringsgrunner(omgjoeringsgrunner);
   }
