@@ -45,7 +45,12 @@ const Feil = styled.div`
   margin: 0 1em;
 `;
 
-const OppgaveTabell: React.FunctionComponent = () => {
+const IkkeFiltrerbarHeader = styled.th`
+  display: block;
+  padding: 1em;
+`;
+
+function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
   const sideLaster = useSelector(velgSideLaster);
@@ -489,58 +494,68 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   return (
     <>
-      {showDebug && <Debug state={filter_state} />}
-
       <table className={`Tabell tabell oppgaver tabell--stripet`} cellSpacing={0} cellPadding={10}>
         <thead>
           <tr>
-            <FiltrerbarHeader
-              onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(
-                  settTyper,
-                  filter,
-                  filter_state?.transformasjoner?.filtrering?.typer,
-                  velgAlleEllerIngen
-                )
-              }
-              filtre={gyldigeTyper}
-              dispatchFunc={filtrerType}
-              aktiveFiltere={filter_state?.transformasjoner?.filtrering?.typer}
-            >
-              Type
-            </FiltrerbarHeader>
+            {visFilter ? (
+              <FiltrerbarHeader
+                onFilter={(filter, velgAlleEllerIngen) =>
+                  settFilter(
+                    settTyper,
+                    filter,
+                    filter_state?.transformasjoner?.filtrering?.typer,
+                    velgAlleEllerIngen
+                  )
+                }
+                filtre={gyldigeTyper}
+                dispatchFunc={filtrerType}
+                aktiveFiltere={filter_state?.transformasjoner?.filtrering?.typer}
+              >
+                Type
+              </FiltrerbarHeader>
+            ) : (
+              <IkkeFiltrerbarHeader>Type</IkkeFiltrerbarHeader>
+            )}
 
-            <FiltrerbarHeader
-              onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(
-                  settTemaer,
-                  filter,
-                  filter_state?.transformasjoner?.filtrering?.temaer,
-                  velgAlleEllerIngen
-                )
-              }
-              filtre={lovligeTemaer}
-              dispatchFunc={filtrerTema}
-              aktiveFiltere={filter_state?.transformasjoner.filtrering?.temaer}
-            >
-              Tema
-            </FiltrerbarHeader>
+            {visFilter ? (
+              <FiltrerbarHeader
+                onFilter={(filter, velgAlleEllerIngen) =>
+                  settFilter(
+                    settTemaer,
+                    filter,
+                    filter_state?.transformasjoner?.filtrering?.temaer,
+                    velgAlleEllerIngen
+                  )
+                }
+                filtre={lovligeTemaer}
+                dispatchFunc={filtrerTema}
+                aktiveFiltere={filter_state?.transformasjoner.filtrering?.temaer}
+              >
+                Tema
+              </FiltrerbarHeader>
+            ) : (
+              <IkkeFiltrerbarHeader>Tema</IkkeFiltrerbarHeader>
+            )}
 
-            <FiltrerbarHeader
-              onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(
-                  settHjemler,
-                  filter,
-                  filter_state?.transformasjoner?.filtrering?.hjemler,
-                  velgAlleEllerIngen
-                )
-              }
-              filtre={gyldigeHjemler}
-              dispatchFunc={filtrerHjemmel}
-              aktiveFiltere={filter_state?.transformasjoner.filtrering?.hjemler}
-            >
-              Hjemmel
-            </FiltrerbarHeader>
+            {visFilter ? (
+              <FiltrerbarHeader
+                onFilter={(filter, velgAlleEllerIngen) =>
+                  settFilter(
+                    settHjemler,
+                    filter,
+                    filter_state?.transformasjoner?.filtrering?.hjemler,
+                    velgAlleEllerIngen
+                  )
+                }
+                filtre={gyldigeHjemler}
+                dispatchFunc={filtrerHjemmel}
+                aktiveFiltere={filter_state?.transformasjoner.filtrering?.hjemler}
+              >
+                Hjemmel
+              </FiltrerbarHeader>
+            ) : (
+              <IkkeFiltrerbarHeader>Hjemmel</IkkeFiltrerbarHeader>
+            )}
 
             {(filter_state?.projeksjon === "UTVIDET" || visFnr) && <th>&nbsp;</th>}
             {(filter_state?.projeksjon === "UTVIDET" || visFnr) && <th>&nbsp;</th>}
@@ -591,6 +606,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
       ) : null}
     </>
   );
-};
+}
 
 export default OppgaveTabell;

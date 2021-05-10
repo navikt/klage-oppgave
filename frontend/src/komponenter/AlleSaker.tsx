@@ -8,7 +8,7 @@ import OppgaveTabell from "../komponenter/Tabell/Tabell";
 const App = (): JSX.Element => {
   return (
     <Oppsett visMeny={true}>
-      <OppgaveTabell />
+      <OppgaveTabell visFilter={true} />
     </Oppsett>
   );
 };
