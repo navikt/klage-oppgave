@@ -1,22 +1,19 @@
-export const temaOversettelse = (tema: string): string => {
-  switch (tema) {
-    case "43":
-      return "Sykepenger";
-    case "DAG":
-      return "Dagpenger";
-    case "FOR":
-      return "Foreldrepenger";
-    default:
-      return tema;
+import { useSelector } from "react-redux";
+import { IKodeverkVerdi } from "../tilstand/moduler/oppgave";
+import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
+
+export const temaOversettelse = (temaId: string): string => {
+  const kodeverk = useSelector(velgKodeverk);
+  if (kodeverk.tema) {
+    return kodeverk.tema.find((t: IKodeverkVerdi) => t.id == temaId).navn;
   }
+  return "";
 };
-export const typeOversettelse = (type: string): string => {
-  switch (type) {
-    case "ae0058":
-      return "Klage";
-    case "ae0046":
-      return "Anke";
-    default:
-      return type;
+
+export const typeOversettelse = (typeId: string): string => {
+  const kodeverk = useSelector(velgKodeverk);
+  if (kodeverk.type) {
+    return kodeverk.type.find((t: IKodeverkVerdi) => t.id == typeId).navn;
   }
+  return "";
 };

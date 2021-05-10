@@ -128,7 +128,6 @@ app.get("/klagebehandlinger/:id/detaljer", async (req, res) => {
     modified: "2021-04-27T08:56:30.679251",
     created: "2021-04-26T18:25:08.859951",
     fraSaksbehandlerident: "Z994674",
-    grunn: null,
     eoes: null,
     raadfoertMedLege: null,
     internVurdering: null,
@@ -138,7 +137,8 @@ app.get("/klagebehandlinger/:id/detaljer", async (req, res) => {
     vedtak: [
       {
         id: "214d1485-5a26-4aec-86e4-19395fa54f87",
-        utfall: null,
+        utfall: "Opprettholdt",
+        grunn: "Feil i bevisvurderingen",
         hjemler: [],
         brevMottakere: [],
       },

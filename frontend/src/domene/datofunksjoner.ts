@@ -7,3 +7,15 @@ export const formattedDate = (frist: number) => {
     return `${da}${mo}${ye}`;
   } else return "mangler";
 };
+
+const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/; // 2020-10-29
+
+export type ISODate = string;
+export type prettyDate = string;
+
+export function isoDateToPretty(isoDate: ISODate | null): prettyDate | null {
+  if (isoDate === null || !isoDateRegex.test(isoDate)) {
+    return null;
+  }
+  return isoDate.split("-").reverse().join(".");
+}

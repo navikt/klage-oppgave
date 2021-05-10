@@ -40,6 +40,7 @@ describe("Oppgave epos", () => {
         const mockedResponse = {
           id: "64848",
           fraNAVEnhet: "4416",
+          fraNAVEnhetNavn: "NAV Trondheim",
           mottattFoersteinstans: "2019-08-22",
           foedselsnummer: "29125639036",
           sakenGjelderNavn: { fornavn: "Petter" },
@@ -62,6 +63,17 @@ describe("Oppgave epos", () => {
           dokumenterTilordnedeHentet: false,
           pageIdx: 0,
           hjemler: [{ kapittel: 8, paragraf: 14, original: "8-14" }],
+          internVurdering: "",
+          kommentarFraFoersteinstans: "",
+          vedtak: [
+            {
+              brevMottakere: [],
+              hjemler: [],
+              id: "214d1485-5a26-4aec-86e4-19395fa54f87",
+              utfall: null,
+              grunn: null,
+            },
+          ],
         };
 
         const reducerResponse = hentetKlageHandling(mockedResponse);
