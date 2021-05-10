@@ -1,5 +1,6 @@
-import { insertNodes, SPEditor } from "@udecode/slate-plugins";
 import { BaseSelection, Transforms } from "slate";
+import { ReactEditor } from "slate-react";
+import { insertNodes, SPEditor } from "@udecode/slate-plugins";
 import { ELEMENT_STANDARD_TEXT, StandardTextData, StandardTextNode } from "../types";
 
 export const insertStandardText = (
@@ -17,8 +18,5 @@ export const insertStandardText = (
     at: selection?.focus,
   });
   Transforms.move(editor);
-  //   if (insertSpaceAfterMention) {
-  //     Transforms.insertText(editor, " ");
-  //     Transforms.move(editor);
-  //   }
+  ReactEditor.focus(editor);
 };

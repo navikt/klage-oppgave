@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { BaseEditor, Path, Node, Element, Editor, BaseSelection, Range } from "slate";
+import { Node, Element, BaseSelection, Range } from "slate";
 import { FormatBold } from "@styled-icons/material/FormatBold";
 import { FormatItalic } from "@styled-icons/material/FormatItalic";
 import { FormatUnderlined } from "@styled-icons/material/FormatUnderlined";
@@ -15,7 +15,7 @@ import {
   useSlatePluginType,
 } from "@udecode/slate-plugins";
 import { Tooltip } from "./Tooltip";
-import { useSlate } from "slate-react";
+import { ReactEditor, useSlate } from "slate-react";
 import { ELEMENT_COMMENTS } from "../types";
 
 interface BallonToolbarProps {
@@ -36,10 +36,10 @@ const tooltip: TippyProps = {
 
 export const BallonToolbar = ({ onAddComment }: BallonToolbarProps) => {
   const editor = useSlate();
-  const isComment = useMemo(() => getIsComment(editor, editor.selection), [
-    editor,
-    editor.selection,
-  ]);
+  // const isComment = useMemo(() => getIsComment(editor, editor.selection), [
+  //   editor,
+  //   editor.selection,
+  // ]);
 
   return (
     <BalloonToolbar direction={direction} hiddenDelay={hiddenDelay} theme={theme} arrow={true}>
@@ -58,12 +58,12 @@ export const BallonToolbar = ({ onAddComment }: BallonToolbarProps) => {
         icon={<FormatUnderlined />}
         tooltip={{ content: <Tooltip>Underline (Ctrl/⌘-U)</Tooltip>, ...tooltip }}
       />
-      {isComment ? null : <ToolbarButton icon={<AddComment />} onMouseDown={onAddComment} />}
+      <ToolbarButton icon={<AddComment />} onMouseDown={onAddComment} />
     </BalloonToolbar>
   );
 };
 
-const getIsComment = (editor: BaseEditor, selection: BaseSelection): boolean => {
+/* const getIsComment = (editor: ReactEditor, selection: BaseSelection): boolean => {
   if (selection === null) {
     return false;
   }
@@ -78,4 +78,4 @@ const getIsComment = (editor: BaseEditor, selection: BaseSelection): boolean => 
     }
   }
   return false;
-};
+}; */

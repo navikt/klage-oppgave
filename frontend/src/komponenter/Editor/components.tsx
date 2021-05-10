@@ -47,12 +47,11 @@ export const components = {
     as: "p",
     styles: {
       root: {
-        backgroundColor: "#eee",
         margin: 0,
         padding: "1em",
         marginLeft: "-1em",
         marginRight: "-1em",
-        borderRadius: ".25em",
+        borderLeft: "1px solid red",
       },
     },
   }),

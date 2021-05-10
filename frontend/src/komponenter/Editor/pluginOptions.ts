@@ -7,7 +7,6 @@ import {
   isBlockAboveEmpty,
   isSelectionAtBlockStart,
   KEYS_HEADING,
-  MentionNodeData,
   ResetBlockTypePluginOptions,
 } from "@udecode/slate-plugins";
 import { ELEMENT_STANDARD_TEXT } from "./types";
@@ -54,15 +53,4 @@ export const optionsResetBlockTypePlugin: ResetBlockTypePluginOptions = {
       predicate: isSelectionAtBlockStart,
     },
   ],
-};
-
-export const optionsMentionPlugin = {
-  mentionables: [],
-  maxSuggestions: 10,
-  insertSpaceAfterMention: false,
-  trigger: "@",
-  mentionableFilter: (s: string) => (mentionable: MentionNodeData) =>
-    mentionable.email.toLowerCase().includes(s.toLowerCase()) ||
-    mentionable.name.toLowerCase().includes(s.toLowerCase()),
-  mentionableSearchPattern: "\\S*",
 };

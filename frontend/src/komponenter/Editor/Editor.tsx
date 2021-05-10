@@ -1,17 +1,27 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
-import { BaseEditor, BaseSelection, createEditor, Transforms, Node, Path, Element } from "slate";
+import {
+  BaseSelection,
+  Transforms,
+  Node,
+  Text,
+  Editor,
+  Range,
+  BaseText,
+  BaseRange,
+  Path,
+} from "slate";
+import { ReactEditor } from "slate-react";
 import {
   createAlignPlugin,
   createBlockquotePlugin,
   createBoldPlugin,
+  createEditorPlugins,
   createExitBreakPlugin,
   createHeadingPlugin,
-  createHistoryPlugin,
   createItalicPlugin,
   createListPlugin,
   createParagraphPlugin,
-  createReactPlugin,
   createResetNodePlugin,
   createStrikethroughPlugin,
   createSubscriptPlugin,
@@ -35,32 +45,25 @@ import { ToolbarButtonsTable } from "./toolbar/Table";
 import { useStandardTextPlugin } from "./standardText/useStandardTextPlugin";
 import { StandardTextSelect } from "./StandardTextSelect";
 import { createCommentPlugin } from "./comment/createCommentPlugin";
-import { CommentsComponent } from "./Comments";
-import { CommentNode, ELEMENT_COMMENTS } from "./types";
+import { CommentableField, CommentNode, ELEMENT_COMMENTS } from "./types";
 import "./Editor.less";
+import { isComment } from "./comment/isComment";
 
-interface KlageEditorProps {
+interface KlageEditorProps extends CommentableField {
   initialData: TDescendant[];
   id: string;
   placeholder?: string;
 }
 
-const KlageEditor = ({ id, initialData = [], placeholder }: KlageEditorProps) => {
-  const editor = useMemo(() => createEditor(), []);
-
-  const [isFocused, setFocused] = useState(false);
-  const [commentThreadId, setCommentThreadId] = useState<string | null>(null);
-
-  const onBlur = useCallback(() => {
-    savedSelection.current = editor.selection;
-    setFocused(false);
-  }, [editor]);
-
-  const onFocus = useCallback(() => {
-    setFocused(true);
-  }, [editor]);
-
-  const savedSelection = useRef(editor.selection);
+const KlageEditor = ({
+  id,
+  initialData = [],
+  placeholder,
+  onFocus,
+  onAddCommentThread,
+  onCommentFocus,
+}: KlageEditorProps) => {
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const {
     getStandardTextSelectProps,
@@ -81,8 +84,8 @@ const KlageEditor = ({ id, initialData = [], placeholder }: KlageEditorProps) =>
 
   const plugins = useMemo(
     () => [
-      createReactPlugin(),
-      createHistoryPlugin(),
+      // createReactPlugin(),
+      // createHistoryPlugin(),
       createCommentPlugin(),
       createParagraphPlugin(),
       createHeadingPlugin(),
@@ -103,27 +106,39 @@ const KlageEditor = ({ id, initialData = [], placeholder }: KlageEditorProps) =>
     [standardTextPlugin, optionsExitBreakPlugin, optionsResetBlockTypePlugin]
   );
 
+  const editor = useMemo(
+    () =>
+      createEditorPlugins({
+        components,
+        plugins,
+        options,
+      }),
+    [components, plugins, options]
+  );
+
+  const onBlur = useCallback(() => {
+    savedSelection.current = editor.selection;
+    setIsFocused(false);
+  }, [editor]);
+
+  const savedSelection = useRef(editor.selection);
+
   const [value, setValue] = useState<TDescendant[]>(initialData);
 
   const showComments = useCallback(
-    (editor: BaseEditor) => {
-      const { selection } = editor;
+    (editor: ReactEditor, selection: BaseSelection) => {
       if (selection === null) {
         return;
       }
-      const parent = Node.ancestor(editor, Path.parent(selection.focus.path));
-      if (
-        Element.isElement(parent) &&
-        parent.type === ELEMENT_COMMENTS &&
-        typeof parent.commentThreadId === "string" &&
-        parent.commentThreadId.length > 0
-      ) {
-        setCommentThreadId(parent.commentThreadId);
+      const focusedNode = Node.get(editor, Path.parent(selection.focus.path));
+      if (isComment(focusedNode)) {
+        const { commentThreadId } = focusedNode;
+        onCommentFocus(commentThreadId);
         return;
       }
-      setCommentThreadId(null);
+      onCommentFocus(null);
     },
-    [editor]
+    [editor, editor.selection]
   );
 
   return (
@@ -139,12 +154,18 @@ const KlageEditor = ({ id, initialData = [], placeholder }: KlageEditorProps) =>
           spellCheck: true,
           autoFocus: false,
           onBlur,
-          onFocus,
+          onFocus: () => {
+            setIsFocused(true);
+            onFocus();
+          },
+          style: {
+            cursor: "text",
+          },
         }}
         onChange={(content) => {
           savedSelection.current = editor.selection;
           setValue(content);
-          showComments(editor);
+          showComments(editor, editor.selection);
         }}
         editor={editor}
       >
@@ -152,8 +173,16 @@ const KlageEditor = ({ id, initialData = [], placeholder }: KlageEditorProps) =>
           styles={{
             root: {
               paddingBottom: 0,
-              backgroundColor: "transparent",
+              backgroundColor: isFocused ? "white" : "#eee",
               zIndex: 1,
+              position: "sticky",
+              top: 0,
+              marginBottom: 0,
+              margin: 0,
+              padding: 0,
+              visibility: isFocused ? "visible" : "hidden",
+              opacity: isFocused ? 1 : 0,
+              transition: "opacity ease 200ms",
             },
           }}
         >
@@ -171,30 +200,43 @@ const KlageEditor = ({ id, initialData = [], placeholder }: KlageEditorProps) =>
           <ToolbarSeparator />
         </HeadingToolbar>
         <StandardTextSelect {...getStandardTextSelectProps()} selection={savedSelection.current} />
-        <BallonToolbar onAddComment={() => addCommentThread(editor, savedSelection.current)} />
+        <BallonToolbar
+          onAddComment={() => addCommentThread(editor, savedSelection.current, onAddCommentThread)}
+        />
       </SlatePlugins>
-      <CommentsComponent commentThreadId={commentThreadId} show={isFocused} />
     </EditorContainer>
   );
 };
 
-const addCommentThread = (editor: BaseEditor, selection: BaseSelection) => {
+const addCommentThread = async (
+  editor: ReactEditor,
+  selection: BaseSelection,
+  onAddCommentThread: () => Promise<string>
+) => {
   if (selection === null) {
     return;
   }
-  // TODO: POST to create a new comment thread. API responds with an ID.
+  const commentThreadId = await onAddCommentThread();
+
   const element: CommentNode = {
     type: ELEMENT_COMMENTS,
-    commentThreadId: Math.random().toString(),
+    commentThreadId,
+    children: [],
   };
+
   Transforms.wrapNodes(editor, element, {
-    at: selection,
+    at: pruneSelection(editor, selection),
     split: true,
-    mode: "highest",
+    match: Text.isText,
   });
 };
 
-const EditorContainer = styled.div<{ focused: boolean }>`
+interface EditorContainerProps {
+  focused: boolean;
+}
+
+const EditorContainer = styled.div<EditorContainerProps>`
+  position: relative;
   z-index: 0;
   display: block;
   width: 100%;
@@ -203,5 +245,40 @@ const EditorContainer = styled.div<{ focused: boolean }>`
   border-radius: 0.25em;
   border: 1px solid #eee;
 `;
+
+const pruneSelection = (editor: ReactEditor, selection: BaseRange): BaseRange => {
+  selection = Editor.unhangRange(editor, selection);
+
+  const nodeGenerator = Editor.nodes<BaseText>(editor, {
+    at: selection,
+    match: Text.isText,
+  });
+  const nodes = Array.from(nodeGenerator);
+
+  if (nodes.length > 1) {
+    let [focus, anchor] = Range.edges(selection);
+    const [firstNode] = nodes[0];
+
+    if (firstNode.text.length === focus.offset) {
+      const [_, secondPath] = nodes[1];
+      focus = {
+        offset: 0,
+        path: secondPath,
+      };
+    }
+
+    if (anchor.offset === 0) {
+      const [secondLastNode, secondLastPath] = nodes[nodes.length - 2];
+      anchor = {
+        offset: secondLastNode.text.length,
+        path: secondLastPath,
+      };
+    }
+
+    return { focus, anchor };
+  }
+
+  return selection;
+};
 
 export default KlageEditor;

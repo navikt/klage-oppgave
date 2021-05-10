@@ -25,7 +25,7 @@ ReactDOM.render(
           <Route exact path="/mineoppgaver" render={() => <MineSaker />} />
           <Route exact path="/mineoppgaver/:side" render={() => <MineSaker />} />
           <Route exact path="/innstillinger" render={() => <Innstillinger />} />
-          <Route exact path="/editor" render={() => <EditorPage />} />
+          <Route exact path="/editor" render={() => <EditorPage saksId={"saksId-123"} />} />
           <Redirect to="/oppgaver" />
         </Switch>
       </BrowserRouter>

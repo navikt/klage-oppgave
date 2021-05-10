@@ -15,7 +15,7 @@ import {
   ELEMENT_TD,
 } from "@udecode/slate-plugins";
 import { TDescendant } from "@udecode/slate-plugins-core";
-import { ELEMENT_STANDARD_TEXT } from "./types";
+import { ELEMENT_STANDARD_TEXT, UUID } from "./types";
 
 export const TEST_DATA: Template = {
   id: "template-id",
@@ -23,19 +23,6 @@ export const TEST_DATA: Template = {
     {
       id: "basic",
       title: "Fast tittel for vedtaksmalen",
-      comments: [
-        [
-          {
-            author: {
-              id: "userId",
-              name: "Testuser",
-            },
-            id: "123",
-            text: "Kommentar",
-            createdDate: "2021-04-20",
-          },
-        ],
-      ],
       content: [
         {
           id: "klager",
@@ -80,19 +67,6 @@ export const TEST_DATA: Template = {
     {
       id: "vedtak-block",
       title: "Vedtak",
-      comments: [
-        [
-          {
-            author: {
-              id: "userId",
-              name: "Testuser",
-            },
-            id: "123",
-            text: "Kommentar",
-            createdDate: "2021-04-20",
-          },
-        ],
-      ],
       content: [
         {
           id: "vedtak",
@@ -232,20 +206,6 @@ export const TEST_DATA: Template = {
   ],
 };
 
-export type UUID = string;
-
-export interface CommentData {
-  id: UUID;
-  author: {
-    id: UUID;
-    name: string;
-  };
-  text: string;
-  createdDate: string;
-}
-
-export type CommentThreadsData = CommentData[][];
-
 export interface RichText {
   id: UUID;
   label?: string | null;
@@ -267,7 +227,6 @@ export type Content = RichText | Text;
 export interface Block {
   id: UUID;
   title: string | null;
-  comments: CommentThreadsData;
   content: Content[];
 }
 

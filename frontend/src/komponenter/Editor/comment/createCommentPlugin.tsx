@@ -3,25 +3,49 @@ import styled from "styled-components";
 import { SlatePlugin } from "@udecode/slate-plugins-core";
 import { getCommentDeserialize } from "./getCommentDeserialize";
 import { ELEMENT_COMMENTS } from "../types";
+import { isComment } from "./isComment";
+
+const hues: Map<string, number> = new Map([]);
+
+export const getHue = (id: string): number => {
+  const existingHue = hues.get(id);
+  if (typeof existingHue === "number") {
+    return existingHue;
+  }
+  const next = hues.size * 53;
+  const newHue = next > 360 ? next % 360 : next;
+  hues.set(id, newHue);
+  return newHue;
+};
 
 export const createCommentPlugin = (): SlatePlugin => ({
-  pluginKeys: ELEMENT_COMMENTS,
   deserialize: getCommentDeserialize(),
   inlineTypes: () => [ELEMENT_COMMENTS],
   renderElement: (editor) => ({ element, attributes, children }) => {
-    const { type, commentThreadId } = element;
-    if (
-      type === ELEMENT_COMMENTS &&
-      typeof commentThreadId === "string" &&
-      commentThreadId.length > 0
-    ) {
-      return <Comment {...attributes}>{children}</Comment>;
+    if (isComment(element)) {
+      const { commentThreadId } = element;
+      return (
+        <StyledInlineComment hue={getHue(commentThreadId)} {...attributes}>
+          {children}
+        </StyledInlineComment>
+      );
     }
   },
 });
 
-const Comment = styled.span`
-  background-color: rgba(0, 200, 0, 0.25);
-  box-shadow: 0 0 0 0.125em rgba(0, 150, 0, 0.75);
-  border-radius: 0.125em;
+// interface InlineCommentProps {
+//   id: string;
+//   children: any;
+// }
+
+// const InlineComment = ({ id, children }: InlineCommentProps) => {
+//   return <StyledInlineComment hue={getHue(id)}>{children}</StyledInlineComment>;
+// };
+
+interface StyledInlineCommentProps {
+  hue: number;
+}
+
+const StyledInlineComment = styled.span<StyledInlineCommentProps>`
+  background-color: hsl(${({ hue }) => hue}, 100%, 80%);
 `;

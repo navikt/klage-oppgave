@@ -5,6 +5,7 @@ import { getStandardTextDeserialize } from "./getStandardTextDeserialize";
 
 export const createStandardTextPlugin = (): SlatePlugin => ({
   pluginKeys: ELEMENT_STANDARD_TEXT,
+  inlineTypes: () => [ELEMENT_STANDARD_TEXT],
   renderElement: () => options[ELEMENT_STANDARD_TEXT].component,
   deserialize: getStandardTextDeserialize(),
 });
