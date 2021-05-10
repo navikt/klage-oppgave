@@ -497,7 +497,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       <table className={`Tabell tabell oppgaver tabell--stripet`} cellSpacing={0} cellPadding={10}>
         <thead>
           <tr>
-            {visFilter ? (
+            {visFilter && (
               <FiltrerbarHeader
                 onFilter={(filter, velgAlleEllerIngen) =>
                   settFilter(
@@ -513,11 +513,10 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
               >
                 Type
               </FiltrerbarHeader>
-            ) : (
-              <IkkeFiltrerbarHeader>Type</IkkeFiltrerbarHeader>
             )}
+            {!visFilter && <IkkeFiltrerbarHeader>Type</IkkeFiltrerbarHeader>}
 
-            {visFilter ? (
+            {visFilter && (
               <FiltrerbarHeader
                 onFilter={(filter, velgAlleEllerIngen) =>
                   settFilter(
@@ -533,11 +532,10 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
               >
                 Tema
               </FiltrerbarHeader>
-            ) : (
-              <IkkeFiltrerbarHeader>Tema</IkkeFiltrerbarHeader>
             )}
+            {!visFilter && <IkkeFiltrerbarHeader>Tema</IkkeFiltrerbarHeader>}
 
-            {visFilter ? (
+            {visFilter && (
               <FiltrerbarHeader
                 onFilter={(filter, velgAlleEllerIngen) =>
                   settFilter(
@@ -553,9 +551,8 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
               >
                 Hjemmel
               </FiltrerbarHeader>
-            ) : (
-              <IkkeFiltrerbarHeader>Hjemmel</IkkeFiltrerbarHeader>
             )}
+            {!visFilter && <IkkeFiltrerbarHeader>Hjemmel</IkkeFiltrerbarHeader>}
 
             {(filter_state?.projeksjon === "UTVIDET" || visFnr) && <th>&nbsp;</th>}
             {(filter_state?.projeksjon === "UTVIDET" || visFnr) && <th>&nbsp;</th>}
