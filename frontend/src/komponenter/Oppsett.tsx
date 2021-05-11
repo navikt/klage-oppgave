@@ -100,11 +100,6 @@ export default function Oppsett({
                 Mine&nbsp;Oppgaver
               </NavLink>
             </li>
-            <li>
-              <NavLink className="link" to="/innstillinger">
-                Innstillinger
-              </NavLink>
-            </li>
           </ul>
         </nav>
         <div className={`toaster ${visFeilmelding ? "active" : ""}`}>

@@ -84,6 +84,9 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
           })}
           <hr />
           <div className={classNames({ enhet: true })}>
+            <a href={"/innstillinger"}>Innstillinger</a>
+          </div>
+          <div className={classNames({ enhet: true })}>
             <a href={"/internal/logout"}>Logg ut</a>
           </div>
         </div>
