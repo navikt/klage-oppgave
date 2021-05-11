@@ -23,7 +23,7 @@ export interface OppgaveRad {
     navn?: string;
   };
   type: string;
-  versjon: number;
+  klagebehandlingVersjon: number;
   tema: string;
   hjemmel: string;
   frist: string | number;

@@ -92,7 +92,10 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
   const [forrigeTypeFilter, settForrigeTypeFilter] = useState<string[] | undefined>(undefined);
 
-  const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
+  const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({
+    id: "",
+    klagebehandlingVersjon: 0,
+  });
 
   const [antall] = useState<number>(10);
   const [start, settStart] = useState<number>(0);
@@ -148,6 +151,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
     }
   }, [featureToggles]);
 
+  const [sidelokasjon, settLokasjon] = useState(location.pathname);
   const [innstillingerHentet, settInnstillingerHentet] = useState(false);
   useEffect(() => {
     if (meg.id) {
@@ -262,57 +266,66 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
     sortType: "frist" | "mottatt";
     sortOrder: "synkende" | "stigende";
   }) => {
-    console.debug(
-      "%c -> kjører den faktisk oppgave-spørringen",
-      "background: #222; color: #bada55"
-    );
-    dispatch(
-      hentUtgatte({
-        ident: filter_state.ident,
-        antall: filter_state.antall,
-        start: filter_state.start || 0,
-        enhetId: filter_state?.enhetId,
-        projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
-        tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
-        transformasjoner: {
-          filtrering: {
-            hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
-            typer: toValue(filter_state.transformasjoner.filtrering.typer),
-            temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+    if (filter_state.ident) {
+      console.debug(
+        "%c -> kjører den faktisk oppgave-spørringen",
+        "background: #222; color: #bada55"
+      );
+      dispatch(
+        hentUtgatte({
+          ident: filter_state.ident,
+          antall: filter_state.antall,
+          start: filter_state.start || 0,
+          enhetId: filter_state?.enhetId,
+          projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
+          tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
+          transformasjoner: {
+            filtrering: {
+              hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
+              typer: toValue(filter_state.transformasjoner.filtrering.typer),
+              temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+            },
+            sortering: {
+              type: sortType,
+              frist:
+                sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
+              mottatt:
+                sortType === "mottatt"
+                  ? sortOrder
+                  : filter_state.transformasjoner.sortering.mottatt,
+            },
           },
-          sortering: {
-            type: sortType,
-            frist: sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
-            mottatt:
-              sortType === "mottatt" ? sortOrder : filter_state.transformasjoner.sortering.mottatt,
+        })
+      );
+      dispatch(
+        oppgaveRequest({
+          ident: filter_state.ident,
+          antall: filter_state.antall,
+          start: filter_state.start || 0,
+          enhetId: filter_state?.enhetId,
+          projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
+          tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
+          transformasjoner: {
+            filtrering: {
+              hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
+              typer: toValue(filter_state.transformasjoner.filtrering.typer),
+              temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+            },
+            sortering: {
+              type: sortType,
+              frist:
+                sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
+              mottatt:
+                sortType === "mottatt"
+                  ? sortOrder
+                  : filter_state.transformasjoner.sortering.mottatt,
+            },
           },
-        },
-      })
-    );
-    dispatch(
-      oppgaveRequest({
-        ident: filter_state.ident,
-        antall: filter_state.antall,
-        start: filter_state.start || 0,
-        enhetId: filter_state?.enhetId,
-        projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
-        tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
-        transformasjoner: {
-          filtrering: {
-            hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
-            typer: toValue(filter_state.transformasjoner.filtrering.typer),
-            temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
-          },
-          sortering: {
-            type: sortType,
-            frist: sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
-            mottatt:
-              sortType === "mottatt" ? sortOrder : filter_state.transformasjoner.sortering.mottatt,
-          },
-        },
-      })
-    );
+        })
+      );
+    }
   };
+
   useEffect(() => {
     if (meg.id) {
       if (location.pathname.startsWith("/mineoppgaver")) {
@@ -389,7 +402,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
         tildelMegHandling({
           oppgaveId: valgtOppgave.id,
           ident: meg.id,
-          versjon: valgtOppgave.versjon,
+          klagebehandlingVersjon: valgtOppgave.klagebehandlingVersjon,
         })
       );
     }
@@ -424,7 +437,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   }, [hjemmelFilter, temaFilter, typeFilter]);
 
   useEffect(() => {
-    if (filter_state.meta.kan_hente_oppgaver || start > 1) {
+    if (filter_state.meta.kan_hente_oppgaver || start > -1) {
       console.debug("%chenter fordi start har endret seg", "background: #222; color: #bada55");
       if (filter_state.transformasjoner.type === "frist")
         dispatchTransformering({

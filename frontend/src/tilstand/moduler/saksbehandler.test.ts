@@ -59,19 +59,23 @@ describe("TILDEL 'Meg' epos", () => {
         const expectedMarble = "(cd)-";
 
         const inputValues = {
-          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+          a: tildelMegHandling({
+            oppgaveId: "123456",
+            ident: "ZAKSBEHANDLER",
+            klagebehandlingVersjon: 5,
+          }),
         };
         const resultPayload = {
           saksbehandler: {
             ident: "ZAKSBEHANDLER",
           },
-          versjon: 5,
+          klagebehandlingVersjon: 5,
           id: 123456,
         };
         const mockedResponse = {
           response: {
             id: 123456,
-            versjon: 5,
+            klagebehandlingVersjon: 5,
             saksbehandler: {
               ident: "ZAKSBEHANDLER",
             },
@@ -117,7 +121,11 @@ describe("TILDEL 'Meg' epos", () => {
         const expectedMarble = "(cd)-";
 
         const inputValues = {
-          a: fradelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+          a: fradelMegHandling({
+            oppgaveId: "123456",
+            ident: "ZAKSBEHANDLER",
+            klagebehandlingVersjon: 5,
+          }),
         };
         const resultPayload = {};
         const mockedResponse = {
@@ -163,7 +171,11 @@ describe("TILDEL 'Meg' epos", () => {
         const expectedMarble = "(tu)";
 
         const inputValues = {
-          a: fradelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+          a: fradelMegHandling({
+            oppgaveId: "123456",
+            ident: "ZAKSBEHANDLER",
+            klagebehandlingVersjon: 5,
+          }),
         };
         const resultPayload = {};
         const mockedResponse = {
@@ -204,7 +216,11 @@ describe("TILDEL 'Meg' epos", () => {
     marbles(() => {
       ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
         const inputValues = {
-          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+          a: tildelMegHandling({
+            oppgaveId: "123456",
+            ident: "ZAKSBEHANDLER",
+            klagebehandlingVersjon: 5,
+          }),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
@@ -244,7 +260,11 @@ describe("TILDEL 'Meg' epos", () => {
     marbles(() => {
       ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
         const inputValues = {
-          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+          a: tildelMegHandling({
+            oppgaveId: "123456",
+            ident: "ZAKSBEHANDLER",
+            klagebehandlingVersjon: 5,
+          }),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
@@ -287,7 +307,11 @@ describe("TILDEL 'Meg' epos", () => {
     marbles(() => {
       ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
         const inputValues = {
-          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+          a: tildelMegHandling({
+            oppgaveId: "123456",
+            ident: "ZAKSBEHANDLER",
+            klagebehandlingVersjon: 5,
+          }),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
@@ -330,7 +354,11 @@ describe("TILDEL 'Meg' epos", () => {
     marbles(() => {
       ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
         const inputValues = {
-          a: tildelMegHandling({ oppgaveId: "123456", ident: "ZAKSBEHANDLER", versjon: 5 }),
+          a: tildelMegHandling({
+            oppgaveId: "123456",
+            ident: "ZAKSBEHANDLER",
+            klagebehandlingVersjon: 5,
+          }),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
 

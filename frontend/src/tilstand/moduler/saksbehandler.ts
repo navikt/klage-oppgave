@@ -12,7 +12,7 @@ import { OppgaveParams, oppgaveRequest } from "./oppgave";
 //==========
 export type TildelType = {
   id: string;
-  versjon: number;
+  klagebehandlingVersjon: number;
   saksbehandler: {
     navn: string;
     ident: string;
@@ -21,7 +21,7 @@ export type TildelType = {
 export type PayloadType = {
   ident: string;
   oppgaveId: string;
-  versjon: number;
+  klagebehandlingVersjon: number;
 };
 
 //==========
@@ -31,7 +31,7 @@ export const saksbehandlerSlice = createSlice({
   name: "saksbehandler",
   initialState: {
     id: "0",
-    versjon: 1,
+    klagebehandlingVersjon: 1,
     saksbehandler: {
       navn: "",
       ident: "",
@@ -65,7 +65,7 @@ export function tildelEpos(
       const tildelMegUrl = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlertildeling`;
       return post(
         tildelMegUrl,
-        { navIdent: action.payload.ident, oppgaveversjon: action.payload.versjon },
+        { navIdent: action.payload.ident, oppgaveversjon: action.payload.klagebehandlingVersjon },
         { "Content-Type": "application/json" }
       )
         .pipe(
@@ -99,7 +99,7 @@ export function fradelEpos(
       const url = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlerfradeling`;
       return post(
         url,
-        { navIdent: action.payload.ident, oppgaveversjon: action.payload.versjon },
+        { navIdent: action.payload.ident, oppgaveversjon: action.payload.klagebehandlingVersjon },
         { "Content-Type": "application/json" }
       )
         .pipe(
