@@ -580,20 +580,22 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
             klagebehandlinger,
             filter_state?.projeksjon || visFnr
           )}
-          <tr>
-            <td colSpan={visFnr ? 7 : 5}>
-              <div className="table-lbl">
-                <div className="antall-saker">{visAntallTreff(klagebehandlinger)}</div>
-                <div className={"paginering"}>
-                  <Paginering
-                    startSide={tolketStart}
-                    antallSider={klagebehandlinger.meta.sider}
-                    pathname={pathname}
-                  />
+          {klagebehandlinger.meta.sider > 1 && (
+            <tr>
+              <td colSpan={visFnr ? 7 : 5}>
+                <div className="table-lbl">
+                  <div className="antall-saker">{visAntallTreff(klagebehandlinger)}</div>
+                  <div className={"paginering"}>
+                    <Paginering
+                      startSide={tolketStart}
+                      antallSider={klagebehandlinger.meta.sider}
+                      pathname={pathname}
+                    />
+                  </div>
                 </div>
-              </div>
-            </td>
-          </tr>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
       {location.pathname.startsWith("/oppgaver") ? (
