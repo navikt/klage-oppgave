@@ -39,7 +39,7 @@ import Debug from "./Debug";
 import styled from "styled-components";
 import { filter } from "rxjs/operators";
 
-const R = require("ramda");
+import * as R from "ramda";
 
 const Feil = styled.div`
   display: block;

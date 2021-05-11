@@ -19,7 +19,7 @@ import { formattedDate } from "../../domene/datofunksjoner";
 import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
 import styled from "styled-components";
 
-const R = require("ramda");
+import * as R from "ramda";
 
 const velgOppgave = R.curry(
   (settValgtOppgave: Function, id: string, klagebehandlingVersjon: number) =>

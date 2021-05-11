@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { Knapp } from "nav-frontend-knapper";
 import styled from "styled-components";
 import { File } from "forhandsvisningsfil";
+import { addAttachment } from "./upload";
 
 interface UploadError {
   timestamp: string;
@@ -39,12 +40,27 @@ const UploadButton = ({ inputId, files, setFiles: setFiles, setLoading, setError
       return;
     }
 
-    const uploads = Array.from(files);
+    const uploads = Array.from(files).map(async (file) => {
+      try {
+        return await addAttachment(file);
+      } catch (err) {
+        // if (err instanceof ApiError) {
+        //   const errorBody: UploadError = await err.response.json();
+        //   const errorMessage = getAttachmentErrorMessage(errorBody.detail);
+        //   setError(upload_error(file, errorMessage));
+        // } else if (err instanceof Error) {
+        //   setError(upload_error(file, err.message));
+        // } else {
+        //   setError(upload_error(file));
+        // }
+        return null;
+      }
+    });
     console.log("uploads:", uploads);
     const addedAttachmentList = uploads.filter(notNull);
     console.log("addedAttachmentList:", addedAttachmentList);
     // TODO
-    setFiles(addedAttachmentList);
+    // setFiles(addedAttachmentList);
     // setAttachments(files.concat(addedAttachmentList));
   };
 

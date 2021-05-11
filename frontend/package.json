@@ -36,6 +36,7 @@
     "@types/classnames": "^2.2.11",
     "@types/jest": "^26.0.14",
     "@types/qs": "^6.9.5",
+    "@types/ramda": "^0.27.40",
     "@types/react": "^16.9.50",
     "@types/react-dom": "^16.9.8",
     "@types/react-pdf": "^5.0.1",
