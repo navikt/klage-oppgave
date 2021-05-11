@@ -266,14 +266,20 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
     sortType: "frist" | "mottatt";
     sortOrder: "synkende" | "stigende";
   }) => {
-    if (filter_state.ident) {
+    let ident = filter_state.ident;
+    if (!filter_state.ident) {
+      //todo dette er ikke riktig, ident skal ikke mangle
+      console.debug("%c mangler ident!", "background: #b00b55; color: #ffffff");
+      ident = meg.id;
+    }
+    if (ident) {
       console.debug(
         "%c -> kjører den faktisk oppgave-spørringen",
         "background: #222; color: #bada55"
       );
       dispatch(
         hentUtgatte({
-          ident: filter_state.ident,
+          ident: ident,
           antall: filter_state.antall,
           start: filter_state.start || 0,
           enhetId: filter_state?.enhetId,
@@ -299,7 +305,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       );
       dispatch(
         oppgaveRequest({
-          ident: filter_state.ident,
+          ident: ident,
           antall: filter_state.antall,
           start: filter_state.start || 0,
           enhetId: filter_state?.enhetId,
@@ -438,7 +444,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
   useEffect(() => {
     if (filter_state.meta.kan_hente_oppgaver || start > -1) {
-      console.debug("%chenter fordi start har endret seg", "background: #222; color: #bada55");
+      console.debug("%chenter oppgaver", "background: #222; color: #bada55");
       if (filter_state.transformasjoner.type === "frist")
         dispatchTransformering({
           sortType: filter_state.transformasjoner.sortering.type,

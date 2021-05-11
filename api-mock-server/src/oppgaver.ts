@@ -55,7 +55,7 @@ function typeQuery(filter: Array<string> | undefined) {
 export interface ISaksbehandler {
   oppgaveId: string;
   navIdent: string;
-  oppgaveVersjon: number;
+  klagebehandlingVersjon: number;
 }
 
 export async function tildelSaksbehandler(params: ISaksbehandler) {
@@ -65,7 +65,7 @@ export async function tildelSaksbehandler(params: ISaksbehandler) {
   return await new Promise((resolve, reject) => {
     db.all(
       sql,
-      [params.navIdent, params.oppgaveId, params.oppgaveVersjon],
+      [params.navIdent, params.oppgaveId, params.klagebehandlingVersjon],
       (err: any, rader: any) => {
         if (err) {
           console.log(sql);
@@ -97,7 +97,7 @@ export async function fradelSaksbehandler(params: ISaksbehandler) {
   return await new Promise((resolve, reject) => {
     db.all(
       sql,
-      [params.oppgaveId, params.oppgaveVersjon],
+      [params.oppgaveId, params.klagebehandlingVersjon],
       (err: any, rader: any) => {
         if (err) {
           console.log(sql);

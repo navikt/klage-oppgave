@@ -65,7 +65,10 @@ export function tildelEpos(
       const tildelMegUrl = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlertildeling`;
       return post(
         tildelMegUrl,
-        { navIdent: action.payload.ident, oppgaveversjon: action.payload.klagebehandlingVersjon },
+        {
+          navIdent: action.payload.ident,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
         .pipe(
@@ -99,7 +102,10 @@ export function fradelEpos(
       const url = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlerfradeling`;
       return post(
         url,
-        { navIdent: action.payload.ident, oppgaveversjon: action.payload.klagebehandlingVersjon },
+        {
+          navIdent: action.payload.ident,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
         .pipe(
