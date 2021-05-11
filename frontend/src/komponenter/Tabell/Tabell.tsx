@@ -581,7 +581,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
             filter_state?.projeksjon || visFnr
           )}
           <tr>
-            <td colSpan={visFnr ? 8 : 6}>
+            <td colSpan={visFnr ? 7 : 5}>
               <div className="table-lbl">
                 <div className="antall-saker">{visAntallTreff(klagebehandlinger)}</div>
                 <div className={"paginering"}>
