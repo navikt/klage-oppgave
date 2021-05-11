@@ -37,6 +37,7 @@ import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
 import filterReducer from "./filterReducer";
 import Debug from "./Debug";
 import styled from "styled-components";
+import { filter } from "rxjs/operators";
 
 const R = require("ramda");
 
@@ -126,7 +127,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
     if (meg.id) {
       filter_dispatch({ type: "sett_navident", payload: meg });
     }
-  }, [meg]);
+  }, [meg.id, location.pathname]);
 
   /** UTVIDET PROJEKSJON
    * Med dette flagget kommer det persondata fra kabal-api. Dette skal skrus
@@ -151,7 +152,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
     }
   }, [featureToggles]);
 
-  const [sidelokasjon, settLokasjon] = useState(location.pathname);
   const [innstillingerHentet, settInnstillingerHentet] = useState(false);
   useEffect(() => {
     if (meg.id) {
@@ -267,12 +267,18 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
     sortOrder: "synkende" | "stigende";
   }) => {
     let ident = filter_state.ident;
+    let enhetId = filter_state.enhetId;
+
     if (!filter_state.ident) {
       //todo dette er ikke riktig, ident skal ikke mangle
       console.debug("%c mangler ident!", "background: #b00b55; color: #ffffff");
       ident = meg.id;
+      if (enheter) {
+        console.debug(enheter);
+      }
+      //enhetId = meg?.enheter[meg?.valgtEnhet].id ||0;
     }
-    if (ident) {
+    if (ident && enhetId) {
       console.debug(
         "%c -> kjører den faktisk oppgave-spørringen",
         "background: #222; color: #bada55"
@@ -282,7 +288,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           ident: ident,
           antall: filter_state.antall,
           start: filter_state.start || 0,
-          enhetId: filter_state?.enhetId,
+          enhetId: enhetId,
           projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
           tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
           transformasjoner: {
@@ -308,7 +314,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           ident: ident,
           antall: filter_state.antall,
           start: filter_state.start || 0,
-          enhetId: filter_state?.enhetId,
+          enhetId: enhetId,
           projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
           tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
           transformasjoner: {
@@ -456,7 +462,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           sortOrder: filter_state.transformasjoner.sortering.mottatt,
         });
     }
-  }, [start, filter_state.meta.kan_hente_oppgaver]);
+  }, [start, filter_state.meta.kan_hente_oppgaver, meg, enheter]);
 
   useEffect(() => {
     const ny_start = (tolketStart - 1) * antall;
