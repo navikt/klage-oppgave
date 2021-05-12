@@ -33,6 +33,11 @@ export interface IInternVurderingPayload {
   internVurdering: string;
 }
 
+export interface IInternVurderingPayload {
+  klagebehandlingid: string;
+  internVurdering: string;
+}
+
 //==========
 // Reducer
 //==========

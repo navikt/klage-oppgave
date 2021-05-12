@@ -52,6 +52,7 @@ export function UtfallSkjema() {
   const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(
     faaOmgjoeringsgrunnObjekt(klage.vedtak[0].grunn) ?? gyldigeOmgjoeringsgrunner[0]
   );
+  const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering ?? "");
 
   const [valgteHjemler, settValgteHjemler] = useState<Filter[]>([]); // TODO: Hentes fra klage
 
@@ -127,6 +128,18 @@ export function UtfallSkjema() {
         internVurdering: internVurdering,
       })
     );
+  }
+
+  function endreInternVurdering(internVurdering: string) {
+    settInternVurdering(internVurdering);
+    dispatch(
+      lagreInternVurdering({
+        klagebehandlingid: klage.id,
+        internVurdering: internVurdering,
+      })
+    );
+    const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
+    settGyldigeOmgjoeringsgrunner(omgjoeringsgrunner);
   }
 
   function faaUtfalllObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
