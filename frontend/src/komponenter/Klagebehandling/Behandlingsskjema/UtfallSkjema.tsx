@@ -8,7 +8,7 @@ import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
 import { Utfall } from "./Utfall";
 import { velgKodeverk } from "../../../tilstand/moduler/oppgave.velgere";
-import { lagreUtfall } from "../../../tilstand/moduler/behandlingsskjema";
+import { lagreInternVurdering, lagreUtfall } from "../../../tilstand/moduler/behandlingsskjema";
 
 function BasertPaaHjemmel() {
   const [hjemler, settHjemler] = useState<string>();
@@ -27,17 +27,20 @@ function BasertPaaHjemmel() {
   );
 }
 
-function Vurdering() {
-  const klage: IKlage = useSelector(velgKlage);
-  const [vurdering, settVurdering] = useState<string>(klage.internVurdering ?? "");
+interface InterfaceInterVurderingProps {
+  internVurdering: string;
+  endreInternVurdering: (internVurdering: string) => void;
+}
+
+function Vurdering({ internVurdering, endreInternVurdering }: InterfaceInterVurderingProps) {
   return (
     <Textarea
-      id="vurdering"
-      value={vurdering}
+      id="internVurdering"
+      value={internVurdering}
       label="Vurdering av kvalitet for intern bruk:"
       maxLength={0}
       onChange={(e) => {
-        settVurdering(e.target.value);
+        endreInternVurdering(e.target.value);
       }}
       style={{
         minHeight: "80px",
@@ -60,6 +63,7 @@ export function UtfallSkjema() {
   const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(
     faaOmgjoeringsgrunnObjekt(klage.vedtak[0].grunn) ?? gyldigeOmgjoeringsgrunner[0]
   );
+  const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering ?? "");
 
   function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi): IKodeverkVerdi[] {
     return kodeverk.grunnerPerUtfall.find((obj: GrunnerPerUtfall) => obj.utfallId == utfall.id)
@@ -72,7 +76,6 @@ export function UtfallSkjema() {
 
   function velgUtfall(utfall: IKodeverkVerdi) {
     settUtfall(utfall);
-    console.log(utfall);
     dispatch(
       lagreUtfall({
         klagebehandlingid: klage.id,
@@ -86,6 +89,18 @@ export function UtfallSkjema() {
 
   function velgOmgjoeringsgrunn(omgjoeringsgrunn: IKodeverkVerdi) {
     settOmgjoeringsgrunn(omgjoeringsgrunn);
+  }
+
+  function endreInternVurdering(internVurdering: string) {
+    settInternVurdering(internVurdering);
+    dispatch(
+      lagreInternVurdering({
+        klagebehandlingid: klage.id,
+        internVurdering: internVurdering,
+      })
+    );
+    const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
+    settGyldigeOmgjoeringsgrunner(omgjoeringsgrunner);
   }
 
   function faaUtfalllObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
@@ -122,7 +137,7 @@ export function UtfallSkjema() {
         </Row>
       )}
       <Row>
-        <Vurdering />
+        <Vurdering internVurdering={internVurdering} endreInternVurdering={endreInternVurdering} />
       </Row>
     </div>
   );

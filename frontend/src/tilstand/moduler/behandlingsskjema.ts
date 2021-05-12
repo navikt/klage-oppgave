@@ -17,17 +17,22 @@ export interface IUtfallPayload {
   utfall: string;
 }
 
+export interface IInternVurderingPayload {
+  klagebehandlingid: string;
+  internVurdering: string;
+}
+
 //==========
 // Reducer
 //==========
 
-const initianStateBehandlingsskjema = {
+const initialStateBehandlingsskjema = {
   internVurdering: "",
 };
 
 export const behandlingsskjemaSlice = createSlice({
   name: "behandlingsskjema",
-  initialState: initianStateBehandlingsskjema,
+  initialState: initialStateBehandlingsskjema,
   reducers: {
     SETT_INTERN_VURDERING: (state, action: PayloadAction<string>) => {
       return { ...state, internVurdering: action.payload };
@@ -35,7 +40,7 @@ export const behandlingsskjemaSlice = createSlice({
   },
 });
 
-const initianStateBehandlingsVedtak = {
+const initialStateBehandlingsVedtak = {
   id: "",
   utfall: "",
   brevMottakere: [],
@@ -45,13 +50,21 @@ const initianStateBehandlingsVedtak = {
 
 export const behandlingsvedtakSlice = createSlice({
   name: "behandlingsvedtak",
-  initialState: initianStateBehandlingsVedtak,
+  initialState: initialStateBehandlingsVedtak,
   reducers: {
+    SETT_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
+      return { ...state, internVurdering: action.payload.internVurdering };
+    },
+    INTERN_VURDERING_SATT: (state) => {
+      console.log("Intern vurdering satt");
+      return state;
+    },
     SETT_UTFALL: (state, action: PayloadAction<IUtfallPayload>) => {
       return { ...state, utfall: action.payload.utfall };
     },
-    UTFALL_SATT: () => {
+    UTFALL_SATT: (state) => {
       console.log("Utfall satt");
+      return state;
     },
   },
 });
@@ -67,11 +80,41 @@ export default behandlingsskjema;
 // Actions
 //==========
 
+export const lagreInternVurdering = createAction<IInternVurderingPayload>(
+  "behandlingsvedtak/SETT_INTERN_VURDERING"
+);
 export const lagreUtfall = createAction<IUtfallPayload>("behandlingsvedtak/SETT_UTFALL");
 
 //==========
 // Epos
 //==========
+
+export function lagreInternVurderingEpos(
+  action$: ActionsObservable<PayloadAction<IInternVurderingPayload>>,
+  state$: StateObservable<RootStateOrAny>,
+  { put }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(lagreInternVurdering.type),
+    withLatestFrom(state$),
+    switchMap(([action]) => {
+      const lagreInternVurderingUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/detaljer/internvurdering`;
+      return put(
+        lagreInternVurderingUrl,
+        { internVurdering: action.payload.internVurdering },
+        { "Content-Type": "application/json" }
+      )
+        .pipe(map((payload: { response: any }) => lagreInternVurdering(payload.response)))
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
+          catchError((error) => {
+            let err = error?.response?.detail || "ukjent feil";
+            return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
+          })
+        );
+    })
+  );
+}
 
 export function lagreUtfallEpos(
   action$: ActionsObservable<PayloadAction<IUtfallPayload>>,
@@ -100,7 +143,7 @@ export function lagreUtfallEpos(
   );
 }
 
-export const BEHANDLINGSSKJEMA_EPICS = [lagreUtfallEpos];
+export const BEHANDLINGSSKJEMA_EPICS = [lagreInternVurderingEpos, lagreUtfallEpos];
 
 //==========
 // Vis feilmeldinger ved feil
