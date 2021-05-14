@@ -3,6 +3,7 @@ import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { map, switchMap } from "rxjs/operators";
 import { AjaxCreationMethod, ajaxPost } from "rxjs/internal-compatibility";
+import { IKlage } from "./klagebehandling";
 
 //==========
 // Interfaces
@@ -13,8 +14,22 @@ import { AjaxCreationMethod, ajaxPost } from "rxjs/internal-compatibility";
 //==========
 export const adminSlice = createSlice({
   name: "meg",
-  initialState: {},
-  reducers: {},
+  initialState: {
+    laster: false,
+    response: "",
+  },
+  reducers: {
+    RENSK_ELASTIC: (state, action: PayloadAction) => {
+      state.laster = true;
+      return state;
+    },
+    ELASTIC_RESPONSE: (state, action: PayloadAction<any>) => {
+      console.debug(action.payload);
+      state.laster = false;
+      state.response = "suksess";
+      return state;
+    },
+  },
 });
 
 export default adminSlice.reducer;
@@ -22,7 +37,7 @@ export default adminSlice.reducer;
 //==========
 // Actions
 //==========
-export const renskElasticHandling = createAction("admin/TØM_ELASTIC");
+export const renskElasticHandling = createAction("admin/RENSK_ELASTIC");
 export const elasticResponse = createAction<any>("admin/ELASTIC_RESPONSE");
 
 //==========
@@ -38,7 +53,7 @@ export function adminEpos(
     switchMap((action) => {
       const url = `/api/internal/elasticadmin/rebuild`;
       return post(url, {}, { "Content-Type": "application/json" }).pipe(
-        map((payload: { response: any }) => elasticResponse(payload.response))
+        map((payload) => elasticResponse(payload))
       );
     })
   );
