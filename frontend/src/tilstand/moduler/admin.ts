@@ -3,7 +3,6 @@ import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { map, switchMap } from "rxjs/operators";
 import { AjaxCreationMethod, ajaxPost } from "rxjs/internal-compatibility";
-import { IKlage } from "./klagebehandling";
 
 //==========
 // Interfaces
@@ -24,9 +23,8 @@ export const adminSlice = createSlice({
       return state;
     },
     ELASTIC_RESPONSE: (state, action: PayloadAction<any>) => {
-      console.debug(action.payload);
       state.laster = false;
-      state.response = "suksess";
+      state.response = action.payload.status === 200 ? "suksess" : "feil";
       return state;
     },
   },

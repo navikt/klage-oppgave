@@ -33,21 +33,20 @@ let Knapp = styled.button`
 const Admin = (): JSX.Element => {
   const dispatch = useDispatch();
   const admin = useSelector(velgAdmin);
-  let [venter, settVenter] = useState(false);
 
   useEffect(() => {
     console.debug({ admin });
-  }, [admin]);
+  }, [admin.laster]);
 
   return (
     <Oppsett visMeny={false}>
       <>
         <Overskrift>Admin</Overskrift>
         <Lenker>
+          {admin.response}
           <Knapp
-            disabled={venter}
+            disabled={admin.laster}
             onClick={() => {
-              settVenter(true);
               dispatch(renskElasticHandling());
             }}
           >
