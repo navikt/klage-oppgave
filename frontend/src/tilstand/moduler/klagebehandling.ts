@@ -329,6 +329,7 @@ export function klagebehandlingEpos(
               feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
                 display: true,
+                type: "feil",
                 feilmelding: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error?.response?.detail}`,
               }),
               toasterSkjul(),
@@ -373,6 +374,7 @@ export function klagebehandlingDokumenterAlleEpos(
               feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
                 display: true,
+                type: "feil",
                 feilmelding: `Henting av dokumenter feilet: ${error?.response?.detail}`,
               }),
               toasterSkjul(),
@@ -431,6 +433,7 @@ export function klagebehandlingDokumenterTilordnedeEpos(
               feiletHandling(error.response.detail),
               toasterSett({
                 display: true,
+                type: "feil",
                 feilmelding: `Henting av tilordnede dokumenter feilet: ${error.response.detail}`,
               }),
               toasterSkjul(),
@@ -472,6 +475,7 @@ export function TilordneKlageDokumentEpos(
               feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
                 display: true,
+                type: "feil",
                 feilmelding: `Tilordning av dokument feilet: (${error?.response?.detail})`,
               }),
               toasterSkjul(),
@@ -508,6 +512,7 @@ export function FradelKlageDokumentEpos(
               feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
                 display: true,
+                type: "feil",
                 feilmelding: `Fradeling av dokument feilet: (${error?.response?.detail ?? error})`,
               }),
               toasterSkjul(),

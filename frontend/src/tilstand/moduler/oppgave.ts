@@ -396,6 +396,7 @@ export function hentUtgaatteFristerEpos(
             feiletHandling(err),
             toasterSett({
               display: true,
+              type: "feil",
               feilmelding: `Henting av utgått frister feilet (${err})`,
             }),
             toasterSkjul(),
