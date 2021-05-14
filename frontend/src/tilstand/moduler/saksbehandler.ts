@@ -6,6 +6,7 @@ import { catchError, concatMap, map, mergeMap, switchMap, withLatestFrom } from 
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { OppgaveParams, oppgaveRequest } from "./oppgave";
+import { AlertStripeType } from "nav-frontend-alertstriper";
 
 //==========
 // Type defs
@@ -144,6 +145,7 @@ function displayToast(error: IError) {
     "generisk feilmelding";
   return toasterSett({
     display: true,
+    type: "feil" as AlertStripeType,
     feilmelding: message as string,
   });
 }

@@ -11,6 +11,7 @@ import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { OppgaveParams } from "./oppgave";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { AlertStripeType } from "nav-frontend-alertstriper";
 
 describe("TILDEL 'Meg' epos", () => {
   let ts: TestScheduler;
@@ -190,6 +191,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
+              type: "feil" as AlertStripeType,
               feilmelding: "fradeling feilet",
             },
             type: "toaster/SETT",
@@ -233,6 +235,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
+              type: "feil" as AlertStripeType,
               feilmelding: "tildeling feilet",
             },
             type: "toaster/SETT",
@@ -277,6 +280,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
+              type: "feil" as AlertStripeType,
               feilmelding: "tildeling feilet",
             },
             type: "toaster/SETT",
@@ -324,6 +328,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
+              type: "feil" as AlertStripeType,
               feilmelding: "tildeling feilet",
             },
             type: "toaster/SETT",
@@ -371,6 +376,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
+              type: "feil" as AlertStripeType,
               feilmelding: "generisk feilmelding",
             },
             type: "toaster/SETT",

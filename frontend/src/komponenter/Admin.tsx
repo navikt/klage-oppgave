@@ -44,7 +44,6 @@ const Admin = (): JSX.Element => {
       <>
         <Overskrift>Admin</Overskrift>
         <Lenker>
-          {admin.response}
           {admin.laster && <NavFrontendSpinner />}
           {!admin.laster && (
             <Knapp

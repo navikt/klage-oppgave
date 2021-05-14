@@ -11,6 +11,7 @@ import {
   toasterSatt,
 } from "./toaster";
 import megTilstand, { hentetHandling } from "./meg";
+import { AlertStripeType } from "nav-frontend-alertstriper";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
@@ -29,6 +30,7 @@ describe("Oppgave epos", () => {
         const inputValues = {
           a: toasterSett({
             display: true,
+            type: "feil" as AlertStripeType,
             feilmelding: "se opp, en feil",
           }),
         };
@@ -40,6 +42,7 @@ describe("Oppgave epos", () => {
           s: {
             payload: {
               display: true,
+              type: "feil" as AlertStripeType,
               feilmelding: "se opp, en feil",
             },
             type: "toaster/SATT",
@@ -63,6 +66,7 @@ describe("Oppgave epos", () => {
 
         const initState = {
           display: true,
+          type: "feil" as AlertStripeType,
           feilmelding: "se opp, en feil",
         };
 
@@ -71,6 +75,7 @@ describe("Oppgave epos", () => {
           s: {
             payload: {
               display: false,
+              type: "feil" as AlertStripeType,
               feilmelding: toasterInitialState.feilmelding,
             },
             type: "toaster/SATT",

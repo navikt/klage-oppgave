@@ -1,8 +1,10 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { map, switchMap } from "rxjs/operators";
+import { catchError, map, switchMap } from "rxjs/operators";
 import { AjaxCreationMethod, ajaxPost } from "rxjs/internal-compatibility";
+import { concat } from "rxjs";
+import { toasterSett, toasterSkjul } from "./toaster";
 
 //==========
 // Interfaces
@@ -39,6 +41,21 @@ export const renskElasticHandling = createAction("admin/RENSK_ELASTIC");
 export const elasticResponse = createAction<any>("admin/ELASTIC_RESPONSE");
 
 //==========
+// Toaster functions
+//==========
+function displayToast(message: string) {
+  return toasterSett({
+    display: true,
+    type: "success",
+    feilmelding: message,
+  });
+}
+
+function skjulToaster() {
+  return toasterSkjul();
+}
+
+//==========
 // Epos
 //==========
 export function adminEpos(
@@ -50,8 +67,9 @@ export function adminEpos(
     ofType(renskElasticHandling.type),
     switchMap((action) => {
       const url = `/api/internal/elasticadmin/rebuild`;
+      let beskjed = "Elastic tømt";
       return post(url, {}, { "Content-Type": "application/json" }).pipe(
-        map((payload) => elasticResponse(payload))
+        map((payload) => concat([displayToast(beskjed), elasticResponse(payload), skjulToaster()]))
       );
     })
   );
