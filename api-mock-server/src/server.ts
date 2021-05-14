@@ -214,6 +214,12 @@ app.get("/ansatte/:id/klagebehandlinger", async (req, res) => {
   res.send(result);
 });
 
+app.post("/internal/elasticadmin/rebuild", async (req, res) => {
+  let random = Math.floor(Math.random() * 2);
+  if (random === 0) return res.status(403).send("");
+  else return res.status(200).send("");
+});
+
 app.get(
   "/ansatte/:id/antallklagebehandlingermedutgaattefrister",
   async (req, res) => {

@@ -21,7 +21,7 @@ const epics: Array<(
   getJSON: AjaxCreationMethod,
   put: AjaxCreationMethod,
   post: AjaxCreationMethod
-) => Observable<any>> = [
+) => Observable<PayloadAction<any>>> = [
   ...OPPGAVER_EPICS,
   ...MEG_EPICS,
   ...TILDEL_EPICS,

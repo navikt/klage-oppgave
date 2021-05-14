@@ -1,11 +1,10 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { catchError, map, switchMap } from "rxjs/operators";
+import { catchError, concatMap, map, mergeMap, switchMap } from "rxjs/operators";
 import { AjaxCreationMethod, ajaxPost } from "rxjs/internal-compatibility";
-import { concat, of } from "rxjs";
+import { concat, Observable, of } from "rxjs";
 import { toasterSett, toasterSkjul } from "./toaster";
-import { AlertStripeType } from "nav-frontend-alertstriper";
 
 //==========
 // Interfaces
@@ -26,6 +25,7 @@ export const adminSlice = createSlice({
       return state;
     },
     ELASTIC_RESPONSE: (state, action: PayloadAction<any>) => {
+      alert("asd");
       state.laster = false;
       state.response = action.payload.status === 200 ? "suksess" : "feil";
       return state;
@@ -51,21 +51,11 @@ export function adminEpos(
 ) {
   return action$.pipe(
     ofType(renskElasticHandling.type),
-    switchMap((action) => {
+    concatMap((action) => {
       const url = `/api/internal/elasticadmin/rebuild`;
       let beskjed = "Elastic tømt";
       return post(url, {}, { "Content-Type": "application/json" }).pipe(
-        map((payload) =>
-          concat([
-            toasterSett({
-              display: true,
-              type: "feil",
-              feilmelding: beskjed,
-            }),
-            elasticResponse(payload),
-            toasterSkjul(),
-          ])
-        )
+        map((payload) => elasticResponse(payload))
       );
     })
   );
