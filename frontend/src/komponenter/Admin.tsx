@@ -3,7 +3,6 @@ import Oppsett from "../komponenter/Oppsett";
 import "../stilark/App.less";
 import "../stilark/Lists.less";
 import "nav-frontend-tabell-style";
-import OppgaveTabell from "../komponenter/Tabell/Tabell";
 import styled from "styled-components";
 import { gjenbyggElasticHandling } from "../tilstand/moduler/admin";
 import { useDispatch, useSelector } from "react-redux";
