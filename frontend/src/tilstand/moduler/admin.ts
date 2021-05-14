@@ -12,7 +12,7 @@ import { AjaxCreationMethod, ajaxPost } from "rxjs/internal-compatibility";
 // Reducer
 //==========
 export const adminSlice = createSlice({
-  name: "meg",
+  name: "admin",
   initialState: {
     laster: false,
     response: "",

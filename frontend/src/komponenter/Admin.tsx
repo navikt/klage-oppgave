@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { renskElasticHandling } from "../tilstand/moduler/admin";
 import { useDispatch, useSelector } from "react-redux";
 import { velgAdmin } from "../tilstand/moduler/admin.velgere";
+import NavFrontendSpinner from "nav-frontend-spinner";
 
 let Overskrift = styled.h1`
   padding: 1em;
@@ -44,14 +45,17 @@ const Admin = (): JSX.Element => {
         <Overskrift>Admin</Overskrift>
         <Lenker>
           {admin.response}
-          <Knapp
-            disabled={admin.laster}
-            onClick={() => {
-              dispatch(renskElasticHandling());
-            }}
-          >
-            Tøm Elastic
-          </Knapp>
+          {admin.laster && <NavFrontendSpinner />}
+          {!admin.laster && (
+            <Knapp
+              disabled={admin.laster}
+              onClick={() => {
+                dispatch(renskElasticHandling());
+              }}
+            >
+              Tøm Elastic
+            </Knapp>
+          )}
         </Lenker>
       </>
     </Oppsett>
