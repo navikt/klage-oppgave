@@ -1,10 +1,11 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { catchError, concatMap, map, mergeMap, switchMap } from "rxjs/operators";
+import { catchError, concatMap, map, mergeMap, retryWhen, switchMap } from "rxjs/operators";
 import { AjaxCreationMethod, ajaxPost } from "rxjs/internal-compatibility";
 import { concat, Observable, of } from "rxjs";
 import { toasterSett, toasterSkjul } from "./toaster";
+import { provIgjenStrategi } from "../../utility/rxUtils";
 
 //==========
 // Interfaces
@@ -20,12 +21,15 @@ export const adminSlice = createSlice({
     response: "",
   },
   reducers: {
-    RENSK_ELASTIC: (state, action: PayloadAction) => {
+    GJENBYGG_ELASTIC: (state, action: PayloadAction) => {
       state.laster = true;
       return state;
     },
+    ELASTIC_FAIL: (state, action: PayloadAction) => {
+      state.laster = false;
+      return state;
+    },
     ELASTIC_RESPONSE: (state, action: PayloadAction<any>) => {
-      alert("asd");
       state.laster = false;
       state.response = action.payload.status === 200 ? "suksess" : "feil";
       return state;
@@ -38,7 +42,8 @@ export default adminSlice.reducer;
 //==========
 // Actions
 //==========
-export const renskElasticHandling = createAction("admin/RENSK_ELASTIC");
+export const gjenbyggElasticHandling = createAction("admin/GJENBYGG_ELASTIC");
+export const stoppLasting = createAction("admin/ELASTIC_FAIL");
 export const elasticResponse = createAction<any>("admin/ELASTIC_RESPONSE");
 
 //==========
@@ -50,15 +55,44 @@ export function adminEpos(
   { post }: AjaxCreationMethod
 ) {
   return action$.pipe(
-    ofType(renskElasticHandling.type),
-    concatMap((action) => {
+    ofType(gjenbyggElasticHandling.type),
+    switchMap((action) => {
       const url = `/api/internal/elasticadmin/rebuild`;
-      let beskjed = "Elastic tømt";
-      return post(url, {}, { "Content-Type": "application/json" }).pipe(
-        map((payload) => elasticResponse(payload))
-      );
+      return post(url, {}, { "Content-Type": "application/json" })
+        .pipe(map((payload) => elasticResponse(payload)))
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
+          catchError((error) => {
+            return concat([
+              stoppLasting(),
+              toasterSett({
+                display: true,
+                type: "feil",
+                feilmelding: `Elastic feilet ${error}`,
+              }),
+              toasterSkjul(),
+            ]);
+          })
+        );
     })
   );
 }
 
-export const ADMIN_EPICS = [adminEpos];
+function toasterSuccessEpos(action$: ActionsObservable<PayloadAction>) {
+  return action$.pipe(
+    ofType(elasticResponse.type),
+    switchMap((action) => {
+      let beskjed = "Elastic-kommando mottatt og gjennomført!";
+      return concat([
+        toasterSett({
+          display: true,
+          type: "suksess",
+          feilmelding: beskjed,
+        }),
+        toasterSkjul(),
+      ]);
+    })
+  );
+}
+
+export const ADMIN_EPICS = [adminEpos, toasterSuccessEpos];

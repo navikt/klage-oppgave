@@ -102,8 +102,8 @@ export default function Oppsett({
             </li>
           </ul>
         </nav>
-        <div className={`toaster ${visFeilmelding ? "active" : ""}`}>
-          {visFeilmelding && (
+        <div className={`toaster ${visFeilmelding.display ? "active" : ""}`}>
+          {visFeilmelding.display && (
             <Alertstripe type={visFeilmelding.type}>
               <span>{feilmelding}</span>
             </Alertstripe>
