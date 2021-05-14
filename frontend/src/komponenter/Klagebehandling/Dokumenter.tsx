@@ -220,6 +220,7 @@ const Preview = styled.div`
   overflow: auto;
   overflow-x: hidden;
   position: relative;
+  z-index: 0;
 `;
 const PreviewTitle = styled.div`
   background: #cde7d8;

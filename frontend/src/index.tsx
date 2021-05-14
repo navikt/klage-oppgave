@@ -10,6 +10,8 @@ import MineSaker from "./komponenter/MineSaker";
 import AlleSaker from "./komponenter/AlleSaker";
 import Innstillinger from "./komponenter/Innstillinger";
 import { hentMegHandling } from "./tilstand/moduler/meg";
+import Admin from "./komponenter/Admin";
+import Kvalitetsskjema from "./komponenter/Kvalitetsskjema";
 
 store.dispatch(hentMegHandling());
 
@@ -24,6 +26,8 @@ ReactDOM.render(
           <Route exact path="/mineoppgaver" render={() => <MineSaker />} />
           <Route exact path="/mineoppgaver/:side" render={() => <MineSaker />} />
           <Route exact path="/innstillinger" render={() => <Innstillinger />} />
+          <Route exact path="/kvalitetsskjema" render={() => <Kvalitetsskjema />} />
+          <Route exact path="/admin" render={() => <Admin />} />
           <Redirect to="/oppgaver" />
         </Switch>
       </BrowserRouter>
