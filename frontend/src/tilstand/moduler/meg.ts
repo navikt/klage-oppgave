@@ -165,6 +165,7 @@ function displayToast(error: string) {
   const message = error || "Kunne ikke lagre innstillinger";
   return toasterSett({
     display: true,
+    type: "feil",
     feilmelding: message,
   });
 }

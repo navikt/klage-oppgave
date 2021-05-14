@@ -145,7 +145,7 @@ function displayToast(error: IError) {
     "generisk feilmelding";
   return toasterSett({
     display: true,
-    type: "feil" as AlertStripeType,
+    type: "feil",
     feilmelding: message as string,
   });
 }

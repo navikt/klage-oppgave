@@ -191,7 +191,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
-              type: "feil" as AlertStripeType,
+              type: "feil",
               feilmelding: "fradeling feilet",
             },
             type: "toaster/SETT",
@@ -235,7 +235,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
-              type: "feil" as AlertStripeType,
+              type: "feil",
               feilmelding: "tildeling feilet",
             },
             type: "toaster/SETT",
@@ -280,7 +280,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
-              type: "feil" as AlertStripeType,
+              type: "feil",
               feilmelding: "tildeling feilet",
             },
             type: "toaster/SETT",
@@ -328,7 +328,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
-              type: "feil" as AlertStripeType,
+              type: "feil",
               feilmelding: "tildeling feilet",
             },
             type: "toaster/SETT",
@@ -376,7 +376,7 @@ describe("TILDEL 'Meg' epos", () => {
           t: {
             payload: {
               display: true,
-              type: "feil" as AlertStripeType,
+              type: "feil",
               feilmelding: "generisk feilmelding",
             },
             type: "toaster/SETT",

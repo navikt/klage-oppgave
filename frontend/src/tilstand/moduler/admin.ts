@@ -46,7 +46,7 @@ export const elasticResponse = createAction<any>("admin/ELASTIC_RESPONSE");
 function displayToast(message: string) {
   return toasterSett({
     display: true,
-    type: "success",
+    type: "suksess",
     feilmelding: message,
   });
 }

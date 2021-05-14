@@ -30,7 +30,7 @@ describe("Oppgave epos", () => {
         const inputValues = {
           a: toasterSett({
             display: true,
-            type: "feil" as AlertStripeType,
+            type: "feil",
             feilmelding: "se opp, en feil",
           }),
         };
@@ -42,7 +42,7 @@ describe("Oppgave epos", () => {
           s: {
             payload: {
               display: true,
-              type: "feil" as AlertStripeType,
+              type: "feil",
               feilmelding: "se opp, en feil",
             },
             type: "toaster/SATT",
@@ -66,7 +66,7 @@ describe("Oppgave epos", () => {
 
         const initState = {
           display: true,
-          type: "feil" as AlertStripeType,
+          type: "feil",
           feilmelding: "se opp, en feil",
         };
 
@@ -75,7 +75,7 @@ describe("Oppgave epos", () => {
           s: {
             payload: {
               display: false,
-              type: "feil" as AlertStripeType,
+              type: "feil",
               feilmelding: toasterInitialState.feilmelding,
             },
             type: "toaster/SATT",
