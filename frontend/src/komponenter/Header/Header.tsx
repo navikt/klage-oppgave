@@ -96,14 +96,20 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
           <hr />
           {harAdminTilgang && (
             <div onClick={() => history.push("/admin")} className={classNames({ enhet: true })}>
-              <NavLink to={"/admin"}>Admin</NavLink>
+              <a href={"#"}>Admin</a>
             </div>
           )}
-          <div className={classNames({ enhet: true })}>
-            <a href={"/innstillinger"}>Innstillinger</a>
+          <div
+            onClick={() => history.push("/innstillinger")}
+            className={classNames({ enhet: true })}
+          >
+            <a href={"#"}>Innstillinger</a>
           </div>
-          <div className={classNames({ enhet: true })}>
-            <a href={"/internal/logout"}>Logg ut</a>
+          <div
+            onClick={() => history.push("/internal/logout")}
+            className={classNames({ enhet: true })}
+          >
+            <a href={"#"}>Logg ut</a>
           </div>
         </div>
       </div>
