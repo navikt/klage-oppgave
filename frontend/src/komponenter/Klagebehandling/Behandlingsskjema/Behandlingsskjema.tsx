@@ -30,7 +30,6 @@ const Detaljer = styled.div`
 
 const KlageBoks = styled.div`
   width: 100%;
-  background: white;
   padding: 0.25em 1.5em;
 
   &:not(:first-child) {

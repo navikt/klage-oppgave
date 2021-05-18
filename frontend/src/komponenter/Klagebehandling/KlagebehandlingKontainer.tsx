@@ -54,6 +54,7 @@ const DokumenterKontainer = styled.div`
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
+  display: ${(props) => props.theme.display};
   width: ${(props) => props.theme.width};
   overflow: hidden;
   position: relative;
@@ -86,7 +87,7 @@ const TilknyttetTittel = styled.div`
 `;
 
 const DokumentKontainer = styled.div`
-  display: ${(props) => props.theme.display};
+  display: grid;
   grid-template-columns: ${(props) => props.theme.dokumentgrid};
   margin: 0 0.25em 0 0;
   height: calc(100% - 3em);
@@ -308,17 +309,18 @@ export default function KlagebehandlingKontainer({ faner }: { faner: IFaner }) {
   const [dokumentgrid, settDokumentgrid] = useState("1fr 1fr 1fr 1fr");
 
   return (
-    <DokumentKontainer
-      theme={{ display: faner.dokumenter.checked ? "grid" : "none", dokumentgrid }}
-    >
+    <DokumentKontainer theme={{ dokumentgrid }}>
       <DokumentTabell
         settAktivPDF={settAktivPDF}
         settjournalpostId={settjournalpostId}
         settdokumentTittel={settdokumentTittel}
         settDokumentGrid={settDokumentgrid}
         settdokumentInfoId={settdokumentInfoId}
+        faner={faner}
       />
-      <PreviewKontainer theme={{ display: aktivPDF ? "unset" : "none" }}>
+      <PreviewKontainer
+        theme={{ display: faner.dokumenter.checked && aktivPDF ? "unset" : "none" }}
+      >
         <Preview>
           <PreviewTitle>
             {dokumentTittel}
@@ -398,6 +400,7 @@ function DokumentTabell(props: {
   settdokumentTittel: Function;
   settDokumentGrid: Function;
   settjournalpostId: Function;
+  faner: IFaner;
 }) {
   const klage: IKlage = useSelector(velgKlage);
   const dispatch = useDispatch();
@@ -482,7 +485,12 @@ function DokumentTabell(props: {
     return <NavFrontendSpinner />;
   }
   return (
-    <DokumenterKontainer theme={{ width: visFullKontainer ? "40em" : "15em" }}>
+    <DokumenterKontainer
+      theme={{
+        display: props.faner.dokumenter.checked ? "block" : "none",
+        width: visFullKontainer ? "40em" : "15em",
+      }}
+    >
       <DokumenterMinivisning theme={{ display: !visFullKontainer ? "unset" : "none" }}>
         <DokumenterNav>
           <DokumenterTittel>Dokumenter</DokumenterTittel>
@@ -529,7 +537,6 @@ function DokumentTabell(props: {
             );
           })}
       </DokumenterMinivisning>
-
       <DokumenterFullvisning ref={rootRef} theme={{ display: visFullKontainer ? "flex" : "none" }}>
         <DokumenterNav>
           <DokumenterTittel>Dokumenter</DokumenterTittel>
