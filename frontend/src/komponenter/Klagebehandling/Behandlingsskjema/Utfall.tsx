@@ -4,20 +4,29 @@ import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 
 interface ResultatProps {
   utfallAlternativer: IKodeverkVerdi[];
-  utfall: IKodeverkVerdi;
-  velgUtfall: (utfall: IKodeverkVerdi) => void;
+  utfall: IKodeverkVerdi | null;
+  velgUtfall: (utfall: IKodeverkVerdi | null) => void;
 }
 export function Utfall({ utfallAlternativer, utfall, velgUtfall }: ResultatProps) {
   return (
     <Select
       label="Utfall/resultat:"
       bredde="m"
-      value={"" + utfallAlternativer.findIndex((obj: IKodeverkVerdi) => obj.id === utfall.id)}
+      value={
+        utfall
+          ? "" + utfallAlternativer.findIndex((obj: IKodeverkVerdi) => obj.id === utfall.id)
+          : undefined
+      }
       onChange={(e) => {
-        const valgtUtfall = utfallAlternativer[e.target.value];
-        velgUtfall(valgtUtfall);
+        if (!e.target.value) {
+          velgUtfall(null);
+        } else {
+          const valgtUtfall = utfallAlternativer[e.target.value];
+          velgUtfall(valgtUtfall);
+        }
       }}
     >
+      <option value={undefined}>Velg utfall</option>
       {utfallAlternativer.map((utfallObj, index) => {
         return (
           <option key={index} value={index}>

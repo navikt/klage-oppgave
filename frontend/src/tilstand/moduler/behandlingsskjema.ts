@@ -2,7 +2,7 @@ import { combineReducers, createAction, createSlice, PayloadAction } from "@redu
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { catchError, concat, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
+import { catchError, map, retryWhen, switchMap, withLatestFrom, concat } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { feiletHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
@@ -14,7 +14,12 @@ import { toasterSett, toasterSkjul } from "./toaster";
 export interface IUtfallPayload {
   klagebehandlingid: string;
   vedtakid: string;
-  utfall: string;
+  utfall: string | null;
+}
+export interface IOmgjoeringsgrunnPayload {
+  klagebehandlingid: string;
+  vedtakid: string;
+  omgjoeringsgrunn: string | null;
 }
 
 export interface IInternVurderingPayload {
@@ -28,6 +33,7 @@ export interface IInternVurderingPayload {
 
 const initialStateBehandlingsskjema = {
   internVurdering: "",
+  klagebehandlingVersjon: 3,
 };
 
 export const behandlingsskjemaSlice = createSlice({
@@ -42,10 +48,11 @@ export const behandlingsskjemaSlice = createSlice({
 
 const initialStateBehandlingsVedtak = {
   id: "",
-  utfall: "",
+  utfall: null as null | string,
   brevMottakere: [],
   hjemler: [],
   grunn: "",
+  klagebehandlingVersjon: 3,
 };
 
 export const behandlingsvedtakSlice = createSlice({
@@ -66,6 +73,13 @@ export const behandlingsvedtakSlice = createSlice({
       console.log("Utfall satt");
       return state;
     },
+    SETT_OMGJOERINGSGRUNN: (state, action: PayloadAction<IOmgjoeringsgrunnPayload>) => {
+      return { ...state, omgjoeringsgrunn: action.payload.omgjoeringsgrunn };
+    },
+    OMGJOERINGSGRUNN_SATT: (state) => {
+      console.log("Omgjøringsgrunn satt");
+      return state;
+    },
   },
 });
 
@@ -83,7 +97,17 @@ export default behandlingsskjema;
 export const lagreInternVurdering = createAction<IInternVurderingPayload>(
   "behandlingsvedtak/SETT_INTERN_VURDERING"
 );
+export const internVurderingSatt = createAction<string>("behandlingsvedtak/INTERN_VURDERING_SATT");
+
 export const lagreUtfall = createAction<IUtfallPayload>("behandlingsvedtak/SETT_UTFALL");
+
+export const lagreOmgjoeringsgrunn = createAction<IOmgjoeringsgrunnPayload>(
+  "behandlingsvedtak/SETT_OMGJOERINGSGRUNN"
+);
+
+export const oppdatertBehandlingsskjema = createAction<boolean>(
+  "klagebehandling/BEHANDLINGSSKJEMA_OPPDATERT"
+);
 
 //==========
 // Epos
@@ -101,10 +125,10 @@ export function lagreInternVurderingEpos(
       const lagreInternVurderingUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/detaljer/internvurdering`;
       return put(
         lagreInternVurderingUrl,
-        { internVurdering: action.payload.internVurdering },
+        { internVurdering: action.payload.internVurdering, klagebehandlingVersjon: 3 },
         { "Content-Type": "application/json" }
       )
-        .pipe(map((payload: { response: any }) => lagreInternVurdering(payload.response)))
+        .pipe(map((payload: { response: any }) => internVurderingSatt(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
@@ -128,7 +152,7 @@ export function lagreUtfallEpos(
       const lagreUtfallUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/utfall`;
       return put(
         lagreUtfallUrl,
-        { utfall: action.payload.utfall },
+        { utfall: action.payload.utfall, klagebehandlingVersjon: 3 },
         { "Content-Type": "application/json" }
       )
         .pipe(map((payload: { response: any }) => lagreUtfall(payload.response)))
@@ -143,7 +167,38 @@ export function lagreUtfallEpos(
   );
 }
 
-export const BEHANDLINGSSKJEMA_EPICS = [lagreInternVurderingEpos, lagreUtfallEpos];
+export function lagreOmgjoeringsgrunnEpos(
+  action$: ActionsObservable<PayloadAction<IOmgjoeringsgrunnPayload>>,
+  state$: StateObservable<RootStateOrAny>,
+  { put }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(lagreOmgjoeringsgrunn.type),
+    withLatestFrom(state$),
+    switchMap(([action]) => {
+      const lagreOmgjoeringsgrunnUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/grunn`;
+      return put(
+        lagreOmgjoeringsgrunnUrl,
+        { grunn: action.payload.omgjoeringsgrunn, klagebehandlingVersjon: 3 },
+        { "Content-Type": "application/json" }
+      )
+        .pipe(map((payload: { response: any }) => lagreOmgjoeringsgrunn(payload.response)))
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
+          catchError((error) => {
+            let err = error?.response?.detail || "ukjent feil";
+            return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
+          })
+        );
+    })
+  );
+}
+
+export const BEHANDLINGSSKJEMA_EPICS = [
+  lagreInternVurderingEpos,
+  lagreUtfallEpos,
+  lagreOmgjoeringsgrunnEpos,
+];
 
 //==========
 // Vis feilmeldinger ved feil

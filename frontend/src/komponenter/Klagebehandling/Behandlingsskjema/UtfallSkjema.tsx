@@ -8,7 +8,11 @@ import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
 import { Utfall } from "./Utfall";
 import { velgKodeverk } from "../../../tilstand/moduler/oppgave.velgere";
-import { lagreInternVurdering, lagreUtfall } from "../../../tilstand/moduler/behandlingsskjema";
+import {
+  lagreInternVurdering,
+  lagreOmgjoeringsgrunn,
+  lagreUtfall,
+} from "../../../tilstand/moduler/behandlingsskjema";
 
 function BasertPaaHjemmel() {
   const [hjemler, settHjemler] = useState<string>();
@@ -54,7 +58,7 @@ export function UtfallSkjema() {
   const klage: IKlage = useSelector(velgKlage);
   const dispatch = useDispatch();
 
-  const [utfall, settUtfall] = useState<IKodeverkVerdi>(
+  const [utfall, settUtfall] = useState<IKodeverkVerdi | null>(
     faaUtfalllObjekt(klage.vedtak[0].utfall) ?? kodeverk.utfall[0]
   );
   const [gyldigeOmgjoeringsgrunner, settGyldigeOmgjoeringsgrunner] = useState<IKodeverkVerdi[]>(
@@ -65,7 +69,10 @@ export function UtfallSkjema() {
   );
   const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering ?? "");
 
-  function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi): IKodeverkVerdi[] {
+  function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi | null): IKodeverkVerdi[] {
+    if (!utfall) {
+      return [];
+    }
     return kodeverk.grunnerPerUtfall.find((obj: GrunnerPerUtfall) => obj.utfallId == utfall.id)
       .grunner;
   }
@@ -74,21 +81,28 @@ export function UtfallSkjema() {
     return gyldigeOmgjoeringsgrunner.length > 0;
   }
 
-  function velgUtfall(utfall: IKodeverkVerdi) {
+  function velgUtfall(utfall: IKodeverkVerdi | null) {
     settUtfall(utfall);
     dispatch(
       lagreUtfall({
         klagebehandlingid: klage.id,
         vedtakid: klage.vedtak[0].id,
-        utfall: utfall.navn,
+        utfall: utfall ? utfall.navn : null,
       })
     );
     const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
     settGyldigeOmgjoeringsgrunner(omgjoeringsgrunner);
   }
 
-  function velgOmgjoeringsgrunn(omgjoeringsgrunn: IKodeverkVerdi) {
+  function velgOmgjoeringsgrunn(omgjoeringsgrunn: IKodeverkVerdi | null) {
     settOmgjoeringsgrunn(omgjoeringsgrunn);
+    dispatch(
+      lagreOmgjoeringsgrunn({
+        klagebehandlingid: klage.id,
+        vedtakid: klage.vedtak[0].id,
+        omgjoeringsgrunn: omgjoeringsgrunn ? omgjoeringsgrunn.navn : null,
+      })
+    );
   }
 
   function endreInternVurdering(internVurdering: string) {
@@ -99,19 +113,17 @@ export function UtfallSkjema() {
         internVurdering: internVurdering,
       })
     );
-    const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
-    settGyldigeOmgjoeringsgrunner(omgjoeringsgrunner);
   }
 
   function faaUtfalllObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
-    if (!utfallnavn) {
+    if (utfallnavn === null) {
       return null;
     }
     return kodeverk.utfall.find((obj: IKodeverkVerdi) => obj.navn === utfallnavn) ?? null;
   }
 
   function faaOmgjoeringsgrunnObjekt(omgjoeringnavn: string | null): IKodeverkVerdi | null {
-    if (!omgjoeringnavn) {
+    if (omgjoeringnavn === null) {
       return null;
     }
     return (
