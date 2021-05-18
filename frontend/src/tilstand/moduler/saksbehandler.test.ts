@@ -92,6 +92,10 @@ describe("TILDEL 'Meg' epos", () => {
             payload: resultPayload,
             type: "saksbehandler/TILDELT",
           },
+          e: {
+            payload: {},
+            type: "klagebehandlinger/SETT_FERDIGLASTET",
+          },
           d: {
             payload: {
               start: initState.klagebehandlinger.meta.start,
@@ -118,8 +122,8 @@ describe("TILDEL 'Meg' epos", () => {
     "+++ FRADEL 'MEG' OPPGAVE SUKSESS",
     marbles(() => {
       ts.run((m) => {
-        const inputMarble = "a-";
-        const expectedMarble = "(cd)-";
+        const inputMarble = "a";
+        const expectedMarble = "(cd)";
 
         const inputValues = {
           a: fradelMegHandling({
@@ -169,7 +173,7 @@ describe("TILDEL 'Meg' epos", () => {
     marbles(() => {
       ts.run((m) => {
         const inputMarble = "a-";
-        const expectedMarble = "(tu)";
+        const expectedMarble = "(txu)";
 
         const inputValues = {
           a: fradelMegHandling({
@@ -195,6 +199,9 @@ describe("TILDEL 'Meg' epos", () => {
               feilmelding: "fradeling feilet",
             },
             type: "toaster/SETT",
+          },
+          x: {
+            type: "klagebehandlinger/SETT_FERDIGLASTET",
           },
           u: {
             payload: undefined,
@@ -240,6 +247,9 @@ describe("TILDEL 'Meg' epos", () => {
             },
             type: "toaster/SETT",
           },
+          x: {
+            type: "klagebehandlinger/SETT_FERDIGLASTET",
+          },
           u: {
             payload: undefined,
             type: "toaster/SKJUL",
@@ -251,7 +261,7 @@ describe("TILDEL 'Meg' epos", () => {
           throwError({ message: "tildeling feilet", status: 503 })
         );
         expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
-          "-(tu)",
+          "-(txu)",
           observableValues
         );
       });
@@ -285,6 +295,9 @@ describe("TILDEL 'Meg' epos", () => {
             },
             type: "toaster/SETT",
           },
+          x: {
+            type: "klagebehandlinger/SETT_FERDIGLASTET",
+          },
           u: {
             payload: undefined,
             type: "toaster/SKJUL",
@@ -299,7 +312,7 @@ describe("TILDEL 'Meg' epos", () => {
           })
         );
         expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
-          "-(tu)",
+          "-(txu)",
           observableValues
         );
       });
@@ -333,6 +346,9 @@ describe("TILDEL 'Meg' epos", () => {
             },
             type: "toaster/SETT",
           },
+          x: {
+            type: "klagebehandlinger/SETT_FERDIGLASTET",
+          },
           u: {
             payload: undefined,
             type: "toaster/SKJUL",
@@ -347,7 +363,7 @@ describe("TILDEL 'Meg' epos", () => {
           })
         );
         expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
-          "-(tu)",
+          "-(txu)",
           observableValues
         );
       });
@@ -381,20 +397,23 @@ describe("TILDEL 'Meg' epos", () => {
             },
             type: "toaster/SETT",
           },
+          x: {
+            type: "klagebehandlinger/SETT_FERDIGLASTET",
+          },
           u: {
             payload: undefined,
             type: "toaster/SKJUL",
           },
         };
 
-        const state$ = new StateObservable(hot("-a", observableValues), {});
+        const state$ = new StateObservable(hot("a", observableValues), {});
         spyOn(dependencies, "post").and.returnValue(
           throwError({
             status: 503,
           })
         );
         expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
-          "-(tu)",
+          "-(txu)",
           observableValues
         );
       });

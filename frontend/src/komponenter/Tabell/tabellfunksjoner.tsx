@@ -109,8 +109,8 @@ const OppgaveTabellRad = ({
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
   const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id);
-  const curriedVisHandlinger = visHandlinger(fradelOppgave)(id)(klagebehandlingVersjon);
-  const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id)(klagebehandlingVersjon);
+  const curriedVisHandlinger = visHandlinger(fradelOppgave)(id);
+  const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);
   const kodeverk = useSelector(velgKodeverk);
 
   const location = useLocation();
@@ -161,8 +161,9 @@ const OppgaveTabellRad = ({
         </TableCell>
       )}
       <TableCell>{frist ? formattedDate(frist as number) : <div>mangler</div>}</TableCell>
-      {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave}
-      {location.pathname.startsWith("/mineoppgaver") && curriedVisHandlinger}
+      {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave(klagebehandlingVersjon)}
+      {location.pathname.startsWith("/mineoppgaver") &&
+        curriedVisHandlinger(klagebehandlingVersjon)}
     </TableRow>
   );
 };

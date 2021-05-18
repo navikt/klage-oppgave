@@ -38,6 +38,8 @@ import filterReducer from "./filterReducer";
 import Debug from "./Debug";
 import styled from "styled-components";
 import { filter } from "rxjs/operators";
+import { velgOppgaveLaster } from "../../tilstand/moduler/oppgavelaster.velgere";
+import { settOppgaverLaster } from "../../tilstand/moduler/oppgavelaster";
 
 const R = require("ramda");
 
@@ -54,7 +56,7 @@ const IkkeFiltrerbarHeader = styled.th`
 function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
-  const sideLaster = useSelector(velgSideLaster);
+  const sideLaster = useSelector(velgOppgaveLaster);
   const kodeverk = useSelector(velgKodeverk);
   const klagebehandlinger = useSelector(velgOppgaver);
   const forrigeSti = useSelector(velgForrigeSti);
@@ -309,6 +311,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           },
         })
       );
+      dispatch(settOppgaverLaster());
       dispatch(
         oppgaveRequest({
           ident: ident,
@@ -511,7 +514,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   if (sideLaster) {
     return (
       <div style={{ width: "100%", textAlign: "center", padding: 20 }}>
-        {showDebug && <Debug state={filter_state} />}
+        {JSON.stringify(sideLaster)}
         <NavFrontendSpinner />
       </div>
     );

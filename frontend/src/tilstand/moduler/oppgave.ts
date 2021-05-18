@@ -2,13 +2,23 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { concat, of, timer } from "rxjs";
-import { catchError, map, retryWhen, switchMap, timeout, withLatestFrom } from "rxjs/operators";
+import {
+  catchError,
+  map,
+  mergeMap,
+  retryWhen,
+  switchMap,
+  timeout,
+  withLatestFrom,
+} from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { settEnhetHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling } from "./klagebehandling";
+import { fradelMegHandling, PayloadType, tildelMegHandling } from "./saksbehandler";
+import { settOppgaverFerdigLastet } from "./oppgavelaster";
 
 const R = require("ramda");
 const { ascend, descend, prop, sort } = R;
@@ -188,6 +198,14 @@ export const oppgaveSlice = createSlice({
       state.lasterData = true;
       return state;
     },
+    SETT_LASTER: (state) => {
+      state.lasterData = true;
+      return state;
+    },
+    SETT_FERDIGLASTET: (state) => {
+      state.lasterData = false;
+      return state;
+    },
     MOTTATT: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
       if (action.payload) {
         state = MottatteRader(action.payload, state);
@@ -339,26 +357,32 @@ export function hentOppgaverEpos(
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
-    ofType(oppgaveRequest.type || settEnhetHandling.type),
+    ofType(oppgaveRequest.type, settEnhetHandling.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
       );
-      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
-        timeout(5000),
-        map((klagebehandlinger) =>
-          MOTTATT({
-            start: action.payload.start,
-            antall: action.payload.antall,
-            tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
-            projeksjon: action.payload.projeksjon,
-            transformasjoner: action.payload.transformasjoner,
-            ...klagebehandlinger,
-          } as RaderMedMetadataUtvidet)
+      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl)
+        .pipe(
+          timeout(5000),
+          map((klagebehandlinger) =>
+            MOTTATT({
+              start: action.payload.start,
+              antall: action.payload.antall,
+              tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
+              projeksjon: action.payload.projeksjon,
+              transformasjoner: action.payload.transformasjoner,
+              ...klagebehandlinger,
+            } as RaderMedMetadataUtvidet)
+          )
         )
-      );
+        .pipe(
+          mergeMap((value) => {
+            return concat([value, settOppgaverFerdigLastet()]);
+          })
+        );
       return hentOppgaver.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => of(FEILET(error)))

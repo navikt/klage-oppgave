@@ -1,12 +1,12 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, from, of } from "rxjs";
-import { catchError, concatMap, map, mergeMap, switchMap, withLatestFrom } from "rxjs/operators";
+import { concat, of } from "rxjs";
+import { catchError, mergeMap, switchMap, timeout, withLatestFrom } from "rxjs/operators";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { OppgaveParams, oppgaveRequest } from "./oppgave";
-import { AlertStripeType } from "nav-frontend-alertstriper";
+import { settOppgaverFerdigLastet, settOppgaverLaster } from "./oppgavelaster";
 
 //==========
 // Type defs
@@ -86,7 +86,20 @@ export function tildelEpos(
             return concat([tildeltHandling(response), oppgaveRequest(params)]);
           })
         )
-        .pipe(catchError((error) => concat([displayToast(error), skjulToaster()])));
+        .pipe(
+          catchError((error) =>
+            concat([displayToast(error), settOppgaverFerdigLastet(), skjulToaster()])
+          )
+        );
+    })
+  );
+}
+
+export function settLasterEpos(action$: ActionsObservable<PayloadAction<PayloadType>>) {
+  return action$.pipe(
+    ofType(fradelMegHandling.type, tildelMegHandling.type),
+    mergeMap(() => {
+      return of(settOppgaverLaster());
     })
   );
 }
@@ -99,7 +112,7 @@ export function fradelEpos(
   return action$.pipe(
     ofType(fradelMegHandling.type),
     withLatestFrom(state$),
-    switchMap(([action]) => {
+    mergeMap(([action]) => {
       const url = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlerfradeling`;
       return post(
         url,
@@ -110,7 +123,8 @@ export function fradelEpos(
         { "Content-Type": "application/json" }
       )
         .pipe(
-          switchMap(({ response }) => {
+          timeout(500),
+          mergeMap((response) => {
             let params = {
               start: state$.value.klagebehandlinger.meta.start,
               antall: state$.value.klagebehandlinger.meta.antall,
@@ -120,10 +134,14 @@ export function fradelEpos(
               projeksjon: state$.value.klagebehandlinger.meta.projeksjon,
               tildeltSaksbehandler: state$.value.klagebehandlinger.meta.tildeltSaksbehandler,
             } as OppgaveParams;
-            return concat([fradeltHandling(response), oppgaveRequest(params)]);
+            return concat([fradeltHandling(response.response), oppgaveRequest(params)]);
           })
         )
-        .pipe(catchError((error) => concat([displayToast(error), skjulToaster()])));
+        .pipe(
+          catchError((error) =>
+            concat([displayToast(error), settOppgaverFerdigLastet(), skjulToaster()])
+          )
+        );
     })
   );
 }
@@ -154,4 +172,4 @@ function skjulToaster() {
   return toasterSkjul();
 }
 
-export const TILDEL_EPICS = [tildelEpos, fradelEpos];
+export const TILDEL_EPICS = [tildelEpos, fradelEpos, settLasterEpos];

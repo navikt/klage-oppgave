@@ -26,6 +26,7 @@ import CloseSVG from "../cancelblack.svg";
 import ExtLink from "../extlink.svg";
 import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
 import { IFaner } from "./KlageBehandling";
+import FullforVedtak from "./Behandlingsskjema/FullforVedtak";
 
 export interface IDokument {
   journalpostId: string;
@@ -352,6 +353,7 @@ export default function KlagebehandlingKontainer({ faner }: { faner: IFaner }) {
       </PreviewKontainer>
 
       <Behandlingsskjema skjult={!faner.detaljer.checked} />
+      <FullforVedtak skjult={!faner.vedtak.checked} />
     </DokumentKontainer>
   );
 }
