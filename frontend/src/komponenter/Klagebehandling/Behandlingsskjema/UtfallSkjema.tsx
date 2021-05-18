@@ -138,8 +138,6 @@ export function UtfallSkjema() {
         internVurdering: internVurdering,
       })
     );
-    const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
-    settGyldigeOmgjoeringsgrunner(omgjoeringsgrunner);
   }
 
   function faaUtfalllObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
