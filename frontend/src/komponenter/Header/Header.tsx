@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import IkonSystem from "./icons/IkonSystem";
 import { NavLink, useHistory } from "react-router-dom";
 import classNames from "classnames";
@@ -8,6 +8,7 @@ import { valgtEnhet, velgEnheter, velgMeg } from "../../tilstand/moduler/meg.vel
 import { settEnhetHandling } from "../../tilstand/moduler/meg";
 import { useOnInteractOutside } from "../Tabell/FiltrerbarHeader";
 import styled from "styled-components";
+import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
 
 const BrukerBoks = styled.div`
   z-index: 2;
@@ -30,11 +31,21 @@ export interface HeaderProps {
 export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   const [aapen, setAapen] = useState(false);
   const [satte_valgtEnhet, settValgtEnhet] = useState(0);
+  const [harAdminTilgang, settHarAdminTilgang] = useState(false);
   const enhetNo = useSelector(valgtEnhet);
   const enheter = useSelector(velgEnheter);
   const person = useSelector(velgMeg);
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
+  const featureToggles = useSelector(velgFeatureToggles);
+  const history = useHistory();
+
+  useEffect(() => {
+    const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
+    if (tilgangEnabled?.isEnabled !== undefined) {
+      settHarAdminTilgang(tilgangEnabled.isEnabled);
+    }
+  }, [featureToggles]);
 
   useOnInteractOutside({
     ref,
@@ -83,6 +94,11 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
             );
           })}
           <hr />
+          {harAdminTilgang && (
+            <div onClick={() => history.push("/admin")} className={classNames({ enhet: true })}>
+              <NavLink to={"/admin"}>Admin</NavLink>
+            </div>
+          )}
           <div className={classNames({ enhet: true })}>
             <a href={"/innstillinger"}>Innstillinger</a>
           </div>

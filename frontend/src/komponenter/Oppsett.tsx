@@ -44,6 +44,7 @@ export default function Oppsett({
 
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
+    dispatch(hentFeatureToggleHandling("klage.admin"));
     //sjekk innlogging
     dispatch(hentExpiry());
     dispatch(kodeverkRequest());
