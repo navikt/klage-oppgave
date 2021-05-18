@@ -35,11 +35,6 @@ jobs:
           docker build --tag ${IMAGE} .
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
-  deploypreprod:
-    name: Deploy to dev-gcp
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v2
         name: Checkout code
       - uses: nais/deploy/actions/deploy@master
