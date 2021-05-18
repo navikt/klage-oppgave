@@ -24,6 +24,8 @@ import { Document, Page } from "react-pdf";
 import CloseSVG from "../cancelblack.svg";
 // @ts-ignore
 import ExtLink from "../extlink.svg";
+import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
+import { IFaner } from "./KlageBehandling";
 
 export interface IDokument {
   journalpostId: string;
@@ -281,7 +283,7 @@ const Feil = styled.div`
   margin: 1em;
 `;
 
-export default function Dokumenter({ skjult }: { skjult: boolean }) {
+export default function KlagebehandlingKontainer({ faner }: { faner: IFaner }) {
   const [aktivPDF, settAktivPDF] = useState(false);
   const [journalpostId, settjournalpostId] = useState(0);
   const [dokumentTittel, settdokumentTittel] = useState("");
@@ -306,7 +308,9 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [dokumentgrid, settDokumentgrid] = useState("1fr 1fr 1fr 1fr");
 
   return (
-    <DokumentKontainer theme={{ display: !skjult ? "grid" : "none", dokumentgrid }}>
+    <DokumentKontainer
+      theme={{ display: faner.dokumenter.checked ? "grid" : "none", dokumentgrid }}
+    >
       <DokumentTabell
         settAktivPDF={settAktivPDF}
         settjournalpostId={settjournalpostId}
@@ -344,6 +348,8 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
           </Document>
         </Preview>
       </PreviewKontainer>
+
+      <Behandlingsskjema skjult={!faner.detaljer.checked} />
     </DokumentKontainer>
   );
 }
