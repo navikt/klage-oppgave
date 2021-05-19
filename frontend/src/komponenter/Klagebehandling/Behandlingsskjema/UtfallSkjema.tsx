@@ -1,4 +1,4 @@
-import { Select, Textarea } from "nav-frontend-skjema";
+import { Textarea } from "nav-frontend-skjema";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderRow, Row } from "../../../styled-components/Row";
@@ -63,6 +63,21 @@ export function UtfallSkjema() {
     }
     return kodeverk.grunnerPerUtfall.find((obj: GrunnerPerUtfall) => obj.utfallId == utfall.id)
       .grunner;
+  }
+
+  const gyldigeHjemler = faaGyldigeHjemler(klage.tema);
+
+  function faaGyldigeHjemler(tema: string): Filter[] {
+    let temahjemler: IKodeverkVerdi[] = [];
+    let gyldigeHjemler: Filter[] = [];
+
+    temahjemler =
+      kodeverk.hjemlerPerTema.filter((_hjemler: any) => _hjemler.temaId === tema)[0]?.hjemler || [];
+
+    temahjemler.forEach((hjemmel: IKodeverkVerdi) => {
+      gyldigeHjemler.push({ label: hjemmel.beskrivelse, value: hjemmel.id.toString() });
+    });
+    return gyldigeHjemler;
   }
 
   function visOmgjoeringsgrunner(): boolean {
@@ -137,7 +152,7 @@ export function UtfallSkjema() {
       </HeaderRow>
       <Row>
         <BasertPaaHjemmel
-          tema={klage.tema}
+          gyldigeHjemler={gyldigeHjemler}
           valgteHjemler={valgteHjemler}
           velgHjemler={velgHjemler}
         />
