@@ -13,10 +13,9 @@ import megTilstand, {
 } from "./meg";
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { oppgaveHentingFeilet } from "./oppgave";
 import { toasterSett, toasterSkjul } from "./toaster";
-import { ReactFragment } from "react";
+import { Dependencies } from "../konfigurerTilstand";
 
 describe("'Meg' epos", () => {
   let ts: TestScheduler;
@@ -88,18 +87,20 @@ describe("'Meg' epos", () => {
         ]);
 
         const dependencies = {
-          getJSON: (url: string) => {
-            if (url.endsWith("enheter")) {
-              return of([
-                {
-                  navn: "test",
-                  id: "42",
-                  lovligeTemaer: [{ label: "test", value: "5" }],
-                },
-              ]);
-            } else {
-              return of(mockedResponse);
-            }
+          ajax: {
+            getJSON: (url: string) => {
+              if (url.endsWith("enheter")) {
+                return of([
+                  {
+                    navn: "test",
+                    id: "42",
+                    lovligeTemaer: [{ label: "test", value: "5" }],
+                  },
+                ]);
+              } else {
+                return of(mockedResponse);
+              }
+            },
           },
         };
 
@@ -117,7 +118,7 @@ describe("'Meg' epos", () => {
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = hentMegEpos(action$, state$, <AjaxCreationMethod>dependencies);
+        const actual$ = hentMegEpos(action$, state$, <Dependencies>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -148,8 +149,10 @@ describe("'Meg' epos", () => {
         const reducerResponse = hentetInnstillingerHandling(mockedResponse);
 
         const dependencies = {
-          getJSON: (navIdent: string, enhetId: string) => {
-            return of(mockedResponse);
+          ajax: {
+            getJSON: (navIdent: string, enhetId: string) => {
+              return of(mockedResponse);
+            },
           },
         };
 
@@ -163,7 +166,7 @@ describe("'Meg' epos", () => {
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = hentInnstillingerEpos(action$, state$, <AjaxCreationMethod>dependencies);
+        const actual$ = hentInnstillingerEpos(action$, state$, <Dependencies>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -247,7 +250,9 @@ describe("'Meg' epos", () => {
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
         const dependencies = {
-          getJSON: (url: string) => of({}),
+          ajax: {
+            getJSON: (url: string) => of({}),
+          },
         };
 
         const observableValues = {
@@ -275,10 +280,10 @@ describe("'Meg' epos", () => {
         };
 
         const state$ = new StateObservable(hot("-a", observableValues), {});
-        spyOn(dependencies, "getJSON").and.returnValue(
+        spyOn(dependencies.ajax, "getJSON").and.returnValue(
           throwError({ message: "ukjent feil", status: 503 })
         );
-        expectObservable(hentMegEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+        expectObservable(hentMegEpos(action$, state$, <Dependencies>dependencies)).toBe(
           "12001ms (tsxy)",
           observableValues
         );

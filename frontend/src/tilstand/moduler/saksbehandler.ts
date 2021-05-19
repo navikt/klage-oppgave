@@ -1,13 +1,12 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, of, timer } from "rxjs";
-import { catchError, debounce, mergeMap, switchMap, timeout, withLatestFrom } from "rxjs/operators";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { toasterSett, toasterSkjul } from "./toaster";
+import { concat, of } from "rxjs";
+import { catchError, mergeMap, switchMap, timeout, withLatestFrom } from "rxjs/operators";
 import { OppgaveParams, oppgaveRequest } from "./oppgave";
 import { settOppgaverFerdigLastet, settOppgaverLaster } from "./oppgavelaster";
 import { displayToast, skjulToaster } from "./meg";
+import { Dependencies } from "../konfigurerTilstand";
 
 //==========
 // Type defs
@@ -59,22 +58,23 @@ const tildeltHandling = createAction<TildelType>("saksbehandler/TILDELT");
 export function tildelEpos(
   action$: ActionsObservable<PayloadAction<ITildelOppgave>>,
   state$: StateObservable<RootStateOrAny>,
-  { post }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(tildelMegHandling.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
       const tildelMegUrl = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlertildeling`;
-      return post(
-        tildelMegUrl,
-        {
-          navIdent: action.payload.ident,
-          enhetId: action.payload.enhetId,
-          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
-        },
-        { "Content-Type": "application/json" }
-      )
+      return ajax
+        .post(
+          tildelMegUrl,
+          {
+            navIdent: action.payload.ident,
+            enhetId: action.payload.enhetId,
+            klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+          },
+          { "Content-Type": "application/json" }
+        )
         .pipe(
           switchMap(({ response }) => {
             let params = {
@@ -110,22 +110,23 @@ export function settLasterEpos(action$: ActionsObservable<PayloadAction<ITildelO
 export function fradelEpos(
   action$: ActionsObservable<PayloadAction<ITildelOppgave>>,
   state$: StateObservable<RootStateOrAny>,
-  { post }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(fradelMegHandling.type),
     withLatestFrom(state$),
     mergeMap(([action]) => {
       const url = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlerfradeling`;
-      return post(
-        url,
-        {
-          navIdent: action.payload.ident,
-          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
-          enhetId: action.payload.enhetId,
-        },
-        { "Content-Type": "application/json" }
-      )
+      return ajax
+        .post(
+          url,
+          {
+            navIdent: action.payload.ident,
+            enhetId: action.payload.enhetId,
+            klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+          },
+          { "Content-Type": "application/json" }
+        )
         .pipe(
           timeout(500),
           mergeMap((response) => {

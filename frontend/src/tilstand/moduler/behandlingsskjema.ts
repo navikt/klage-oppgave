@@ -1,14 +1,12 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { catchError, map, retryWhen, switchMap, timeout, withLatestFrom } from "rxjs/operators";
-import { concat, of } from "rxjs";
+import { concat } from "rxjs";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { IKlage } from "./klagebehandling";
 import { displayToast, feiletHandling, skjulToaster } from "./meg";
 import { RootState } from "../root";
-import { FEILET, MOTTATT, RaderMedMetadata, RaderMedMetadataUtvidet } from "./oppgave";
+import { Dependencies } from "../konfigurerTilstand";
 
 //==========
 // Interfaces
@@ -107,12 +105,8 @@ export default behandlingsvedtakSlice.reducer;
 // Actions
 //==========
 
-const {
-  LAGRE_UTFALL,
-  LAGRE_OMGJOERINGSGRUNN,
-  LAGRE_INTERN_VURDERING,
-  LAGRE_HJEMLER,
-} = behandlingsvedtakSlice.actions;
+const { LAGRE_UTFALL, LAGRE_OMGJOERINGSGRUNN, LAGRE_INTERN_VURDERING, LAGRE_HJEMLER } =
+  behandlingsvedtakSlice.actions;
 export const settKlageInfo = createAction<IKlageInfoPayload>("behandlingsvedtak/SETT_KLAGE_INFO");
 
 export const lagreInternVurdering = createAction<IInternVurderingPayload>(
@@ -135,21 +129,22 @@ export const lagreHjemler = createAction<IHjemlerPayload>("behandlingsvedtak/SET
 export function lagreInternVurderingEpos(
   action$: ActionsObservable<PayloadAction<IInternVurderingPayload>>,
   state$: StateObservable<RootState>,
-  { put }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(lagreInternVurdering.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
       const lagreInternVurderingUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/detaljer/internvurdering`;
-      return put(
-        lagreInternVurderingUrl,
-        {
-          internVurdering: action.payload.internVurdering,
-          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
-        },
-        { "Content-Type": "application/json" }
-      )
+      return ajax
+        .put(
+          lagreInternVurderingUrl,
+          {
+            internVurdering: action.payload.internVurdering,
+            klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+          },
+          { "Content-Type": "application/json" }
+        )
         .pipe(
           map((payload: { response: any }) =>
             LAGRE_INTERN_VURDERING({
@@ -172,24 +167,26 @@ export function lagreInternVurderingEpos(
 export function lagreUtfallEpos(
   action$: ActionsObservable<PayloadAction<IUtfallPayload>>,
   state$: StateObservable<RootStateOrAny>,
-  { put }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(lagreUtfall.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
       const lagreUtfallUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/utfall`;
-      const lagre = put(
-        lagreUtfallUrl,
-        {
-          utfall: action.payload.utfall,
-          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
-        },
-        { "Content-Type": "application/json" }
-      ).pipe(
-        timeout(5000),
-        map((payload: { response: any }) => LAGRE_UTFALL(payload.response))
-      );
+      const lagre = ajax
+        .put(
+          lagreUtfallUrl,
+          {
+            utfall: action.payload.utfall,
+            klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+          },
+          { "Content-Type": "application/json" }
+        )
+        .pipe(
+          timeout(5000),
+          map((payload: { response: any }) => LAGRE_UTFALL(payload.response))
+        );
       return lagre.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => {
@@ -204,21 +201,22 @@ export function lagreUtfallEpos(
 export function lagreOmgjoeringsgrunnEpos(
   action$: ActionsObservable<PayloadAction<IOmgjoeringsgrunnPayload>>,
   state$: StateObservable<RootStateOrAny>,
-  { put }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(lagreOmgjoeringsgrunn.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
       const lagreOmgjoeringsgrunnUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/grunn`;
-      return put(
-        lagreOmgjoeringsgrunnUrl,
-        {
-          grunn: action.payload.omgjoeringsgrunn,
-          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
-        },
-        { "Content-Type": "application/json" }
-      )
+      return ajax
+        .put(
+          lagreOmgjoeringsgrunnUrl,
+          {
+            grunn: action.payload.omgjoeringsgrunn,
+            klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+          },
+          { "Content-Type": "application/json" }
+        )
         .pipe(map((payload: { response: any }) => LAGRE_OMGJOERINGSGRUNN(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
@@ -234,21 +232,22 @@ export function lagreOmgjoeringsgrunnEpos(
 export function lagreHjemlerEpos(
   action$: ActionsObservable<PayloadAction<IHjemlerPayload>>,
   state$: StateObservable<RootState>,
-  { put }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(lagreHjemler.type),
     withLatestFrom(state$),
     switchMap(([action]) => {
       const lagreHjemlerUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/hjemler`;
-      return put(
-        lagreHjemlerUrl,
-        {
-          hjemler: action.payload.hjemler,
-          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
-        },
-        { "Content-Type": "application/json" }
-      )
+      return ajax
+        .put(
+          lagreHjemlerUrl,
+          {
+            hjemler: action.payload.hjemler,
+            klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+          },
+          { "Content-Type": "application/json" }
+        )
         .pipe(map((payload: { response: any }) => LAGRE_HJEMLER(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),

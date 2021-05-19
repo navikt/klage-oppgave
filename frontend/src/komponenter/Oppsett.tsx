@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Header } from "./Header/Header";
 import Alertstripe from "nav-frontend-alertstriper";
-const R = require("ramda");
+import * as R from "ramda";
 
 interface LayoutType {
   visMeny: boolean;
@@ -11,9 +11,9 @@ interface LayoutType {
   children: JSX.Element;
 }
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { NavLink, useHistory, useLocation } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
 
@@ -25,6 +25,7 @@ import { hentExpiry } from "../tilstand/moduler/token";
 import { kodeverkRequest } from "../tilstand/moduler/oppgave";
 import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 import { toasterSkjul } from "../tilstand/moduler/toaster";
+import { useAppDispatch } from "../tilstand/konfigurerTilstand";
 
 export default function Oppsett({
   visMeny,
@@ -39,7 +40,7 @@ export default function Oppsett({
   const feilmelding = useSelector(velgToasterMelding);
   const featureToggles = useSelector(velgFeatureToggles);
   const kodeverk = useSelector(velgKodeverk);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [generellTilgang, settTilgang] = useState<boolean | undefined>(undefined);
   const history = useHistory();
 
@@ -76,7 +77,7 @@ export default function Oppsett({
   if (!generellTilgang) {
     return <div>Beklager, men din bruker har ikke tilgang til denne siden</div>;
   }
-  if (R.isEmpty()(kodeverk)) {
+  if (R.isEmpty(kodeverk)) {
     return <NavFrontendSpinner />;
   }
 

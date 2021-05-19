@@ -1,6 +1,7 @@
 import { App } from "@tinyhttp/app";
 import { logger } from "@tinyhttp/logger";
 import { cors } from "@tinyhttp/cors";
+import formidable, { File } from "formidable";
 import {
   filtrerOppgaver,
   fradelSaksbehandler,
@@ -10,6 +11,9 @@ import {
   toggleVedlegg,
 } from "./oppgaver";
 import { OppgaveQuery } from "./types";
+import fs from "fs";
+import path from "path";
+import { klagebehandlingDetaljerView } from "./klagebehandlingDetaljerView";
 
 let bodyParser = require("body-parser");
 
@@ -18,6 +22,7 @@ const app = new App()
   .use(logger())
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }));
+
 const port = 3000; // default port to listen
 
 async function hentOppgaver() {
@@ -93,73 +98,17 @@ async function hentVedlegg() {
 
 app.get("/kodeverk", (req, res) => {
   let data = require("fs")
-    .readFileSync(
-      require("path").resolve(__dirname, "../fixtures/kodeverk.json")
-    )
+    .readFileSync(path.resolve(__dirname, "../fixtures/kodeverk.json"))
     .toString("utf8");
   let kodeverk = JSON.parse(data);
   res.send(kodeverk);
 });
 
-app.get("/klagebehandlinger/:id/detaljer", async (req, res) => {
-  res.send({
-    id: "a6257f0d-c79c-4844-bfc6-a45ae6d6976f",
-    klageInnsendtdato: "2020-08-11",
-    fraNAVEnhet: "0104",
-    fraNAVEnhetNavn: "NAV Moss",
-    mottattFoersteinstans: "2020-08-14",
-    sakenGjelderFoedselsnummer: "17457337760",
-    sakenGjelderNavn: {
-      fornavn: "Anders",
-      mellomnavn: "Jørgen",
-      etternavn: "Andersen",
-    },
-    sakenGjelderKjoenn: "MANN",
-    sakenGjelderVirksomhetsnummer: null,
-    klagerFoedselsnummer: "10297333820",
-    klagerVirksomhetsnummer: "",
-    klagerVirksomhetsnavn: "",
-    klagerNavn: {
-      fornavn: "Tone",
-      mellomnavn: "Camilla",
-      etternavn: "Petersen",
-    },
-    foedselsnummer: "17457337760",
-    virksomhetsnummer: null,
-    tema: "43",
-    type: "1",
-    mottatt: "2021-04-26",
-    startet: "2021-04-27",
-    avsluttetAvSaksbehandler: null,
-    frist: null,
-    tildeltSaksbehandlerident: "Z994488",
-    medunderskriverident: "",
-    erMedunderskriver: null,
-    hjemler: ["1000.008.004"],
-    modified: "2021-04-27T08:56:30.679251",
-    created: "2021-04-26T18:25:08.859951",
-    fraSaksbehandlerident: "Z994674",
-    eoes: null,
-    raadfoertMedLege: null,
-    internVurdering: null,
-    sendTilbakemelding: null,
-    tilbakemelding: null,
-    klagebehandlingVersjon: 3,
-    vedtak: [
-      {
-        id: "214d1485-5a26-4aec-86e4-19395fa54f87",
-        utfall: "Opprettholdt",
-        grunn: "Feil i bevisvurderingen",
-        hjemler: [],
-        brevMottakere: [],
-      },
-    ],
-    kommentarFraFoersteinstans: null,
-  });
-});
+app.get("/klagebehandlinger/:id/detaljer", async (req, res) =>
+  res.send(klagebehandlingDetaljerView)
+);
+
 app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
-  let fs = require("fs");
-  let path = require("path");
   const query = req.query;
   let forrigeSide = query.forrigeSide || undefined;
   let pageReference: string | null;
@@ -190,12 +139,11 @@ app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
   });
 });
 app.get("/klagebehandlinger/:id/dokumenter", async (req, res) => {
-  let fs = require("fs");
-  let path = require("path");
-  let data = fs
-    .readFileSync(path.resolve(__dirname, "../fixtures/dokumenter.json"))
-    .toString("utf8");
-  let dokumenter = JSON.parse(data);
+  const data = fs.readFileSync(
+    path.resolve(__dirname, "../fixtures/dokumenter.json"),
+    { encoding: "utf-8" }
+  );
+  const dokumenter = JSON.parse(data);
   res.send({
     dokumenter: dokumenter.dokumenter.slice(0, 5),
   });
@@ -212,7 +160,6 @@ app.get("/ansatte/:id/oppgaver", async (req, res) => {
 app.get(
   "/klagebehandlinger/:id/journalposter/:journalPostId/dokumenter/:dokumentId",
   (req, res) => {
-    let path = require("path");
     res.sendFile(path.resolve(__dirname, "../fixtures/testdocument.pdf"));
   }
 );
@@ -289,6 +236,87 @@ app.get("/aapenfeaturetoggle/:feature", (req, res) => {
   else res.status(200).send("false");
 });
 
+// Slette vedtak.
+app.delete(
+  "/klagebehandlinger/:klagebehandlingId/vedtak/:vedtakId/vedlegg",
+  async (req, res) => {
+    await sleep(1000);
+    res.sendStatus(200);
+  }
+);
+
+// Opplasting av vedtak.
+app.post(
+  "/klagebehandlinger/:klagebehandlingId/vedtak/:vedtakId/vedlegg",
+  async (req, res, next) => {
+    const form = formidable({
+      multiples: true,
+      allowEmptyFiles: true,
+      keepExtensions: true,
+      maxFields: 3,
+    });
+    form.parse(req, async (err, fields, files) => {
+      if (typeof err !== "undefined" && err !== null) {
+        console.error("Upload error", err);
+        if (next) {
+          next(err);
+        }
+        return;
+      }
+
+      let vedlegg: File | null = null;
+
+      if (Array.isArray(files.vedlegg)) {
+        if (files.vedlegg.length !== 1) {
+          res
+            .status(400)
+            .send(`Too many files uploaded. ${files.vedlegg.length}`);
+          return;
+        }
+        vedlegg = files.vedlegg[0];
+      } else {
+        vedlegg = files.vedlegg;
+      }
+
+      if (!vedlegg.name?.endsWith(".pdf") ?? false) {
+        res.status(400).send(`Wrong file extension. ${vedlegg.name}`);
+        return;
+      }
+
+      const { journalfoerendeEnhet, klagebehandlingVersjon } = fields;
+
+      if (
+        typeof journalfoerendeEnhet === "undefined" ||
+        journalfoerendeEnhet.length === 0
+      ) {
+        res.status(400).send("Missing journalfoerendeEnhet.");
+        return;
+      }
+
+      if (
+        typeof klagebehandlingVersjon === "undefined" ||
+        klagebehandlingVersjon.length === 0
+      ) {
+        res.status(400).send("Missing klagebehandlingVersjon.");
+        return;
+      }
+
+      await sleep(1000);
+
+      res.status(200).json({
+        id: "UUID",
+        name: vedlegg.name,
+        size: vedlegg.size,
+        uploadedDate: new Date().toISOString(),
+        content: fs.readFileSync(
+          path.resolve(__dirname, "../fixtures/testdocument.pdf"),
+          { encoding: "base64" }
+        ),
+      });
+    });
+  }
+);
+
 app.post("/klagebehandlinger/:oppgaveid/dokumenter", async (req, res) => {
   res.status(200).send("OK");
 });
@@ -325,6 +353,67 @@ app.put(
   }
 );
 
+app.post(
+  "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/fullfoer",
+  async (req, res) => {
+    await sleep(500);
+    const { journalfoerendeEnhet, klagebehandlingVersjon } = req.body;
+    if (
+      typeof journalfoerendeEnhet !== "string" ||
+      journalfoerendeEnhet.length === 0
+    ) {
+      res.sendStatus(400);
+      return;
+    }
+    if (typeof klagebehandlingVersjon !== "number") {
+      res.sendStatus(400);
+      return;
+    }
+    res.json({
+      ...klagebehandlingDetaljerView,
+      avsluttetAvSaksbehandler: "2021-05-17T15:00:59",
+    });
+  }
+);
+
+app.get("/ansatte/:id/medunderskrivere/:tema", (req, res) =>
+  delay(
+    () =>
+      res.json({
+        tema: req.params?.tema ?? "UKJENT_TEMA",
+        medunderskrivere: [
+          {
+            navn: "Ingrid Oksavik",
+            ident: "123",
+          },
+          {
+            navn: "Saksbehandler A",
+            ident: "a",
+          },
+          {
+            navn: "Saksbehandler B",
+            ident: "b",
+          },
+          {
+            navn: "Saksbehandler C",
+            ident: "c",
+          },
+        ],
+      }),
+    500
+  )
+);
+
+app.put("/klagebehandlinger/:id/detaljer/medunderskriverident", (req, res) =>
+  delay(
+    () =>
+      res.json({
+        medunderskriverident: req.body.medunderskriverident,
+      }),
+    500
+  )
+);
+
 interface OppgaveModell {
   ident: String;
 }
@@ -347,3 +436,10 @@ app.listen(
   },
   "0.0.0.0"
 );
+
+const delay = async (fn: () => void, ms: number) => {
+  await sleep(ms);
+  return fn();
+};
+
+const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));

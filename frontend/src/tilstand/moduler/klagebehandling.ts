@@ -12,11 +12,11 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { IInnstillinger } from "./meg";
 import { IKodeverkVerdi } from "./oppgave";
 import { RootState } from "../root";
+import { Dependencies } from "../konfigurerTilstand";
 
 //==========
 // Interfaces
@@ -29,15 +29,17 @@ export interface IHjemmel {
   original?: string;
 }
 
+export interface INavn {
+  fornavn?: string;
+  mellomnavn?: string;
+  etternavn?: string;
+}
+
 export interface IKlage {
   id: string;
   sakenGjelderKjoenn: string;
   sakenGjelderFoedselsnummer: string;
-  sakenGjelderNavn: {
-    fornavn?: string;
-    mellomnavn?: string;
-    etternavn?: string;
-  };
+  sakenGjelderNavn: INavn;
   klageLastet: boolean;
   klagebehandlingVersjon: number;
   lasterDokumenter: boolean;
@@ -54,7 +56,8 @@ export interface IKlage {
   type: string;
   mottatt: string;
   startet?: string;
-  avsluttetAvSaksbehandler?: string;
+  avsluttet: string | null;
+  avsluttetAvSaksbehandler: string | null;
   frist: string;
   tildeltSaksbehandlerident?: string;
   hjemler: Array<IHjemmel>;
@@ -69,6 +72,7 @@ export interface IKlage {
   internVurdering: string;
   kommentarFraFoersteinstans: string;
   vedtak: Array<Vedtak>;
+  medunderskriverident: string | null;
 }
 
 export interface Vedtak {
@@ -77,6 +81,19 @@ export interface Vedtak {
   id: string;
   utfall: string | null;
   grunn: string | null;
+  file: IVedlegg | null;
+  ferdigstilt: string | null;
+}
+
+export interface IVedlegg {
+  name: string;
+  size: number;
+  content: string;
+}
+
+export interface IVedleggOpplastet {
+  vedtakId: string;
+  vedlegg: IVedlegg;
 }
 
 export interface GrunnerPerUtfall {
@@ -115,10 +132,10 @@ export const klageSlice = createSlice({
   name: "klagebehandling",
   initialState: {
     id: "",
+    klagebehandlingVersjon: 0,
     klageLastet: false,
     sakenGjelderKjoenn: "",
     sakenGjelderNavn: "",
-    klagebehandlingVersjon: 0,
     sakenGjelderFoedselsnummer: "",
     lasterDokumenter: false,
     klageLastingFeilet: false,
@@ -133,7 +150,8 @@ export const klageSlice = createSlice({
     type: "",
     mottatt: "",
     startet: undefined,
-    avsluttetAvSaksbehandler: undefined,
+    avsluttet: null,
+    avsluttetAvSaksbehandler: null,
     frist: "",
     tildeltSaksbehandlerident: undefined,
     pageReference: "",
@@ -153,8 +171,11 @@ export const klageSlice = createSlice({
         id: "214d1485-5a26-4aec-86e4-19395fa54f87",
         utfall: null,
         grunn: null,
+        ferdigstilt: null,
+        file: null,
       },
     ],
+    medunderskriverident: null,
   } as IKlage,
   reducers: {
     HENT_KLAGE: (state, action: PayloadAction<IKlage>) => {
@@ -220,6 +241,30 @@ export const klageSlice = createSlice({
       state.dokumenterTilordnede = action.payload.dokumenter;
       return state;
     },
+    MEDUNDERSKRIVER_SATT: (state, action: PayloadAction<string | null>) => {
+      state.medunderskriverident = action.payload;
+      return state;
+    },
+    VEDLEGG_OPPLASTET: (state, action: PayloadAction<IVedleggOpplastet>) => {
+      const vedtak = state.vedtak.find(({ id }) => id === action.payload.vedtakId);
+      if (typeof vedtak !== "undefined") {
+        vedtak.file = action.payload.vedlegg;
+      }
+      return state;
+    },
+    VEDLEGG_SLETTET: (state, action: PayloadAction<Vedtak>) => {
+      const vedtakIndex = state.vedtak.findIndex(({ id }) => id === action.payload.id);
+      if (vedtakIndex === -1) {
+        state.vedtak.push(action.payload);
+        return state;
+      }
+      state.vedtak[vedtakIndex] = action.payload;
+      return state;
+    },
+    VEDLEGG_FULLFOERT: (state, action: PayloadAction<IKlage>) => ({
+      ...state,
+      ...action.payload,
+    }),
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
       state.klageLastet = true;
@@ -234,7 +279,14 @@ export default klageSlice.reducer;
 //==========
 // Actions
 //==========
-export const { HENTET, FEILET } = klageSlice.actions;
+export const {
+  HENTET,
+  FEILET,
+  MEDUNDERSKRIVER_SATT,
+  VEDLEGG_OPPLASTET,
+  VEDLEGG_FULLFOERT,
+  VEDLEGG_SLETTET,
+} = klageSlice.actions;
 export const hentKlageHandling = createAction<string>("klagebehandling/HENT_KLAGE");
 export const hentetKlageHandling = createAction<IKlage>("klagebehandling/HENTET");
 export const feiletHandling = createAction<string>("klagebehandling/FEILET");
@@ -280,19 +332,18 @@ export const nullstillDokumenter = createAction("klagebehandling/NULLSTILL_DOKUM
 // Epos
 //==========
 const klageUrl = (id: string) => `/api/klagebehandlinger/${id}/detaljer`;
-var resultData: IKlage;
-const R = require("ramda");
 
 export function klagebehandlingEpos(
   action$: ActionsObservable<PayloadAction<string>>,
   state$: StateObservable<RootState>,
-  { getJSON }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(hentKlageHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
-      return getJSON<IKlage>(klageUrl(action.payload))
+      return ajax
+        .getJSON<IKlage>(klageUrl(action.payload))
         .pipe(
           timeout(5000),
           map((response: IKlage) => response)
@@ -323,7 +374,7 @@ export function klagebehandlingEpos(
 export function klagebehandlingDokumenterAlleEpos(
   action$: ActionsObservable<PayloadAction<IDokumentParams>>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(hentDokumentAlleHandling.type),
@@ -332,7 +383,8 @@ export function klagebehandlingDokumenterAlleEpos(
       let ref = action.payload.ref;
       let { historyNavigate } = action.payload;
       let klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10&forrigeSide=${ref}`;
-      return getJSON<IKlagePayload>(klageUrl)
+      return ajax
+        .getJSON<IKlagePayload>(klageUrl)
         .pipe(
           timeout(5000),
           map((response: IKlagePayload) => {
@@ -366,9 +418,7 @@ export function klagebehandlingDokumenterAlleEpos(
 }
 
 export function HentDokumentForhandsvisningEpos(
-  action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
-  state$: StateObservable<RootStateOrAny>,
-  { get }: AjaxCreationMethod
+  action$: ActionsObservable<PayloadAction<IDokumentPayload>>
 ) {
   return action$.pipe(
     ofType(hentPreviewHandling.type),
@@ -382,7 +432,7 @@ export function HentDokumentForhandsvisningEpos(
 export function klagebehandlingDokumenterTilordnedeEpos(
   action$: ActionsObservable<PayloadAction<IDokumentParams>>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(hentDokumentTilordnedeHandling.type, tilordnetDokumentHandling.type),
@@ -391,7 +441,8 @@ export function klagebehandlingDokumenterTilordnedeEpos(
       let ref = action.payload.ref;
       let { historyNavigate } = action.payload;
       let klageUrl = `/api/klagebehandlinger/${action.payload.id}/dokumenter`;
-      return getJSON<IKlagePayload>(klageUrl)
+      return ajax
+        .getJSON<IKlagePayload>(klageUrl)
         .pipe(
           timeout(5000),
           map((response: IKlagePayload) => {
@@ -427,22 +478,23 @@ export function klagebehandlingDokumenterTilordnedeEpos(
 export function ToggleKlageDokumentEpos(
   action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
   state$: StateObservable<RootStateOrAny>,
-  { post }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(toggleDokumenterHandling.type),
     switchMap((action) => {
       const url = `/api/klagebehandlinger/${action.payload.id}/toggledokument`;
-      return post(
-        url,
-        {
-          id: action.payload.id,
-          journalpostId: action.payload.journalpostId,
-          dokumentInfoId: action.payload.dokumentInfoId,
-          erVedlegg: action.payload.erVedlegg,
-        },
-        { "Content-Type": "application/json" }
-      )
+      return ajax
+        .post(
+          url,
+          {
+            id: action.payload.id,
+            journalpostId: action.payload.journalpostId,
+            dokumentInfoId: action.payload.dokumentInfoId,
+            erVedlegg: action.payload.erVedlegg,
+          },
+          { "Content-Type": "application/json" }
+        )
         .pipe(
           map((payload: { response: IInnstillinger }) =>
             tilordnetDokumentHandling({ id: action.payload.id, ...payload.response })
