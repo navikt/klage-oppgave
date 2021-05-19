@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { HeaderRow, Row } from "../../../styled-components/Row";
 import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
-import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
+import { Filter, IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
 import { Utfall } from "./Utfall";
 import { velgKodeverk } from "../../../tilstand/moduler/oppgave.velgere";
@@ -13,23 +13,7 @@ import {
   lagreOmgjoeringsgrunn,
   lagreUtfall,
 } from "../../../tilstand/moduler/behandlingsskjema";
-
-function BasertPaaHjemmel() {
-  const [hjemler, settHjemler] = useState<string>();
-
-  return (
-    <Select
-      label="Utfallet er basert på lovhjemmel:"
-      bredde="l"
-      value={hjemler}
-      onChange={(e) => {
-        settHjemler(e.target.value);
-      }}
-    >
-      <option value="todo">TODO</option>
-    </Select>
-  );
-}
+import { BasertPaaHjemmel } from "./BasertPaaLovhjemmel";
 
 interface InterfaceInterVurderingProps {
   internVurdering: string;
