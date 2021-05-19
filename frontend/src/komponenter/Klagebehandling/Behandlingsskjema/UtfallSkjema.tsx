@@ -52,6 +52,9 @@ export function UtfallSkjema() {
   const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(
     faaOmgjoeringsgrunnObjekt(klage.vedtak[0].grunn) ?? gyldigeOmgjoeringsgrunner[0]
   );
+
+  const [valgteHjemler, settValgteHjemler] = useState<Filter[]>([]);
+
   const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering ?? "");
 
   const [valgteHjemler, settValgteHjemler] = useState<Filter[]>([]); // TODO: Hentes fra klage
