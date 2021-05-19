@@ -1,47 +1,36 @@
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams, useLocation } from "react-router-dom";
+import * as R from "ramda";
+import styled from "styled-components";
+import NavFrontendSpinner from "nav-frontend-spinner";
 import {
   Filter,
   hentUtgatte,
   IKodeverkVerdi,
-  kodeverkRequest,
   oppgaveRequest,
 } from "../../tilstand/moduler/oppgave";
-import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
 import {
   valgtEnhet,
   velgEnheter,
   velgInnstillinger,
   velgMeg,
 } from "../../tilstand/moduler/meg.velgere";
-import {
-  velgOppgaver,
-  velgSideLaster,
-  velgProjeksjon,
-  velgKodeverk,
-} from "../../tilstand/moduler/oppgave.velgere";
+import { velgOppgaver, velgProjeksjon, velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
-import "../../stilark/Tabell.less";
-import "../../stilark/TabellHead.less";
 import FiltrerbarHeader, { settFilter } from "./FiltrerbarHeader";
 import { valgtOppgaveType } from "../types";
 import { genererTabellRader } from "./tabellfunksjoner";
 import Paginering, { visAntallTreff } from "../Paginering/Paginering";
-import { useHistory, useParams, useLocation } from "react-router-dom";
-import NavFrontendSpinner from "nav-frontend-spinner";
-import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
-import { hentInnstillingerHandling, settInnstillingerHandling } from "../../tilstand/moduler/meg";
+import { hentInnstillingerHandling } from "../../tilstand/moduler/meg";
 import { hentFeatureToggleHandling } from "../../tilstand/moduler/unleash";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
-
 import filterReducer from "./filterReducer";
-import Debug from "./Debug";
-import styled from "styled-components";
-import { filter } from "rxjs/operators";
 import { velgOppgaveLaster } from "../../tilstand/moduler/oppgavelaster.velgere";
 import { settOppgaverLaster } from "../../tilstand/moduler/oppgavelaster";
-
-const R = require("ramda");
+import "../../stilark/Tabell.less";
+import "../../stilark/TabellHead.less";
+import { useAppDispatch, useAppSelector } from "../../tilstand/konfigurerTilstand";
 
 const Feil = styled.div`
   display: block;
@@ -54,13 +43,13 @@ const IkkeFiltrerbarHeader = styled.th`
 `;
 
 function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
-  const dispatch = useDispatch();
-  const meg = useSelector(velgMeg);
-  const sideLaster = useSelector(velgOppgaveLaster);
-  const kodeverk = useSelector(velgKodeverk);
-  const klagebehandlinger = useSelector(velgOppgaver);
-  const forrigeSti = useSelector(velgForrigeSti);
-  const utvidetProjeksjon = useSelector(velgProjeksjon);
+  const dispatch = useAppDispatch();
+  const meg = useAppSelector(velgMeg);
+  const sideLaster = useAppSelector(velgOppgaveLaster);
+  const kodeverk = useAppSelector(velgKodeverk);
+  const klagebehandlinger = useAppSelector(velgOppgaver);
+  const forrigeSti = useAppSelector(velgForrigeSti);
+  const utvidetProjeksjon = useAppSelector(velgProjeksjon);
   const location = useLocation();
 
   const [showDebug, setDebug] = useState(false);
@@ -104,10 +93,10 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const [start, settStart] = useState<number>(0);
   const history = useHistory();
   const pathname = location.pathname.split("/")[1];
-  const innstillinger = useSelector(velgInnstillinger);
-  const enheter = useSelector(velgEnheter);
-  const valgtEnhetIdx = useSelector(valgtEnhet);
-  const featureToggles = useSelector(velgFeatureToggles);
+  const innstillinger = useAppSelector(velgInnstillinger);
+  const enheter = useAppSelector(velgEnheter);
+  const valgtEnhetIdx = useAppSelector(valgtEnhet);
+  const featureToggles = useAppSelector(velgFeatureToggles);
 
   const { filter_state, filter_dispatch } = filterReducer(antall, start);
   const settFiltrering = (type: string, payload: Filter[]) => {

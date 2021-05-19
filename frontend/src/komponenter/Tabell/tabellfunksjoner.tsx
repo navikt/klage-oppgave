@@ -1,25 +1,22 @@
+import React, { useRef, useState } from "react";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
+import * as R from "ramda";
+import styled from "styled-components";
+import EtikettBase from "nav-frontend-etiketter";
+import { Knapp } from "nav-frontend-knapper";
+import classNames from "classnames";
 import {
   IKodeverkVerdi,
   OppgaveRad,
   OppgaveRader,
   OppgaveRadMedFunksjoner,
 } from "../../tilstand/moduler/oppgave";
-import React, { useRef, useState } from "react";
-import EtikettBase from "nav-frontend-etiketter";
-import { Knapp } from "nav-frontend-knapper";
-import classNames from "classnames";
 import { useOnInteractOutside } from "./FiltrerbarHeader";
-import { useDispatch, useSelector } from "react-redux";
 import { fradelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
-// @ts-ignore
-import PilOppHoeyre from "../../komponenter/arrow.svg";
-import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { formattedDate } from "../../domene/datofunksjoner";
 import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
-import styled from "styled-components";
-
-const R = require("ramda");
+import { useAppDispatch, useAppSelector } from "../../tilstand/konfigurerTilstand";
 
 const velgOppgave = R.curry(
   (settValgtOppgave: Function, id: string, klagebehandlingVersjon: number) =>
@@ -106,12 +103,12 @@ const OppgaveTabellRad = ({
   utvidetProjeksjon,
   settValgtOppgave,
 }: OppgaveRadMedFunksjoner) => {
-  const dispatch = useDispatch();
-  const meg = useSelector(velgMeg);
+  const dispatch = useAppDispatch();
+  const meg = useAppSelector(velgMeg);
   const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id);
   const curriedVisHandlinger = visHandlinger(fradelOppgave)(id);
   const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);
-  const kodeverk = useSelector(velgKodeverk);
+  const kodeverk = useAppSelector(velgKodeverk);
 
   const location = useLocation();
   const history = useHistory();

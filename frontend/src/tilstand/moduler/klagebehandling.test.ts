@@ -5,6 +5,7 @@ import { klagebehandlingEpos, hentKlageHandling, hentetKlageHandling } from "./k
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { Action } from "@reduxjs/toolkit";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
@@ -92,6 +93,16 @@ describe("Oppgave epos", () => {
           },
         };
 
+        const hotActions: hotActions = <T extends Action>(marbles, values) => {
+          const actionInput$ = m.hot<T>(marbles, values);
+          return new ActionsObservable(actionInput$);
+        };
+
+        const hotState: hotState = <T>(marbles, values, initialState) => {
+          const stateInput$ = m.hot<T>(marbles, values);
+          return new StateObservable<T>(stateInput$, initialState);
+        };
+
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
         const actual$ = klagebehandlingEpos(action$, state$, <AjaxCreationMethod>dependencies);
@@ -100,3 +111,15 @@ describe("Oppgave epos", () => {
     })
   );
 });
+
+type hotActions = <T extends Action>(
+  marbles: string,
+  values?: { [marble: string]: T },
+  error?: any
+) => ActionsObservable<T>;
+
+type hotState = <T = string>(
+  marbles: string,
+  values?: { [marble: string]: T },
+  error?: any
+) => StateObservable<T>;

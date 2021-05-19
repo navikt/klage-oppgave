@@ -1,14 +1,14 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react";
-import IkonSystem from "./icons/IkonSystem";
 import { NavLink, useHistory } from "react-router-dom";
+import styled from "styled-components";
 import classNames from "classnames";
+import IkonSystem from "./icons/IkonSystem";
 import "./Header.less";
-import { useDispatch, useSelector } from "react-redux";
 import { valgtEnhet, velgEnheter, velgMeg } from "../../tilstand/moduler/meg.velgere";
 import { settEnhetHandling } from "../../tilstand/moduler/meg";
 import { useOnInteractOutside } from "../Tabell/FiltrerbarHeader";
-import styled from "styled-components";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
+import { useAppDispatch, useAppSelector } from "../../tilstand/konfigurerTilstand";
 
 const BrukerBoks = styled.div`
   z-index: 2;
@@ -32,12 +32,12 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   const [aapen, setAapen] = useState(false);
   const [satte_valgtEnhet, settValgtEnhet] = useState(0);
   const [harAdminTilgang, settHarAdminTilgang] = useState(false);
-  const enhetNo = useSelector(valgtEnhet);
-  const enheter = useSelector(velgEnheter);
-  const person = useSelector(velgMeg);
-  const dispatch = useDispatch();
+  const enhetNo = useAppSelector(valgtEnhet);
+  const enheter = useAppSelector(velgEnheter);
+  const person = useAppSelector(velgMeg);
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
-  const featureToggles = useSelector(velgFeatureToggles);
+  const featureToggles = useAppSelector(velgFeatureToggles);
   const history = useHistory();
 
   useEffect(() => {

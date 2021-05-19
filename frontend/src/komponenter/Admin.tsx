@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Oppsett from "../komponenter/Oppsett";
 import "../stilark/App.less";
 import "../stilark/Lists.less";
 import "nav-frontend-tabell-style";
 import styled from "styled-components";
 import { gjenbyggElasticHandling } from "../tilstand/moduler/admin";
-import { useDispatch, useSelector } from "react-redux";
 import { velgAdmin } from "../tilstand/moduler/admin.velgere";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
+import { useAppDispatch } from "../tilstand/konfigurerTilstand";
 
 let Container = styled.div`
   display: flex;
@@ -40,7 +41,7 @@ let Knapp = styled.button`
 `;
 
 const Admin = (): JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const admin = useSelector(velgAdmin);
   const featureToggles = useSelector(velgFeatureToggles);
   const [tilgang, settTilgang] = useState<boolean | undefined>(undefined);

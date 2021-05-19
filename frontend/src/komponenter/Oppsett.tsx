@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Header } from "./Header/Header";
+import { NavLink } from "react-router-dom";
+import * as R from "ramda";
+import PropTypes from "prop-types";
 import Alertstripe from "nav-frontend-alertstriper";
-const R = require("ramda");
+import NavFrontendSpinner from "nav-frontend-spinner";
+import { Header } from "./Header/Header";
+import { velgMeg } from "../tilstand/moduler/meg.velgere";
+import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
+import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
+import { velgExpire } from "../tilstand/moduler/token.velgere";
+import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
+import { hentExpiry } from "../tilstand/moduler/token";
+import { kodeverkRequest } from "../tilstand/moduler/oppgave";
+import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
+import { useAppDispatch, useAppSelector } from "../tilstand/konfigurerTilstand";
 
 interface LayoutType {
   visMeny: boolean;
@@ -11,20 +23,6 @@ interface LayoutType {
   children: JSX.Element;
 }
 
-import { useDispatch, useSelector } from "react-redux";
-import PropTypes from "prop-types";
-import { NavLink, useHistory, useLocation } from "react-router-dom";
-import { velgMeg } from "../tilstand/moduler/meg.velgere";
-import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
-
-import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
-import { velgExpire } from "../tilstand/moduler/token.velgere";
-import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
-import NavFrontendSpinner from "nav-frontend-spinner";
-import { hentExpiry } from "../tilstand/moduler/token";
-import { kodeverkRequest } from "../tilstand/moduler/oppgave";
-import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
-
 export default function Oppsett({
   visMeny,
   backLink,
@@ -32,15 +30,14 @@ export default function Oppsett({
   contentClass,
   children,
 }: LayoutType) {
-  const person = useSelector(velgMeg);
-  const visFeilmelding = useSelector(velgToaster);
-  const expireTime = useSelector(velgExpire);
-  const feilmelding = useSelector(velgToasterMelding);
-  const featureToggles = useSelector(velgFeatureToggles);
-  const kodeverk = useSelector(velgKodeverk);
-  const dispatch = useDispatch();
+  const person = useAppSelector(velgMeg);
+  const visFeilmelding = useAppSelector(velgToaster);
+  const expireTime = useAppSelector(velgExpire);
+  const feilmelding = useAppSelector(velgToasterMelding);
+  const featureToggles = useAppSelector(velgFeatureToggles);
+  const kodeverk = useAppSelector(velgKodeverk);
+  const dispatch = useAppDispatch();
   const [generellTilgang, settTilgang] = useState<boolean | undefined>(undefined);
-  const history = useHistory();
 
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
@@ -75,7 +72,7 @@ export default function Oppsett({
   if (!generellTilgang) {
     return <div>Beklager, men din bruker har ikke tilgang til denne siden</div>;
   }
-  if (R.isEmpty()(kodeverk)) {
+  if (R.isEmpty(kodeverk)) {
     return <NavFrontendSpinner />;
   }
 

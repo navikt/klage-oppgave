@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 //import { ENV } from './constants/env';
 import store from "./tilstand/konfigurerTilstand";
 //import { initEnvironment } from './state/modules/environment';

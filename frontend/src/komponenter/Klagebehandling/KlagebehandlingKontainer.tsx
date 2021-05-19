@@ -9,16 +9,14 @@ import {
   nullstillDokumenter,
   tilordneDokumenterHandling,
 } from "../../tilstand/moduler/klagebehandling";
-import { useDispatch, useSelector } from "react-redux";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../domene/datofunksjoner";
 import styled from "styled-components";
 import { useLoadItems } from "./utils";
 import { List, ListItem, Loading } from "./List";
 import "./sjekkboks.less";
-
 import { Document, Page } from "react-pdf";
 // @ts-ignore
 import CloseSVG from "../cancelblack.svg";
@@ -27,6 +25,7 @@ import ExtLink from "../extlink.svg";
 import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
 import { IFaner } from "./KlageBehandling";
 import FullforVedtak from "./Behandlingsskjema/FullforVedtak";
+import { useAppDispatch, useAppSelector } from "../../tilstand/konfigurerTilstand";
 
 export interface IDokument {
   journalpostId: string;
@@ -290,7 +289,7 @@ export default function KlagebehandlingKontainer({ faner }: { faner: IFaner }) {
   const [journalpostId, settjournalpostId] = useState(0);
   const [dokumentTittel, settdokumentTittel] = useState("");
   const [dokumentInfoId, settdokumentInfoId] = useState(0);
-  const klage: IKlage = useSelector(velgKlage);
+  const klage = useAppSelector(velgKlage);
   const [file, setFile] = useState(null);
   const [numPages, setNumPages] = useState(0);
 
@@ -404,11 +403,11 @@ function DokumentTabell(props: {
   settjournalpostId: Function;
   faner: IFaner;
 }) {
-  const klage: IKlage = useSelector(velgKlage);
-  const dispatch = useDispatch();
+  const klage: IKlage = useAppSelector(velgKlage);
+  const dispatch = useAppDispatch();
   const { loading, hasNextPage, error, loadMore } = useLoadItems();
 
-  const [liste, setListe] = React.useState<IDokument[]>([]);
+  const [liste, setListe] = useState<IDokument[]>([]);
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: klage.lasterDokumenter,

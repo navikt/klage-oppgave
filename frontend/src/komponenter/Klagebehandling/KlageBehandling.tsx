@@ -1,25 +1,22 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import qs from "qs";
+import NavFrontendSpinner from "nav-frontend-spinner";
 import Oppsett from "../Oppsett";
 import "../../stilark/klagebehandling.less";
 // @ts-ignore
 import CloseSVG from "../cancel.svg";
 // @ts-ignore
 import HakeSVG from "../hake.svg";
-
-import { NavLink, useLocation, useParams } from "react-router-dom";
-import klageReducer, { IKlageState } from "../klage-reducer";
-import qs from "qs";
-import { useDispatch, useSelector } from "react-redux";
+import klageReducer from "../klage-reducer";
 import { hentKlageHandling, IKlage } from "../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
-import Debug from "../Tabell/Debug";
 import KlagebehandlingKontainer from "./KlagebehandlingKontainer";
-import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
-import styled from "styled-components";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
-import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
 import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
+import { useAppDispatch, useAppSelector } from "../../tilstand/konfigurerTilstand";
 
 const IkonHake = styled.img`
   position: absolute;
@@ -213,10 +210,10 @@ function ToggleKnapp({
 export default function Klagebehandling() {
   const { klage_state, klage_dispatch } = klageReducer();
   const location = useLocation();
-  const dispatch = useDispatch();
-  const klage: IKlage = useSelector(velgKlage);
-  const kodeverk = useSelector(velgKodeverk);
-  const innstillinger = useSelector(velgInnstillinger);
+  const dispatch = useAppDispatch();
+  const klage: IKlage = useAppSelector(velgKlage);
+  const kodeverk = useAppSelector(velgKodeverk);
+  const innstillinger = useAppSelector(velgInnstillinger);
 
   const [kodeverkLaster, settKodeverkLaster] = useState<boolean>(true);
 

@@ -1,5 +1,4 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, combineEpics, StateObservable } from "redux-observable";
 import { Observable } from "rxjs";
 import { combineReducers } from "redux";
@@ -17,7 +16,7 @@ import admin, { ADMIN_EPICS } from "./moduler/admin";
 
 const epics: Array<(
   $action: ActionsObservable<PayloadAction<any>>,
-  $state: StateObservable<RootStateOrAny>,
+  $state: StateObservable<RootState>,
   ajaxDelete: AjaxCreationMethod,
   getJSON: AjaxCreationMethod,
   put: AjaxCreationMethod,

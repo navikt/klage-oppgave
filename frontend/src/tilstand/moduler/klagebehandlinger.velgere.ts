@@ -1,6 +1,3 @@
-import { RootStateOrAny } from "react-redux";
-import { IKlage } from "./klagebehandling";
+import { RootState } from "../root";
 
-export function velgKlage(state: RootStateOrAny) {
-  return state.klagebehandling as IKlage;
-}
+export const velgKlage = (state: RootState) => state.klagebehandling;

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import styled from "styled-components";
+import EtikettBase from "nav-frontend-etiketter";
+import { Knapp } from "nav-frontend-knapper";
 import Oppsett from "./Oppsett";
 import FiltrerbarHeader, { settFilter } from "./Tabell/FiltrerbarHeader";
 import { Filter, IKodeverkVerdi } from "../tilstand/moduler/oppgave";
-import { useDispatch, useSelector } from "react-redux";
 import { velgFiltrering, velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
-import EtikettBase from "nav-frontend-etiketter";
-import { Knapp } from "nav-frontend-knapper";
 import {
   velgInnstillinger,
   velgEnheter,
@@ -17,7 +18,7 @@ import {
   hentInnstillingerHandling,
   settInnstillingerHandling,
 } from "../tilstand/moduler/meg";
-import styled from "styled-components";
+import { useAppDispatch } from "../tilstand/konfigurerTilstand";
 
 function initState(filter: Array<string> | undefined) {
   if ("undefined" === typeof filter) {
@@ -32,7 +33,7 @@ function initState(filter: Array<string> | undefined) {
 const TableRow = styled.td``;
 
 const Innstillinger = (): JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const filtrering = useSelector(velgFiltrering);
   const faner = {};
   const meg = useSelector(velgMeg);
