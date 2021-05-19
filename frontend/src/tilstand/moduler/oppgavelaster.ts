@@ -3,7 +3,6 @@ import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { switchMap, withLatestFrom } from "rxjs/operators";
 import { of } from "rxjs";
 import { RootStateOrAny } from "react-redux";
-import { oppgaveSlice } from "./oppgave";
 
 //==========
 // Type defs

@@ -93,8 +93,8 @@ describe("TILDEL 'Meg' epos", () => {
             type: "saksbehandler/TILDELT",
           },
           e: {
-            payload: {},
-            type: "klagebehandlinger/SETT_FERDIGLASTET",
+            payload: undefined,
+            type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           d: {
             payload: {
@@ -201,7 +201,8 @@ describe("TILDEL 'Meg' epos", () => {
             type: "toaster/SETT",
           },
           x: {
-            type: "klagebehandlinger/SETT_FERDIGLASTET",
+            payload: undefined,
+            type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
             payload: undefined,
@@ -248,7 +249,8 @@ describe("TILDEL 'Meg' epos", () => {
             type: "toaster/SETT",
           },
           x: {
-            type: "klagebehandlinger/SETT_FERDIGLASTET",
+            payload: undefined,
+            type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
             payload: undefined,
@@ -296,7 +298,8 @@ describe("TILDEL 'Meg' epos", () => {
             type: "toaster/SETT",
           },
           x: {
-            type: "klagebehandlinger/SETT_FERDIGLASTET",
+            payload: undefined,
+            type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
             payload: undefined,
@@ -347,7 +350,8 @@ describe("TILDEL 'Meg' epos", () => {
             type: "toaster/SETT",
           },
           x: {
-            type: "klagebehandlinger/SETT_FERDIGLASTET",
+            payload: undefined,
+            type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
             payload: undefined,
@@ -398,7 +402,8 @@ describe("TILDEL 'Meg' epos", () => {
             type: "toaster/SETT",
           },
           x: {
-            type: "klagebehandlinger/SETT_FERDIGLASTET",
+            payload: undefined,
+            type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
             payload: undefined,
