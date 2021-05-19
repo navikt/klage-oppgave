@@ -9,6 +9,7 @@ import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
 import { Utfall } from "./Utfall";
 import { velgKodeverk } from "../../../tilstand/moduler/oppgave.velgere";
 import {
+  lagreHjemler,
   lagreInternVurdering,
   lagreOmgjoeringsgrunn,
   lagreUtfall,
@@ -51,6 +52,9 @@ export function UtfallSkjema() {
   const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(
     faaOmgjoeringsgrunnObjekt(klage.vedtak[0].grunn) ?? gyldigeOmgjoeringsgrunner[0]
   );
+
+  const [valgteHjemler, settValgteHjemler] = useState<Filter[]>([]);
+
   const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering ?? "");
 
   function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi | null): IKodeverkVerdi[] {
@@ -89,6 +93,17 @@ export function UtfallSkjema() {
     );
   }
 
+  function velgHjemler(hjemler: Filter[]) {
+    settValgteHjemler(hjemler);
+    dispatch(
+      lagreHjemler({
+        klagebehandlingid: klage.id,
+        vedtakid: klage.vedtak[0].id,
+        hjemler: hjemler.map((f) => f.value as string),
+      })
+    );
+  }
+
   function endreInternVurdering(internVurdering: string) {
     settInternVurdering(internVurdering);
     dispatch(
@@ -121,7 +136,11 @@ export function UtfallSkjema() {
         <Utfall utfallAlternativer={kodeverk.utfall} utfall={utfall} velgUtfall={velgUtfall} />
       </HeaderRow>
       <Row>
-        <BasertPaaHjemmel />
+        <BasertPaaHjemmel
+          tema={klage.tema}
+          valgteHjemler={valgteHjemler}
+          velgHjemler={velgHjemler}
+        />
       </Row>
       {visOmgjoeringsgrunner() && (
         <Row>

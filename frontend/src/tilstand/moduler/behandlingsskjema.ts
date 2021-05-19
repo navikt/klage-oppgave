@@ -22,6 +22,12 @@ export interface IOmgjoeringsgrunnPayload {
   omgjoeringsgrunn: string | null;
 }
 
+export interface IHjemlerPayload {
+  klagebehandlingid: string;
+  vedtakid: string;
+  hjemler: string[];
+}
+
 export interface IInternVurderingPayload {
   klagebehandlingid: string;
   internVurdering: string;
@@ -50,8 +56,8 @@ const initialStateBehandlingsVedtak = {
   id: "",
   utfall: null as null | string,
   brevMottakere: [],
-  hjemler: [],
-  grunn: "",
+  hjemler: [] as string[],
+  grunn: null as null | string,
   klagebehandlingVersjon: 3,
 };
 
@@ -74,10 +80,17 @@ export const behandlingsvedtakSlice = createSlice({
       return state;
     },
     SETT_OMGJOERINGSGRUNN: (state, action: PayloadAction<IOmgjoeringsgrunnPayload>) => {
-      return { ...state, omgjoeringsgrunn: action.payload.omgjoeringsgrunn };
+      return { ...state, grunn: action.payload.omgjoeringsgrunn };
     },
     OMGJOERINGSGRUNN_SATT: (state) => {
       console.log("Omgjøringsgrunn satt");
+      return state;
+    },
+    SETT_HJEMLER: (state, action: PayloadAction<IHjemlerPayload>) => {
+      return { ...state, hjemler: action.payload.hjemler };
+    },
+    HJEMLER_SATT: (state) => {
+      console.log("Hjemler satt");
       return state;
     },
   },
@@ -104,6 +117,8 @@ export const lagreUtfall = createAction<IUtfallPayload>("behandlingsvedtak/SETT_
 export const lagreOmgjoeringsgrunn = createAction<IOmgjoeringsgrunnPayload>(
   "behandlingsvedtak/SETT_OMGJOERINGSGRUNN"
 );
+
+export const lagreHjemler = createAction<IHjemlerPayload>("behandlingsvedtak/SETT_HJEMLER");
 
 export const oppdatertBehandlingsskjema = createAction<boolean>(
   "klagebehandling/BEHANDLINGSSKJEMA_OPPDATERT"
@@ -194,10 +209,38 @@ export function lagreOmgjoeringsgrunnEpos(
   );
 }
 
+export function lagreHjemlerEpos(
+  action$: ActionsObservable<PayloadAction<IHjemlerPayload>>,
+  state$: StateObservable<RootStateOrAny>,
+  { put }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(lagreHjemler.type),
+    withLatestFrom(state$),
+    switchMap(([action]) => {
+      const lagreHjemlerUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/hjemler`;
+      return put(
+        lagreHjemlerUrl,
+        { hjemler: action.payload.hjemler, klagebehandlingVersjon: 3 },
+        { "Content-Type": "application/json" }
+      )
+        .pipe(map((payload: { response: any }) => lagreHjemler(payload.response)))
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
+          catchError((error) => {
+            let err = error?.response?.detail || "ukjent feil";
+            return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
+          })
+        );
+    })
+  );
+}
+
 export const BEHANDLINGSSKJEMA_EPICS = [
   lagreInternVurderingEpos,
   lagreUtfallEpos,
   lagreOmgjoeringsgrunnEpos,
+  lagreHjemlerEpos,
 ];
 
 //==========

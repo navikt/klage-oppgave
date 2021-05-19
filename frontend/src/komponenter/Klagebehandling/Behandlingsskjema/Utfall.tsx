@@ -2,12 +2,12 @@ import { Select } from "nav-frontend-skjema";
 import React from "react";
 import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 
-interface ResultatProps {
+interface UtfallProps {
   utfallAlternativer: IKodeverkVerdi[];
   utfall: IKodeverkVerdi | null;
   velgUtfall: (utfall: IKodeverkVerdi | null) => void;
 }
-export function Utfall({ utfallAlternativer, utfall, velgUtfall }: ResultatProps) {
+export function Utfall({ utfallAlternativer, utfall, velgUtfall }: UtfallProps) {
   return (
     <Select
       label="Utfall/resultat:"
