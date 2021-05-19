@@ -1,7 +1,6 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, Observable, of } from "rxjs";
+import { concat } from "rxjs";
 import {
   catchError,
   map,
@@ -11,12 +10,12 @@ import {
   timeout,
   withLatestFrom,
 } from "rxjs/operators";
-import { provIgjenStrategi } from "../../utility/rxUtils";
 import { AjaxCreationMethod, ajaxDelete } from "rxjs/internal-compatibility";
+import { provIgjenStrategi } from "../../utility/rxUtils";
 import { toasterSett, toasterSkjul } from "./toaster";
-import { IInnstillinger, sattInnstillinger, settInnstillingerHandling } from "./meg";
-import { SETT } from "./router";
+import { IInnstillinger } from "./meg";
 import { IKodeverkVerdi } from "./oppgave";
+import { RootState } from "../root";
 
 //==========
 // Interfaces
@@ -305,7 +304,7 @@ const R = require("ramda");
 
 export function klagebehandlingEpos(
   action$: ActionsObservable<PayloadAction<string>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -342,7 +341,7 @@ export function klagebehandlingEpos(
 
 export function klagebehandlingDokumenterAlleEpos(
   action$: ActionsObservable<PayloadAction<IDokumentParams>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -387,7 +386,7 @@ export function klagebehandlingDokumenterAlleEpos(
 
 export function HentDokumentForhandsvisningEpos(
   action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { get }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -401,7 +400,7 @@ export function HentDokumentForhandsvisningEpos(
 
 export function klagebehandlingDokumenterTilordnedeEpos(
   action$: ActionsObservable<PayloadAction<IDokumentParams>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -446,7 +445,7 @@ export function klagebehandlingDokumenterTilordnedeEpos(
 
 export function TilordneKlageDokumentEpos(
   action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { post }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -488,7 +487,7 @@ export function TilordneKlageDokumentEpos(
 
 export function FradelKlageDokumentEpos(
   action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
-  state$: StateObservable<RootStateOrAny>
+  state$: StateObservable<RootState>
 ) {
   return action$.pipe(
     ofType(fradelDokumenterHandling.type),

@@ -1,7 +1,6 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, from, of } from "rxjs";
+import { concat } from "rxjs";
 import {
   catchError,
   concatAll,
@@ -13,10 +12,10 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { AjaxCreationMethod, AjaxObservable, ajaxPost } from "rxjs/internal-compatibility";
+import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
 import { toasterSett, toasterSkjul } from "./toaster";
-import { ReactFragment, ReactNode } from "react";
+import { RootState } from "../root";
 
 //==========
 // Interfaces
@@ -184,7 +183,7 @@ let resultData: any;
 
 export function hentMegEpos(
   action$: ActionsObservable<PayloadAction>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -250,7 +249,7 @@ export function hentMegEpos(
 
 export function hentInnstillingerEpos(
   action$: ActionsObservable<PayloadAction<IHentInnstilingerPayload>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -284,7 +283,7 @@ export function hentInnstillingerEpos(
 
 export function settInnstillingerEpos(
   action$: ActionsObservable<PayloadAction<IInnstillingerPayload>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { post }: AjaxCreationMethod
 ) {
   return action$.pipe(

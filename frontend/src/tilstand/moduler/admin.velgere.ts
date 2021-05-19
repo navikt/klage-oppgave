@@ -1,5 +1,5 @@
-import { RootStateOrAny } from "react-redux";
+import { RootState } from "../root";
 
-export function velgAdmin(state: RootStateOrAny) {
+export function velgAdmin(state: RootState) {
   return state.admin;
 }

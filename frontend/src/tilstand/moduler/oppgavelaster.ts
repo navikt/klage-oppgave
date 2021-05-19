@@ -2,8 +2,7 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { switchMap, withLatestFrom } from "rxjs/operators";
 import { of } from "rxjs";
-import { RootStateOrAny } from "react-redux";
-import { oppgaveSlice } from "./oppgave";
+import { RootState } from "../root";
 
 //==========
 // Type defs
@@ -18,11 +17,12 @@ export interface IOppgaveLaster {
 export const initialState = <IOppgaveLaster>{
   laster: false,
 };
+
 export const slice = createSlice({
   name: "oppgavelaster",
   initialState: initialState,
   reducers: {
-    SETT_LASTET: (state, action) => ({
+    SETT_LASTET: (state, action: PayloadAction<boolean>) => ({
       laster: action.payload,
     }),
   },
@@ -42,7 +42,7 @@ export const settOppgaverFerdigLastet = createAction("oppgavelaster/SETT_FERDIG_
 //==========
 export function settLasterEpos(
   action$: ActionsObservable<PayloadAction>,
-  state$: StateObservable<RootStateOrAny>
+  state$: StateObservable<RootState>
 ) {
   return action$.pipe(
     ofType(settOppgaverLaster.type),
@@ -52,7 +52,7 @@ export function settLasterEpos(
 }
 export function settFerdigLastetEpos(
   action$: ActionsObservable<PayloadAction>,
-  state$: StateObservable<RootStateOrAny>
+  state$: StateObservable<RootState>
 ) {
   return action$.pipe(
     ofType(settOppgaverFerdigLastet.type),

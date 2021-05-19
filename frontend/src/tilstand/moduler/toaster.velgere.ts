@@ -1,8 +1,8 @@
-import { RootStateOrAny } from "react-redux";
+import { RootState } from "../root";
 
-export function velgToaster(state: RootStateOrAny) {
+export function velgToaster(state: RootState) {
   return state.toaster;
 }
-export function velgToasterMelding(state: RootStateOrAny) {
+export function velgToasterMelding(state: RootState) {
   return state.toaster.feilmelding;
 }

@@ -1,11 +1,9 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { catchError, delay, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
-import { concat, of } from "rxjs";
-import { RootStateOrAny } from "react-redux";
+import { delay, switchMap, withLatestFrom } from "rxjs/operators";
+import { of } from "rxjs";
 import { AlertStripeType } from "nav-frontend-alertstriper";
-import { provIgjenStrategi } from "../../utility/rxUtils";
-import { feiletHandling } from "./klagebehandling";
+import { RootState } from "../root";
 
 //==========
 // Type defs
@@ -55,7 +53,7 @@ export const toasterSkjul = createAction("toaster/SKJUL");
 //==========
 export function visToasterEpos(
   action$: ActionsObservable<PayloadAction<IToaster>>,
-  state$: StateObservable<RootStateOrAny>
+  state$: StateObservable<RootState>
 ) {
   return action$.pipe(
     ofType(toasterSett.type),

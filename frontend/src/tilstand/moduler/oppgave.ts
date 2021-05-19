@@ -1,7 +1,6 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, of, timer } from "rxjs";
+import { concat, of } from "rxjs";
 import {
   catchError,
   map,
@@ -17,8 +16,8 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { settEnhetHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling } from "./klagebehandling";
-import { fradelMegHandling, PayloadType, tildelMegHandling } from "./saksbehandler";
 import { settOppgaverFerdigLastet } from "./oppgavelaster";
+import { RootState } from "../root";
 
 const R = require("ramda");
 const { ascend, descend, prop, sort } = R;
@@ -41,9 +40,13 @@ export interface OppgaveRad {
   saksbehandler: string;
 }
 
+export enum Projeksjon {
+  UTVIDET = "UTVIDET",
+}
+
 export interface OppgaveRadMedFunksjoner extends OppgaveRad {
   settValgtOppgave: Function;
-  utvidetProjeksjon: "UTVIDET" | boolean | undefined;
+  utvidetProjeksjon?: Projeksjon;
 }
 
 export interface Filter {
@@ -297,14 +300,13 @@ export function buildQuery(url: string, data: OppgaveParams) {
 
 export function hentEnkeltOppgaveEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(enkeltOppgave.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      let rader = state.klagebehandlinger.rader.slice();
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
@@ -332,7 +334,7 @@ export function hentEnkeltOppgaveEpos(
 
 export function hentKodeverk(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -353,7 +355,7 @@ export function hentKodeverk(
 
 export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -393,7 +395,7 @@ export function hentOppgaverEpos(
 
 export function hentUtgaatteFristerEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(

@@ -19,13 +19,12 @@ import {
 } from "../tilstand/moduler/meg";
 import styled from "styled-components";
 
-function initState(filter: Array<string> | undefined) {
-  if ("undefined" === typeof filter) {
-    return [];
-  }
-  if (!Array.isArray(filter)) return [{ label: filter }];
-  return filter.map(function (f: string) {
-    return { label: f, value: f };
+function initState(filter: string[] | Filter[]): Filter[] {
+  return filter.map((f) => {
+    if (typeof f === "string") {
+      return { label: f, value: f };
+    }
+    return f;
   });
 }
 
@@ -39,11 +38,11 @@ const Innstillinger = (): JSX.Element => {
   const enheter = useSelector(velgEnheter);
   const innstillinger = useSelector(velgInnstillinger);
   const [reload, settReload] = useState<boolean>(false);
-  const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
+  const [typeFilter, settTypeFilter] = useState<Filter[]>([]);
   const [aktiveTyper, settAktiveTyper] = useState<Filter[]>(initState(filtrering.typer));
-  const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
+  const [hjemmelFilter, settHjemmelFilter] = useState<Filter[]>([]);
   const [aktiveHjemler, settAktiveHjemler] = useState<Filter[]>(initState(filtrering.hjemler));
-  const [temaFilter, settTemaFilter] = useState<string[] | undefined>(undefined);
+  const [temaFilter, settTemaFilter] = useState<Filter[]>([]);
   const [aktiveTemaer, settAktiveTemaer] = useState<Filter[]>(initState(filtrering.temaer));
   const [aktiveFaner, settAktiveFaner] = useState<Faner>(faner);
   const [lovligeTemaer, settLovligeTemaer] = useState<Filter[]>([]);
@@ -120,27 +119,15 @@ const Innstillinger = (): JSX.Element => {
   }, [reload]);
 
   const filtrerTema = (filtre: Filter[]) => {
-    if (!filtre.length) {
-      settTemaFilter(undefined);
-    } else {
-      settTemaFilter(filtre.map((f) => f.value as string));
-    }
+    settTemaFilter(filtre);
     lagreInnstillinger();
   };
   const filtrerType = (filtre: Filter[]) => {
-    if (!filtre.length) {
-      settTypeFilter(undefined);
-    } else {
-      settTypeFilter(filtre.map((f) => f.value as string));
-    }
+    settTypeFilter(filtre);
     lagreInnstillinger();
   };
   const filtrerHjemmel = (filtre: Filter[]) => {
-    if (!filtre.length) {
-      settHjemmelFilter(undefined);
-    } else {
-      settHjemmelFilter(filtre.map((f) => f.value as string));
-    }
+    settHjemmelFilter(filtre);
     lagreInnstillinger();
   };
   return (

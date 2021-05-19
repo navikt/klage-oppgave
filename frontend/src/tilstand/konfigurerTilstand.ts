@@ -26,4 +26,6 @@ const reduxStore = configureStore({
 
 epicMiddleware.run(rootEpic);
 
+export type AppDispatch = typeof reduxStore.dispatch;
+
 export default reduxStore;

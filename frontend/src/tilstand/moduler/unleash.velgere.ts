@@ -1,6 +1,5 @@
-import { RootStateOrAny } from "react-redux";
-import { IFeatureToggle, IFeatureToggles } from "./unleash";
+import { RootState } from "../root";
 
-export function velgFeatureToggles(state: RootStateOrAny) {
-  return state.featureToggles as IFeatureToggles;
+export function velgFeatureToggles(state: RootState) {
+  return state.featureToggles;
 }

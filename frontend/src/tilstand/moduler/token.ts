@@ -1,18 +1,10 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, from, of } from "rxjs";
-import {
-  catchError,
-  concatAll,
-  map,
-  mergeMap,
-  retryWhen,
-  timeout,
-  withLatestFrom,
-} from "rxjs/operators";
+import { of } from "rxjs";
+import { catchError, map, mergeMap, retryWhen, timeout, withLatestFrom } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { AjaxCreationMethod, AjaxObservable } from "rxjs/internal-compatibility";
+import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { RootState } from "../root";
 
 //==========
 // Interfaces
@@ -52,7 +44,7 @@ export const feiletHandling = createAction<string>("expireToken/FEILET");
 //==========
 export function expireTokenEpos(
   action$: ActionsObservable<PayloadAction<string>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(

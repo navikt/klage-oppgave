@@ -1,5 +1,4 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { concat, of } from "rxjs";
 import { catchError, mergeMap, switchMap, timeout, withLatestFrom } from "rxjs/operators";
@@ -7,6 +6,7 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { OppgaveParams, oppgaveRequest } from "./oppgave";
 import { settOppgaverFerdigLastet, settOppgaverLaster } from "./oppgavelaster";
+import { RootState } from "../root";
 
 //==========
 // Type defs
@@ -56,7 +56,7 @@ const tildeltHandling = createAction<TildelType>("saksbehandler/TILDELT");
 //==========
 export function tildelEpos(
   action$: ActionsObservable<PayloadAction<PayloadType>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { post }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -106,7 +106,7 @@ export function settLasterEpos(action$: ActionsObservable<PayloadAction<PayloadT
 
 export function fradelEpos(
   action$: ActionsObservable<PayloadAction<PayloadType>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { post }: AjaxCreationMethod
 ) {
   return action$.pipe(

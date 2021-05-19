@@ -1,12 +1,8 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny } from "react-redux";
-import { ActionsObservable, combineEpics, StateObservable } from "redux-observable";
-import { Observable } from "rxjs";
+import { combineEpics } from "redux-observable";
 import { combineReducers } from "redux";
 import klagebehandlinger, { OPPGAVER_EPICS } from "./moduler/oppgave";
 import meg, { MEG_EPICS } from "./moduler/meg";
 import saksbehandler, { TILDEL_EPICS } from "./moduler/saksbehandler";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import routing, { ROUTING_EPICS } from "./moduler/router";
 import toaster, { TOASTER_EPICS } from "./moduler/toaster";
 import oppgavelaster, { OPPGAVELASTER_EPOS } from "./moduler/oppgavelaster";
@@ -15,14 +11,7 @@ import klagebehandling, { KLAGEBEHANDLING_EPICS } from "./moduler/klagebehandlin
 import token, { EXPIRE_EPICS } from "./moduler/token";
 import admin, { ADMIN_EPICS } from "./moduler/admin";
 
-const epics: Array<(
-  $action: ActionsObservable<PayloadAction<any>>,
-  $state: StateObservable<RootStateOrAny>,
-  ajaxDelete: AjaxCreationMethod,
-  getJSON: AjaxCreationMethod,
-  put: AjaxCreationMethod,
-  post: AjaxCreationMethod
-) => Observable<PayloadAction<any>>> = [
+const epics = [
   ...OPPGAVER_EPICS,
   ...MEG_EPICS,
   ...OPPGAVELASTER_EPOS,

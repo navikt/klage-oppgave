@@ -1,15 +1,14 @@
-import { RootStateOrAny } from "react-redux";
-import { IEnhetData, IInnstillinger } from "./meg";
+import { RootState } from "../root";
 
-export function velgMeg(state: RootStateOrAny) {
+export function velgMeg(state: RootState) {
   return state.meg;
 }
-export function velgEnheter(state: RootStateOrAny) {
-  return state.meg.enheter as Array<IEnhetData>;
+export function velgEnheter(state: RootState) {
+  return state.meg.enheter;
 }
-export function valgtEnhet(state: RootStateOrAny) {
+export function valgtEnhet(state: RootState) {
   return state.meg.valgtEnhet;
 }
-export function velgInnstillinger(state: RootStateOrAny) {
-  return state.meg.innstillinger as IInnstillinger;
+export function velgInnstillinger(state: RootState) {
+  return state.meg.innstillinger;
 }
