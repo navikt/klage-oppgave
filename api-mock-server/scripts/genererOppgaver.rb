@@ -21,7 +21,8 @@ def init_oppgaver()
                 navn TEXT,
                 klagebehandlingVersjon INTEGER,
                 erMedunderskriver INTEGER,
-                finalized TEXT
+                finalized TEXT,
+                ferdigstiltFom TEXT
             )
             "
   rescue SQLite3::Exception => e
@@ -35,11 +36,11 @@ def init_oppgaver()
 end
 
 
-def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon, erMedunderskriver, finalized)
+def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon, erMedunderskriver, finalized,ferdigstiltFom)
   begin
 	  db = SQLite3::Database.open ARGV[0]
-      db.execute("INSERT INTO Oppgaver (Id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon, erMedunderskriver, finalized) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                        [id, type, tema, hjemmel, frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon, erMedunderskriver && 1 || 0, finalized.to_s])
+      db.execute("INSERT INTO Oppgaver (Id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon, erMedunderskriver, finalized, ferdigstiltFom) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
+                                        [id, type, tema, hjemmel, frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon, erMedunderskriver && 1 || 0, finalized.to_s, ferdigstiltFom.to_s])
 
   rescue SQLite3::Exception => e
     puts "Exception occurred"
@@ -66,8 +67,12 @@ def tilfeldigTema()
   end
 end
 
-def nestenTilfeldigSaksbehandler()
-  return rand(15) <= 1 ?  "Z994488" : Faker::Internet.username(specifier: 6..8)
+def saksbehandler(teller)
+  return teller <= 3 ?  "Z994488" : ""
+end
+
+def ferdigstilt(teller)
+  return teller <= 3 ?  Faker::Date.backward(days: 3) : ""
 end
 
 def tilfeldigHjemmel()
@@ -81,7 +86,7 @@ def tilfeldigType()
     return kodeverk["type"][rand(0...1)]["id"].to_s;
 end
 
-def lagData()
+def lagData(teller)
   id = Faker::Number.number(digits: 7)
   type = tilfeldigType()
   tema = tilfeldigTema()
@@ -89,19 +94,20 @@ def lagData()
   mottatt = Faker::Date.backward(days: 365)
   finalized = Faker::Date.backward(days: 5)
   hjemmel = tilfeldigHjemmel()
+  ferdigstiltFom = ferdigstilt(teller)
   fnr = Faker::Number.number(digits: 11)
   navn = Faker::Movies::StarWars.character
   versjon = Faker::Number.number(digits: 2)
   erMedunderskriver = [true, false].shuffle
   finalizedRand = [true, false].shuffle
-  insert_oppgave(id, type, tema, hjemmel, frist, mottatt, nestenTilfeldigSaksbehandler(), fnr, navn, versjon, erMedunderskriver, finalized)
+  insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler(teller), fnr, navn, versjon, erMedunderskriver, finalized,ferdigstiltFom)
 end
 
 init_oppgaver()
 
 i=0
 loop do
-  lagData()
+  lagData(i)
   i += 1;
   if i == 500
     break

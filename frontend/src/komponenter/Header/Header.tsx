@@ -63,8 +63,11 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
     return enheter[enhetNo]?.navn ?? "";
   };
 
+  console.info(person.enhetId);
+
   return (
     <BrukerBoks className={"bruker-boks"}>
+      <div style={{ color: "white" }}>{JSON.stringify(person.enhetId)}</div>
       <button
         className={classNames(aapen ? "header__lukkeknapp" : "header__aapneknapp")}
         onClick={() => setAapen((a) => !a)}
@@ -87,6 +90,7 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
                 className={classNames({ enhet: true, active: person.enhetId == enhet.id })}
                 key={enhet.id}
               >
+                *
                 <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
                   {enhet.id} {enhet.navn}
                 </NavLink>

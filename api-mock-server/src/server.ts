@@ -269,6 +269,13 @@ app.post("/klagebehandlinger/:oppgaveid/dokumenter", async (req, res) => {
 });
 
 app.post(
+  "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/vedlegg",
+  async (req, res) => {
+    res.status(200).send("OK");
+  }
+);
+
+app.post(
   "/ansatte/:id/klagebehandlinger/:oppgaveid/saksbehandlertildeling",
   async (req, res) => {
     const result = await tildelSaksbehandler({

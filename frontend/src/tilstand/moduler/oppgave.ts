@@ -240,6 +240,7 @@ export interface OppgaveParams {
   tildeltSaksbehandler?: string;
   enhetId: string;
   projeksjon?: "UTVIDET";
+  fullforte?: string;
   transformasjoner: Transformasjoner;
 }
 
@@ -253,6 +254,7 @@ export default oppgaveSlice.reducer;
 export const { HENTET_KODEVERK, MOTTATT, FEILET, HENTET_UGATTE } = oppgaveSlice.actions;
 export const enkeltOppgave = createAction<OppgaveParams>("klagebehandlinger/HENT_ENKELTOPPGAVE");
 export const oppgaveRequest = createAction<OppgaveParams>("klagebehandlinger/HENT");
+export const fullforteRequest = createAction<OppgaveParams>("klagebehandlinger/HENT_FULLFORTE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("klagebehandlinger/UTSNITT");
 export const oppgaveHentingFeilet = createAction("klagebehandlinger/FEILET");
 export const hentUtgatte = createAction<OppgaveParams>("klagebehandlinger/HENT_UTGAATTE");

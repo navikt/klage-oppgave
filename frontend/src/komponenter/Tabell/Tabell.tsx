@@ -1,5 +1,6 @@
 import {
   Filter,
+  fullforteRequest,
   hentUtgatte,
   IKodeverkVerdi,
   kodeverkRequest,
@@ -51,6 +52,10 @@ const Feil = styled.div`
 const IkkeFiltrerbarHeader = styled.th`
   display: block;
   padding: 1em;
+`;
+
+const FullforteOppgaver = styled.div`
+  margin: 4em 0 0 0;
 `;
 
 function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
@@ -338,6 +343,33 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           },
         })
       );
+      dispatch(
+        fullforteRequest({
+          ident: ident,
+          antall: filter_state.antall,
+          start: filter_state.start || 0,
+          enhetId: enhetId,
+          fullforte: "2021-05-20",
+          projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
+          tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
+          transformasjoner: {
+            filtrering: {
+              hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
+              typer: toValue(filter_state.transformasjoner.filtrering.typer),
+              temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+            },
+            sortering: {
+              type: sortType,
+              frist:
+                sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
+              mottatt:
+                sortType === "mottatt"
+                  ? sortOrder
+                  : filter_state.transformasjoner.sortering.mottatt,
+            },
+          },
+        })
+      );
     }
   };
 
@@ -514,7 +546,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   if (sideLaster) {
     return (
       <div style={{ width: "100%", textAlign: "center", padding: 20 }}>
-        {JSON.stringify(sideLaster)}
         <NavFrontendSpinner />
       </div>
     );
@@ -608,6 +639,19 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
             klagebehandlinger,
             filter_state?.projeksjon || visFnr
           )}
+
+          {location.pathname.startsWith("/mineoppgaver") && (
+            <>
+              <FullforteOppgaver>Fullførte oppgaver</FullforteOppgaver>
+              {genererTabellRader(
+                settValgtOppgave,
+                klagebehandlinger,
+                filter_state?.projeksjon || visFnr
+              )}
+              )
+            </>
+          )}
+
           {klagebehandlinger.meta.sider > 1 && (
             <tr>
               <td colSpan={visFnr ? 7 : 5}>

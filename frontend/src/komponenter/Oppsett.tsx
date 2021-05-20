@@ -24,6 +24,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import { hentExpiry } from "../tilstand/moduler/token";
 import { kodeverkRequest } from "../tilstand/moduler/oppgave";
 import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
+import { toasterSkjul } from "../tilstand/moduler/toaster";
 
 export default function Oppsett({
   visMeny,
@@ -105,7 +106,7 @@ export default function Oppsett({
         </nav>
         <div className={`toaster ${visFeilmelding.display ? "active" : ""}`}>
           {visFeilmelding.display && (
-            <Alertstripe type={visFeilmelding.type}>
+            <Alertstripe onClick={() => dispatch(toasterSkjul())} type={visFeilmelding.type}>
               <span>{feilmelding}</span>
             </Alertstripe>
           )}
