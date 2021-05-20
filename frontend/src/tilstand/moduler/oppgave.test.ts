@@ -61,6 +61,34 @@ describe("Oppgave epos", () => {
       "/ansatte/ZATHRAS/klagebehandlinger?temaer=43%2C44&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&erTildeltSaksbehandler=false&enhetId=42"
     );
   });
+  /**
+   * Test queryBuilder
+   */
+  test("+++ QUERYBUILDER Ferdigestilte", () => {
+    const inputValues = {
+      ident: "ZATHRAS",
+      enhetId: "42",
+      antall: 2,
+      start: 0,
+      ferdigstiltFom: "2020-11-02",
+      transformasjoner: {
+        sortering: {
+          type: "frist" as "frist",
+          frist: "synkende" as "synkende",
+          mottatt: "synkende" as "synkende",
+        },
+        filtrering: {
+          typer: [],
+          hjemler: [],
+          temaer: ["43", "44"],
+        },
+      },
+    };
+    const url = buildQuery("/ansatte/ZATHRAS/klagebehandlinger", inputValues);
+    expect(url).toStrictEqual(
+      "/ansatte/ZATHRAS/klagebehandlinger?temaer=43%2C44&antall=2&start=0&sortering=FRIST&rekkefoelge=SYNKENDE&ferdigstiltFom=2020-11-02&erTildeltSaksbehandler=false&enhetId=42"
+    );
+  });
 
   test("+++ QUERYBUILDER type", () => {
     const inputValues = {

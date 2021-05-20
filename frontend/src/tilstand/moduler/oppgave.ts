@@ -103,6 +103,9 @@ export interface Transformasjoner {
 
 export type OppgaveState = {
   rader?: OppgaveRad[];
+  ferdigstilteKlager?: {
+    rader: OppgaveRad[];
+  };
   transformasjoner: Transformasjoner;
   meta: Metadata;
   lasterData: boolean;
@@ -171,6 +174,9 @@ export const oppgaveSlice = createSlice({
   name: "klagebehandlinger",
   initialState: {
     rader: [],
+    ferdigstilteKlager: {
+      rader: [],
+    },
     lasterData: true,
     kodeverk: {},
     meta: {
@@ -212,6 +218,10 @@ export const oppgaveSlice = createSlice({
       }
       return state;
     },
+    MOTTATT_FERDIGSTILTE: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
+      state = { ...state, ferdigstilteKlager: { rader: action.payload.klagebehandlinger } };
+      return state;
+    },
     HENTET_UGATTE: (state, action: PayloadAction<RaderMedMetadataUtvidet>) => {
       state.meta = { ...state.meta, utgaatteFrister: action.payload.antall };
       return state;
@@ -240,7 +250,7 @@ export interface OppgaveParams {
   tildeltSaksbehandler?: string;
   enhetId: string;
   projeksjon?: "UTVIDET";
-  fullforte?: string;
+  ferdigstiltFom?: string | undefined;
   transformasjoner: Transformasjoner;
 }
 
@@ -251,10 +261,16 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const { HENTET_KODEVERK, MOTTATT, FEILET, HENTET_UGATTE } = oppgaveSlice.actions;
+export const {
+  HENTET_KODEVERK,
+  MOTTATT_FERDIGSTILTE,
+  MOTTATT,
+  FEILET,
+  HENTET_UGATTE,
+} = oppgaveSlice.actions;
 export const enkeltOppgave = createAction<OppgaveParams>("klagebehandlinger/HENT_ENKELTOPPGAVE");
 export const oppgaveRequest = createAction<OppgaveParams>("klagebehandlinger/HENT");
-export const fullforteRequest = createAction<OppgaveParams>("klagebehandlinger/HENT_FULLFORTE");
+export const ferdigstilteRequest = createAction<OppgaveParams>("klagebehandlinger/HENT_FULLFORTE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("klagebehandlinger/UTSNITT");
 export const oppgaveHentingFeilet = createAction("klagebehandlinger/FEILET");
 export const hentUtgatte = createAction<OppgaveParams>("klagebehandlinger/HENT_UTGAATTE");
@@ -283,6 +299,7 @@ export function buildQuery(url: string, data: OppgaveParams) {
     query.push(`rekkefoelge=${data.transformasjoner.sortering.frist.toLocaleUpperCase()}`);
   else query.push(`rekkefoelge=${data.transformasjoner.sortering.mottatt.toLocaleUpperCase()}`);
   if (data.projeksjon) query.push(`projeksjon=${data.projeksjon}`);
+  if (data.ferdigstiltFom) query.push(`ferdigstiltFom=${data.ferdigstiltFom}`);
   if (data.tildeltSaksbehandler) {
     query.push(`tildeltSaksbehandler=${data.tildeltSaksbehandler}`);
     query.push(`erTildeltSaksbehandler=true`);
@@ -353,6 +370,46 @@ export function hentKodeverk(
   );
 }
 
+export function hentFullforteOppgaverEpos(
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
+  state$: StateObservable<RootStateOrAny>,
+  { getJSON }: AjaxCreationMethod
+) {
+  return action$.pipe(
+    ofType(ferdigstilteRequest.type),
+    withLatestFrom(state$),
+    switchMap(([action, state]) => {
+      let oppgaveUrl = buildQuery(
+        `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
+        action.payload
+      );
+      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl)
+        .pipe(
+          timeout(5000),
+          map((klagebehandlinger) => {
+            return MOTTATT_FERDIGSTILTE({
+              start: action.payload.start,
+              antall: action.payload.antall,
+              tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
+              projeksjon: action.payload.projeksjon,
+              transformasjoner: action.payload.transformasjoner,
+              ...klagebehandlinger,
+            } as RaderMedMetadataUtvidet);
+          })
+        )
+        .pipe(
+          mergeMap((value) => {
+            return concat([value, settOppgaverFerdigLastet()]);
+          })
+        );
+      return hentOppgaver.pipe(
+        retryWhen(provIgjenStrategi()),
+        catchError((error) => of(FEILET(error)))
+      );
+    })
+  );
+}
+
 export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>,
@@ -369,16 +426,26 @@ export function hentOppgaverEpos(
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl)
         .pipe(
           timeout(5000),
-          map((klagebehandlinger) =>
-            MOTTATT({
-              start: action.payload.start,
-              antall: action.payload.antall,
-              tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
-              projeksjon: action.payload.projeksjon,
-              transformasjoner: action.payload.transformasjoner,
-              ...klagebehandlinger,
-            } as RaderMedMetadataUtvidet)
-          )
+          map((klagebehandlinger) => {
+            if (action.payload.ferdigstiltFom) {
+              return MOTTATT_FERDIGSTILTE({
+                start: action.payload.start,
+                antall: action.payload.antall,
+                tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
+                projeksjon: action.payload.projeksjon,
+                transformasjoner: action.payload.transformasjoner,
+                ...klagebehandlinger,
+              } as RaderMedMetadataUtvidet);
+            } else
+              return MOTTATT({
+                start: action.payload.start,
+                antall: action.payload.antall,
+                tildeltSaksbehandler: action.payload.tildeltSaksbehandler,
+                projeksjon: action.payload.projeksjon,
+                transformasjoner: action.payload.transformasjoner,
+                ...klagebehandlinger,
+              } as RaderMedMetadataUtvidet);
+          })
         )
         .pipe(
           mergeMap((value) => {
@@ -433,4 +500,9 @@ export function hentUtgaatteFristerEpos(
   );
 }
 
-export const OPPGAVER_EPICS = [hentKodeverk, hentUtgaatteFristerEpos, hentOppgaverEpos];
+export const OPPGAVER_EPICS = [
+  hentKodeverk,
+  hentFullforteOppgaverEpos,
+  hentUtgaatteFristerEpos,
+  hentOppgaverEpos,
+];

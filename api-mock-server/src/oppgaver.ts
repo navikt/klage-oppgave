@@ -43,6 +43,14 @@ function saksbehandlerFiltrering(
   return `${!where ? "WHERE" : " AND"} saksbehandler = ?`;
 }
 
+function fullfortFiltrering(hasWhere: boolean, fullfortFom: string) {
+  if (fullfortFom)
+    return `${
+      !hasWhere ? "WHERE" : " AND"
+    } ferdigstiltFom >= date(${fullfortFom})`;
+  else return "";
+}
+
 function typeQuery(filter: Array<string> | undefined) {
   if (filter) {
     return `${filter?.map(
@@ -132,7 +140,9 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     rekkefoelge,
     navIdent,
     tildeltSaksbehandler,
+    fullfortFom,
   } = query;
+  /*
   console.log({
     typer,
     temaer,
@@ -142,7 +152,10 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     rekkefoelge,
     navIdent,
     tildeltSaksbehandler,
+      fullfortFom
   });
+*/
+
   let filterTyper = typer?.split(",");
   let filterTemaer = temaer?.split(",");
   let filterHjemler = hjemler?.replace(/ og /, ",").split(",");
@@ -151,6 +164,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
   let harTyper = "undefined" !== typeof typer;
   let harTemaer = "undefined" !== typeof temaer;
   let harHjemler = "undefined" !== typeof hjemler;
+  let harFullfortFom = "undefined" !== typeof fullfortFom;
 
   let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, 
                  hjemmel, tema, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon
@@ -170,6 +184,17 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
                     harTyper || harTemaer || harHjemler,
                     tildeltSaksbehandler
                   )}
+                  ${
+                    fullfortFom
+                      ? fullfortFiltrering(
+                          harTyper ||
+                            harTemaer ||
+                            harHjemler ||
+                            tildeltSaksbehandler !== "",
+                          fullfortFom
+                        )
+                      : ""
+                  }
                  ORDER BY frist ${rekkefoelge === "STIGENDE" ? "ASC" : "DESC"}
                  LIMIT ?,? 
                  `;
@@ -185,6 +210,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     });
     if (tildeltSaksbehandler) params.push(tildeltSaksbehandler);
     if (!tildeltSaksbehandler) params.push(navIdent);
+    //if (fullfortFom) params.push("date("+fullfortFom+")");
     params = params.filter((f: any) => f !== undefined);
     params.push(start);
     params.push(antall);

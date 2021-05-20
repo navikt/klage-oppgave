@@ -7,6 +7,9 @@ import { OppgaveRader } from "./oppgave";
 export function velgOppgaver(state: RootStateOrAny) {
   return state.klagebehandlinger as OppgaveRader;
 }
+export function velgFerdigstilteOppgaver(state: RootStateOrAny) {
+  return state.klagebehandlinger.ferdigstilteKlager as OppgaveRader;
+}
 export function velgSideLaster(state: RootStateOrAny) {
   return state.klagebehandlinger.lasterData as boolean;
 }

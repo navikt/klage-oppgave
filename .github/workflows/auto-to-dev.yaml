@@ -24,8 +24,16 @@ jobs:
       - name: Build
         run: |
           cd frontend
-          npm i
+          npm ci
           npm run build
+      - name: Test
+        run: |
+          cd frontend
+          npm test
+      - name: Test API-mock
+        run: |
+          cd server
+          npm test
       - name: Build and publish Docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

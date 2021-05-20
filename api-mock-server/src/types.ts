@@ -7,4 +7,5 @@ export interface OppgaveQuery {
   rekkefoelge: "SYNKENDE" | "STIGENDE";
   navIdent?: string;
   tildeltSaksbehandler?: string;
+  fullfortFom?: string;
 }

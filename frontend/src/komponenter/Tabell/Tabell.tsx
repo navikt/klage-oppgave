@@ -1,6 +1,6 @@
 import {
   Filter,
-  fullforteRequest,
+  ferdigstilteRequest,
   hentUtgatte,
   IKodeverkVerdi,
   kodeverkRequest,
@@ -19,6 +19,7 @@ import {
   velgSideLaster,
   velgProjeksjon,
   velgKodeverk,
+  velgFerdigstilteOppgaver,
 } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import "../../stilark/Tabell.less";
@@ -64,6 +65,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const sideLaster = useSelector(velgOppgaveLaster);
   const kodeverk = useSelector(velgKodeverk);
   const klagebehandlinger = useSelector(velgOppgaver);
+  const ferdigstilteKlager = useSelector(velgFerdigstilteOppgaver);
   const forrigeSti = useSelector(velgForrigeSti);
   const utvidetProjeksjon = useSelector(velgProjeksjon);
   const location = useLocation();
@@ -323,6 +325,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           antall: filter_state.antall,
           start: filter_state.start || 0,
           enhetId: enhetId,
+          ferdigstiltFom: undefined,
           projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
           tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
           transformasjoner: {
@@ -344,12 +347,12 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
         })
       );
       dispatch(
-        fullforteRequest({
+        ferdigstilteRequest({
           ident: ident,
           antall: filter_state.antall,
           start: filter_state.start || 0,
           enhetId: enhetId,
-          fullforte: "2021-05-20",
+          ferdigstiltFom: "2021-05-07",
           projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
           tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
           transformasjoner: {
@@ -640,17 +643,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
             filter_state?.projeksjon || visFnr
           )}
 
-          {location.pathname.startsWith("/mineoppgaver") && (
-            <>
-              <FullforteOppgaver>Fullførte oppgaver</FullforteOppgaver>
-              {genererTabellRader(
-                settValgtOppgave,
-                klagebehandlinger,
-                filter_state?.projeksjon || visFnr
-              )}
-            </>
-          )}
-
           {klagebehandlinger.meta.sider > 1 && (
             <tr>
               <td colSpan={visFnr ? 7 : 5}>
@@ -669,6 +661,25 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           )}
         </tbody>
       </table>
+      {location.pathname.startsWith("/mineoppgaver") && ferdigstilteKlager?.rader && (
+        <>
+          <FullforteOppgaver>Fullførte oppgaver</FullforteOppgaver>
+          <table
+            className={`Tabell tabell oppgaver tabell--stripet`}
+            cellSpacing={0}
+            cellPadding={10}
+          >
+            <tbody>
+              {genererTabellRader(
+                settValgtOppgave,
+                ferdigstilteKlager,
+                filter_state?.projeksjon || visFnr
+              )}
+            </tbody>
+          </table>
+        </>
+      )}
+
       {location.pathname.startsWith("/oppgaver") ? (
         <div style={{ margin: "1em 2em" }}>
           Antall oppgaver med utgåtte frister: {klagebehandlinger.meta.utgaatteFrister}
