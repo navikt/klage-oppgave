@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { hentKlageHandling, IKlage } from "../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
 import Debug from "../Tabell/Debug";
-import Dokumenter from "./Dokumenter";
+import KlagebehandlingKontainer from "./KlagebehandlingKontainer";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
@@ -106,6 +106,11 @@ const SjekkboksLabel = styled.div`
   z-index: 5;
 `;
 
+const HorisontalGrid = styled.div`
+  display: grid;
+  template-area-rows: 1fr 1fr;
+`;
+
 function UtarbeideVedtak() {
   return <>Utarbeide Vedtak</>;
 }
@@ -137,6 +142,18 @@ function mellomnavn(klage: Partial<IKlage>) {
     return klage.sakenGjelderNavn.mellomnavn.padStart(1, " ");
   }
   return "";
+}
+
+export interface IFaner {
+  detaljer: {
+    checked: boolean;
+  };
+  dokumenter: {
+    checked: boolean;
+  };
+  vedtak: {
+    checked: boolean;
+  };
 }
 
 const FeilmeldingInformasjon = styled.div`
@@ -212,7 +229,7 @@ export default function Klagebehandling() {
     });
   }
 
-  const [faner, settAktiveFaner] = useState({
+  const [faner, settAktiveFaner] = useState<IFaner>({
     detaljer: {
       checked: innstillinger?.aktiveFaner?.detaljer?.checked || false,
     },
@@ -326,11 +343,7 @@ export default function Klagebehandling() {
           <EksterneLenker klage_state={klage_state} id={klage_state.oppgaveId} />
         </Kontrollpanel>
 
-        {showDebug && <Debug state={klage} />}
-
-        <Dokumenter skjult={!faner.dokumenter.checked} />
-
-        <Behandlingsskjema skjult={!faner.detaljer.checked} />
+        <KlagebehandlingKontainer faner={faner} />
       </>
     </Oppsett>
   );

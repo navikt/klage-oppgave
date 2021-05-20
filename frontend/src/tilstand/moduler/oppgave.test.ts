@@ -431,7 +431,7 @@ describe("Oppgave epos", () => {
     marbles(() => {
       ts.run((m) => {
         const inputMarble = "a-";
-        const expectedMarble = "c-";
+        const expectedMarble = "(cd)-";
 
         const inputValues = {
           a: oppgaveRequest({
@@ -457,6 +457,8 @@ describe("Oppgave epos", () => {
           antallTreffTotalt: 2,
           start: 0,
           antall: 2,
+          projeksjon: undefined,
+          tildeltSaksbehandler: undefined,
           klagebehandlinger: [
             { frist: "2019-09-12", tema: "43", hjemmel: "8-4" },
             { frist: "2020-11-15", tema: "43", hjemmel: "10-12" },
@@ -494,6 +496,10 @@ describe("Oppgave epos", () => {
             payload: resultPayload.payload,
             type: "klagebehandlinger/MOTTATT",
           },
+          d: {
+            payload: undefined,
+            type: "oppgavelaster/SETT_FERDIG_LASTET",
+          },
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
@@ -509,7 +515,7 @@ describe("Oppgave epos", () => {
     marbles(() => {
       ts.run((m) => {
         const inputMarble = "a-";
-        const expectedMarble = "c-";
+        const expectedMarble = "(cd)-";
 
         const inputValues = {
           a: oppgaveRequest({
@@ -569,6 +575,10 @@ describe("Oppgave epos", () => {
           c: {
             payload: resultPayload.payload,
             type: "klagebehandlinger/MOTTATT",
+          },
+          d: {
+            payload: undefined,
+            type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
         };
 

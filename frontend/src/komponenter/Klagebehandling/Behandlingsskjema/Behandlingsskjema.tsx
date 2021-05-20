@@ -12,22 +12,24 @@ import { UtfallSkjema } from "./UtfallSkjema";
 import { OversendtKA } from "./OversendtKA";
 import { MottattFoersteinstans } from "./MottattFoersteinstans";
 
-const KlageKontainer = styled.div`
+const Kontainer = styled.div`
   display: ${(props) => props.theme.display};
+  margin: 0.25em 0.25em 0.25em 0.25em;
+  background: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  width: ${(props) => props.theme.width};
   grid-template-columns: repeat(2, 1fr);
   gap: 0;
-  margin: 1em;
 `;
 
 const Detaljer = styled.div`
   display: flex;
   justify-content: space-between;
-  max-width: 25em;
 `;
 
 const KlageBoks = styled.div`
   width: 100%;
-  background: white;
   padding: 0.25em 1.5em;
 
   &:not(:first-child) {
@@ -91,7 +93,7 @@ function TyperTemaer() {
 
 export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
   return (
-    <KlageKontainer theme={{ display: !skjult ? "grid" : "none" }}>
+    <Kontainer theme={{ display: !skjult ? "grid" : "none", width: "40em" }}>
       <KlageBoks>
         <HeaderRow>
           <h1>Behandlingsdetaljer</h1>
@@ -119,6 +121,6 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
       <KlageBoks>
         <UtfallSkjema />
       </KlageBoks>
-    </KlageKontainer>
+    </Kontainer>
   );
 }

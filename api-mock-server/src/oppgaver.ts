@@ -55,17 +55,17 @@ function typeQuery(filter: Array<string> | undefined) {
 export interface ISaksbehandler {
   oppgaveId: string;
   navIdent: string;
-  oppgaveVersjon: number;
+  klagebehandlingVersjon: number;
 }
 
 export async function tildelSaksbehandler(params: ISaksbehandler) {
   let db = new sqlite3.Database(path.join(__dirname, "../oppgaver.db"));
   let sql =
-    "UPDATE Oppgaver SET saksbehandler = ? WHERE Id = ? AND versjon = ?";
+    "UPDATE Oppgaver SET saksbehandler = ? WHERE Id = ? AND klagebehandlingVersjon = ?";
   return await new Promise((resolve, reject) => {
     db.all(
       sql,
-      [params.navIdent, params.oppgaveId, params.oppgaveVersjon],
+      [params.navIdent, params.oppgaveId, params.klagebehandlingVersjon],
       (err: any, rader: any) => {
         if (err) {
           console.log(sql);
@@ -93,11 +93,11 @@ export async function tildelSaksbehandler(params: ISaksbehandler) {
 export async function fradelSaksbehandler(params: ISaksbehandler) {
   let db = new sqlite3.Database(path.join(__dirname, "../oppgaver.db"));
   let sql =
-    "UPDATE Oppgaver SET saksbehandler = '' WHERE Id = ? AND versjon = ?";
+    "UPDATE Oppgaver SET saksbehandler = '' WHERE Id = ? AND klagebehandlingVersjon = ?";
   return await new Promise((resolve, reject) => {
     db.all(
       sql,
-      [params.oppgaveId, params.oppgaveVersjon],
+      [params.oppgaveId, params.klagebehandlingVersjon],
       (err: any, rader: any) => {
         if (err) {
           console.log(sql);
@@ -153,7 +153,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
   let harHjemler = "undefined" !== typeof hjemler;
 
   let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, 
-                 hjemmel, tema, frist, mottatt, saksbehandler, fnr, navn, versjon
+                 hjemmel, tema, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon
                  FROM Oppgaver 
                  ${typeQuery(filterTyper).replace(/,/g, "")}
                  ${generiskFilterSpoerring(
@@ -204,7 +204,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             tema: rad.tema,
             frist: rad.frist,
             mottatt: rad.mottatt,
-            versjon: rad.versjon,
+            klagebehandlingVersjon: rad.klagebehandlingVersjon,
           }))
         );
       else
@@ -218,7 +218,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             frist: rad.frist,
             mottatt: rad.mottatt,
             person: { fnr: rad.fnr, navn: rad.navn },
-            versjon: rad.versjon,
+            klagebehandlingVersjon: rad.klagebehandlingVersjon,
           }))
         );
     });

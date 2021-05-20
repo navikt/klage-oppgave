@@ -1,18 +1,19 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, from, of } from "rxjs";
-import { catchError, concatMap, map, mergeMap, switchMap, withLatestFrom } from "rxjs/operators";
+import { concat, of } from "rxjs";
+import { catchError, mergeMap, switchMap, timeout, withLatestFrom } from "rxjs/operators";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { OppgaveParams, oppgaveRequest } from "./oppgave";
+import { settOppgaverFerdigLastet, settOppgaverLaster } from "./oppgavelaster";
 
 //==========
 // Type defs
 //==========
 export type TildelType = {
   id: string;
-  versjon: number;
+  klagebehandlingVersjon: number;
   saksbehandler: {
     navn: string;
     ident: string;
@@ -21,7 +22,7 @@ export type TildelType = {
 export type PayloadType = {
   ident: string;
   oppgaveId: string;
-  versjon: number;
+  klagebehandlingVersjon: number;
 };
 
 //==========
@@ -31,7 +32,7 @@ export const saksbehandlerSlice = createSlice({
   name: "saksbehandler",
   initialState: {
     id: "0",
-    versjon: 1,
+    klagebehandlingVersjon: 1,
     saksbehandler: {
       navn: "",
       ident: "",
@@ -65,7 +66,10 @@ export function tildelEpos(
       const tildelMegUrl = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlertildeling`;
       return post(
         tildelMegUrl,
-        { navIdent: action.payload.ident, oppgaveversjon: action.payload.versjon },
+        {
+          navIdent: action.payload.ident,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
         .pipe(
@@ -82,7 +86,20 @@ export function tildelEpos(
             return concat([tildeltHandling(response), oppgaveRequest(params)]);
           })
         )
-        .pipe(catchError((error) => concat([displayToast(error), skjulToaster()])));
+        .pipe(
+          catchError((error) =>
+            concat([displayToast(error), settOppgaverFerdigLastet(), skjulToaster()])
+          )
+        );
+    })
+  );
+}
+
+export function settLasterEpos(action$: ActionsObservable<PayloadAction<PayloadType>>) {
+  return action$.pipe(
+    ofType(fradelMegHandling.type, tildelMegHandling.type),
+    mergeMap(() => {
+      return of(settOppgaverLaster());
     })
   );
 }
@@ -95,15 +112,19 @@ export function fradelEpos(
   return action$.pipe(
     ofType(fradelMegHandling.type),
     withLatestFrom(state$),
-    switchMap(([action]) => {
+    mergeMap(([action]) => {
       const url = `/api/ansatte/${action.payload.ident}/klagebehandlinger/${action.payload.oppgaveId}/saksbehandlerfradeling`;
       return post(
         url,
-        { navIdent: action.payload.ident, oppgaveversjon: action.payload.versjon },
+        {
+          navIdent: action.payload.ident,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
         .pipe(
-          switchMap(({ response }) => {
+          timeout(500),
+          mergeMap((response) => {
             let params = {
               start: state$.value.klagebehandlinger.meta.start,
               antall: state$.value.klagebehandlinger.meta.antall,
@@ -113,10 +134,14 @@ export function fradelEpos(
               projeksjon: state$.value.klagebehandlinger.meta.projeksjon,
               tildeltSaksbehandler: state$.value.klagebehandlinger.meta.tildeltSaksbehandler,
             } as OppgaveParams;
-            return concat([fradeltHandling(response), oppgaveRequest(params)]);
+            return concat([fradeltHandling(response.response), oppgaveRequest(params)]);
           })
         )
-        .pipe(catchError((error) => concat([displayToast(error), skjulToaster()])));
+        .pipe(
+          catchError((error) =>
+            concat([displayToast(error), settOppgaverFerdigLastet(), skjulToaster()])
+          )
+        );
     })
   );
 }
@@ -138,6 +163,7 @@ function displayToast(error: IError) {
     "generisk feilmelding";
   return toasterSett({
     display: true,
+    type: "feil",
     feilmelding: message as string,
   });
 }
@@ -146,4 +172,4 @@ function skjulToaster() {
   return toasterSkjul();
 }
 
-export const TILDEL_EPICS = [tildelEpos, fradelEpos];
+export const TILDEL_EPICS = [tildelEpos, fradelEpos, settLasterEpos];

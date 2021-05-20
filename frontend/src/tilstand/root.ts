@@ -9,10 +9,12 @@ import saksbehandler, { TILDEL_EPICS } from "./moduler/saksbehandler";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import routing, { ROUTING_EPICS } from "./moduler/router";
 import toaster, { TOASTER_EPICS } from "./moduler/toaster";
+import oppgavelaster, { OPPGAVELASTER_EPOS } from "./moduler/oppgavelaster";
 import featureToggles, { UNLEASH_EPICS } from "./moduler/unleash";
 import klagebehandling, { KLAGEBEHANDLING_EPICS } from "./moduler/klagebehandling";
 import token, { EXPIRE_EPICS } from "./moduler/token";
 import behandlingsskjema, { BEHANDLINGSSKJEMA_EPICS } from "./moduler/behandlingsskjema";
+import admin, { ADMIN_EPICS } from "./moduler/admin";
 
 const epics: Array<(
   $action: ActionsObservable<PayloadAction<any>>,
@@ -24,6 +26,7 @@ const epics: Array<(
 ) => Observable<PayloadAction<any>>> = [
   ...OPPGAVER_EPICS,
   ...MEG_EPICS,
+  ...OPPGAVELASTER_EPOS,
   ...TILDEL_EPICS,
   ...UNLEASH_EPICS,
   ...TOASTER_EPICS,
@@ -31,6 +34,7 @@ const epics: Array<(
   ...ROUTING_EPICS,
   ...EXPIRE_EPICS,
   ...BEHANDLINGSSKJEMA_EPICS,
+  ...ADMIN_EPICS,
 ];
 export const rootEpic = combineEpics.apply(combineEpics, epics);
 
@@ -39,11 +43,13 @@ const rootReducer = combineReducers({
   meg,
   routing,
   toaster,
+  oppgavelaster,
   klagebehandling,
   featureToggles,
   saksbehandler,
   token,
   behandlingsskjema,
+  admin,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

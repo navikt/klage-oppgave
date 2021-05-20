@@ -32,7 +32,7 @@ export interface FilterMenuItemProps {
 
 export type valgtOppgaveType = {
   id: string;
-  versjon: number;
+  klagebehandlingVersjon: number;
 };
 
 export interface TabellHeader {

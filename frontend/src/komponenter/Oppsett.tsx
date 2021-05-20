@@ -44,6 +44,7 @@ export default function Oppsett({
 
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
+    dispatch(hentFeatureToggleHandling("klage.admin"));
     //sjekk innlogging
     dispatch(hentExpiry());
     dispatch(kodeverkRequest());
@@ -100,16 +101,11 @@ export default function Oppsett({
                 Mine&nbsp;Oppgaver
               </NavLink>
             </li>
-            <li>
-              <NavLink className="link" to="/innstillinger">
-                Innstillinger
-              </NavLink>
-            </li>
           </ul>
         </nav>
-        <div className={`toaster ${visFeilmelding ? "active" : ""}`}>
-          {visFeilmelding && (
-            <Alertstripe type="feil">
+        <div className={`toaster ${visFeilmelding.display ? "active" : ""}`}>
+          {visFeilmelding.display && (
+            <Alertstripe type={visFeilmelding.type}>
               <span>{feilmelding}</span>
             </Alertstripe>
           )}

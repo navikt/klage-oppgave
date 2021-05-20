@@ -222,6 +222,12 @@ app.get("/ansatte/:id/klagebehandlinger", async (req, res) => {
   res.send(result);
 });
 
+app.post("/internal/elasticadmin/rebuild", async (req, res) => {
+  let random = Math.floor(Math.random() * 2);
+  if (random === 0) return res.status(403).send("");
+  else return res.status(200).send("");
+});
+
 app.get(
   "/ansatte/:id/antallklagebehandlingermedutgaattefrister",
   async (req, res) => {
@@ -247,6 +253,7 @@ app.get("/ansatte/:id/enheter", async (req, res) => {
 app.get("/featuretoggle/:feature", (req, res) => {
   if (req.params?.feature === "klage.generellTilgang")
     res.status(200).send("true");
+  else if (req.params?.feature === "klage.admin") res.status(200).send("true");
   else res.status(200).send("false");
 });
 
@@ -267,7 +274,7 @@ app.post(
     const result = await tildelSaksbehandler({
       oppgaveId: req.params?.oppgaveid,
       navIdent: req.params?.id,
-      oppgaveVersjon: req.body.oppgaveversjon,
+      klagebehandlingVersjon: req.body.klagebehandlingVersjon,
     } as ISaksbehandler)
       .then((result) => res.status(200).send({ status: "OK" }))
       .catch((err) => res.status(err.status).send(err.body));
@@ -279,7 +286,7 @@ app.post(
     return await fradelSaksbehandler({
       oppgaveId: req.params?.oppgaveid,
       navIdent: req.params?.id,
-      oppgaveVersjon: req.body.oppgaveversjon,
+      klagebehandlingVersjon: req.body.klagebehandlingVersjon,
     } as ISaksbehandler)
       .then((result) => res.status(200).send({ status: "OK" }))
       .catch((err) => res.status(err.status).send(err.body));

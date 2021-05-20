@@ -19,7 +19,9 @@ def init_oppgaver()
                 saksbehandler TEXT,
                 fnr TEXT,
                 navn TEXT,
-                versjon INTEGER
+                klagebehandlingVersjon INTEGER,
+                erMedunderskriver INTEGER,
+                finalized TEXT
             )
             "
   rescue SQLite3::Exception => e
@@ -32,19 +34,12 @@ def init_oppgaver()
   end
 end
 
-def baby()
-  begin
-    ["eat", "sleep", "drit"].each do |aktivitet|
-        puts aktivitet
-    end
-end
-repeat()
 
-def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon)
+def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon, erMedunderskriver, finalized)
   begin
 	  db = SQLite3::Database.open ARGV[0]
-      db.execute("INSERT INTO Oppgaver (Id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                        [id, type, tema, hjemmel, frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon])
+      db.execute("INSERT INTO Oppgaver (Id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon, erMedunderskriver, finalized) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                        [id, type, tema, hjemmel, frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon, erMedunderskriver && 1 || 0, finalized.to_s])
 
   rescue SQLite3::Exception => e
     puts "Exception occurred"
@@ -54,7 +49,6 @@ def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, 
     db.close if db
   end
 end
-
 
 def tilfeldigTema()
   r = rand(4)
@@ -93,11 +87,14 @@ def lagData()
   tema = tilfeldigTema()
   frist = Faker::Date.backward(days: 365)
   mottatt = Faker::Date.backward(days: 365)
+  finalized = Faker::Date.backward(days: 5)
   hjemmel = tilfeldigHjemmel()
   fnr = Faker::Number.number(digits: 11)
   navn = Faker::Movies::StarWars.character
   versjon = Faker::Number.number(digits: 2)
-  insert_oppgave(id, type, tema, hjemmel, frist, mottatt, nestenTilfeldigSaksbehandler(), fnr, navn, versjon)
+  erMedunderskriver = [true, false].shuffle
+  finalizedRand = [true, false].shuffle
+  insert_oppgave(id, type, tema, hjemmel, frist, mottatt, nestenTilfeldigSaksbehandler(), fnr, navn, versjon, erMedunderskriver, finalized)
 end
 
 init_oppgaver()

@@ -1,6 +1,6 @@
 table.oppgaver {
   margin: 1em 1.5em;
-  width: calc(5 * 14em);
+  max-width: calc(5 * 14em);
   animation: 0.2s ease-in-out;
 }
 
@@ -64,7 +64,7 @@ table.innstillinger > tbody > tr > td > div {
 }
 
 .tabell {
-  width: 100%;
+  width: calc(100% - 3em);
 }
 
 .table {
@@ -204,6 +204,13 @@ table.innstillinger > tbody > tr > td > div {
       right: 4px;
     }
   }
+}
+
+.etikett {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 13em;
 }
 
 .etikett--hjemmel {

@@ -24,6 +24,9 @@ import { Document, Page } from "react-pdf";
 import CloseSVG from "../cancelblack.svg";
 // @ts-ignore
 import ExtLink from "../extlink.svg";
+import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
+import { IFaner } from "./KlageBehandling";
+import FullforVedtak from "./Behandlingsskjema/FullforVedtak";
 
 export interface IDokument {
   journalpostId: string;
@@ -52,6 +55,7 @@ const DokumenterKontainer = styled.div`
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
+  display: ${(props) => props.theme.display};
   width: ${(props) => props.theme.width};
   overflow: hidden;
   position: relative;
@@ -84,7 +88,7 @@ const TilknyttetTittel = styled.div`
 `;
 
 const DokumentKontainer = styled.div`
-  display: ${(props) => props.theme.display};
+  display: grid;
   grid-template-columns: ${(props) => props.theme.dokumentgrid};
   margin: 0 0.25em 0 0;
   height: calc(100% - 3em);
@@ -220,6 +224,7 @@ const Preview = styled.div`
   overflow: auto;
   overflow-x: hidden;
   position: relative;
+  z-index: 0;
 `;
 const PreviewTitle = styled.div`
   background: #cde7d8;
@@ -280,7 +285,7 @@ const Feil = styled.div`
   margin: 1em;
 `;
 
-export default function Dokumenter({ skjult }: { skjult: boolean }) {
+export default function KlagebehandlingKontainer({ faner }: { faner: IFaner }) {
   const [aktivPDF, settAktivPDF] = useState(false);
   const [journalpostId, settjournalpostId] = useState(0);
   const [dokumentTittel, settdokumentTittel] = useState("");
@@ -305,15 +310,18 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
   const [dokumentgrid, settDokumentgrid] = useState("1fr 1fr 1fr 1fr");
 
   return (
-    <DokumentKontainer theme={{ display: !skjult ? "grid" : "none", dokumentgrid }}>
+    <DokumentKontainer theme={{ dokumentgrid }}>
       <DokumentTabell
         settAktivPDF={settAktivPDF}
         settjournalpostId={settjournalpostId}
         settdokumentTittel={settdokumentTittel}
         settDokumentGrid={settDokumentgrid}
         settdokumentInfoId={settdokumentInfoId}
+        faner={faner}
       />
-      <PreviewKontainer theme={{ display: aktivPDF ? "unset" : "none" }}>
+      <PreviewKontainer
+        theme={{ display: faner.dokumenter.checked && aktivPDF ? "unset" : "none" }}
+      >
         <Preview>
           <PreviewTitle>
             {dokumentTittel}
@@ -343,6 +351,9 @@ export default function Dokumenter({ skjult }: { skjult: boolean }) {
           </Document>
         </Preview>
       </PreviewKontainer>
+
+      <Behandlingsskjema skjult={!faner.detaljer.checked} />
+      <FullforVedtak skjult={!faner.vedtak.checked} />
     </DokumentKontainer>
   );
 }
@@ -391,6 +402,7 @@ function DokumentTabell(props: {
   settdokumentTittel: Function;
   settDokumentGrid: Function;
   settjournalpostId: Function;
+  faner: IFaner;
 }) {
   const klage: IKlage = useSelector(velgKlage);
   const dispatch = useDispatch();
@@ -475,7 +487,12 @@ function DokumentTabell(props: {
     return <NavFrontendSpinner />;
   }
   return (
-    <DokumenterKontainer theme={{ width: visFullKontainer ? "40em" : "15em" }}>
+    <DokumenterKontainer
+      theme={{
+        display: props.faner.dokumenter.checked ? "block" : "none",
+        width: visFullKontainer ? "40em" : "15em",
+      }}
+    >
       <DokumenterMinivisning theme={{ display: !visFullKontainer ? "unset" : "none" }}>
         <DokumenterNav>
           <DokumenterTittel>Dokumenter</DokumenterTittel>
@@ -522,7 +539,6 @@ function DokumentTabell(props: {
             );
           })}
       </DokumenterMinivisning>
-
       <DokumenterFullvisning ref={rootRef} theme={{ display: visFullKontainer ? "flex" : "none" }}>
         <DokumenterNav>
           <DokumenterTittel>Dokumenter</DokumenterTittel>

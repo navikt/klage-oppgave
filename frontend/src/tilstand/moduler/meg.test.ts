@@ -263,6 +263,7 @@ describe("'Meg' epos", () => {
           x: {
             payload: {
               display: true,
+              type: "feil",
               feilmelding: "ukjent feil",
             },
             type: toasterSett.type,

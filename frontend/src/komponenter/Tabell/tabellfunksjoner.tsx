@@ -21,8 +21,9 @@ import styled from "styled-components";
 
 const R = require("ramda");
 
-const velgOppgave = R.curry((settValgtOppgave: Function, id: string, versjon: number) =>
-  tildelOppgave(settValgtOppgave, id, versjon)
+const velgOppgave = R.curry(
+  (settValgtOppgave: Function, id: string, klagebehandlingVersjon: number) =>
+    tildelOppgave(settValgtOppgave, id, klagebehandlingVersjon)
 );
 
 const gosysEnvironment = (hostname: string) => {
@@ -46,47 +47,49 @@ const EndreKnapp = styled.button`
   cursor: pointer !important;
 `;
 
-const visHandlinger = R.curry((fradelOppgave: Function, id: string, versjon: number) => {
-  const [viserHandlinger, settVisHandlinger] = useState(false);
-  let [it] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  useOnInteractOutside({
-    ref,
-    onInteractOutside: () => settVisHandlinger(false),
-    active: viserHandlinger,
-  });
+const visHandlinger = R.curry(
+  (fradelOppgave: Function, id: string, klagebehandlingVersjon: number) => {
+    const [viserHandlinger, settVisHandlinger] = useState(false);
+    let [it] = useState(0);
+    const ref = useRef<HTMLDivElement>(null);
+    useOnInteractOutside({
+      ref,
+      onInteractOutside: () => settVisHandlinger(false),
+      active: viserHandlinger,
+    });
 
-  return (
-    <td className="knapp-med-handlingsoverlegg">
-      <EndreKnapp
-        data-testid={`endreknapp${it++}`}
-        onClick={() => settVisHandlinger(!viserHandlinger)}
-        className={classNames({ skjult: viserHandlinger })}
-      >
-        Endre
-      </EndreKnapp>
-      <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
-        <div>
-          <Knapp
-            data-testid="leggtilbake"
-            className={"knapp"}
-            onClick={(e) => fradelOppgave(id, versjon)}
-          >
-            Legg tilbake
-          </Knapp>
+    return (
+      <td className="knapp-med-handlingsoverlegg">
+        <EndreKnapp
+          data-testid={`endreknapp${it++}`}
+          onClick={() => settVisHandlinger(!viserHandlinger)}
+          className={classNames({ skjult: viserHandlinger })}
+        >
+          Endre
+        </EndreKnapp>
+        <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
+          <div>
+            <Knapp
+              data-testid="leggtilbake"
+              className={"knapp"}
+              onClick={(e) => fradelOppgave(id, klagebehandlingVersjon)}
+            >
+              Legg tilbake
+            </Knapp>
+          </div>
         </div>
-      </div>
-    </td>
-  );
-});
+      </td>
+    );
+  }
+);
 
 const leggTilbakeOppgave = R.curry(
-  (dispatch: Function, ident: string, oppgaveId: string, versjon: number) =>
+  (dispatch: Function, ident: string, oppgaveId: string, klagebehandlingVersjon: number) =>
     dispatch(
       fradelMegHandling({
         oppgaveId: oppgaveId,
         ident: ident,
-        versjon: versjon,
+        klagebehandlingVersjon: klagebehandlingVersjon,
       })
     )
 );
@@ -98,7 +101,7 @@ const OppgaveTabellRad = ({
   hjemmel,
   frist,
   mottatt,
-  versjon,
+  klagebehandlingVersjon,
   person,
   utvidetProjeksjon,
   settValgtOppgave,
@@ -106,8 +109,8 @@ const OppgaveTabellRad = ({
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
   const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id);
-  const curriedVisHandlinger = visHandlinger(fradelOppgave)(id)(versjon);
-  const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id)(versjon);
+  const curriedVisHandlinger = visHandlinger(fradelOppgave)(id);
+  const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);
   const kodeverk = useSelector(velgKodeverk);
 
   const location = useLocation();
@@ -158,20 +161,21 @@ const OppgaveTabellRad = ({
         </TableCell>
       )}
       <TableCell>{frist ? formattedDate(frist as number) : <div>mangler</div>}</TableCell>
-      {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave}
-      {location.pathname.startsWith("/mineoppgaver") && curriedVisHandlinger}
+      {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave(klagebehandlingVersjon)}
+      {location.pathname.startsWith("/mineoppgaver") &&
+        curriedVisHandlinger(klagebehandlingVersjon)}
     </TableRow>
   );
 };
 
-function tildelOppgave(settValgtOppgave: Function, id: string, versjon: number) {
+function tildelOppgave(settValgtOppgave: Function, id: string, klagebehandlingVersjon: number) {
   let [it] = useState(0);
   return (
     <TableCell>
       <Knapp
         data-testid={`tildelknapp${it++}`}
         className={"knapp"}
-        onClick={(e) => settValgtOppgave({ id, versjon })}
+        onClick={(e) => settValgtOppgave({ id, klagebehandlingVersjon })}
       >
         Tildel meg
       </Knapp>

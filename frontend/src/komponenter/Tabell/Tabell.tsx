@@ -37,6 +37,9 @@ import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
 import filterReducer from "./filterReducer";
 import Debug from "./Debug";
 import styled from "styled-components";
+import { filter } from "rxjs/operators";
+import { velgOppgaveLaster } from "../../tilstand/moduler/oppgavelaster.velgere";
+import { settOppgaverLaster } from "../../tilstand/moduler/oppgavelaster";
 
 const R = require("ramda");
 
@@ -45,10 +48,15 @@ const Feil = styled.div`
   margin: 0 1em;
 `;
 
-const OppgaveTabell: React.FunctionComponent = () => {
+const IkkeFiltrerbarHeader = styled.th`
+  display: block;
+  padding: 1em;
+`;
+
+function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
-  const sideLaster = useSelector(velgSideLaster);
+  const sideLaster = useSelector(velgOppgaveLaster);
   const kodeverk = useSelector(velgKodeverk);
   const klagebehandlinger = useSelector(velgOppgaver);
   const forrigeSti = useSelector(velgForrigeSti);
@@ -87,7 +95,10 @@ const OppgaveTabell: React.FunctionComponent = () => {
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
   const [forrigeTypeFilter, settForrigeTypeFilter] = useState<string[] | undefined>(undefined);
 
-  const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({ id: "", versjon: 0 });
+  const [valgtOppgave, settValgtOppgave] = useState<valgtOppgaveType>({
+    id: "",
+    klagebehandlingVersjon: 0,
+  });
 
   const [antall] = useState<number>(10);
   const [start, settStart] = useState<number>(0);
@@ -118,7 +129,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
     if (meg.id) {
       filter_dispatch({ type: "sett_navident", payload: meg });
     }
-  }, [meg]);
+  }, [meg.id, location.pathname]);
 
   /** UTVIDET PROJEKSJON
    * Med dette flagget kommer det persondata fra kabal-api. Dette skal skrus
@@ -257,57 +268,79 @@ const OppgaveTabell: React.FunctionComponent = () => {
     sortType: "frist" | "mottatt";
     sortOrder: "synkende" | "stigende";
   }) => {
-    console.debug(
-      "%c -> kjører den faktisk oppgave-spørringen",
-      "background: #222; color: #bada55"
-    );
-    dispatch(
-      hentUtgatte({
-        ident: filter_state.ident,
-        antall: filter_state.antall,
-        start: filter_state.start || 0,
-        enhetId: filter_state?.enhetId,
-        projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
-        tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
-        transformasjoner: {
-          filtrering: {
-            hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
-            typer: toValue(filter_state.transformasjoner.filtrering.typer),
-            temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+    let ident = filter_state.ident;
+    let enhetId = filter_state.enhetId;
+
+    if (!filter_state.ident) {
+      //todo dette er ikke riktig, ident skal ikke mangle
+      console.debug("%c mangler ident!", "background: #b00b55; color: #ffffff");
+      ident = meg.id;
+      if (enheter) {
+        console.debug(enheter);
+      }
+      //enhetId = meg?.enheter[meg?.valgtEnhet].id ||0;
+    }
+    if (ident && enhetId) {
+      console.debug(
+        "%c -> kjører den faktisk oppgave-spørringen",
+        "background: #222; color: #bada55"
+      );
+      dispatch(
+        hentUtgatte({
+          ident: ident,
+          antall: filter_state.antall,
+          start: filter_state.start || 0,
+          enhetId: enhetId,
+          projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
+          tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
+          transformasjoner: {
+            filtrering: {
+              hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
+              typer: toValue(filter_state.transformasjoner.filtrering.typer),
+              temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+            },
+            sortering: {
+              type: sortType,
+              frist:
+                sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
+              mottatt:
+                sortType === "mottatt"
+                  ? sortOrder
+                  : filter_state.transformasjoner.sortering.mottatt,
+            },
           },
-          sortering: {
-            type: sortType,
-            frist: sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
-            mottatt:
-              sortType === "mottatt" ? sortOrder : filter_state.transformasjoner.sortering.mottatt,
+        })
+      );
+      dispatch(settOppgaverLaster());
+      dispatch(
+        oppgaveRequest({
+          ident: ident,
+          antall: filter_state.antall,
+          start: filter_state.start || 0,
+          enhetId: enhetId,
+          projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
+          tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
+          transformasjoner: {
+            filtrering: {
+              hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
+              typer: toValue(filter_state.transformasjoner.filtrering.typer),
+              temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+            },
+            sortering: {
+              type: sortType,
+              frist:
+                sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
+              mottatt:
+                sortType === "mottatt"
+                  ? sortOrder
+                  : filter_state.transformasjoner.sortering.mottatt,
+            },
           },
-        },
-      })
-    );
-    dispatch(
-      oppgaveRequest({
-        ident: filter_state.ident,
-        antall: filter_state.antall,
-        start: filter_state.start || 0,
-        enhetId: filter_state?.enhetId,
-        projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
-        tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
-        transformasjoner: {
-          filtrering: {
-            hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
-            typer: toValue(filter_state.transformasjoner.filtrering.typer),
-            temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
-          },
-          sortering: {
-            type: sortType,
-            frist: sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
-            mottatt:
-              sortType === "mottatt" ? sortOrder : filter_state.transformasjoner.sortering.mottatt,
-          },
-        },
-      })
-    );
+        })
+      );
+    }
   };
+
   useEffect(() => {
     if (meg.id) {
       if (location.pathname.startsWith("/mineoppgaver")) {
@@ -384,7 +417,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
         tildelMegHandling({
           oppgaveId: valgtOppgave.id,
           ident: meg.id,
-          versjon: valgtOppgave.versjon,
+          klagebehandlingVersjon: valgtOppgave.klagebehandlingVersjon,
         })
       );
     }
@@ -419,8 +452,8 @@ const OppgaveTabell: React.FunctionComponent = () => {
   }, [hjemmelFilter, temaFilter, typeFilter]);
 
   useEffect(() => {
-    if (filter_state.meta.kan_hente_oppgaver || start > 1) {
-      console.debug("%chenter fordi start har endret seg", "background: #222; color: #bada55");
+    if (filter_state.meta.kan_hente_oppgaver || start > -1) {
+      console.debug("%chenter oppgaver", "background: #222; color: #bada55");
       if (filter_state.transformasjoner.type === "frist")
         dispatchTransformering({
           sortType: filter_state.transformasjoner.sortering.type,
@@ -432,7 +465,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
           sortOrder: filter_state.transformasjoner.sortering.mottatt,
         });
     }
-  }, [start, filter_state.meta.kan_hente_oppgaver]);
+  }, [start, filter_state.meta.kan_hente_oppgaver, meg, enheter]);
 
   useEffect(() => {
     const ny_start = (tolketStart - 1) * antall;
@@ -481,7 +514,7 @@ const OppgaveTabell: React.FunctionComponent = () => {
   if (sideLaster) {
     return (
       <div style={{ width: "100%", textAlign: "center", padding: 20 }}>
-        {showDebug && <Debug state={filter_state} />}
+        {JSON.stringify(sideLaster)}
         <NavFrontendSpinner />
       </div>
     );
@@ -489,58 +522,65 @@ const OppgaveTabell: React.FunctionComponent = () => {
 
   return (
     <>
-      {showDebug && <Debug state={filter_state} />}
-
       <table className={`Tabell tabell oppgaver tabell--stripet`} cellSpacing={0} cellPadding={10}>
         <thead>
           <tr>
-            <FiltrerbarHeader
-              onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(
-                  settTyper,
-                  filter,
-                  filter_state?.transformasjoner?.filtrering?.typer,
-                  velgAlleEllerIngen
-                )
-              }
-              filtre={gyldigeTyper}
-              dispatchFunc={filtrerType}
-              aktiveFiltere={filter_state?.transformasjoner?.filtrering?.typer}
-            >
-              Type
-            </FiltrerbarHeader>
+            {visFilter && (
+              <FiltrerbarHeader
+                onFilter={(filter, velgAlleEllerIngen) =>
+                  settFilter(
+                    settTyper,
+                    filter,
+                    filter_state?.transformasjoner?.filtrering?.typer,
+                    velgAlleEllerIngen
+                  )
+                }
+                filtre={gyldigeTyper}
+                dispatchFunc={filtrerType}
+                aktiveFiltere={filter_state?.transformasjoner?.filtrering?.typer}
+              >
+                Type
+              </FiltrerbarHeader>
+            )}
+            {!visFilter && <IkkeFiltrerbarHeader>Type</IkkeFiltrerbarHeader>}
 
-            <FiltrerbarHeader
-              onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(
-                  settTemaer,
-                  filter,
-                  filter_state?.transformasjoner?.filtrering?.temaer,
-                  velgAlleEllerIngen
-                )
-              }
-              filtre={lovligeTemaer}
-              dispatchFunc={filtrerTema}
-              aktiveFiltere={filter_state?.transformasjoner.filtrering?.temaer}
-            >
-              Tema
-            </FiltrerbarHeader>
+            {visFilter && (
+              <FiltrerbarHeader
+                onFilter={(filter, velgAlleEllerIngen) =>
+                  settFilter(
+                    settTemaer,
+                    filter,
+                    filter_state?.transformasjoner?.filtrering?.temaer,
+                    velgAlleEllerIngen
+                  )
+                }
+                filtre={lovligeTemaer}
+                dispatchFunc={filtrerTema}
+                aktiveFiltere={filter_state?.transformasjoner.filtrering?.temaer}
+              >
+                Tema
+              </FiltrerbarHeader>
+            )}
+            {!visFilter && <IkkeFiltrerbarHeader>Tema</IkkeFiltrerbarHeader>}
 
-            <FiltrerbarHeader
-              onFilter={(filter, velgAlleEllerIngen) =>
-                settFilter(
-                  settHjemler,
-                  filter,
-                  filter_state?.transformasjoner?.filtrering?.hjemler,
-                  velgAlleEllerIngen
-                )
-              }
-              filtre={gyldigeHjemler}
-              dispatchFunc={filtrerHjemmel}
-              aktiveFiltere={filter_state?.transformasjoner.filtrering?.hjemler}
-            >
-              Hjemmel
-            </FiltrerbarHeader>
+            {visFilter && (
+              <FiltrerbarHeader
+                onFilter={(filter, velgAlleEllerIngen) =>
+                  settFilter(
+                    settHjemler,
+                    filter,
+                    filter_state?.transformasjoner?.filtrering?.hjemler,
+                    velgAlleEllerIngen
+                  )
+                }
+                filtre={gyldigeHjemler}
+                dispatchFunc={filtrerHjemmel}
+                aktiveFiltere={filter_state?.transformasjoner.filtrering?.hjemler}
+              >
+                Hjemmel
+              </FiltrerbarHeader>
+            )}
+            {!visFilter && <IkkeFiltrerbarHeader>Hjemmel</IkkeFiltrerbarHeader>}
 
             {(filter_state?.projeksjon === "UTVIDET" || visFnr) && <th>&nbsp;</th>}
             {(filter_state?.projeksjon === "UTVIDET" || visFnr) && <th>&nbsp;</th>}
@@ -568,20 +608,22 @@ const OppgaveTabell: React.FunctionComponent = () => {
             klagebehandlinger,
             filter_state?.projeksjon || visFnr
           )}
-          <tr>
-            <td colSpan={visFnr ? 8 : 6}>
-              <div className="table-lbl">
-                <div className="antall-saker">{visAntallTreff(klagebehandlinger)}</div>
-                <div className={"paginering"}>
-                  <Paginering
-                    startSide={tolketStart}
-                    antallSider={klagebehandlinger.meta.sider}
-                    pathname={pathname}
-                  />
+          {klagebehandlinger.meta.sider > 1 && (
+            <tr>
+              <td colSpan={visFnr ? 7 : 5}>
+                <div className="table-lbl">
+                  <div className="antall-saker">{visAntallTreff(klagebehandlinger)}</div>
+                  <div className={"paginering"}>
+                    <Paginering
+                      startSide={tolketStart}
+                      antallSider={klagebehandlinger.meta.sider}
+                      pathname={pathname}
+                    />
+                  </div>
                 </div>
-              </div>
-            </td>
-          </tr>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
       {location.pathname.startsWith("/oppgaver") ? (
@@ -591,6 +633,6 @@ const OppgaveTabell: React.FunctionComponent = () => {
       ) : null}
     </>
   );
-};
+}
 
 export default OppgaveTabell;

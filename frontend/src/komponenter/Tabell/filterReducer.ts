@@ -63,8 +63,17 @@ function filterReducer(antall: number, start: number) {
   function reducer(state: any, action: any) {
     switch (action.type) {
       case "sett_start": {
-        if (undefined !== typeof action.payload) return { ...state, start: action.payload };
-        else return state;
+        if (undefined !== typeof action.payload)
+          return {
+            ...state,
+            start: action.payload,
+            meta: { ...state.meta, kan_hente_oppgaver: true },
+          };
+        else
+          return {
+            ...state,
+            meta: { ...state.meta, kan_hente_oppgaver: true },
+          };
       }
 
       case "sett_tildelt_saksbehandler": {
@@ -165,7 +174,11 @@ function filterReducer(antall: number, start: number) {
         };
       }
       case "sett_projeksjon": {
-        return { ...state, projeksjon: action.payload };
+        return {
+          ...state,
+          projeksjon: action.payload,
+          meta: { ...state.meta, kan_hente_oppgaver: true },
+        };
       }
 
       default:
