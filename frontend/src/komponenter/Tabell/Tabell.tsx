@@ -623,14 +623,17 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
               role="columnheader"
               aria-sort={sorteringFrist === "stigende" ? "ascending" : "descending"}
             >
-              <div
-                className={`sortHeader 
+              {visFilter && (
+                <div
+                  className={`sortHeader 
                 ${filter_state.transformasjoner.sortering.type == "frist" ? "" : "inaktiv"}
                 ${sorteringFrist === "stigende" ? "ascending" : "descending"}`}
-                onClick={skiftSorteringFrist}
-              >
-                Frist
-              </div>
+                  onClick={skiftSorteringFrist}
+                >
+                  Frist
+                </div>
+              )}
+              {!visFilter && <div>Frist</div>}
             </th>
 
             <th />
@@ -662,13 +665,19 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
         </tbody>
       </table>
       {location.pathname.startsWith("/mineoppgaver") && ferdigstilteKlager?.rader && (
-        <>
-          <FullforteOppgaver>Fullførte oppgaver</FullforteOppgaver>
+        <FullforteOppgaver>
           <table
             className={`Tabell tabell oppgaver tabell--stripet`}
             cellSpacing={0}
             cellPadding={10}
           >
+            <thead>
+              <tr>
+                <th colSpan={5}>Fullførte oppgaver siste 7 dager</th>
+                <th>Fullført</th>
+                <th />
+              </tr>
+            </thead>
             <tbody>
               {genererTabellRader(
                 settValgtOppgave,
@@ -677,7 +686,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
               )}
             </tbody>
           </table>
-        </>
+        </FullforteOppgaver>
       )}
 
       {location.pathname.startsWith("/oppgaver") ? (
