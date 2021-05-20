@@ -1,5 +1,4 @@
-import { Textarea } from "nav-frontend-skjema";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { HeaderRow, Row } from "../../../styled-components/Row";
 import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandling";
@@ -15,33 +14,17 @@ import {
   lagreUtfall,
 } from "../../../tilstand/moduler/behandlingsskjema";
 import { BasertPaaHjemmel } from "./BasertPaaLovhjemmel";
-
-interface InterfaceInterVurderingProps {
-  internVurdering: string;
-  endreInternVurdering: (internVurdering: string) => void;
-}
-
-function Vurdering({ internVurdering, endreInternVurdering }: InterfaceInterVurderingProps) {
-  return (
-    <Textarea
-      id="internVurdering"
-      value={internVurdering}
-      label="Vurdering av kvalitet for intern bruk:"
-      maxLength={0}
-      onChange={(e) => {
-        endreInternVurdering(e.target.value);
-      }}
-      style={{
-        minHeight: "80px",
-      }}
-    />
-  );
-}
+import AutosaveProgressIndicator, { AutosaveStatus } from "./autosave-progress";
+import { InternVurdering } from "./InternVurdering";
+import { velgBehandlingsvedtak } from "../../../tilstand/moduler/behandlingsskjema.velgere";
 
 export function UtfallSkjema() {
   const kodeverk = useSelector(velgKodeverk);
   const klage: IKlage = useSelector(velgKlage);
+  const behandlingsvedtak = useSelector(velgBehandlingsvedtak);
   const dispatch = useDispatch();
+
+  console.log("behandlingsvedtak:", behandlingsvedtak);
 
   const [utfall, settUtfall] = useState<IKodeverkVerdi | null>(
     faaUtfalllObjekt(klage.vedtak[0].utfall) ?? kodeverk.utfall[0]
@@ -55,7 +38,8 @@ export function UtfallSkjema() {
 
   const [valgteHjemler, settValgteHjemler] = useState<Filter[]>([]); // TODO: Hentes fra klage
 
-  const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering ?? "");
+  const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering);
+  const [autosaveStatus, setAutosaveStatus] = useState<AutosaveStatus>(AutosaveStatus.NONE);
 
   const [valgteHjemler, settValgteHjemler] = useState<Filter[]>([]); // TODO: Hentes fra klage
 
@@ -123,8 +107,7 @@ export function UtfallSkjema() {
     );
   }
 
-  function endreInternVurdering(internVurdering: string) {
-    settInternVurdering(internVurdering);
+  function oppdaterInternVurdering(internVurdering: string) {
     dispatch(
       lagreInternVurdering({
         klagebehandlingid: klage.id,
@@ -159,6 +142,19 @@ export function UtfallSkjema() {
     );
   }
 
+  useEffect(() => {
+    // console.log("klagen er:", klage);
+    // console.log("vurderingen er:", klage.internVurdering);
+    // console.log("state:", vedtakStore.getState());
+    if (klage.internVurdering === internVurdering) {
+      setAutosaveStatus(AutosaveStatus.SAVED);
+      return;
+    }
+    setAutosaveStatus(AutosaveStatus.SAVING);
+    const timeout = setTimeout(oppdaterInternVurdering, 1000);
+    return () => clearTimeout(timeout); // Clear existing timer every time it runs.
+  }, [internVurdering]);
+
   return (
     <div className={"detaljer"}>
       <Row>
@@ -181,7 +177,17 @@ export function UtfallSkjema() {
         </Row>
       )}
       <Row>
-        <Vurdering internVurdering={internVurdering} endreInternVurdering={endreInternVurdering} />
+        <InternVurdering
+          internVurdering={internVurdering}
+          settInternVurdering={settInternVurdering}
+        />
+      </Row>
+      <Row>
+        <AutosaveProgressIndicator
+          autosaveStatus={
+            behandlingsvedtak.isLoading ? AutosaveStatus.SAVING : AutosaveStatus.SAVED
+          }
+        />
       </Row>
     </div>
   );

@@ -64,6 +64,7 @@ const initialStateBehandlingsVedtak = {
   hjemler: [] as string[],
   grunn: null as null | string,
   klagebehandlingVersjon: 3,
+  isLoading: false,
 };
 
 export const behandlingsvedtakSlice = createSlice({
@@ -71,11 +72,11 @@ export const behandlingsvedtakSlice = createSlice({
   initialState: initialStateBehandlingsVedtak,
   reducers: {
     SETT_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
-      return { ...state, internVurdering: action.payload.internVurdering };
+      return { ...state, internVurdering: action.payload.internVurdering, isLoading: true };
     },
     INTERN_VURDERING_SATT: (state) => {
       console.log("Intern vurdering satt");
-      return state;
+      return { ...state, isLoading: false };
     },
     SETT_UTFALL: (state, action: PayloadAction<IUtfallPayload>) => {
       return { ...state, utfall: action.payload.utfall };

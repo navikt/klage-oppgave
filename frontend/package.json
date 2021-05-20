@@ -105,6 +105,8 @@
     "nav-frontend-lenker-style": "^0.2.42",
     "nav-frontend-paneler": "^2.0.10",
     "nav-frontend-paneler-style": "^0.3.34",
+    "nav-frontend-popover": "^1.1.4",
+    "nav-frontend-popover-style": "^1.1.1",
     "nav-frontend-skjema": "^3.2.1",
     "nav-frontend-skjema-style": "^2.2.1",
     "nav-frontend-spinner": "^2.0.6",
