@@ -8,5 +8,7 @@ import { InfofeltStatisk } from "./TekstDisplay";
 export function OversendtKA() {
   const klage: IKlage = useSelector(velgKlage);
 
-  return <InfofeltStatisk header="Oversendt til KA" info={isoDateToPretty(klage.mottatt) ?? "-"} />;
+  return (
+    <InfofeltStatisk header="Mottatt klageinstans" info={isoDateToPretty(klage.mottatt) ?? "-"} />
+  );
 }

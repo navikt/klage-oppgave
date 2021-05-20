@@ -72,8 +72,8 @@ export function BasertPaaHjemmel({
 
   return (
     <div>
-      <b>Utfallet er basert på lovhjemmel:</b>
       <MultipleChoiceHeader
+        label="Utfallet er basert på lovhjemmel:"
         valgmuligheter={gyldigeHjemler}
         onSelect={(hjemmel) => settHjemmel(settHjemler, hjemmel, valgteHjemler)}
         dispatchFunc={settHjemmel}

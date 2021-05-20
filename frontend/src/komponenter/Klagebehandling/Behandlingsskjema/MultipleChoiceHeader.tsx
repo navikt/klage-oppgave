@@ -92,6 +92,7 @@ export function settHjemmel(
 }
 
 export const MultipleChoiceHeader = ({
+  label,
   children,
   valgmuligheter,
   onSelect,
@@ -117,6 +118,7 @@ export const MultipleChoiceHeader = ({
 
   return (
     <MultipleChoice ref={ref}>
+      <div className={`skjemaelement__label`}>{label}</div>
       <button className={classNames("filterHeader", open && "open")} onClick={onClick} tabIndex={0}>
         {children}
       </button>

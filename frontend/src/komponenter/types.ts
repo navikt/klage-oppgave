@@ -11,6 +11,7 @@ export interface FiltrerbarHeaderProps {
 }
 
 export interface SelectListHeaderProps {
+  label?: string;
   children: ReactNode | ReactNode[];
   onSelect: (filter: Filter | Filter[], override?: boolean) => void;
   valgmuligheter: Filter[];
