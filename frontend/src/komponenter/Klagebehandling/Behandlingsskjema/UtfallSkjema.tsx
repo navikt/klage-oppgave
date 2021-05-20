@@ -147,9 +147,9 @@ export function UtfallSkjema() {
 
   return (
     <div className={"detaljer"}>
-      <HeaderRow>
+      <Row>
         <Utfall utfallAlternativer={kodeverk.utfall} utfall={utfall} velgUtfall={velgUtfall} />
-      </HeaderRow>
+      </Row>
       <Row>
         <BasertPaaHjemmel
           gyldigeHjemler={gyldigeHjemler}

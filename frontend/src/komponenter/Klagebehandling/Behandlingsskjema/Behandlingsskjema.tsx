@@ -30,7 +30,13 @@ const Detaljer = styled.div`
 
 const KlageBoks = styled.div`
   width: 100%;
-  padding: 0.25em 1.5em;
+  background: white;
+  padding: 1.5em 1.5em 0.25em 1.5em;
+  display: flex;
+  flex-direction: column;
+  > div {
+    flex-basis: 42px;
+  }
 
   &:not(:first-child) {
     border-left: 1px solid #c9c9c9;
@@ -39,7 +45,6 @@ const KlageBoks = styled.div`
   h1 {
     font-size: 1.25em;
     font-weight: 600;
-    margin: 16px 0;
   }
 `;
 
@@ -57,7 +62,7 @@ function VurderingFraFoersteinstans() {
   const klage: IKlage = useSelector(velgKlage);
   return (
     <InfofeltStatisk
-      header="Vurdering fra førsteinstans for intern bruk"
+      header="Melding fra førsteinstans for intern bruk"
       info={klage.kommentarFraFoersteinstans || "-"}
     />
   );
@@ -98,28 +103,33 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
         <HeaderRow>
           <h1>Behandlingsdetaljer</h1>
         </HeaderRow>
-        <Row>
-          <Klager />
-        </Row>
-        <Row>
-          <TyperTemaer />
-        </Row>
-        <Row>
-          <MottattFoersteinstans />
-        </Row>
-        <Row>
-          <FraNavEnhet />
-        </Row>
-        <Row>
-          <OversendtKA />
-        </Row>
-        <Row>
-          <VurderingFraFoersteinstans />
-        </Row>
+        <div>
+          <Row>
+            <Klager />
+          </Row>
+          <Row>
+            <TyperTemaer />
+          </Row>
+          <Row>
+            <MottattFoersteinstans />
+          </Row>
+          <Row>
+            <FraNavEnhet />
+          </Row>
+          <Row>
+            <OversendtKA />
+          </Row>
+          <Row>
+            <VurderingFraFoersteinstans />
+          </Row>
+        </div>
       </KlageBoks>
 
       <KlageBoks>
-        <UtfallSkjema />
+        <HeaderRow></HeaderRow>
+        <div>
+          <UtfallSkjema />
+        </div>
       </KlageBoks>
     </Kontainer>
   );
