@@ -32,7 +32,7 @@ jobs:
           npm test
       - name: Test API-mock
         run: |
-          cd server
+          cd api-mock-server
           npm test
       - name: Build and publish Docker image
         env:
