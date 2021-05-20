@@ -648,7 +648,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
                 klagebehandlinger,
                 filter_state?.projeksjon || visFnr
               )}
-              )
             </>
           )}
 
