@@ -30,11 +30,6 @@ jobs:
         run: |
           cd frontend
           npm test
-      - name: Test API-mock
-        run: |
-          cd api-mock-server
-          npm i
-          npm test
       - name: Build and publish Docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
