@@ -26,13 +26,14 @@ jobs:
           cd frontend
           npm i
           npm run build
-      - name: Test
+      - name: Test Frontend
         run: |
           cd frontend
           npm test
       - name: Test API-mock
         run: |
           cd api-mock-server
+          npm i
           npm test
       - name: Build and publish Docker image
         env:
