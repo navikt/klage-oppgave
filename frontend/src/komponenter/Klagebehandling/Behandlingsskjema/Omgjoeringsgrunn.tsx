@@ -5,7 +5,7 @@ import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 interface OmgjoeringsgrunnProps {
   gyldigeOmgjoeringsgrunner: IKodeverkVerdi[];
   omgjoeringsgrunn: IKodeverkVerdi | null;
-  velgOmgjoeringsgrunn: (omgjoeringsgrunn: IKodeverkVerdi) => void;
+  velgOmgjoeringsgrunn: (omgjoeringsgrunn: IKodeverkVerdi | null) => void;
 }
 export function Omgjoeringsgrunn({
   gyldigeOmgjoeringsgrunner,
@@ -20,9 +20,15 @@ export function Omgjoeringsgrunn({
         (omgjoeringObj: IKodeverkVerdi) => omgjoeringObj.id === omgjoeringsgrunn?.id
       )}
       onChange={(e) => {
-        velgOmgjoeringsgrunn(gyldigeOmgjoeringsgrunner[e.target.value]);
+        if (!e.target.value) {
+          velgOmgjoeringsgrunn(null);
+        } else {
+          const valgtOmgjoeringsgrunn = gyldigeOmgjoeringsgrunner[e.target.value];
+          velgOmgjoeringsgrunn(valgtOmgjoeringsgrunn);
+        }
       }}
     >
+      <option value={undefined}>Velg omgjøringsgrunn</option>
       {gyldigeOmgjoeringsgrunner.map((omgjoeringObj, index) => {
         return (
           <option key={index} value={index}>

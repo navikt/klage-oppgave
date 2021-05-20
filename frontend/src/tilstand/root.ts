@@ -13,6 +13,7 @@ import oppgavelaster, { OPPGAVELASTER_EPOS } from "./moduler/oppgavelaster";
 import featureToggles, { UNLEASH_EPICS } from "./moduler/unleash";
 import klagebehandling, { KLAGEBEHANDLING_EPICS } from "./moduler/klagebehandling";
 import token, { EXPIRE_EPICS } from "./moduler/token";
+import behandlingsskjema, { BEHANDLINGSSKJEMA_EPICS } from "./moduler/behandlingsskjema";
 import admin, { ADMIN_EPICS } from "./moduler/admin";
 
 const epics: Array<(
@@ -32,6 +33,7 @@ const epics: Array<(
   ...KLAGEBEHANDLING_EPICS,
   ...ROUTING_EPICS,
   ...EXPIRE_EPICS,
+  ...BEHANDLINGSSKJEMA_EPICS,
   ...ADMIN_EPICS,
 ];
 export const rootEpic = combineEpics.apply(combineEpics, epics);
@@ -46,6 +48,7 @@ const rootReducer = combineReducers({
   featureToggles,
   saksbehandler,
   token,
+  behandlingsskjema,
   admin,
 });
 
