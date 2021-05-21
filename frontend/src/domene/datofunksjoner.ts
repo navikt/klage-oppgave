@@ -4,8 +4,11 @@ export const formattedDate = (frist: any) => {
     const ye = new Intl.DateTimeFormat("nb", { year: "numeric" }).format(utime);
     const mo = new Intl.DateTimeFormat("nb", { month: "2-digit" }).format(utime);
     const da = new Intl.DateTimeFormat("nb", { day: "2-digit" }).format(utime);
-    return `${da}${mo}${ye}`;
-  } else return "mangler";
+    let res = `${da}${mo}${ye}`;
+    if (res === "01.01.1970") return "mangler";
+    else return res;
+  }
+  return "mangler";
 };
 
 const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/; // 2020-10-29
