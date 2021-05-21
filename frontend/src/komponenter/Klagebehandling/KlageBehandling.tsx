@@ -61,6 +61,8 @@ const Kontrollpanel = styled.div`
 const Knapper = styled.div`
   display: flex;
   grid-area: Toggles;
+  user-select: none;
+  cursor: pointer;
   justify-content: space-between;
   max-width: 35em;
   justify-self: center;
@@ -104,7 +106,6 @@ const Personnummer = styled.span`
 `;
 const SjekkboksLabel = styled.div`
   z-index: 5;
-  user-select: none;
 `;
 
 const HorisontalGrid = styled.div`

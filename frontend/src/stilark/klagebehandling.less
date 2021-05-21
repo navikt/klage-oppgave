@@ -379,6 +379,8 @@ table.dokument-tabell {
 
 .toggle-label {
   padding: 0 0.75em 0 0.4em;
+  user-select: none;
+  cursor: pointer;
 
   &.fet {
     text-shadow: 0.02em 0 0 black;
@@ -398,7 +400,7 @@ table.dokument-tabell {
   width: @toggle-w;
   height: @toggle-h;
   position: relative;
-  cursor: pointer;
+  cursor: hand;
   background-color: #78706a;
   transition: border-color 300ms;
   border-radius: 6px;
