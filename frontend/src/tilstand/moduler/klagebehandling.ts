@@ -382,7 +382,7 @@ export function klagebehandlingDokumenterTilordnedeEpos(
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
-    ofType(hentDokumentTilordnedeHandling.type),
+    ofType(hentDokumentTilordnedeHandling.type, tilordnetDokumentHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
       let ref = action.payload.ref;
