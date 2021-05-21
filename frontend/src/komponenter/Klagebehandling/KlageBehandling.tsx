@@ -104,6 +104,7 @@ const Personnummer = styled.span`
 `;
 const SjekkboksLabel = styled.div`
   z-index: 5;
+  user-select: none;
 `;
 
 const HorisontalGrid = styled.div`
@@ -253,7 +254,7 @@ export default function Klagebehandling() {
   useEffect(() => {
     settAktiveFaner({
       detaljer: {
-        checked: innstillinger?.aktiveFaner?.detaljer?.checked || false,
+        checked: innstillinger?.aktiveFaner?.detaljer?.checked || true,
       },
       dokumenter: {
         checked: innstillinger?.aktiveFaner?.dokumenter?.checked || true,
