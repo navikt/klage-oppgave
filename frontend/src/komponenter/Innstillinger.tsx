@@ -144,7 +144,7 @@ const Innstillinger = (): JSX.Element => {
     lagreInnstillinger();
   };
   return (
-    <Oppsett visMeny={true}>
+    <Oppsett visMeny={false}>
       <div className={"innstillinger"}>
         <h1>Innstillinger</h1>
         <h3>Velg hvilke temaer og hjemler du har kompetanse til å behandle</h3>
