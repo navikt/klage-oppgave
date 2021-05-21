@@ -39,7 +39,7 @@ const IkonLukk = styled.img`
 const Kontrollpanel = styled.div`
   display: grid;
   background: #f8f8f8;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 23em repeat(3, 1fr);
   grid-template-areas: "Person Toggles Toggles Knapper";
   height: 3em;
 
@@ -65,7 +65,7 @@ const Knapper = styled.div`
   cursor: pointer;
   justify-content: space-between;
   max-width: 35em;
-  justify-self: center;
+  justify-self: left;
   @media screen and (max-width: 1400px) {
     justify-content: flex-start;
     justify-self: flex-start;
@@ -80,6 +80,7 @@ const Person = styled.div`
   margin: 0.5em 1em;
   white-space: nowrap;
   padding: 0.5em 1em;
+  max-width: 23em;
   @media screen and (max-width: 1400px) {
     padding: 0.5em 0 0 0;
     border: none;
@@ -101,6 +102,7 @@ const Kjonn = styled.span`
   display: inline-flex;
   margin: 0 0.25em 0 0;
 `;
+
 const Personnummer = styled.span`
   padding-left: 0.1em;
 `;
