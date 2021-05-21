@@ -442,7 +442,7 @@ export function ToggleKlageDokumentEpos(
       )
         .pipe(
           map((payload: { response: IInnstillinger }) =>
-            tilordnetDokumentHandling(payload.response)
+            tilordnetDokumentHandling({ id: action.payload.id, ...payload.response })
           )
         )
         .pipe(
