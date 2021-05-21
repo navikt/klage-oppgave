@@ -112,6 +112,11 @@ end
 init()
 
 i=0
+
+# trenger disse for test
+insert_dokument("test_journalpostId", "test_dokumentInfoId", "test_tittel", "test_tema", "2020-12-31", 1,1)
+insert_vedlegg("test_dokumentInfoId_2", "test_vedlegg_tittel", 1, 1)
+
 loop do
   lagDokument()
   lagVedlegg()

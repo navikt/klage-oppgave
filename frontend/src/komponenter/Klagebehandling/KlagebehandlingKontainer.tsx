@@ -1,13 +1,12 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import {
-  fradelDokumenterHandling,
   hentDokumentAlleHandling,
   hentDokumentTilordnedeHandling,
   hentPreviewHandling,
   IKlage,
   lasterDokumenter,
   nullstillDokumenter,
-  tilordneDokumenterHandling,
+  toggleDokumenterHandling,
 } from "../../tilstand/moduler/klagebehandling";
 import { useDispatch, useSelector } from "react-redux";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
@@ -27,6 +26,7 @@ import ExtLink from "../extlink.svg";
 import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
 import { IFaner } from "./KlageBehandling";
 import FullforVedtak from "./Behandlingsskjema/FullforVedtak";
+import { Checkbox } from "nav-frontend-skjema";
 
 export interface IDokument {
   journalpostId: string;
@@ -141,6 +141,7 @@ const RightAlign = styled.div`
   display: flex;
   justify-content: right;
   float: right; //for safari
+  position: relative;
 `;
 
 const DokumentRad = styled.ul`
@@ -188,6 +189,7 @@ const DokumentSjekkboks = styled.li`
   width: 100%;
   text-align: right;
   grid-area: sjekkboks;
+  position: relative;
 `;
 
 const VedleggKontainer = styled.div`
@@ -197,7 +199,7 @@ const VedleggKontainer = styled.div`
 const VedleggRad = styled.ul`
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.65em 0 0 0;
   display: flex;
   justify-content: space-between;
 `;
@@ -449,12 +451,15 @@ function DokumentTabell(props: {
     }
   }, [klage.dokumenter]);
 
-  function tilordneDokument(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
-    dispatch(tilordneDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
-  }
-
-  function fradelDokument(behandlingId: string, journalpostId: string, dokumentInfoId: string) {
-    dispatch(fradelDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
+  function toggleDokument(
+    behandlingId: string,
+    journalpostId: string,
+    dokumentInfoId: string,
+    erVedlegg: boolean
+  ) {
+    dispatch(
+      toggleDokumenterHandling({ id: behandlingId, journalpostId, dokumentInfoId, erVedlegg })
+    );
   }
 
   useEffect(() => {
@@ -466,19 +471,21 @@ function DokumentTabell(props: {
     journalpostId,
     dokumentTittel,
     dokumentInfoId,
+    erVedlegg,
     props,
   }: {
     behandlingId: string;
     journalpostId: string;
     dokumentTittel: string;
     dokumentInfoId: string;
+    erVedlegg: boolean;
     props: any;
   }) {
     props.settAktivPDF(true);
     props.settdokumentInfoId(dokumentInfoId);
     props.settdokumentTittel(dokumentTittel);
     props.settjournalpostId(journalpostId);
-    dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId }));
+    dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId, erVedlegg }));
   }
 
   const [visFullKontainer, settvisFullKontainer] = useState(true);
@@ -529,6 +536,7 @@ function DokumentTabell(props: {
                       journalpostId: item.journalpostId,
                       dokumentInfoId: item.dokumentInfoId,
                       dokumentTittel: item.tittel,
+                      erVedlegg: false,
                       props: props,
                     })
                   }
@@ -573,6 +581,7 @@ function DokumentTabell(props: {
                       journalpostId: item.journalpostId,
                       dokumentInfoId: item.dokumentInfoId,
                       dokumentTittel: item.tittel!,
+                      erVedlegg: false,
                       props: props,
                     })
                   }
@@ -587,6 +596,7 @@ function DokumentTabell(props: {
                       journalpostId: item.journalpostId,
                       dokumentInfoId: item.dokumentInfoId,
                       dokumentTittel: item.tittel!,
+                      erVedlegg: false,
                       props: props,
                     })
                   }
@@ -604,6 +614,7 @@ function DokumentTabell(props: {
                           journalpostId: item.journalpostId,
                           dokumentInfoId: item.dokumentInfoId,
                           dokumentTittel: item.tittel!,
+                          erVedlegg: false,
                           props: props,
                         })
                       : console.error("har ikke tilgang")
@@ -613,26 +624,16 @@ function DokumentTabell(props: {
                   {formattedDate(item.registrert)}
                 </DokumentDato>
 
-                <DokumentSjekkboks className={"dokument-sjekkboks"}>
+                <DokumentSjekkboks>
                   <RightAlign>
-                    <Sjekkboks
-                      type={"checkbox"}
-                      id={item.journalpostId + item.dokumentInfoId}
+                    <Checkbox
+                      label={""}
                       disabled={!item.harTilgangTilArkivvariant}
-                      checked={item.valgt}
-                      onChange={() => {
-                        console.log("endret sjekkboks main");
-                      }}
-                    />
-                    <label
+                      defaultChecked={item.valgt}
+                      className={"dokument-sjekkboks"}
                       onClick={() => {
-                        if (item.valgt) {
-                          fradelDokument(klage.id, item.journalpostId, item.dokumentInfoId);
-                        } else {
-                          tilordneDokument(klage.id, item.journalpostId, item.dokumentInfoId);
-                        }
+                        toggleDokument(klage.id, item.journalpostId, item.dokumentInfoId, false);
                       }}
-                      htmlFor={item.journalpostId + item.dokumentInfoId}
                     />
                   </RightAlign>
                 </DokumentSjekkboks>
@@ -648,6 +649,7 @@ function DokumentTabell(props: {
                                   journalpostId: item.journalpostId,
                                   dokumentInfoId: vedlegg.dokumentInfoId,
                                   dokumentTittel: vedlegg.tittel,
+                                  erVedlegg: false,
                                   props: props,
                                 })
                               : console.error("ingen tilgang")
@@ -658,31 +660,20 @@ function DokumentTabell(props: {
 
                         <DokumentSjekkboks className={"dokument-sjekkboks"}>
                           <RightAlign>
-                            <Sjekkboks
-                              id={idx + item.dokumentInfoId}
-                              type={"checkbox"}
-                              checked={vedlegg.valgt}
+                            <Checkbox
+                              label={""}
                               disabled={!item.harTilgangTilArkivvariant}
-                              onChange={() => {
-                                console.log("endret sjekkboks sub");
-                              }}
+                              defaultChecked={item.valgt}
+                              className={"dokument-sjekkboks"}
                               onClick={() => {
-                                if (vedlegg.valgt) {
-                                  return fradelDokument(
-                                    klage.id,
-                                    item.journalpostId,
-                                    vedlegg.dokumentInfoId
-                                  );
-                                } else {
-                                  return tilordneDokument(
-                                    klage.id,
-                                    item.journalpostId,
-                                    vedlegg.dokumentInfoId
-                                  );
-                                }
+                                toggleDokument(
+                                  klage.id,
+                                  item.journalpostId,
+                                  vedlegg.dokumentInfoId,
+                                  true
+                                );
                               }}
                             />
-                            <label htmlFor={idx + item.dokumentInfoId} />
                           </RightAlign>
                         </DokumentSjekkboks>
                       </VedleggRad>

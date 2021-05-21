@@ -6,6 +6,8 @@ import {
   fradelSaksbehandler,
   ISaksbehandler,
   tildelSaksbehandler,
+  toggleDokument,
+  toggleVedlegg,
 } from "./oppgaver";
 import { OppgaveQuery } from "./types";
 
@@ -227,6 +229,28 @@ app.post("/internal/elasticadmin/rebuild", async (req, res) => {
   if (random === 0) return res.status(403).send("");
   else return res.status(200).send("");
 });
+
+app.post(
+  "/klagebehandlinger/:behandlingsid/toggledokument",
+  async (req, res) => {
+    let id = req.params?.behandlingsid;
+    let { dokumentInfoId, journalpostId, erVedlegg } = req.body;
+    if (!id || !dokumentInfoId || !journalpostId || erVedlegg === undefined) {
+      return res
+        .status(400)
+        .send(
+          `mangler data (${id}, ${dokumentInfoId}, ${journalpostId}, ${erVedlegg})`
+        );
+    }
+    let result;
+    if (id) {
+      result = (await erVedlegg)
+        ? toggleVedlegg({ id, dokumentInfoId, journalpostId })
+        : toggleDokument({ id, dokumentInfoId, journalpostId });
+      return res.status(200).send(result);
+    } else return res.status(403).send("");
+  }
+);
 
 app.get(
   "/ansatte/:id/antallklagebehandlingermedutgaattefrister",

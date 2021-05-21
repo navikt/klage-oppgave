@@ -95,6 +95,7 @@ interface IDokumentPayload {
   id: string;
   journalpostId: string;
   dokumentInfoId: string;
+  erVedlegg: boolean;
 }
 
 interface IDokumentParams {
@@ -166,7 +167,6 @@ export const klageSlice = createSlice({
       return state;
     },
     HENTET_DOKUMENT_FORHANDSVISNING: (state, action: PayloadAction<any>) => {
-      console.debug("currentPDF", action.payload);
       state.currentPDF = action.payload;
       return state;
     },
@@ -217,26 +217,6 @@ export const klageSlice = createSlice({
       state.dokumenterTilordnede = action.payload.dokumenter;
       return state;
     },
-    DOKUMENT_TILORDNET: (state, action: PayloadAction<any>) => {
-      state.dokumenterOppdatert = new Date().getTime().toString();
-      console.log(action.payload);
-      state.dokumenter.map((dok: any) => {
-        console.log({ dok });
-      });
-      return state;
-    },
-    DOKUMENT_FRADELT: (
-      state,
-      action: PayloadAction<{ journalpostId: string; dokumentInfoId: string; payload: any }>
-    ) => {
-      state.dokumenterOppdatert = new Date().getTime().toString();
-      state.dokumenterTilordnede = state.dokumenterTilordnede.filter(
-        (dok: any) =>
-          dok.journalpostId !== action.payload.journalpostId &&
-          dok.dokumentInfoId !== action.payload.dokumentInfoId
-      );
-      return state;
-    },
     FEILET: (state, action: PayloadAction<string>) => {
       console.error(action.payload);
       state.klageLastet = true;
@@ -278,11 +258,8 @@ export const hentDokumentTilordnedeHandling = createAction<Partial<IDokumentPara
   "klagebehandling/HENT_TILORDNEDE_DOKUMENTER"
 );
 
-export const tilordneDokumenterHandling = createAction<Partial<Partial<IDokumentPayload>>>(
+export const toggleDokumenterHandling = createAction<Partial<Partial<IDokumentPayload>>>(
   "klagebehandling/TILORDNE_DOKUMENT"
-);
-export const fradelDokumenterHandling = createAction<Partial<Partial<IDokumentPayload>>>(
-  "klagebehandling/FRADEL_DOKUMENT"
 );
 export const fradeltDokumentHandling = createAction<{
   journalpostId: string;
@@ -444,21 +421,22 @@ export function klagebehandlingDokumenterTilordnedeEpos(
   );
 }
 
-export function TilordneKlageDokumentEpos(
+export function ToggleKlageDokumentEpos(
   action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
   state$: StateObservable<RootStateOrAny>,
   { post }: AjaxCreationMethod
 ) {
   return action$.pipe(
-    ofType(tilordneDokumenterHandling.type),
+    ofType(toggleDokumenterHandling.type),
     switchMap((action) => {
-      const url = `/api/klagebehandlinger/${action.payload.id}/dokumenter`;
+      const url = `/api/klagebehandlinger/${action.payload.id}/toggledokument`;
       return post(
         url,
         {
           id: action.payload.id,
           journalpostId: action.payload.journalpostId,
           dokumentInfoId: action.payload.dokumentInfoId,
+          erVedlegg: action.payload.erVedlegg,
         },
         { "Content-Type": "application/json" }
       )
@@ -486,48 +464,10 @@ export function TilordneKlageDokumentEpos(
   );
 }
 
-export function FradelKlageDokumentEpos(
-  action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
-  state$: StateObservable<RootStateOrAny>
-) {
-  return action$.pipe(
-    ofType(fradelDokumenterHandling.type),
-    switchMap((action) => {
-      const url = `/api/klagebehandlinger/${action.payload.id}/journalposter/${action.payload.journalpostId}/dokumenter/${action.payload.dokumentInfoId}`;
-      return ajaxDelete(url)
-        .pipe(
-          map((payload: { response: IInnstillinger }) =>
-            fradeltDokumentHandling({
-              journalpostId: action.payload.journalpostId,
-              dokumentInfoId: action.payload.dokumentInfoId,
-              payload: payload.response,
-            })
-          )
-        )
-        .pipe(
-          retryWhen(provIgjenStrategi({ maksForsok: 0 })),
-          catchError((error) => {
-            console.debug(error);
-            return concat([
-              feiletHandling(error?.response?.detail || "feilet"),
-              toasterSett({
-                display: true,
-                type: "feil",
-                feilmelding: `Fradeling av dokument feilet: (${error?.response?.detail ?? error})`,
-              }),
-              toasterSkjul(),
-            ]);
-          })
-        );
-    })
-  );
-}
-
 export const KLAGEBEHANDLING_EPICS = [
   klagebehandlingEpos,
   klagebehandlingDokumenterTilordnedeEpos,
   klagebehandlingDokumenterAlleEpos,
-  TilordneKlageDokumentEpos,
-  FradelKlageDokumentEpos,
+  ToggleKlageDokumentEpos,
   HentDokumentForhandsvisningEpos,
 ];

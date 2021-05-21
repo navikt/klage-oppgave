@@ -130,6 +130,88 @@ export async function fradelSaksbehandler(params: ISaksbehandler) {
     }));
 }
 
+export async function toggleDokument({
+  id,
+  dokumentInfoId,
+  journalpostId,
+}: {
+  id: string;
+  dokumentInfoId: string;
+  journalpostId: string;
+}) {
+  let fetch_sql = `SELECT valgt from Dokumenter WHERE dokumentInfoId LIKE ?`;
+  let params = [dokumentInfoId];
+  let db = new sqlite3.Database(path.join(__dirname, "../oppgaver.db"));
+  let erValgt = await new Promise((resolve, reject) =>
+    db.all(fetch_sql, params, (err: any, rad: any) => {
+      if (err) {
+        console.log({ fetch_sql, params });
+        reject(err);
+      }
+      resolve(rad[0].valgt);
+    })
+  );
+  let endret_sql = `UPDATE Dokumenter set valgt = ? WHERE dokumentInfoId LIKE ?`;
+  let nyValgt = erValgt === 1 ? 0 : 1;
+  let params2 = [nyValgt, dokumentInfoId];
+  await new Promise((resolve, reject) =>
+    db.run(endret_sql, params2, (err: any) => {
+      if (err) {
+        console.log({ endret_sql, params });
+        reject(err);
+      }
+      resolve("");
+    })
+  );
+  db.close((err: { message: string }) => {
+    if (err) {
+      throw err.message;
+    }
+  });
+  return `${erValgt} endret til ${nyValgt}`;
+}
+
+export async function toggleVedlegg({
+  id,
+  dokumentInfoId,
+  journalpostId,
+}: {
+  id: string;
+  dokumentInfoId: string;
+  journalpostId: string;
+}) {
+  let fetch_sql = `SELECT valgt from Vedlegg WHERE dokumentInfoId LIKE ?`;
+  let params = [dokumentInfoId];
+  let db = new sqlite3.Database(path.join(__dirname, "../oppgaver.db"));
+  let erValgt = await new Promise((resolve, reject) =>
+    db.all(fetch_sql, params, (err: any, rad: any) => {
+      if (err) {
+        console.log({ fetch_sql, params });
+        reject(err);
+      }
+      resolve(rad[0].valgt);
+    })
+  );
+  let endret_sql = `UPDATE Vedlegg set valgt = ? WHERE dokumentInfoId LIKE ?`;
+  let nyValgt = erValgt === 1 ? 0 : 1;
+  let params2 = [nyValgt, dokumentInfoId];
+  await new Promise((resolve, reject) =>
+    db.run(endret_sql, params2, (err: any) => {
+      if (err) {
+        console.log({ endret_sql, params });
+        reject(err);
+      }
+      resolve("");
+    })
+  );
+  db.close((err: { message: string }) => {
+    if (err) {
+      throw err.message;
+    }
+  });
+  return `${erValgt} endret til ${nyValgt}`;
+}
+
 export async function filtrerOppgaver(query: OppgaveQuery) {
   const {
     typer,
@@ -142,19 +224,6 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     tildeltSaksbehandler,
     fullfortFom,
   } = query;
-  /*
-  console.log({
-    typer,
-    temaer,
-    hjemler,
-    antall,
-    start,
-    rekkefoelge,
-    navIdent,
-    tildeltSaksbehandler,
-      fullfortFom
-  });
-*/
 
   let filterTyper = typer?.split(",");
   let filterTemaer = temaer?.split(",");
