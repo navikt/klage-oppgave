@@ -163,10 +163,8 @@ const OppgaveTabellRad = ({
         </TableCell>
       )}
 
-      {!R.empty(avsluttet) && <TableCell>{formattedDate(avsluttet)}</TableCell>}
-      {R.empty(avsluttet) && (
-        <TableCell>{!R.empty(frist) ? formattedDate(Number(frist)) : <div>mangler</div>}</TableCell>
-      )}
+      {avsluttet && <TableCell>{formattedDate(avsluttet)}</TableCell>}
+      {!avsluttet && <TableCell>{formattedDate(frist)}</TableCell>}
 
       {utfall ? <TableCell>{utfall}</TableCell> : null}
       {!utfall &&
