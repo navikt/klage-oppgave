@@ -90,7 +90,6 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
                 className={classNames({ enhet: true, active: person.enhetId == enhet.id })}
                 key={enhet.id}
               >
-                *
                 <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
                   {enhet.id} {enhet.navn}
                 </NavLink>
@@ -99,22 +98,16 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
           })}
           <hr />
           {harAdminTilgang && (
-            <div onClick={() => history.push("/admin")} className={classNames({ enhet: true })}>
-              <a href={"#"}>Admin</a>
-            </div>
+            <NavLink to={"/admin"} className={classNames({ enhet: true, navlink: true })}>
+              Admin
+            </NavLink>
           )}
-          <div
-            onClick={() => history.push("/innstillinger")}
-            className={classNames({ enhet: true })}
-          >
-            <a href={"#"}>Innstillinger</a>
-          </div>
-          <div
-            onClick={() => history.push("/internal/logout")}
-            className={classNames({ enhet: true })}
-          >
-            <a href={"#"}>Logg ut</a>
-          </div>
+          <NavLink to={"/innstillinger"} className={classNames({ enhet: true, navlink: true })}>
+            Innstillinger
+          </NavLink>
+          <NavLink to={"/internal/logout"} className={classNames({ enhet: true, navlink: true })}>
+            Logg ut
+          </NavLink>
         </div>
       </div>
     </BrukerBoks>
