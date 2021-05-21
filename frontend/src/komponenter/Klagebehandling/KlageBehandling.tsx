@@ -231,7 +231,7 @@ export default function Klagebehandling() {
 
   const [faner, settAktiveFaner] = useState<IFaner>({
     detaljer: {
-      checked: innstillinger?.aktiveFaner?.detaljer?.checked || false,
+      checked: innstillinger?.aktiveFaner?.detaljer?.checked || true,
     },
     dokumenter: {
       checked: innstillinger?.aktiveFaner?.dokumenter?.checked || true,
