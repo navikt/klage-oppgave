@@ -453,6 +453,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           oppgaveId: valgtOppgave.id,
           ident: meg.id,
           klagebehandlingVersjon: valgtOppgave.klagebehandlingVersjon,
+          enhetId: enheter[valgtEnhetIdx].id,
         })
       );
     }

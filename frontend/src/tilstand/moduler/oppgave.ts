@@ -17,7 +17,7 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { settEnhetHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling } from "./klagebehandling";
-import { fradelMegHandling, PayloadType, tildelMegHandling } from "./saksbehandler";
+import { fradelMegHandling, ITildelOppgave, tildelMegHandling } from "./saksbehandler";
 import { settOppgaverFerdigLastet } from "./oppgavelaster";
 
 const R = require("ramda");

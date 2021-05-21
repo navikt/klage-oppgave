@@ -19,10 +19,11 @@ export type TildelType = {
     ident: string;
   };
 };
-export type PayloadType = {
+export type ITildelOppgave = {
   ident: string;
   oppgaveId: string;
   klagebehandlingVersjon: number;
+  enhetId: string;
 };
 
 //==========
@@ -46,8 +47,8 @@ export default saksbehandlerSlice.reducer;
 //==========
 // Actions
 //==========
-export const tildelMegHandling = createAction<PayloadType>("saksbehandler/TILDEL_MEG");
-export const fradelMegHandling = createAction<PayloadType>("saksbehandler/FRADEL_MEG");
+export const tildelMegHandling = createAction<ITildelOppgave>("saksbehandler/TILDEL_MEG");
+export const fradelMegHandling = createAction<ITildelOppgave>("saksbehandler/FRADEL_MEG");
 const fradeltHandling = createAction<string>("saksbehandler/FRADELT");
 const tildeltHandling = createAction<TildelType>("saksbehandler/TILDELT");
 
@@ -55,7 +56,7 @@ const tildeltHandling = createAction<TildelType>("saksbehandler/TILDELT");
 // Epos
 //==========
 export function tildelEpos(
-  action$: ActionsObservable<PayloadAction<PayloadType>>,
+  action$: ActionsObservable<PayloadAction<ITildelOppgave>>,
   state$: StateObservable<RootStateOrAny>,
   { post }: AjaxCreationMethod
 ) {
@@ -68,6 +69,7 @@ export function tildelEpos(
         tildelMegUrl,
         {
           navIdent: action.payload.ident,
+          enhetId: action.payload.enhetId,
           klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
         },
         { "Content-Type": "application/json" }
@@ -95,7 +97,7 @@ export function tildelEpos(
   );
 }
 
-export function settLasterEpos(action$: ActionsObservable<PayloadAction<PayloadType>>) {
+export function settLasterEpos(action$: ActionsObservable<PayloadAction<ITildelOppgave>>) {
   return action$.pipe(
     ofType(fradelMegHandling.type, tildelMegHandling.type),
     mergeMap(() => {
@@ -105,7 +107,7 @@ export function settLasterEpos(action$: ActionsObservable<PayloadAction<PayloadT
 }
 
 export function fradelEpos(
-  action$: ActionsObservable<PayloadAction<PayloadType>>,
+  action$: ActionsObservable<PayloadAction<ITildelOppgave>>,
   state$: StateObservable<RootStateOrAny>,
   { post }: AjaxCreationMethod
 ) {
@@ -119,6 +121,7 @@ export function fradelEpos(
         {
           navIdent: action.payload.ident,
           klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+          enhetId: action.payload.enhetId,
         },
         { "Content-Type": "application/json" }
       )

@@ -1,17 +1,11 @@
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
-import saksbehandlerTilstand, {
-  fradelEpos,
-  fradelMegHandling,
-  tildelEpos,
-  tildelMegHandling,
-} from "./saksbehandler";
+import { fradelEpos, fradelMegHandling, tildelEpos, tildelMegHandling } from "./saksbehandler";
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { OppgaveParams } from "./oppgave";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { AlertStripeType } from "nav-frontend-alertstriper";
 
 describe("TILDEL 'Meg' epos", () => {
   let ts: TestScheduler;
@@ -64,6 +58,7 @@ describe("TILDEL 'Meg' epos", () => {
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
             klagebehandlingVersjon: 5,
+            enhetId: "",
           }),
         };
         const resultPayload = {
@@ -130,6 +125,7 @@ describe("TILDEL 'Meg' epos", () => {
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
             klagebehandlingVersjon: 5,
+            enhetId: "",
           }),
         };
         const resultPayload = {};
@@ -180,6 +176,7 @@ describe("TILDEL 'Meg' epos", () => {
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
             klagebehandlingVersjon: 5,
+            enhetId: "",
           }),
         };
         const resultPayload = {};
@@ -230,6 +227,7 @@ describe("TILDEL 'Meg' epos", () => {
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
             klagebehandlingVersjon: 5,
+            enhetId: "",
           }),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
@@ -279,6 +277,7 @@ describe("TILDEL 'Meg' epos", () => {
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
             klagebehandlingVersjon: 5,
+            enhetId: "",
           }),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
@@ -331,6 +330,7 @@ describe("TILDEL 'Meg' epos", () => {
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
             klagebehandlingVersjon: 5,
+            enhetId: "",
           }),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
@@ -383,6 +383,7 @@ describe("TILDEL 'Meg' epos", () => {
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
             klagebehandlingVersjon: 5,
+            enhetId: "",
           }),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));

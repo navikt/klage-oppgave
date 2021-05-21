@@ -52,6 +52,7 @@ const visHandlinger = R.curry(
     const [viserHandlinger, settVisHandlinger] = useState(false);
     let [it] = useState(0);
     const ref = useRef<HTMLDivElement>(null);
+    const meg = useSelector(velgMeg);
     useOnInteractOutside({
       ref,
       onInteractOutside: () => settVisHandlinger(false),
@@ -84,12 +85,19 @@ const visHandlinger = R.curry(
 );
 
 const leggTilbakeOppgave = R.curry(
-  (dispatch: Function, ident: string, oppgaveId: string, klagebehandlingVersjon: number) =>
+  (
+    dispatch: Function,
+    ident: string,
+    enhetId: string,
+    oppgaveId: string,
+    klagebehandlingVersjon: number
+  ) =>
     dispatch(
       fradelMegHandling({
         oppgaveId: oppgaveId,
         ident: ident,
         klagebehandlingVersjon: klagebehandlingVersjon,
+        enhetId: enhetId,
       })
     )
 );
@@ -110,7 +118,8 @@ const OppgaveTabellRad = ({
 }: OppgaveRadMedFunksjoner) => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
-  const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id);
+  const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id)(meg.enheter[meg.valgtEnhet].id);
+
   const curriedVisHandlinger = visHandlinger(fradelOppgave)(id);
   const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);
   const kodeverk = useSelector(velgKodeverk);
