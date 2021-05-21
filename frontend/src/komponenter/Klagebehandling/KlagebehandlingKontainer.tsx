@@ -93,6 +93,7 @@ const DokumentKontainer = styled.div`
   margin: 0 0.25em 0 0;
   height: calc(100% - 3em);
   max-height: 100%;
+  overflow-x: scroll;
   @media screen and (max-width: 1400px) {
     height: calc(100% - 6.25em);
   }
