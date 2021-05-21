@@ -22,7 +22,9 @@ def init_oppgaver()
                 klagebehandlingVersjon INTEGER,
                 erMedunderskriver INTEGER,
                 finalized TEXT,
-                ferdigstiltFom TEXT
+                ferdigstiltFom TEXT,
+                avsluttet TEXT,
+                utfall TEXT
             )
             "
   rescue SQLite3::Exception => e
@@ -36,11 +38,11 @@ def init_oppgaver()
 end
 
 
-def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon, erMedunderskriver, finalized,ferdigstiltFom)
+def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon, erMedunderskriver, finalized, ferdigstiltFom, avsluttet, utfall)
   begin
 	  db = SQLite3::Database.open ARGV[0]
-      db.execute("INSERT INTO Oppgaver (Id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon, erMedunderskriver, finalized, ferdigstiltFom) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)",
-                                        [id, type, tema, hjemmel, frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon, erMedunderskriver && 1 || 0, finalized.to_s, ferdigstiltFom.to_s])
+      db.execute("INSERT INTO Oppgaver  (Id, type, tema, hjemmel,  frist,      mottatt,      saksbehandler, fnr, navn, klagebehandlingVersjon, erMedunderskriver,           finalized,      ferdigstiltFom,      avsluttet,      utfall) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                        [id, type, tema, hjemmel,  frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon,                erMedunderskriver && 1 || 0, finalized.to_s, ferdigstiltFom.to_s, avsluttet.to_s, utfall])
 
   rescue SQLite3::Exception => e
     puts "Exception occurred"
@@ -92,6 +94,7 @@ def lagData(teller)
   tema = tilfeldigTema()
   frist = Faker::Date.backward(days: 365)
   mottatt = Faker::Date.backward(days: 365)
+  avsluttet = Faker::Date.backward(days: 14)
   finalized = Faker::Date.backward(days: 5)
   hjemmel = tilfeldigHjemmel()
   ferdigstiltFom = ferdigstilt(teller)
@@ -100,7 +103,8 @@ def lagData(teller)
   versjon = Faker::Number.number(digits: 2)
   erMedunderskriver = [true, false].shuffle
   finalizedRand = [true, false].shuffle
-  insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler(teller), fnr, navn, versjon, erMedunderskriver, finalized,ferdigstiltFom)
+  utfall = "Medhold"
+  insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler(teller), fnr, navn, versjon, erMedunderskriver, finalized,ferdigstiltFom, avsluttet, utfall)
 end
 
 init_oppgaver()

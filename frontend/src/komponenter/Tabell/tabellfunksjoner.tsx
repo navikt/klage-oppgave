@@ -15,7 +15,7 @@ import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 // @ts-ignore
 import PilOppHoeyre from "../../komponenter/arrow.svg";
 import { NavLink, useHistory, useLocation } from "react-router-dom";
-import { formattedDate } from "../../domene/datofunksjoner";
+import { formattedDate, isoDateToPretty } from "../../domene/datofunksjoner";
 import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
 import styled from "styled-components";
 
@@ -105,6 +105,8 @@ const OppgaveTabellRad = ({
   person,
   utvidetProjeksjon,
   settValgtOppgave,
+  avsluttet,
+  utfall,
 }: OppgaveRadMedFunksjoner) => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
@@ -160,9 +162,18 @@ const OppgaveTabellRad = ({
           </div>
         </TableCell>
       )}
-      <TableCell>{frist ? formattedDate(frist as number) : <div>mangler</div>}</TableCell>
-      {location.pathname.startsWith("/oppgaver") && curriedVelgOppgave(klagebehandlingVersjon)}
-      {location.pathname.startsWith("/mineoppgaver") &&
+
+      {!R.empty(avsluttet) && <TableCell>{formattedDate(avsluttet)}</TableCell>}
+      {R.empty(avsluttet) && (
+        <TableCell>{!R.empty(frist) ? formattedDate(Number(frist)) : <div>mangler</div>}</TableCell>
+      )}
+
+      {utfall ? <TableCell>{utfall}</TableCell> : null}
+      {!utfall &&
+        location.pathname.startsWith("/oppgaver") &&
+        curriedVelgOppgave(klagebehandlingVersjon)}
+      {!utfall &&
+        location.pathname.startsWith("/mineoppgaver") &&
         curriedVisHandlinger(klagebehandlingVersjon)}
     </TableRow>
   );

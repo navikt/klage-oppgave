@@ -1,4 +1,4 @@
-export const formattedDate = (frist: number) => {
+export const formattedDate = (frist: any) => {
   const utime = new Date(frist).getTime();
   if (!isNaN(utime)) {
     const ye = new Intl.DateTimeFormat("nb", { year: "numeric" }).format(utime);

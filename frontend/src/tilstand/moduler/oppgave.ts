@@ -39,6 +39,8 @@ export interface OppgaveRad {
   frist: string | number;
   mottatt: string | number;
   saksbehandler: string;
+  avsluttet?: string;
+  utfall?: string;
 }
 
 export interface OppgaveRadMedFunksjoner extends OppgaveRad {

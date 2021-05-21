@@ -679,10 +679,16 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
               </tr>
             </thead>
             <tbody>
-              {genererTabellRader(
-                settValgtOppgave,
-                ferdigstilteKlager,
-                filter_state?.projeksjon || visFnr
+              {ferdigstilteKlager.rader.length > 0 ? (
+                genererTabellRader(
+                  settValgtOppgave,
+                  ferdigstilteKlager,
+                  filter_state?.projeksjon || visFnr
+                )
+              ) : (
+                <tr>
+                  <td colSpan={7}>Ingen fullførte oppgaver</td>
+                </tr>
               )}
             </tbody>
           </table>

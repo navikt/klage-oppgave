@@ -43,11 +43,11 @@ function saksbehandlerFiltrering(
   return `${!where ? "WHERE" : " AND"} saksbehandler = ?`;
 }
 
-function fullfortFiltrering(hasWhere: boolean, fullfortFom: string) {
-  if (fullfortFom)
+function fullfortFiltrering(hasWhere: boolean, ferdigstiltFom: string) {
+  if (ferdigstiltFom)
     return `${
       !hasWhere ? "WHERE" : " AND"
-    } ferdigstiltFom >= date(${fullfortFom})`;
+    } ferdigstiltFom >= date(${ferdigstiltFom})`;
   else return "";
 }
 
@@ -222,7 +222,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     rekkefoelge,
     navIdent,
     tildeltSaksbehandler,
-    fullfortFom,
+    ferdigstiltFom,
   } = query;
 
   let filterTyper = typer?.split(",");
@@ -233,10 +233,9 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
   let harTyper = "undefined" !== typeof typer;
   let harTemaer = "undefined" !== typeof temaer;
   let harHjemler = "undefined" !== typeof hjemler;
-  let harFullfortFom = "undefined" !== typeof fullfortFom;
 
   let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, 
-                 hjemmel, tema, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon
+                 hjemmel, tema, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon, avsluttet, utfall
                  FROM Oppgaver 
                  ${typeQuery(filterTyper).replace(/,/g, "")}
                  ${generiskFilterSpoerring(
@@ -254,13 +253,13 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
                     tildeltSaksbehandler
                   )}
                   ${
-                    fullfortFom
+                    ferdigstiltFom
                       ? fullfortFiltrering(
                           harTyper ||
                             harTemaer ||
                             harHjemler ||
                             tildeltSaksbehandler !== "",
-                          fullfortFom
+                          ferdigstiltFom
                         )
                       : ""
                   }
@@ -279,7 +278,6 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     });
     if (tildeltSaksbehandler) params.push(tildeltSaksbehandler);
     if (!tildeltSaksbehandler) params.push(navIdent);
-    //if (fullfortFom) params.push("date("+fullfortFom+")");
     params = params.filter((f: any) => f !== undefined);
     params.push(start);
     params.push(antall);
@@ -289,7 +287,25 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
         console.log(params);
         reject(err);
       }
-      if ("undefined" === typeof tildeltSaksbehandler)
+
+      console.log({ ferdigstiltFom });
+      if (ferdigstiltFom) {
+        resolve(
+          rader.map((rad: any) => ({
+            totaltAntall: rad.totaltAntall ?? 0,
+            id: rad.id,
+            type: rad.type,
+            hjemmel: rad.hjemmel,
+            tema: rad.tema,
+            frist: rad.frist,
+            mottatt: rad.mottatt,
+            person: { fnr: rad.fnr, navn: rad.navn },
+            klagebehandlingVersjon: rad.klagebehandlingVersjon,
+            avsluttet: rad.avsluttet,
+            utfall: rad.utfall,
+          }))
+        );
+      } else if ("undefined" === typeof tildeltSaksbehandler)
         resolve(
           rader.map((rad: any) => ({
             totaltAntall: rad.totaltAntall ?? 0,
