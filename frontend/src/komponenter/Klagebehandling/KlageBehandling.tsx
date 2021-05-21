@@ -1,4 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
+import ReactTooltip from "react-tooltip";
+
 import Oppsett from "../Oppsett";
 import "../../stilark/klagebehandling.less";
 // @ts-ignore
@@ -81,6 +83,8 @@ const Person = styled.div`
   white-space: nowrap;
   padding: 0.5em 1em;
   max-width: 23em;
+  overflow: hidden;
+  text-overflow: ellipsis;
   @media screen and (max-width: 1400px) {
     padding: 0.5em 0 0 0;
     border: none;
@@ -315,8 +319,12 @@ export default function Klagebehandling() {
       contentClass={"uten-nav"}
     >
       <>
+        <ReactTooltip />
         <Kontrollpanel>
-          <Person>
+          <Person
+            data-tip={`${fornavn(klage)} ${mellomnavn(klage)} ${etternavn(klage)}`}
+            data-delay-show={1000}
+          >
             <Kjonn>{klage?.sakenGjelderKjoenn[0]}</Kjonn>
             <Navn>{`${fornavn(klage)} ${mellomnavn(klage)} ${etternavn(klage)}`}</Navn>
             <span>/</span>
