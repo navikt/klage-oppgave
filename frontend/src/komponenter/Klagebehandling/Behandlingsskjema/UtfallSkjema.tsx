@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { HeaderRow, Row } from "../../../styled-components/Row";
+import { Row } from "../../../styled-components/Row";
 import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
 import { Filter, IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
@@ -16,15 +16,13 @@ import {
 import { BasertPaaHjemmel } from "./BasertPaaLovhjemmel";
 import AutosaveProgressIndicator, { AutosaveStatus } from "./autosave-progress";
 import { InternVurdering } from "./InternVurdering";
-import { velgBehandlingsvedtak } from "../../../tilstand/moduler/behandlingsskjema.velgere";
+import { velgBehandlingsskjema } from "../../../tilstand/moduler/behandlingsskjema.velgere";
 
 export function UtfallSkjema() {
   const kodeverk = useSelector(velgKodeverk);
   const klage: IKlage = useSelector(velgKlage);
-  const behandlingsvedtak = useSelector(velgBehandlingsvedtak);
+  const behandlingsskjema = useSelector(velgBehandlingsskjema);
   const dispatch = useDispatch();
-
-  console.log("behandlingsvedtak:", behandlingsvedtak);
 
   const [utfall, settUtfall] = useState<IKodeverkVerdi | null>(
     faaUtfalllObjekt(klage.vedtak[0].utfall) ?? kodeverk.utfall[0]
@@ -36,14 +34,20 @@ export function UtfallSkjema() {
     faaOmgjoeringsgrunnObjekt(klage.vedtak[0].grunn) ?? gyldigeOmgjoeringsgrunner[0]
   );
 
-  const [valgteHjemler, settValgteHjemler] = useState<Filter[]>([]); // TODO: Hentes fra klage
+  const [autosaveStatus, setAutosaveStatus] = useState<AutosaveStatus>(AutosaveStatus.SAVED);
 
-  const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering);
-  const [autosaveStatus, setAutosaveStatus] = useState<AutosaveStatus>(AutosaveStatus.NONE);
-
-  const [valgteHjemler, settValgteHjemler] = useState<Filter[]>([]); // TODO: Hentes fra klage
+  const [valgteHjemler, settValgteHjemler] = useState<Filter[]>(
+    klage.hjemler.map((hjemmel) => faaHjemmelFilter("" + hjemmel))
+  );
 
   const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering ?? "");
+
+  function faaHjemmelFilter(hjemmelkode: string): Filter {
+    const hjemmelObj = kodeverk.hjemmel.find(
+      (hjemmel: IKodeverkVerdi) => hjemmel.id === hjemmelkode
+    );
+    return { label: hjemmelObj.beskrivelse, value: hjemmelObj.id };
+  }
 
   function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi | null): IKodeverkVerdi[] {
     if (!utfall) {
@@ -116,16 +120,6 @@ export function UtfallSkjema() {
     );
   }
 
-  function endreInternVurdering(internVurdering: string) {
-    settInternVurdering(internVurdering);
-    dispatch(
-      lagreInternVurdering({
-        klagebehandlingid: klage.id,
-        internVurdering: internVurdering,
-      })
-    );
-  }
-
   function faaUtfalllObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
     if (utfallnavn === null) {
       return null;
@@ -143,17 +137,32 @@ export function UtfallSkjema() {
   }
 
   useEffect(() => {
-    // console.log("klagen er:", klage);
-    // console.log("vurderingen er:", klage.internVurdering);
-    // console.log("state:", vedtakStore.getState());
-    if (klage.internVurdering === internVurdering) {
+    if (
+      behandlingsskjema.utfall === utfall &&
+      behandlingsskjema.grunn === omgjoeringsgrunn &&
+      behandlingsskjema.hjemler === valgteHjemler.map((h) => h.value) &&
+      behandlingsskjema.internVurdering === internVurdering
+    ) {
       setAutosaveStatus(AutosaveStatus.SAVED);
       return;
+    } else {
+      setAutosaveStatus(AutosaveStatus.SAVING);
+
+      if (behandlingsskjema.utfall !== utfall) {
+        velgUtfall(utfall);
+      }
+      if (behandlingsskjema.grunn !== omgjoeringsgrunn) {
+        velgOmgjoeringsgrunn(omgjoeringsgrunn);
+      }
+      if (behandlingsskjema.hjemler.length !== valgteHjemler.map((h) => h.value)) {
+        velgHjemler(valgteHjemler);
+      }
+      if (behandlingsskjema.internVurdering !== internVurdering) {
+        const timeout = setTimeout(oppdaterInternVurdering, 1000);
+        return () => clearTimeout(timeout); // Oppdater kun 1s etter at bruker slutter å skrive
+      }
     }
-    setAutosaveStatus(AutosaveStatus.SAVING);
-    const timeout = setTimeout(oppdaterInternVurdering, 1000);
-    return () => clearTimeout(timeout); // Clear existing timer every time it runs.
-  }, [internVurdering]);
+  }, [utfall, omgjoeringsgrunn, valgteHjemler, internVurdering]);
 
   return (
     <div className={"detaljer"}>
@@ -183,11 +192,7 @@ export function UtfallSkjema() {
         />
       </Row>
       <Row>
-        <AutosaveProgressIndicator
-          autosaveStatus={
-            behandlingsvedtak.isLoading ? AutosaveStatus.SAVING : AutosaveStatus.SAVED
-          }
-        />
+        <AutosaveProgressIndicator autosaveStatus={autosaveStatus} />
       </Row>
     </div>
   );

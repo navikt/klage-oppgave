@@ -42,29 +42,14 @@ export interface IInternVurderingPayload {
 // Reducer
 //==========
 
-const initialStateBehandlingsskjema = {
-  internVurdering: "",
-  klagebehandlingVersjon: 3,
-};
-
-export const behandlingsskjemaSlice = createSlice({
-  name: "behandlingsskjema",
-  initialState: initialStateBehandlingsskjema,
-  reducers: {
-    SETT_INTERN_VURDERING: (state, action: PayloadAction<string>) => {
-      return { ...state, internVurdering: action.payload };
-    },
-  },
-});
-
 const initialStateBehandlingsVedtak = {
   id: "",
   utfall: null as null | string,
   brevMottakere: [],
   hjemler: [] as string[],
   grunn: null as null | string,
+  internVurdering: "",
   klagebehandlingVersjon: 3,
-  isLoading: false,
 };
 
 export const behandlingsvedtakSlice = createSlice({
@@ -72,42 +57,21 @@ export const behandlingsvedtakSlice = createSlice({
   initialState: initialStateBehandlingsVedtak,
   reducers: {
     SETT_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
-      return { ...state, internVurdering: action.payload.internVurdering, isLoading: true };
-    },
-    INTERN_VURDERING_SATT: (state) => {
-      console.log("Intern vurdering satt");
-      return { ...state, isLoading: false };
+      return { ...state, internVurdering: action.payload.internVurdering };
     },
     SETT_UTFALL: (state, action: PayloadAction<IUtfallPayload>) => {
       return { ...state, utfall: action.payload.utfall };
     },
-    UTFALL_SATT: (state) => {
-      console.log("Utfall satt");
-      return state;
-    },
     SETT_OMGJOERINGSGRUNN: (state, action: PayloadAction<IOmgjoeringsgrunnPayload>) => {
       return { ...state, grunn: action.payload.omgjoeringsgrunn };
-    },
-    OMGJOERINGSGRUNN_SATT: (state) => {
-      console.log("Omgjøringsgrunn satt");
-      return state;
     },
     SETT_HJEMLER: (state, action: PayloadAction<IHjemlerPayload>) => {
       return { ...state, hjemler: action.payload.hjemler };
     },
-    HJEMLER_SATT: (state) => {
-      console.log("Hjemler satt");
-      return state;
-    },
   },
 });
 
-const behandlingsskjema = combineReducers({
-  behandlingsskjema: behandlingsskjemaSlice.reducer,
-  behandlingsvedtak: behandlingsvedtakSlice.reducer,
-});
-
-export default behandlingsskjema;
+export default behandlingsvedtakSlice.reducer;
 
 //==========
 // Actions
@@ -125,10 +89,6 @@ export const lagreOmgjoeringsgrunn = createAction<IOmgjoeringsgrunnPayload>(
 );
 
 export const lagreHjemler = createAction<IHjemlerPayload>("behandlingsvedtak/SETT_HJEMLER");
-
-export const oppdatertBehandlingsskjema = createAction<boolean>(
-  "klagebehandling/BEHANDLINGSSKJEMA_OPPDATERT"
-);
 
 //==========
 // Epos
@@ -149,7 +109,7 @@ export function lagreInternVurderingEpos(
         { internVurdering: action.payload.internVurdering, klagebehandlingVersjon: 3 },
         { "Content-Type": "application/json" }
       )
-        .pipe(map((payload: { response: any }) => internVurderingSatt(payload.response)))
+        .pipe(map((payload: { response: any }) => lagreInternVurdering(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {

@@ -77,7 +77,7 @@ export function BasertPaaHjemmel({
         valgmuligheter={gyldigeHjemler}
         onSelect={(hjemmel) => settHjemmel(settHjemler, hjemmel, valgteHjemler)}
         dispatchFunc={settHjemmel}
-        aktiveValgmuligheter={filter_state?.transformasjoner.filtrering?.hjemler}
+        aktiveValgmuligheter={valgteHjemler}
       >
         {hjemmelTagsDisplay()}
       </MultipleChoiceHeader>

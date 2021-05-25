@@ -355,6 +355,133 @@
         { "id": "1000", "navn": "FTL", "beskrivelse": "Folketrygdloven" },
         { "id": "1002", "navn": "MANGLER", "beskrivelse": "Hjemmel mangler" }
       ]
+    },
+    {
+      "temaId": "43",
+      "hjemler": [
+        {
+          "id": "1000.008.002",
+          "navn": "FTL 8-2",
+          "beskrivelse": "Folketrygdloven §8-2"
+        },
+        {
+          "id": "1000.008.003",
+          "navn": "FTL 8-3",
+          "beskrivelse": "Folketrygdloven §8-3"
+        },
+        {
+          "id": "1000.008.004",
+          "navn": "FTL 8-4",
+          "beskrivelse": "Folketrygdloven §8-4"
+        },
+        {
+          "id": "1000.008.007",
+          "navn": "FTL 8-7",
+          "beskrivelse": "Folketrygdloven §8-7"
+        },
+        {
+          "id": "1000.008.008",
+          "navn": "FTL 8-8",
+          "beskrivelse": "Folketrygdloven §8-8"
+        },
+        {
+          "id": "1000.008.012",
+          "navn": "FTL 8-12",
+          "beskrivelse": "Folketrygdloven §8-12"
+        },
+        {
+          "id": "1000.008.013",
+          "navn": "FTL 8-13",
+          "beskrivelse": "Folketrygdloven §8-13"
+        },
+        {
+          "id": "1000.008.015",
+          "navn": "FTL 8-15",
+          "beskrivelse": "Folketrygdloven §8-15"
+        },
+        {
+          "id": "1000.008.020",
+          "navn": "FTL 8-20",
+          "beskrivelse": "Folketrygdloven §8-20"
+        },
+        {
+          "id": "1000.008.028",
+          "navn": "FTL 8-28",
+          "beskrivelse": "Folketrygdloven §8-28"
+        },
+        {
+          "id": "1000.008.029",
+          "navn": "FTL 8-29",
+          "beskrivelse": "Folketrygdloven §8-29"
+        },
+        {
+          "id": "1000.008.030",
+          "navn": "FTL 8-30",
+          "beskrivelse": "Folketrygdloven §8-30"
+        },
+        {
+          "id": "1000.008.034",
+          "navn": "FTL 8-34",
+          "beskrivelse": "Folketrygdloven §8-34"
+        },
+        {
+          "id": "1000.008.035",
+          "navn": "FTL 8-35",
+          "beskrivelse": "Folketrygdloven §8-35"
+        },
+        {
+          "id": "1000.008.036",
+          "navn": "FTL 8-36",
+          "beskrivelse": "Folketrygdloven §8-36"
+        },
+        {
+          "id": "1000.008.037",
+          "navn": "FTL 8-37",
+          "beskrivelse": "Folketrygdloven §8-37"
+        },
+        {
+          "id": "1000.008.038",
+          "navn": "FTL 8-38",
+          "beskrivelse": "Folketrygdloven §8-38"
+        },
+        {
+          "id": "1000.008.039",
+          "navn": "FTL 8-39",
+          "beskrivelse": "Folketrygdloven §8-39"
+        },
+        {
+          "id": "1000.008.040",
+          "navn": "FTL 8-40",
+          "beskrivelse": "Folketrygdloven §8-40"
+        },
+        {
+          "id": "1000.008.041",
+          "navn": "FTL 8-41",
+          "beskrivelse": "Folketrygdloven §8-41"
+        },
+        {
+          "id": "1000.008.042",
+          "navn": "FTL 8-42",
+          "beskrivelse": "Folketrygdloven §8-42"
+        },
+        {
+          "id": "1000.008.043",
+          "navn": "FTL 8-43",
+          "beskrivelse": "Folketrygdloven §8-43"
+        },
+        {
+          "id": "1000.008.047",
+          "navn": "FTL 8-47",
+          "beskrivelse": "Folketrygdloven §8-47"
+        },
+        {
+          "id": "1000.008.049",
+          "navn": "FTL 8-49",
+          "beskrivelse": "Folketrygdloven §8-49"
+        },
+        { "id": "1000", "navn": "FTL", "beskrivelse": "Folketrygdloven" },
+        { "id": "1002", "navn": "MANGLER", "beskrivelse": "Hjemmel mangler" }
+      ]
     }
   ],
   "grunnerPerUtfall": [
@@ -456,5 +583,56 @@
     { "utfallId": "2", "grunner": [] },
     { "utfallId": "1", "grunner": [] },
     { "utfallId": "7", "grunner": [] }
+  ],
+  "partIdType": [
+    { "id": "PERSON", "navn": "Person", "beskrivelse": "Person" },
+    { "id": "VIRKSOMHET", "navn": "Virksomhet", "beskrivelse": "Virksomhet" }
+  ],
+  "rolle": [
+    { "id": "1", "navn": "Klager", "beskrivelse": "Klager" },
+    { "id": "2", "navn": "Saken gjelder", "beskrivelse": "Den saken gjelder" },
+    {
+      "id": "3",
+      "navn": "Prosessfullmektig",
+      "beskrivelse": "Prosessfullmektig"
+    },
+    { "id": "4", "navn": "Tredjepart", "beskrivelse": "Relevant tredjepart" }
+  ],
+  "fagsystem": [
+    {
+      "id": "1",
+      "navn": "FS36",
+      "beskrivelse": "Vedtaksløsning Foreldrepenger"
+    },
+    {
+      "id": "2",
+      "navn": "FS39",
+      "beskrivelse": "Saksbehandling for Folketrygdloven kapittel 9"
+    },
+    { "id": "3", "navn": "AO01", "beskrivelse": "Arena" },
+    { "id": "4", "navn": "AO11", "beskrivelse": "Grisen" },
+    { "id": "5", "navn": "BISYS", "beskrivelse": "BISYS" },
+    { "id": "6", "navn": "FS38", "beskrivelse": "Melosys" },
+    { "id": "7", "navn": "IT01", "beskrivelse": "Infotrygd" },
+    { "id": "8", "navn": "K9", "beskrivelse": "Sykdom i familien" },
+    { "id": "9", "navn": "OB36", "beskrivelse": "Utbetalingsmelding" },
+    { "id": "10", "navn": "OEBS", "beskrivelse": "OEBS" },
+    { "id": "11", "navn": "PP01", "beskrivelse": "Pesys" },
+    { "id": "12", "navn": "UFM", "beskrivelse": "Unntak fra medlemskap" },
+    { "id": "13", "navn": "BA", "beskrivelse": "Barnetrygd" },
+    { "id": "14", "navn": "EF", "beskrivelse": "Enslig forsørger" },
+    { "id": "15", "navn": "KONT", "beskrivelse": "Kontantstøtte" },
+    { "id": "16", "navn": "SUPSTONAD", "beskrivelse": "Supplerende Stønad" },
+    { "id": "17", "navn": "OMSORGSPENGER", "beskrivelse": "Omsorgspenger" },
+    {
+      "id": "18",
+      "navn": "MANUELL",
+      "beskrivelse": "Manuell registrering av kvalitetsskjema"
+    }
+  ],
+  "utsendingStatus": [
+    { "id": "1", "navn": "Ikke sendt", "beskrivelse": "Ikke sendt" },
+    { "id": "2", "navn": "Feilet", "beskrivelse": "Feilet" },
+    { "id": "3", "navn": "Sendt", "beskrivelse": "Sendt" }
   ]
 }
