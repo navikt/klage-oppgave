@@ -20,7 +20,7 @@ def init_oppgaver()
                 fnr TEXT,
                 navn TEXT,
                 klagebehandlingVersjon INTEGER,
-                erMedunderskriver INTEGER,
+                erMedunderskriver TEXT,
                 finalized TEXT,
                 ferdigstiltFom TEXT,
                 avsluttet TEXT,
@@ -42,7 +42,7 @@ def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, 
   begin
 	  db = SQLite3::Database.open ARGV[0]
       db.execute("INSERT INTO Oppgaver  (Id, type, tema, hjemmel,  frist,      mottatt,      saksbehandler, fnr, navn, klagebehandlingVersjon, erMedunderskriver,           finalized,      ferdigstiltFom,      avsluttet,      utfall) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                        [id, type, tema, hjemmel,  frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon,                erMedunderskriver && 1 || 0, finalized.to_s, ferdigstiltFom.to_s, avsluttet.to_s, utfall])
+                                        [id, type, tema, hjemmel,  frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon,                erMedunderskriver && saksbehandler || "", finalized.to_s, ferdigstiltFom.to_s, avsluttet.to_s, utfall])
 
   rescue SQLite3::Exception => e
     puts "Exception occurred"

@@ -41,6 +41,7 @@ export interface OppgaveRad {
   saksbehandler: string;
   avsluttet?: string;
   utfall?: string;
+  erMedunderskriver?: string;
 }
 
 export interface OppgaveRadMedFunksjoner extends OppgaveRad {

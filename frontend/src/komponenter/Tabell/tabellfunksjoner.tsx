@@ -18,6 +18,7 @@ import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { formattedDate, isoDateToPretty } from "../../domene/datofunksjoner";
 import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
 import styled from "styled-components";
+import MedunderskriverStatus from "./Medunderskriver";
 
 const R = require("ramda");
 
@@ -60,26 +61,28 @@ const visHandlinger = R.curry(
     });
 
     return (
-      <td className="knapp-med-handlingsoverlegg">
-        <EndreKnapp
-          data-testid={`endreknapp${it++}`}
-          onClick={() => settVisHandlinger(!viserHandlinger)}
-          className={classNames({ skjult: viserHandlinger })}
-        >
-          Endre
-        </EndreKnapp>
-        <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
-          <div>
-            <Knapp
-              data-testid="leggtilbake"
-              className={"knapp"}
-              onClick={(e) => fradelOppgave(id, klagebehandlingVersjon)}
-            >
-              Legg tilbake
-            </Knapp>
+      <MedunderskriverStatus id={id}>
+        <td className="knapp-med-handlingsoverlegg">
+          <EndreKnapp
+            data-testid={`endreknapp${it++}`}
+            onClick={() => settVisHandlinger(!viserHandlinger)}
+            className={classNames({ skjult: viserHandlinger })}
+          >
+            Endre
+          </EndreKnapp>
+          <div className={classNames({ handlinger: true, skjult: !viserHandlinger })} ref={ref}>
+            <div>
+              <Knapp
+                data-testid="leggtilbake"
+                className={"knapp"}
+                onClick={(e) => fradelOppgave(id, klagebehandlingVersjon)}
+              >
+                Legg tilbake
+              </Knapp>
+            </div>
           </div>
-        </div>
-      </td>
+        </td>
+      </MedunderskriverStatus>
     );
   }
 );

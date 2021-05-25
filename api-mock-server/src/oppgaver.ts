@@ -235,7 +235,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
   let harHjemler = "undefined" !== typeof hjemler;
 
   let sql = `SELECT count(*) OVER() AS totaltAntall, Id as id, type, 
-                 hjemmel, tema, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon, avsluttet, utfall
+                 hjemmel, tema, frist, mottatt, saksbehandler, fnr, navn, klagebehandlingVersjon, avsluttet, utfall, erMedunderskriver
                  FROM Oppgaver 
                  ${typeQuery(filterTyper).replace(/,/g, "")}
                  ${generiskFilterSpoerring(
@@ -301,6 +301,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             mottatt: rad.mottatt,
             person: { fnr: rad.fnr, navn: rad.navn },
             klagebehandlingVersjon: rad.klagebehandlingVersjon,
+            erMedunderskriver: rad.erMedunderskriver,
             avsluttet: rad.avsluttet,
             utfall: rad.utfall,
           }))
@@ -316,6 +317,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             frist: rad.frist,
             mottatt: rad.mottatt,
             klagebehandlingVersjon: rad.klagebehandlingVersjon,
+            erMedunderskriver: rad.erMedunderskriver,
           }))
         );
       else
@@ -330,6 +332,8 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             mottatt: rad.mottatt,
             person: { fnr: rad.fnr, navn: rad.navn },
             klagebehandlingVersjon: rad.klagebehandlingVersjon,
+            erMedunderskriver: rad.erMedunderskriver,
+            avsluttet: rad.avsluttet,
           }))
         );
     });
