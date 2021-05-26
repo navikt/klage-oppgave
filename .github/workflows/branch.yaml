@@ -61,11 +61,6 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: nais/dev.yaml
           VARS: nais/vars.yaml
-  acceptance-tests:
-    name: Run acceptance tests
-    needs: deploytodev
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v2
         with:
           repository: navikt/kabal-api
