@@ -27,15 +27,6 @@ const velgOppgave = R.curry(
     tildelOppgave(settValgtOppgave, id, klagebehandlingVersjon)
 );
 
-const gosysEnvironment = (hostname: string) => {
-  if (hostname === "localhost") {
-    return "http://localhost:3000";
-  } else if (hostname.indexOf("dev.nav.no") !== -1) {
-    return "https://gosys.nais.preprod.local";
-  }
-  return "https://gosys-nais.nais.adeo.no";
-};
-
 const TableRow = styled.tr`
   &:hover {
     background: #e5f3ff !important;

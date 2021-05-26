@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 
 import Oppsett from "../Oppsett";
@@ -8,19 +8,17 @@ import CloseSVG from "../cancel.svg";
 // @ts-ignore
 import HakeSVG from "../hake.svg";
 
-import { NavLink, useLocation, useParams } from "react-router-dom";
-import klageReducer, { IKlageState } from "../klage-reducer";
+import { NavLink, useLocation } from "react-router-dom";
+import klageReducer from "../klage-reducer";
 import qs from "qs";
 import { useDispatch, useSelector } from "react-redux";
 import { hentKlageHandling, IKlage } from "../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
-import Debug from "../Tabell/Debug";
 import KlagebehandlingKontainer from "./KlagebehandlingKontainer";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
-import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
 import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
 
 const IkonHake = styled.img`
@@ -352,7 +350,11 @@ export default function Klagebehandling() {
             />
           </Knapper>
 
-          <EksterneLenker klage_state={klage_state} id={klage_state.oppgaveId} />
+          <EksterneLenker
+            klage_state={klage_state}
+            id={klage_state.oppgaveId}
+            fnr={klage.foedselsnummer}
+          />
         </Kontrollpanel>
 
         <KlagebehandlingKontainer faner={faner} />

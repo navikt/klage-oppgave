@@ -1,10 +1,14 @@
 import { IKlageState } from "../klage-reducer";
-import { NavLink } from "react-router-dom";
-import classNames from "classnames";
 //@ts-ignore
 import ExtLink from "../extlinkblue.svg";
 import React from "react";
 import styled from "styled-components";
+import {
+  aInntektEnvironment,
+  gosysEnvironment,
+  modiaEnvironment,
+  vedtaksEnvironment,
+} from "../../domene/eksterne_systemer";
 
 const Knapper = styled.div`
   display: flex;
@@ -47,8 +51,10 @@ const Knapperad = styled.div`
 export default function EksterneLenker({
   klage_state,
   id,
+  fnr,
 }: {
   klage_state: IKlageState;
+  fnr: string;
   id: string;
 }) {
   return (
@@ -57,14 +63,14 @@ export default function EksterneLenker({
         <Lenke
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={`/gosys/personoversikt/fnr=`}
+          href={`${gosysEnvironment(window.location.hostname)}/personoversikt/fnr=${fnr}`}
         >
           Gosys
         </Lenke>
         <Lenke2
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={`/gosys/personoversikt/fnr=`}
+          href={`${gosysEnvironment(window.location.hostname)}/personoversikt/fnr=${fnr}`}
         >
           <Ikon alt="Ekstern lenke" src={ExtLink} />
         </Lenke2>
@@ -73,15 +79,15 @@ export default function EksterneLenker({
       <Knapperad>
         <Lenke
           target="_blank"
-          aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={`/gosys/personoversikt/fnr=`}
+          aria-label={"Ekstern lenke til Vedtaksløningen for denne personen"}
+          href={vedtaksEnvironment(window.location.hostname)}
         >
           Vedtaksløsning
         </Lenke>
         <Lenke2
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={`/gosys/personoversikt/fnr=`}
+          href={vedtaksEnvironment(window.location.hostname)}
         >
           <Ikon alt="Ekstern lenke" src={ExtLink} />
         </Lenke2>
@@ -91,14 +97,14 @@ export default function EksterneLenker({
         <Lenke
           target="_blank"
           aria-label={"Ekstern lenke til A-inntekt for denne personen"}
-          href={`/gosys/personoversikt/fnr=`}
+          href={aInntektEnvironment(window.location.hostname)}
         >
           A-inntekt
         </Lenke>
         <Lenke2
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={`/gosys/personoversikt/fnr=`}
+          href={aInntektEnvironment(window.location.hostname)}
         >
           <Ikon alt="Ekstern lenke" src={ExtLink} />
         </Lenke2>
@@ -108,14 +114,14 @@ export default function EksterneLenker({
         <Lenke
           target="_blank"
           aria-label={"Ekstern lenke til Modia for denne personen"}
-          href={`/gosys/personoversikt/fnr=`}
+          href={modiaEnvironment(window.location.hostname)}
         >
           Modia
         </Lenke>
         <Lenke2
           target="_blank"
           aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={`/gosys/personoversikt/fnr=`}
+          href={modiaEnvironment(window.location.hostname)}
         >
           <Ikon alt="Ekstern lenke" src={ExtLink} />
         </Lenke2>
