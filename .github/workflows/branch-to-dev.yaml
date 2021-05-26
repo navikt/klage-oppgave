@@ -2,9 +2,6 @@ name: Branch til dev
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - behandlingsskjema-autosave
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
