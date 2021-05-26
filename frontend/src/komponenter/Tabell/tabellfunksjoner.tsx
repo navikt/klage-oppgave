@@ -38,7 +38,7 @@ const gosysEnvironment = (hostname: string) => {
 
 const TableRow = styled.tr`
   &:hover {
-    background: #ddd !important;
+    background: #e5f3ff !important;
   }
 `;
 const TableCell = styled.td`

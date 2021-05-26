@@ -5,6 +5,7 @@ module.exports = {
   },
   transform: {
     ".+\\.less$": "jest-transform-stub",
+    "\\.js?x$": ["ts-jest"],
   },
   transformIgnorePatterns: [
     "node_modules/(?!(nav-frontend-typografi-style|nav-frontend-alertstriper-style|nav-frontend-spinner-style|nav-frontend-etiketter-style|nav-frontend-knapper-style)/)",

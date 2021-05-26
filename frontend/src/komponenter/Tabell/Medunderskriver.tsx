@@ -12,23 +12,22 @@ function MedunderskriverStatus({ id, children }: { id: any; children: any }) {
     .filter((o) => o.id === id)
     .map((t) => [t.id, t.erMedunderskriver, t.saksbehandler])
     .reduce(Object.assign, {});
-  console.debug({ oppgaven });
 
-  if (oppgaven[0].erMedunderskriver) {
-    if (oppgaven[0].saksbehandler === meg.id) {
-      return <td>Medunderskriver</td>;
+  if (oppgaven[0][1]) {
+    if (oppgaven[0][1] === meg.id) {
+      return (
+        <td data-testid={`${id}-text`}>
+          <div className={"etikett etikett--medunderskriver"}>Medunderskriver</div>
+        </td>
+      );
     } else {
-      return <td>Sendt til medunderskriver</td>;
+      return (
+        <td data-testid={`${id}-text`}>
+          <div className={"etikett etikett--medunderskriver"}>Sendt til medunderskriver</div>
+        </td>
+      );
     }
-  }
-  return children;
+  } else return children;
 }
 
 export default MedunderskriverStatus;
-
-/*
-1. Ingen status = erMedunderskriver = null
-2. Sendt til medunderskriver og saksbehandler ikke er medunderskriver = false
-3. Send til medunderskriver og saksbehandler er medunderskriver = true
-4. Medunderskriver har godkjent = null , og feltet finalized er satt til tidspunktet den ble godkjent. (Dette feltet er ikke med i KlagebehandlingListView (ennå), disse klagebehandlingene dukker ikke opp i den vanlige lista..)
- */
