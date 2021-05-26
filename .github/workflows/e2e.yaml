@@ -1,0 +1,33 @@
+name: E2E-tester
+
+on:
+  #push:
+  #  branches: [main]
+  #pull_request:
+  # The branches below must be a subset of the branches above
+  #  branches: [main]
+  schedule:
+    - cron: '0 23 * * 2'
+
+env:
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
+  LATEST: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: navikt/kabal-api
+      - name: Set UUID
+        id: generate-uuid
+        uses: filipstefansson/uuid-action@v1.1
+      - name: Run acceptance tests
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_API_KEY }}
+          CLUSTER: dev-gcp
+          VAR: app=kabal,jobname=klage-job-${{ steps.generate-uuid.outputs.uuid }}
+          TEAM: klage
+          RESOURCE: deploy/e2ejob.yml
+        timeout-minutes: 5
