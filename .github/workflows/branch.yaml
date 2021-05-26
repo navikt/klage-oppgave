@@ -27,7 +27,7 @@ jobs:
       - name: Install
         run: |
           cd frontend
-          npm ci
+          npm i
       - name: Test
         run: |
           cd frontend
