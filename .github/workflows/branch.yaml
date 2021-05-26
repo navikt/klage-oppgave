@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - dockercompose
+      - behandlingsskjema-autosave
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
