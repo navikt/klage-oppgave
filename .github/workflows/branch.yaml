@@ -61,9 +61,12 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: nais/dev.yaml
           VARS: nais/vars.yaml
+  e2etest:
+    name: E2E-test av deploy
+    needs: deploytodev
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v2
-        with:
-          repository: navikt/kabal-api
       - name: Set UUID
         id: generate-uuid
         uses: filipstefansson/uuid-action@v1.1
