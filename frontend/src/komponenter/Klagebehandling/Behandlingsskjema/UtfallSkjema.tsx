@@ -137,6 +137,9 @@ export function UtfallSkjema() {
   }
 
   useEffect(() => {
+    if (!klage.id || !klage.vedtak[0].id) {
+      return;
+    }
     if (
       behandlingsskjema.utfall === utfall &&
       behandlingsskjema.grunn === omgjoeringsgrunn &&

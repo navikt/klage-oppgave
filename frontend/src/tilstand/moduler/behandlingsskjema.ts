@@ -42,6 +42,8 @@ export interface IInternVurderingPayload {
 // Reducer
 //==========
 
+const KLAGEBEHANDLINGVERSJON = 5;
+
 const initialStateBehandlingsVedtak = {
   id: "",
   utfall: null as null | string,
@@ -49,7 +51,7 @@ const initialStateBehandlingsVedtak = {
   hjemler: [] as string[],
   grunn: null as null | string,
   internVurdering: "",
-  klagebehandlingVersjon: 3,
+  klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON,
 };
 
 export const behandlingsvedtakSlice = createSlice({
@@ -106,7 +108,10 @@ export function lagreInternVurderingEpos(
       const lagreInternVurderingUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/detaljer/internvurdering`;
       return put(
         lagreInternVurderingUrl,
-        { internVurdering: action.payload.internVurdering, klagebehandlingVersjon: 3 },
+        {
+          internVurdering: action.payload.internVurdering,
+          klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON,
+        },
         { "Content-Type": "application/json" }
       )
         .pipe(map((payload: { response: any }) => lagreInternVurdering(payload.response)))
@@ -133,7 +138,7 @@ export function lagreUtfallEpos(
       const lagreUtfallUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/utfall`;
       return put(
         lagreUtfallUrl,
-        { utfall: action.payload.utfall, klagebehandlingVersjon: 3 },
+        { utfall: action.payload.utfall, klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON },
         { "Content-Type": "application/json" }
       )
         .pipe(map((payload: { response: any }) => lagreUtfall(payload.response)))
@@ -160,7 +165,7 @@ export function lagreOmgjoeringsgrunnEpos(
       const lagreOmgjoeringsgrunnUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/grunn`;
       return put(
         lagreOmgjoeringsgrunnUrl,
-        { grunn: action.payload.omgjoeringsgrunn, klagebehandlingVersjon: 3 },
+        { grunn: action.payload.omgjoeringsgrunn, klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON },
         { "Content-Type": "application/json" }
       )
         .pipe(map((payload: { response: any }) => lagreOmgjoeringsgrunn(payload.response)))
@@ -187,7 +192,7 @@ export function lagreHjemlerEpos(
       const lagreHjemlerUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/hjemler`;
       return put(
         lagreHjemlerUrl,
-        { hjemler: action.payload.hjemler, klagebehandlingVersjon: 3 },
+        { hjemler: action.payload.hjemler, klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON },
         { "Content-Type": "application/json" }
       )
         .pipe(map((payload: { response: any }) => lagreHjemler(payload.response)))
