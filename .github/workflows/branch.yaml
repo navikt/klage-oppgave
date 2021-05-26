@@ -1,4 +1,4 @@
-name: Bygg manuelt
+name: Branch til dev
 
 on:
   workflow_dispatch:
