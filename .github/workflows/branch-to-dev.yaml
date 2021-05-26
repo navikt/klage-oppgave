@@ -2,13 +2,12 @@ name: Branch til dev
 
 on:
   workflow_dispatch:
-    
+    branches:
+      - '**'
   push:
     branches:
-      - '*'         # matches every branch that doesn't contain a '/'
-      - '*/*'       # matches every branch containing a single '/'
-      - '**'        # matches every branch
-      - '!main'   # excludes master
+      - '**'
+      - '!main'
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
