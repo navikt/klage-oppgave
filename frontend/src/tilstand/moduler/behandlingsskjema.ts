@@ -42,7 +42,7 @@ export interface IInternVurderingPayload {
 // Reducer
 //==========
 
-const KLAGEBEHANDLINGVERSJON = 5;
+const KLAGEBEHANDLINGVERSJON = 6;
 
 const initialStateBehandlingsVedtak = {
   id: "",

@@ -140,36 +140,36 @@ export function UtfallSkjema() {
     if (!klage.id || !klage.vedtak[0].id) {
       return;
     }
+
+    let valgteHjemlerVerdier = valgteHjemler.map((h) => h.value);
+
     if (
-      behandlingsskjema.utfall === utfall &&
-      behandlingsskjema.grunn === omgjoeringsgrunn &&
-      behandlingsskjema.hjemler === valgteHjemler.map((h) => h.value) &&
+      utfall &&
+      behandlingsskjema.utfall === utfall.id &&
+      (!omgjoeringsgrunn || behandlingsskjema.grunn === omgjoeringsgrunn.id) &&
+      behandlingsskjema.hjemler.slice().sort().toString() ===
+        valgteHjemlerVerdier.sort().toString() &&
       behandlingsskjema.internVurdering === internVurdering
     ) {
       setAutosaveStatus(AutosaveStatus.SAVED);
       return;
-    } else {
-      setAutosaveStatus(AutosaveStatus.SAVING);
+    }
+    setAutosaveStatus(AutosaveStatus.SAVING);
 
-      if (behandlingsskjema.utfall !== utfall.id) {
-        velgUtfall(utfall);
-      }
-      if (behandlingsskjema.grunn !== omgjoeringsgrunn.id) {
-        velgOmgjoeringsgrunn(omgjoeringsgrunn);
-      }
-      if (
-        behandlingsskjema.hjemler.toString().sort() !==
-        valgteHjemler
-          .map((h) => h.value)
-          .toString()
-          .sort()
-      ) {
-        velgHjemler(valgteHjemler);
-      }
-      if (behandlingsskjema.internVurdering !== internVurdering) {
-        const timeout = setTimeout(oppdaterInternVurdering, 1000);
-        return () => clearTimeout(timeout); // Oppdater kun 1s etter at bruker slutter å skrive
-      }
+    if (utfall && behandlingsskjema.utfall !== utfall.id) {
+      velgUtfall(utfall);
+    }
+    if (omgjoeringsgrunn && behandlingsskjema.grunn !== omgjoeringsgrunn.id) {
+      velgOmgjoeringsgrunn(omgjoeringsgrunn);
+    }
+    if (
+      behandlingsskjema.hjemler.slice().sort().toString() !== valgteHjemlerVerdier.sort().toString()
+    ) {
+      velgHjemler(valgteHjemler);
+    }
+    if (behandlingsskjema.internVurdering !== internVurdering) {
+      const timeout = setTimeout(() => oppdaterInternVurdering(internVurdering), 1000);
+      return () => clearTimeout(timeout); // Oppdater kun 1s etter at bruker slutter å skrive
     }
   }, [utfall, omgjoeringsgrunn, valgteHjemler, internVurdering]);
 
