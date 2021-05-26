@@ -2,8 +2,6 @@ name: Branch til dev
 
 on:
   workflow_dispatch:
-    branches:
-      - '**'
   push:
     branches:
       - '**'
