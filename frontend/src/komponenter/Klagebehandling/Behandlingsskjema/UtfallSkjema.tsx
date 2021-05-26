@@ -82,7 +82,7 @@ export function UtfallSkjema() {
       lagreUtfall({
         klagebehandlingid: klage.id,
         vedtakid: klage.vedtak[0].id,
-        utfall: utfall ? utfall.navn : null,
+        utfall: utfall ? utfall.id : null,
       })
     );
     const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
@@ -95,7 +95,7 @@ export function UtfallSkjema() {
       lagreOmgjoeringsgrunn({
         klagebehandlingid: klage.id,
         vedtakid: klage.vedtak[0].id,
-        omgjoeringsgrunn: omgjoeringsgrunn ? omgjoeringsgrunn.navn : null,
+        omgjoeringsgrunn: omgjoeringsgrunn ? omgjoeringsgrunn.id : null,
       })
     );
   }
@@ -151,13 +151,19 @@ export function UtfallSkjema() {
     } else {
       setAutosaveStatus(AutosaveStatus.SAVING);
 
-      if (behandlingsskjema.utfall !== utfall) {
+      if (behandlingsskjema.utfall !== utfall.id) {
         velgUtfall(utfall);
       }
-      if (behandlingsskjema.grunn !== omgjoeringsgrunn) {
+      if (behandlingsskjema.grunn !== omgjoeringsgrunn.id) {
         velgOmgjoeringsgrunn(omgjoeringsgrunn);
       }
-      if (behandlingsskjema.hjemler.length !== valgteHjemler.map((h) => h.value)) {
+      if (
+        behandlingsskjema.hjemler.toString().sort() !==
+        valgteHjemler
+          .map((h) => h.value)
+          .toString()
+          .sort()
+      ) {
         velgHjemler(valgteHjemler);
       }
       if (behandlingsskjema.internVurdering !== internVurdering) {
