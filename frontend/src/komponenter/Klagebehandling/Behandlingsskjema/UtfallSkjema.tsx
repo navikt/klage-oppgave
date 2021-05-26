@@ -76,7 +76,7 @@ export function UtfallSkjema() {
     return gyldigeOmgjoeringsgrunner.length > 0;
   }
 
-  function velgUtfall(utfall: IKodeverkVerdi | null) {
+  const velgUtfall = (utfall: IKodeverkVerdi | null) => {
     settUtfall(utfall);
     dispatch(
       lagreUtfall({
@@ -87,7 +87,7 @@ export function UtfallSkjema() {
     );
     const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
     settGyldigeOmgjoeringsgrunner(omgjoeringsgrunner);
-  }
+  };
 
   function velgOmgjoeringsgrunn(omgjoeringsgrunn: IKodeverkVerdi | null) {
     settOmgjoeringsgrunn(omgjoeringsgrunn);
@@ -168,10 +168,15 @@ export function UtfallSkjema() {
       velgHjemler(valgteHjemler);
     }
     if (behandlingsskjema.internVurdering !== internVurdering) {
-      const timeout = setTimeout(() => oppdaterInternVurdering(internVurdering), 1000);
+      const timeout = setTimeout(() => {
+        oppdaterInternVurdering(internVurdering);
+        if (behandlingsskjema.internVurdering === internVurdering) {
+          setAutosaveStatus(AutosaveStatus.SAVED);
+        }
+      }, 1000);
       return () => clearTimeout(timeout); // Oppdater kun 1s etter at bruker slutter å skrive
     }
-  }, [utfall, omgjoeringsgrunn, valgteHjemler, internVurdering]);
+  }, [utfall, omgjoeringsgrunn, valgteHjemler, internVurdering, behandlingsskjema]);
 
   return (
     <div className={"detaljer"}>

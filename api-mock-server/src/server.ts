@@ -324,6 +324,31 @@ app.post(
   }
 );
 
+app.put(
+  "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/utfall",
+  async (req, res) => {
+    res.status(200).send("OK");
+  }
+);
+app.put(
+  "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/grunn",
+  async (req, res) => {
+    res.status(200).send("OK");
+  }
+);
+app.put(
+  "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/hjemler",
+  async (req, res) => {
+    res.status(200).send("OK");
+  }
+);
+app.put(
+  "/klagebehandlinger/:klagebehandlingid/detaljer/internvurdering",
+  async (req, res) => {
+    res.status(200).send("OK");
+  }
+);
+
 interface OppgaveModell {
   ident: String;
 }
