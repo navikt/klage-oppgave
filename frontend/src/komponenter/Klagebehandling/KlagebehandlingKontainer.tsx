@@ -10,7 +10,7 @@ import {
 } from "../../tilstand/moduler/klagebehandling";
 import { useDispatch, useSelector } from "react-redux";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../domene/datofunksjoner";
 import styled from "styled-components";
@@ -47,10 +47,9 @@ export interface IVedlegg {
   valgt: boolean;
 }
 
-const maxHeight = "33em";
 const infiniteBottomMargin = "600px";
 
-const DokumenterKontainer = styled.div`
+const DokumenterBeholder = styled.div`
   margin: 0.25em 0.25em 0.25em 0.25em;
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -87,7 +86,7 @@ const TilknyttetTittel = styled.div`
   color: #0067c5;
 `;
 
-const DokumentKontainer = styled.div`
+const DokumentBeholder = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.theme.dokumentgrid};
   margin: 0 0.25em 0 0;
@@ -132,10 +131,6 @@ const VisTilknyttedeKnapp = styled.button`
   :click {
     background: red;
   }
-`;
-
-const Sjekkboks = styled.input`
-  display: none;
 `;
 
 const RightAlign = styled.div`
@@ -193,7 +188,7 @@ const DokumentSjekkboks = styled.li`
   position: relative;
 `;
 
-const VedleggKontainer = styled.div`
+const VedleggBeholder = styled.div`
   grid-area: vedlegg;
 `;
 
@@ -211,9 +206,9 @@ const VedleggTittel = styled.li`
   min-width: 15em;
   cursor: pointer;
 `;
-const PreviewKontainer = styled.div`
+const PreviewBeholder = styled.div`
   display: ${(props) => props.theme.display};
-  margin: 0.25em 0.25em 0.25em 0.25em;
+  margin: 0.25em 0.5em;
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
@@ -263,7 +258,7 @@ const EksternalSVGIkon = styled.img`
   }
 `;
 
-const PDFKontainer = styled.div`
+const PDFBeholder = styled.div`
   overflow: auto;
   overflow-x: hidden; // for safari
 
@@ -275,7 +270,7 @@ const PDFKontainer = styled.div`
     }
 
     &__Page {
-      max-width: calc(~"100% - 1em");
+      max-width: calc(100% - 1em);
       canvas {
         height: auto !important;
       }
@@ -288,7 +283,7 @@ const Feil = styled.div`
   margin: 1em;
 `;
 
-export default function KlagebehandlingKontainer({ faner }: { faner: IFaner }) {
+export default function KlagebehandlingBeholder({ faner }: { faner: IFaner }) {
   const [aktivPDF, settAktivPDF] = useState(false);
   const [journalpostId, settjournalpostId] = useState(0);
   const [dokumentTittel, settdokumentTittel] = useState("");
@@ -313,7 +308,7 @@ export default function KlagebehandlingKontainer({ faner }: { faner: IFaner }) {
   const [dokumentgrid, settDokumentgrid] = useState("1fr 1fr 1fr 1fr");
 
   return (
-    <DokumentKontainer theme={{ dokumentgrid }}>
+    <DokumentBeholder theme={{ dokumentgrid }}>
       <DokumentTabell
         settAktivPDF={settAktivPDF}
         settjournalpostId={settjournalpostId}
@@ -322,9 +317,7 @@ export default function KlagebehandlingKontainer({ faner }: { faner: IFaner }) {
         settdokumentInfoId={settdokumentInfoId}
         faner={faner}
       />
-      <PreviewKontainer
-        theme={{ display: faner.dokumenter.checked && aktivPDF ? "unset" : "none" }}
-      >
+      <PreviewBeholder theme={{ display: faner.dokumenter.checked && aktivPDF ? "unset" : "none" }}>
         <Preview>
           <PreviewTitle>
             {dokumentTittel}
@@ -346,18 +339,18 @@ export default function KlagebehandlingKontainer({ faner }: { faner: IFaner }) {
             error={<Feil>Kunne ikke hente PDF</Feil>}
             loading={<NavFrontendSpinner />}
           >
-            <PDFKontainer>
+            <PDFBeholder>
               {Array.from(new Array(numPages), (el, index) => (
                 <Page key={`page_${index + 1}`} pageNumber={index + 1} />
               ))}
-            </PDFKontainer>
+            </PDFBeholder>
           </Document>
         </Preview>
-      </PreviewKontainer>
+      </PreviewBeholder>
 
       <Behandlingsskjema skjult={!faner.detaljer.checked} />
       <FullforVedtak skjult={!faner.vedtak.checked} />
-    </DokumentKontainer>
+    </DokumentBeholder>
   );
 }
 
@@ -365,38 +358,6 @@ export interface Item {
   id: string;
   journalpostId: string;
   dokumentInfoId: string;
-}
-
-function itemClicked(
-  journalpostId: string,
-  dokumentInfoId: string,
-  items: Array<Partial<IDokument>>
-) {
-  return (
-    items.filter(
-      (it: Partial<IDokument>) =>
-        it.journalpostId === journalpostId && it.dokumentInfoId === dokumentInfoId
-    ).length > 0
-  );
-}
-function subItemClicked(dokumentInfoId: string, idx: number, items: Array<Partial<IVedlegg>>) {
-  return (
-    items.filter((it: Partial<IVedlegg>, _idx: number) => it.dokumentInfoId === dokumentInfoId)
-      .length > 0
-  );
-}
-
-function sjekkErTilordnet(klage: any, journalpostId: string, dokumentInfoId: string): boolean {
-  if (!klage?.dokumenterTilordnede) {
-    return false;
-  }
-  let res = klage.dokumenterTilordnede.filter(
-    (klage: any) => klage.journalpostId === journalpostId && klage.dokumentInfoId === dokumentInfoId
-  );
-  if (res.length) {
-    return true;
-  }
-  return false;
 }
 
 function DokumentTabell(props: {
@@ -489,34 +450,34 @@ function DokumentTabell(props: {
     dispatch(hentPreviewHandling({ id: behandlingId, journalpostId, dokumentInfoId, erVedlegg }));
   }
 
-  const [visFullKontainer, settvisFullKontainer] = useState(true);
+  const [visFullBeholder, settvisFullBeholder] = useState(true);
 
   if (!klage.dokumenter) {
     return <NavFrontendSpinner />;
   }
   return (
-    <DokumenterKontainer
+    <DokumenterBeholder
       theme={{
         display: props.faner.dokumenter.checked ? "block" : "none",
-        width: visFullKontainer ? "40em" : "15em",
+        width: visFullBeholder ? "40em" : "15em",
       }}
     >
-      <DokumenterMinivisning theme={{ display: !visFullKontainer ? "unset" : "none" }}>
+      <DokumenterMinivisning theme={{ display: !visFullBeholder ? "unset" : "none" }}>
         <DokumenterNav>
           <DokumenterTittel>Dokumenter</DokumenterTittel>
           <VisTilknyttedeKnapp
-            theme={{ display: visFullKontainer ? "unset" : "none" }}
+            theme={{ display: visFullBeholder ? "unset" : "none" }}
             onClick={() => {
-              settvisFullKontainer(false);
+              settvisFullBeholder(false);
               props.settDokumentGrid("15.5em 1fr 1fr 1fr");
             }}
           >
             Vis kun tilknyttede
           </VisTilknyttedeKnapp>
           <VisTilknyttedeKnapp
-            theme={{ display: !visFullKontainer ? "unset" : "none" }}
+            theme={{ display: !visFullBeholder ? "unset" : "none" }}
             onClick={() => {
-              settvisFullKontainer(true);
+              settvisFullBeholder(true);
               props.settDokumentGrid("1fr 1fr 1fr 1fr");
             }}
           >
@@ -548,22 +509,22 @@ function DokumentTabell(props: {
             );
           })}
       </DokumenterMinivisning>
-      <DokumenterFullvisning ref={rootRef} theme={{ display: visFullKontainer ? "flex" : "none" }}>
+      <DokumenterFullvisning ref={rootRef} theme={{ display: visFullBeholder ? "flex" : "none" }}>
         <DokumenterNav>
           <DokumenterTittel>Dokumenter</DokumenterTittel>
           <VisTilknyttedeKnapp
-            theme={{ display: visFullKontainer ? "unset" : "none" }}
+            theme={{ display: visFullBeholder ? "unset" : "none" }}
             onClick={() => {
-              settvisFullKontainer(false);
+              settvisFullBeholder(false);
               props.settDokumentGrid("15.5em 1fr 1fr 1fr");
             }}
           >
             Vis kun tilknyttede ({klage.dokumenterTilordnede?.length ?? "0"})
           </VisTilknyttedeKnapp>
           <VisTilknyttedeKnapp
-            theme={{ display: !visFullKontainer ? "unset" : "none" }}
+            theme={{ display: !visFullBeholder ? "unset" : "none" }}
             onClick={() => {
-              settvisFullKontainer(true);
+              settvisFullBeholder(true);
               props.settDokumentGrid("1fr 1fr 1fr 1fr");
             }}
           >
@@ -639,7 +600,7 @@ function DokumentTabell(props: {
                   </RightAlign>
                 </DokumentSjekkboks>
                 {item.vedlegg.length > 0 && (
-                  <VedleggKontainer>
+                  <VedleggBeholder>
                     {item.vedlegg.map((vedlegg: any, idx: number) => (
                       <VedleggRad key={`vedlegg-${idx}${item.dokumentInfoId}`}>
                         <VedleggTittel
@@ -679,7 +640,7 @@ function DokumentTabell(props: {
                         </DokumentSjekkboks>
                       </VedleggRad>
                     ))}
-                  </VedleggKontainer>
+                  </VedleggBeholder>
                 )}
               </DokumentRad>
             </ListItem>
@@ -691,6 +652,6 @@ function DokumentTabell(props: {
           )}
         </List>
       </DokumenterFullvisning>
-    </DokumenterKontainer>
+    </DokumenterBeholder>
   );
 }
