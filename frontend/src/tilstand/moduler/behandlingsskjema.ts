@@ -1,9 +1,11 @@
 import { combineReducers, createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny } from "react-redux";
+import { RootStateOrAny, useSelector } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { catchError, map, retryWhen, switchMap, withLatestFrom, concat } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
+import { IKlage } from "./klagebehandling";
+import { velgKlage } from "./klagebehandlinger.velgere";
 import { feiletHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
 
@@ -15,34 +17,31 @@ export interface IUtfallPayload {
   klagebehandlingid: string;
   vedtakid: string;
   utfall: string | null;
+  klagebehandlingVersjon: number;
 }
 export interface IOmgjoeringsgrunnPayload {
   klagebehandlingid: string;
   vedtakid: string;
   omgjoeringsgrunn: string | null;
+  klagebehandlingVersjon: number;
 }
 
 export interface IHjemlerPayload {
   klagebehandlingid: string;
   vedtakid: string;
   hjemler: string[];
+  klagebehandlingVersjon: number;
 }
 
 export interface IInternVurderingPayload {
   klagebehandlingid: string;
   internVurdering: string;
-}
-
-export interface IInternVurderingPayload {
-  klagebehandlingid: string;
-  internVurdering: string;
+  klagebehandlingVersjon: number;
 }
 
 //==========
 // Reducer
 //==========
-
-const KLAGEBEHANDLINGVERSJON = 6;
 
 const initialStateBehandlingsVedtak = {
   id: "",
@@ -51,7 +50,6 @@ const initialStateBehandlingsVedtak = {
   hjemler: [] as string[],
   grunn: null as null | string,
   internVurdering: "",
-  klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON,
 };
 
 export const behandlingsvedtakSlice = createSlice({
@@ -110,7 +108,7 @@ export function lagreInternVurderingEpos(
         lagreInternVurderingUrl,
         {
           internVurdering: action.payload.internVurdering,
-          klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
         },
         { "Content-Type": "application/json" }
       )
@@ -138,7 +136,10 @@ export function lagreUtfallEpos(
       const lagreUtfallUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/utfall`;
       return put(
         lagreUtfallUrl,
-        { utfall: action.payload.utfall, klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON },
+        {
+          utfall: action.payload.utfall,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
         .pipe(map((payload: { response: any }) => lagreUtfall(payload.response)))
@@ -165,7 +166,10 @@ export function lagreOmgjoeringsgrunnEpos(
       const lagreOmgjoeringsgrunnUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/grunn`;
       return put(
         lagreOmgjoeringsgrunnUrl,
-        { grunn: action.payload.omgjoeringsgrunn, klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON },
+        {
+          grunn: action.payload.omgjoeringsgrunn,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
         .pipe(map((payload: { response: any }) => lagreOmgjoeringsgrunn(payload.response)))
@@ -192,7 +196,10 @@ export function lagreHjemlerEpos(
       const lagreHjemlerUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/hjemler`;
       return put(
         lagreHjemlerUrl,
-        { hjemler: action.payload.hjemler, klagebehandlingVersjon: KLAGEBEHANDLINGVERSJON },
+        {
+          hjemler: action.payload.hjemler,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
         .pipe(map((payload: { response: any }) => lagreHjemler(payload.response)))

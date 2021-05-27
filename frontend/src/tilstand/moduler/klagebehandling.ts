@@ -68,6 +68,7 @@ export interface IKlage {
   internVurdering: string;
   kommentarFraFoersteinstans: string;
   vedtak: Array<Vedtak>;
+  klagebehandlingVersjon: number;
 }
 
 export interface Vedtak {
@@ -153,6 +154,7 @@ export const klageSlice = createSlice({
         grunn: null,
       },
     ],
+    klagebehandlingVersjon: 8,
   } as IKlage,
   reducers: {
     HENT_KLAGE: (state, action: PayloadAction<IKlage>) => {

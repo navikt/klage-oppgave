@@ -83,6 +83,7 @@ export function UtfallSkjema() {
         klagebehandlingid: klage.id,
         vedtakid: klage.vedtak[0].id,
         utfall: utfall ? utfall.id : null,
+        klagebehandlingVersjon: klage.klagebehandlingVersjon,
       })
     );
     const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
@@ -96,6 +97,7 @@ export function UtfallSkjema() {
         klagebehandlingid: klage.id,
         vedtakid: klage.vedtak[0].id,
         omgjoeringsgrunn: omgjoeringsgrunn ? omgjoeringsgrunn.id : null,
+        klagebehandlingVersjon: klage.klagebehandlingVersjon,
       })
     );
   }
@@ -107,6 +109,7 @@ export function UtfallSkjema() {
         klagebehandlingid: klage.id,
         vedtakid: klage.vedtak[0].id,
         hjemler: hjemler.map((f) => f.value as string),
+        klagebehandlingVersjon: klage.klagebehandlingVersjon,
       })
     );
   }
@@ -116,6 +119,7 @@ export function UtfallSkjema() {
       lagreInternVurdering({
         klagebehandlingid: klage.id,
         internVurdering: internVurdering,
+        klagebehandlingVersjon: klage.klagebehandlingVersjon,
       })
     );
   }

@@ -74,6 +74,7 @@ describe("Oppgave epos", () => {
               grunn: null,
             },
           ],
+          klagebehandlingVersjon: 8,
         };
 
         const reducerResponse = hentetKlageHandling(mockedResponse);
