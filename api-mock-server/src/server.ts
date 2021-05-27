@@ -130,7 +130,7 @@ app.get("/klagebehandlinger/:id/detaljer", async (req, res) => {
     type: "1",
     mottatt: "2021-04-26",
     startet: "2021-04-27",
-    avsluttet: null,
+    avsluttetAvSaksbehandler: null,
     frist: null,
     tildeltSaksbehandlerident: "Z994488",
     medunderskriverident: null,

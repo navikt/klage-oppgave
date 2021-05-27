@@ -107,7 +107,7 @@ const OppgaveTabellRad = ({
   person,
   utvidetProjeksjon,
   settValgtOppgave,
-  avsluttet,
+  avsluttetAvSaksbehandler,
   utfall,
 }: OppgaveRadMedFunksjoner) => {
   const dispatch = useDispatch();
@@ -166,8 +166,8 @@ const OppgaveTabellRad = ({
         </TableCell>
       )}
 
-      {avsluttet && <TableCell>{formattedDate(avsluttet)}</TableCell>}
-      {!avsluttet && <TableCell>{formattedDate(frist)}</TableCell>}
+      {avsluttetAvSaksbehandler && <TableCell>{formattedDate(avsluttetAvSaksbehandler)}</TableCell>}
+      {!avsluttetAvSaksbehandler && <TableCell>{formattedDate(frist)}</TableCell>}
 
       {utfall ? <TableCell>{utfall}</TableCell> : null}
       {!utfall &&

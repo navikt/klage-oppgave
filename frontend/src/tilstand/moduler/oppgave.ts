@@ -39,7 +39,7 @@ export interface OppgaveRad {
   frist: string | number;
   mottatt: string | number;
   saksbehandler: string;
-  avsluttet?: string;
+  avsluttetAvSaksbehandler?: string;
   utfall?: string;
   erMedunderskriver?: string;
 }

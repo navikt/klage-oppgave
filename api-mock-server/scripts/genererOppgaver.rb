@@ -23,7 +23,7 @@ def init_oppgaver()
                 erMedunderskriver TEXT,
                 finalized TEXT,
                 ferdigstiltFom TEXT,
-                avsluttet TEXT,
+                avsluttetAvSaksbehandler TEXT,
                 utfall TEXT
             )
             "
@@ -38,11 +38,11 @@ def init_oppgaver()
 end
 
 
-def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon, erMedunderskriver, finalized, ferdigstiltFom, avsluttet, utfall)
+def insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler, fnr, navn, versjon, erMedunderskriver, finalized, ferdigstiltFom, avsluttetAvSaksbehandler, utfall)
   begin
 	  db = SQLite3::Database.open ARGV[0]
-      db.execute("INSERT INTO Oppgaver  (Id, type, tema, hjemmel,  frist,      mottatt,      saksbehandler, fnr, navn, klagebehandlingVersjon, erMedunderskriver,           finalized,      ferdigstiltFom,      avsluttet,      utfall) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                        [id, type, tema, hjemmel,  frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon,                erMedunderskriver && saksbehandler || "", finalized.to_s, ferdigstiltFom.to_s, avsluttet.to_s, utfall])
+      db.execute("INSERT INTO Oppgaver  (Id, type, tema, hjemmel,  frist,      mottatt,      saksbehandler, fnr, navn, klagebehandlingVersjon, erMedunderskriver,           finalized,      ferdigstiltFom,      avsluttetAvSaksbehandler,      utfall) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                        [id, type, tema, hjemmel,  frist.to_s, mottatt.to_s, saksbehandler, fnr, navn, versjon,                erMedunderskriver && saksbehandler || "", finalized.to_s, ferdigstiltFom.to_s, avsluttetAvSaksbehandler.to_s, utfall])
 
   rescue SQLite3::Exception => e
     puts "Exception occurred"
@@ -94,7 +94,7 @@ def lagData(teller)
   tema = tilfeldigTema()
   frist = Faker::Date.backward(days: 365)
   mottatt = Faker::Date.backward(days: 365)
-  avsluttet = Faker::Date.backward(days: 14)
+  avsluttetAvSaksbehandler = Faker::Date.backward(days: 14)
   finalized = Faker::Date.backward(days: 5)
   hjemmel = tilfeldigHjemmel()
   ferdigstiltFom = ferdigstilt(teller)
@@ -104,7 +104,7 @@ def lagData(teller)
   erMedunderskriver = [true, false].shuffle
   finalizedRand = [true, false].shuffle
   utfall = "Medhold"
-  insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler(teller), fnr, navn, versjon, erMedunderskriver, finalized,ferdigstiltFom, avsluttet, utfall)
+  insert_oppgave(id, type, tema, hjemmel, frist, mottatt, saksbehandler(teller), fnr, navn, versjon, erMedunderskriver, finalized,ferdigstiltFom, avsluttetAvSaksbehandler, utfall)
 end
 
 init_oppgaver()

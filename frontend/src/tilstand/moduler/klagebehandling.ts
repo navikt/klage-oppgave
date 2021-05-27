@@ -53,7 +53,7 @@ export interface IKlage {
   type: string;
   mottatt: string;
   startet?: string;
-  avsluttet?: string;
+  avsluttetAvSaksbehandler?: string;
   frist: string;
   tildeltSaksbehandlerident?: string;
   hjemler: Array<IHjemmel>;
@@ -131,7 +131,7 @@ export const klageSlice = createSlice({
     type: "",
     mottatt: "",
     startet: undefined,
-    avsluttet: undefined,
+    avsluttetAvSaksbehandler: undefined,
     frist: "",
     tildeltSaksbehandlerident: undefined,
     pageReference: "",

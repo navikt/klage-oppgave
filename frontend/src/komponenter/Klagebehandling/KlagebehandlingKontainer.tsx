@@ -206,15 +206,20 @@ const VedleggTittel = styled.li`
   min-width: 15em;
   cursor: pointer;
 `;
-const PreviewBeholder = styled.div`
+const FullBeholder = styled.div`
   display: ${(props) => props.theme.display};
   margin: 0.25em 0.5em;
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   width: 40em;
-  overflow: hidden;
   position: relative;
+`;
+
+const PreviewBeholder = styled.div`
+  display: ${(props) => props.theme.display};
+  width: 100%;
+  overflow: hidden;
 `;
 
 const Preview = styled.div`
@@ -317,36 +322,38 @@ export default function KlagebehandlingBeholder({ faner }: { faner: IFaner }) {
         settdokumentInfoId={settdokumentInfoId}
         faner={faner}
       />
-      <PreviewBeholder theme={{ display: faner.dokumenter.checked && aktivPDF ? "unset" : "none" }}>
-        <Preview>
-          <PreviewTitle>
-            {dokumentTittel}
-            <div>
-              <a href={klage.currentPDF} target={"_blank"}>
-                <EksternalSVGIkon alt="Ekstern lenke" src={ExtLink} />
-              </a>
-              <SVGIkon
-                alt="Lukk forhåndsvisning"
-                src={CloseSVG}
-                onClick={() => settAktivPDF(false)}
-              />
-            </div>
-          </PreviewTitle>
-          <Document
-            file={klage.currentPDF}
-            onLoadSuccess={onDocumentLoadSuccess}
-            options={options}
-            error={<Feil>Kunne ikke hente PDF</Feil>}
-            loading={<NavFrontendSpinner />}
-          >
-            <PDFBeholder>
-              {Array.from(new Array(numPages), (el, index) => (
-                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-              ))}
-            </PDFBeholder>
-          </Document>
-        </Preview>
-      </PreviewBeholder>
+      <FullBeholder theme={{ display: faner.dokumenter.checked && aktivPDF ? "unset" : "none" }}>
+        <PreviewBeholder theme={{ display: "block" }}>
+          <Preview>
+            <PreviewTitle>
+              {dokumentTittel}
+              <div>
+                <a href={klage.currentPDF} target={"_blank"}>
+                  <EksternalSVGIkon alt="Ekstern lenke" src={ExtLink} />
+                </a>
+                <SVGIkon
+                  alt="Lukk forhåndsvisning"
+                  src={CloseSVG}
+                  onClick={() => settAktivPDF(false)}
+                />
+              </div>
+            </PreviewTitle>
+            <Document
+              file={klage.currentPDF}
+              onLoadSuccess={onDocumentLoadSuccess}
+              options={options}
+              error={<Feil>Kunne ikke hente PDF</Feil>}
+              loading={<NavFrontendSpinner />}
+            >
+              <PDFBeholder>
+                {Array.from(new Array(numPages), (el, index) => (
+                  <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+                ))}
+              </PDFBeholder>
+            </Document>
+          </Preview>
+        </PreviewBeholder>
+      </FullBeholder>
 
       <Behandlingsskjema skjult={!faner.detaljer.checked} />
       <FullforVedtak skjult={!faner.vedtak.checked} />
