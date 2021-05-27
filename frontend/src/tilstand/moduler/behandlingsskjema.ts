@@ -13,6 +13,12 @@ import { toasterSett, toasterSkjul } from "./toaster";
 // Interfaces
 //==========
 
+export interface IKlageInfoPayload {
+  utfall: string | null;
+  grunn: string | null;
+  hjemler: string[];
+  internVurdering: string;
+}
 export interface IUtfallPayload {
   klagebehandlingid: string;
   vedtakid: string;
@@ -47,15 +53,26 @@ const initialStateBehandlingsVedtak = {
   id: "",
   utfall: null as null | string,
   brevMottakere: [],
-  hjemler: [] as string[],
   grunn: null as null | string,
+  hjemler: [] as string[],
   internVurdering: "",
+  lasterKlage: true,
 };
 
 export const behandlingsvedtakSlice = createSlice({
   name: "behandlingsvedtak",
   initialState: initialStateBehandlingsVedtak,
   reducers: {
+    SETT_KLAGE_INFO: (state, action: PayloadAction<IKlageInfoPayload>) => {
+      return {
+        ...state,
+        utfall: action.payload.utfall,
+        grunn: action.payload.grunn,
+        hjemler: action.payload.hjemler,
+        internVurdering: action.payload.internVurdering,
+        lasterKlage: false,
+      };
+    },
     SETT_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
       return { ...state, internVurdering: action.payload.internVurdering };
     },
@@ -76,6 +93,8 @@ export default behandlingsvedtakSlice.reducer;
 //==========
 // Actions
 //==========
+
+export const settKlageInfo = createAction<IKlageInfoPayload>("behandlingsvedtak/SETT_KLAGE_INFO");
 
 export const lagreInternVurdering = createAction<IInternVurderingPayload>(
   "behandlingsvedtak/SETT_INTERN_VURDERING"

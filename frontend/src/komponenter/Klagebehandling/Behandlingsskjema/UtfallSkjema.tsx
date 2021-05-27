@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row } from "../../../styled-components/Row";
 import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandling";
@@ -12,6 +12,7 @@ import {
   lagreInternVurdering,
   lagreOmgjoeringsgrunn,
   lagreUtfall,
+  settKlageInfo,
 } from "../../../tilstand/moduler/behandlingsskjema";
 import { BasertPaaHjemmel } from "./BasertPaaLovhjemmel";
 import AutosaveProgressIndicator, { AutosaveStatus } from "./autosave-progress";
@@ -25,7 +26,7 @@ export function UtfallSkjema() {
   const dispatch = useDispatch();
 
   const [utfall, settUtfall] = useState<IKodeverkVerdi | null>(
-    faaUtfalllObjekt(klage.vedtak[0].utfall) ?? kodeverk.utfall[0]
+    faaUtfallObjekt(klage.vedtak[0].utfall) ?? null
   );
   const [gyldigeOmgjoeringsgrunner, settGyldigeOmgjoeringsgrunner] = useState<IKodeverkVerdi[]>(
     faaOmgjoeringsgrunner(utfall)
@@ -124,7 +125,7 @@ export function UtfallSkjema() {
     );
   }
 
-  function faaUtfalllObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
+  function faaUtfallObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
     if (utfallnavn === null) {
       return null;
     }
@@ -141,23 +142,25 @@ export function UtfallSkjema() {
   }
 
   useEffect(() => {
-    if (!klage.id || !klage.vedtak[0].id) {
+    if (behandlingsskjema.lasterKlage) {
+      let valgteHjemlerVerdier = valgteHjemler.map((f) => f.value as string);
+      dispatch(
+        settKlageInfo({
+          utfall: utfall ? utfall.id : null,
+          grunn: omgjoeringsgrunn ? omgjoeringsgrunn.id : null,
+          hjemler: valgteHjemlerVerdier,
+          internVurdering: internVurdering,
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (behandlingsskjema.lasterKlage) {
       return;
     }
-
     let valgteHjemlerVerdier = valgteHjemler.map((h) => h.value);
 
-    if (
-      utfall &&
-      behandlingsskjema.utfall === utfall.id &&
-      (!omgjoeringsgrunn || behandlingsskjema.grunn === omgjoeringsgrunn.id) &&
-      behandlingsskjema.hjemler.slice().sort().toString() ===
-        valgteHjemlerVerdier.sort().toString() &&
-      behandlingsskjema.internVurdering === internVurdering
-    ) {
-      setAutosaveStatus(AutosaveStatus.SAVED);
-      return;
-    }
     setAutosaveStatus(AutosaveStatus.SAVING);
 
     if (utfall && behandlingsskjema.utfall !== utfall.id) {
@@ -180,7 +183,7 @@ export function UtfallSkjema() {
       }, 1000);
       return () => clearTimeout(timeout); // Oppdater kun 1s etter at bruker slutter å skrive
     }
-  }, [utfall, omgjoeringsgrunn, valgteHjemler, internVurdering, behandlingsskjema]);
+  }, [utfall, omgjoeringsgrunn, valgteHjemler, internVurdering]);
 
   return (
     <div className={"detaljer"}>
