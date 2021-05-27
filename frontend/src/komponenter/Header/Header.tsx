@@ -63,8 +63,6 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
     return enheter[enhetNo]?.navn ?? "";
   };
 
-  console.info(person.enhetId);
-
   return (
     <BrukerBoks className={"bruker-boks"}>
       <div style={{ color: "white" }}>{JSON.stringify(person.enhetId)}</div>
