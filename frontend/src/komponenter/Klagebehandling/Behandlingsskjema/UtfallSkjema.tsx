@@ -147,7 +147,9 @@ export function UtfallSkjema() {
         })
       );
     }
-  }, [behandlingsskjema]);
+  }, []);
+
+  let { lasterKlage } = behandlingsskjema;
 
   useEffect(() => {
     if (behandlingsskjema.lasterKlage) {
@@ -166,7 +168,7 @@ export function UtfallSkjema() {
     ) {
       velgHjemler(valgteHjemler);
     }
-  }, [utfall, omgjoeringsgrunn, valgteHjemler, behandlingsskjema]);
+  }, [utfall, omgjoeringsgrunn, valgteHjemler, lasterKlage]);
 
   let isFirstRunInternVurdering = useRef(true);
   useEffect(() => {
@@ -192,12 +194,16 @@ export function UtfallSkjema() {
   return (
     <div className={"detaljer"}>
       <Row>
-        <Utfall utfallAlternativer={kodeverk.utfall} utfall={utfall} velgUtfall={velgUtfall} />
+        <Utfall
+          utfallAlternativer={kodeverk.utfall}
+          utfall={faaUtfallObjekt(klage.vedtak[0].utfall)}
+          velgUtfall={velgUtfall}
+        />
       </Row>
       <Row>
         <BasertPaaHjemmel
           gyldigeHjemler={gyldigeHjemler}
-          valgteHjemler={valgteHjemler}
+          valgteHjemler={klage.hjemler.map((hjemmel) => faaHjemmelFilter("" + hjemmel))}
           velgHjemler={velgHjemler}
         />
       </Row>
