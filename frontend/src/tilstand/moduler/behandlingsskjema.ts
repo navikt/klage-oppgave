@@ -42,7 +42,7 @@ export interface IHjemlerPayload {
 export interface IInternVurderingPayload {
   klagebehandlingid: string;
   internVurdering: string;
-    klagebehandlingVersjon: number;
+  klagebehandlingVersjon: number;
 }
 
 export interface IInternVurderingPayload {
@@ -61,7 +61,7 @@ const initialStateBehandlingsVedtak = {
   grunn: null as null | string,
   hjemler: [] as string[],
   internVurdering: "",
-    lasterKlage: true,
+  lasterKlage: true,
   klagebehandlingVersjon: 0,
 };
 
@@ -169,7 +169,6 @@ export function lagreUtfallEpos(
       )
         .pipe(map((payload: { response: any }) => lagreUtfall(payload.response)))
         .pipe(
-          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
             let err = error?.response?.detail || "ukjent feil";
             return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
