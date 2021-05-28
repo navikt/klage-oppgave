@@ -147,10 +147,10 @@ export function UtfallSkjema() {
         })
       );
     }
-  }, []);
+  }, [behandlingsskjema]);
 
   useEffect(() => {
-    if (!klage.klageLastet || behandlingsskjema.lasterKlage) {
+    if (behandlingsskjema.lasterKlage) {
       return;
     }
     let valgteHjemlerVerdier = valgteHjemler.map((h) => h.value);
