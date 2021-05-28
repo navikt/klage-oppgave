@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row } from "../../../styled-components/Row";
 import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandling";
@@ -82,9 +82,9 @@ export function UtfallSkjema() {
     dispatch(
       lagreUtfall({
         klagebehandlingid: klage.id,
+        klagebehandlingVersjon: klage.klagebehandlingVersjon,
         vedtakid: klage.vedtak[0].id,
         utfall: utfall ? utfall.id : null,
-        klagebehandlingVersjon: klage.klagebehandlingVersjon,
       })
     );
     const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
@@ -96,9 +96,9 @@ export function UtfallSkjema() {
     dispatch(
       lagreOmgjoeringsgrunn({
         klagebehandlingid: klage.id,
+        klagebehandlingVersjon: klage.klagebehandlingVersjon,
         vedtakid: klage.vedtak[0].id,
         omgjoeringsgrunn: omgjoeringsgrunn ? omgjoeringsgrunn.id : null,
-        klagebehandlingVersjon: klage.klagebehandlingVersjon,
       })
     );
   }
@@ -109,8 +109,8 @@ export function UtfallSkjema() {
       lagreHjemler({
         klagebehandlingid: klage.id,
         vedtakid: klage.vedtak[0].id,
-        hjemler: hjemler.map((f) => f.value as string),
         klagebehandlingVersjon: klage.klagebehandlingVersjon,
+        hjemler: hjemler.map((f) => f.value as string),
       })
     );
   }
@@ -140,8 +140,14 @@ export function UtfallSkjema() {
       gyldigeOmgjoeringsgrunner.find((obj: IKodeverkVerdi) => obj.navn === omgjoeringnavn) ?? null
     );
   }
+  const isFirstRun = useRef(true);
 
   useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+
     if (behandlingsskjema.lasterKlage) {
       let valgteHjemlerVerdier = valgteHjemler.map((f) => f.value as string);
       dispatch(

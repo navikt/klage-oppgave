@@ -1,13 +1,13 @@
-import { combineReducers, createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny, useSelector } from "react-redux";
+import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { catchError, map, retryWhen, switchMap, withLatestFrom, concat } from "rxjs/operators";
+import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
+import { concat } from "rxjs";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { IKlage } from "./klagebehandling";
-import { velgKlage } from "./klagebehandlinger.velgere";
-import { feiletHandling } from "./meg";
-import { toasterSett, toasterSkjul } from "./toaster";
+import { displayToast, feiletHandling, skjulToaster } from "./meg";
+import { RootState } from "../root";
 
 //==========
 // Interfaces
@@ -42,7 +42,12 @@ export interface IHjemlerPayload {
 export interface IInternVurderingPayload {
   klagebehandlingid: string;
   internVurdering: string;
-  klagebehandlingVersjon: number;
+    klagebehandlingVersjon: number;
+}
+
+export interface IInternVurderingPayload {
+  klagebehandlingid: string;
+  internVurdering: string;
 }
 
 //==========
@@ -56,7 +61,8 @@ const initialStateBehandlingsVedtak = {
   grunn: null as null | string,
   hjemler: [] as string[],
   internVurdering: "",
-  lasterKlage: true,
+    lasterKlage: true,
+  klagebehandlingVersjon: 0,
 };
 
 export const behandlingsvedtakSlice = createSlice({
@@ -115,7 +121,7 @@ export const lagreHjemler = createAction<IHjemlerPayload>("behandlingsvedtak/SET
 
 export function lagreInternVurderingEpos(
   action$: ActionsObservable<PayloadAction<IInternVurderingPayload>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { put }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -205,7 +211,7 @@ export function lagreOmgjoeringsgrunnEpos(
 
 export function lagreHjemlerEpos(
   action$: ActionsObservable<PayloadAction<IHjemlerPayload>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { put }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -243,16 +249,3 @@ export const BEHANDLINGSSKJEMA_EPICS = [
 //==========
 // Vis feilmeldinger ved feil
 //==========
-
-function displayToast(error: string) {
-  const message = error || "Kunne ikke lagre innstillinger";
-  return toasterSett({
-    display: true,
-    type: "feil",
-    feilmelding: message,
-  });
-}
-
-function skjulToaster() {
-  return toasterSkjul();
-}

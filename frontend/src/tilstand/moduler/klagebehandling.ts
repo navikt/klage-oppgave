@@ -1,7 +1,7 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, Observable, of } from "rxjs";
+import { concat } from "rxjs";
 import {
   catchError,
   map,
@@ -12,11 +12,11 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { AjaxCreationMethod, ajaxDelete } from "rxjs/internal-compatibility";
+import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
-import { IInnstillinger, sattInnstillinger, settInnstillingerHandling } from "./meg";
-import { SETT } from "./router";
+import { IInnstillinger } from "./meg";
 import { IKodeverkVerdi } from "./oppgave";
+import { RootState } from "../root";
 
 //==========
 // Interfaces
@@ -39,6 +39,7 @@ export interface IKlage {
     etternavn?: string;
   };
   klageLastet: boolean;
+  klagebehandlingVersjon: number;
   lasterDokumenter: boolean;
   hasMore: boolean;
   klageLastingFeilet: boolean;
@@ -118,6 +119,7 @@ export const klageSlice = createSlice({
     klageLastet: false,
     sakenGjelderKjoenn: "",
     sakenGjelderNavn: "",
+    klagebehandlingVersjon: 0,
     sakenGjelderFoedselsnummer: "",
     lasterDokumenter: false,
     klageLastingFeilet: false,
@@ -284,21 +286,21 @@ const R = require("ramda");
 
 export function klagebehandlingEpos(
   action$: ActionsObservable<PayloadAction<string>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(hentKlageHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
-      return getJSON<IKlagePayload>(klageUrl(action.payload))
+      return getJSON<IKlage>(klageUrl(action.payload))
         .pipe(
           timeout(5000),
-          map((response: IKlagePayload) => response)
+          map((response: IKlage) => response)
         )
         .pipe(
           map((data) => {
-            return hentetKlageHandling(data as IKlage);
+            return hentetKlageHandling(data);
           })
         )
         .pipe(

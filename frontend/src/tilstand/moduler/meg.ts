@@ -161,7 +161,7 @@ export const feiletHandling = createAction<string>("meg/FEILET");
 //==========
 // Vis feilmeldinger ved feil
 //==========
-function displayToast(error: string) {
+export function displayToast(error: string) {
   const message = error || "Kunne ikke lagre innstillinger";
   return toasterSett({
     display: true,
@@ -170,7 +170,7 @@ function displayToast(error: string) {
   });
 }
 
-function skjulToaster() {
+export function skjulToaster() {
   return toasterSkjul();
 }
 

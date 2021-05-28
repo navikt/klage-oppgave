@@ -1,16 +1,20 @@
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
-import { klagebehandlingEpos, hentKlageHandling, hentetKlageHandling } from "./klagebehandling";
+import {
+  hentetKlageHandling,
+  hentKlageHandling,
+  IKlage,
+  klagebehandlingEpos,
+} from "./klagebehandling";
 import { ajax } from "rxjs/ajax";
-import { of, throwError } from "rxjs";
+import { of } from "rxjs";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { RootStateOrAny } from "react-redux";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
   const originalAjaxGet = ajax.get;
-
-  const mockApi = jest.fn();
 
   beforeEach(() => {
     ts = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
@@ -32,10 +36,8 @@ describe("Oppgave epos", () => {
         const inputValues = {
           a: hentKlageHandling("123"),
         };
-        const initState = {
-          klagebehandling: {
-            id: "123",
-          },
+        const initState: Partial<IKlage> = {
+          id: "123",
         };
         const mockedResponse = {
           id: "64848",
@@ -60,6 +62,7 @@ describe("Oppgave epos", () => {
           lasterDokumenter: false,
           klageLastet: false,
           dokumenterAlleHentet: false,
+          klagebehandlingVersjon: 0,
           dokumenterTilordnedeHentet: false,
           pageIdx: 0,
           hjemler: [{ kapittel: 8, paragraf: 14, original: "8-14" }],
@@ -95,7 +98,11 @@ describe("Oppgave epos", () => {
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = klagebehandlingEpos(action$, state$, <AjaxCreationMethod>dependencies);
+        const actual$ = klagebehandlingEpos(
+          action$,
+          state$ as RootStateOrAny,
+          <AjaxCreationMethod>dependencies
+        );
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })

@@ -118,7 +118,6 @@ export type OppgaveState = {
     beskrivelse?: string;
   };
 };
-
 export interface RaderMedMetadata {
   antallTreffTotalt: number;
   klagebehandlinger: OppgaveRad[];

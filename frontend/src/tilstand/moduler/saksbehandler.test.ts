@@ -193,7 +193,7 @@ describe("TILDEL 'Meg' epos", () => {
             payload: {
               display: true,
               type: "feil",
-              feilmelding: "fradeling feilet",
+              feilmelding: { message: "fradeling feilet", status: 503 },
             },
             type: "toaster/SETT",
           },
@@ -242,7 +242,7 @@ describe("TILDEL 'Meg' epos", () => {
             payload: {
               display: true,
               type: "feil",
-              feilmelding: "tildeling feilet",
+              feilmelding: { message: "tildeling feilet", status: 503 },
             },
             type: "toaster/SETT",
           },
@@ -292,7 +292,7 @@ describe("TILDEL 'Meg' epos", () => {
             payload: {
               display: true,
               type: "feil",
-              feilmelding: "tildeling feilet",
+              feilmelding: { message: "tildeling feilet", status: 503 },
             },
             type: "toaster/SETT",
           },
@@ -309,7 +309,7 @@ describe("TILDEL 'Meg' epos", () => {
         const state$ = new StateObservable(hot("-a", observableValues), {});
         spyOn(dependencies, "post").and.returnValue(
           throwError({
-            response: { detail: { feilmelding: "tildeling feilet" } },
+            message: "tildeling feilet",
             status: 503,
           })
         );
@@ -345,7 +345,7 @@ describe("TILDEL 'Meg' epos", () => {
             payload: {
               display: true,
               type: "feil",
-              feilmelding: "tildeling feilet",
+              feilmelding: { message: "tildeling feilet", status: 503 },
             },
             type: "toaster/SETT",
           },
@@ -362,7 +362,7 @@ describe("TILDEL 'Meg' epos", () => {
         const state$ = new StateObservable(hot("-a", observableValues), {});
         spyOn(dependencies, "post").and.returnValue(
           throwError({
-            response: { detail: "tildeling feilet" },
+            message: "tildeling feilet",
             status: 503,
           })
         );
@@ -398,7 +398,9 @@ describe("TILDEL 'Meg' epos", () => {
             payload: {
               display: true,
               type: "feil",
-              feilmelding: "generisk feilmelding",
+              feilmelding: {
+                status: 503,
+              },
             },
             type: "toaster/SETT",
           },
