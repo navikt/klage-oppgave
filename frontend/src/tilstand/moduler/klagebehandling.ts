@@ -69,7 +69,6 @@ export interface IKlage {
   internVurdering: string;
   kommentarFraFoersteinstans: string;
   vedtak: Array<Vedtak>;
-  klagebehandlingVersjon: number;
 }
 
 export interface Vedtak {
@@ -156,7 +155,6 @@ export const klageSlice = createSlice({
         grunn: null,
       },
     ],
-    klagebehandlingVersjon: 8,
   } as IKlage,
   reducers: {
     HENT_KLAGE: (state, action: PayloadAction<IKlage>) => {
@@ -195,6 +193,7 @@ export const klageSlice = createSlice({
         state.pageRefs = [];
         state.pageRefs.push(null);
       }
+
       if (action.payload.pageReference && !historyNavigate) {
         if (!historyNavigate) {
           const found = state.pageRefs.filter((ref) => ref === action.payload.pageReference);
