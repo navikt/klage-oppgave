@@ -5,18 +5,11 @@ import { Ellipsis } from "../../../styled-components/ellipsis";
 import Success from "../../SuccessIcon";
 import styled from "styled-components";
 
-export enum AutosaveStatus {
-  NONE,
-  SAVING,
-  SAVED,
-  FAILED,
-}
-
 interface Props {
-  autosaveStatus: AutosaveStatus;
+  autosaveStatus: boolean;
 }
 
-const AutosaveContainer = styled.div`
+const AutoLagreBeholder = styled.div`
   display: flex;
   justify-content: flex-end;
   color: #78706a;
@@ -34,7 +27,7 @@ const AutosaveContent = styled.div`
   align-items: center;
 `;
 
-const AutosaveProgressIndicator = (props: Props) => {
+const LagringsIndikator = (props: Props) => {
   const [anker, setAnker] = useState<(EventTarget & HTMLDivElement) | undefined>(undefined);
 
   const togglePopover = (ankerEl: EventTarget & HTMLDivElement): void =>
@@ -47,27 +40,27 @@ const AutosaveProgressIndicator = (props: Props) => {
         onRequestClose={() => setAnker(undefined)}
         orientering={PopoverOrientering.OverHoyre}
       >
-        <p style={{ padding: "16px" }}>Vi lagrer endringene dine automatisk.</p>
+        <p style={{ padding: "16px" }}>Endringene lagres automatisk.</p>
       </Popover>
 
-      <AutosaveContainer>
+      <AutoLagreBeholder>
         <AutosaveContent onClick={(e) => togglePopover(e.currentTarget)}>
-          {getContent(props.autosaveStatus)}
+          {visStatus(props.autosaveStatus)}
         </AutosaveContent>
-      </AutosaveContainer>
+      </AutoLagreBeholder>
     </>
   );
 };
 
-const getContent = (status: AutosaveStatus) => {
-  if (status === AutosaveStatus.SAVING) {
+const visStatus = (status: boolean) => {
+  if (status) {
     return (
       <Element>
         <Ellipsis>Lagrer</Ellipsis>
       </Element>
     );
   }
-  if (status === AutosaveStatus.SAVED) {
+  if (!status) {
     return (
       <>
         <Success />
@@ -75,10 +68,7 @@ const getContent = (status: AutosaveStatus) => {
       </>
     );
   }
-  if (status === AutosaveStatus.FAILED) {
-    return <Element>Klarte ikke lagre</Element>;
-  }
   return null;
 };
 
-export default AutosaveProgressIndicator;
+export default LagringsIndikator;

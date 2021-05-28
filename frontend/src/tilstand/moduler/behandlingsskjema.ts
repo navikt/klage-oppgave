@@ -65,6 +65,7 @@ const initialStateBehandlingsVedtak = {
   hjemler: [] as string[],
   internVurdering: "",
   lasterKlage: true,
+  lagrerVurdering: false,
   klagebehandlingVersjon: 0,
 };
 
@@ -82,8 +83,11 @@ export const behandlingsvedtakSlice = createSlice({
         lasterKlage: false,
       };
     },
+    SETT_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
+      return { ...state, lagrerVurdering: true };
+    },
     LAGRE_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
-      return { ...state, internVurdering: action.payload.internVurdering };
+      return { ...state, lagrerVurdering: false, internVurdering: action.payload.internVurdering };
     },
     LAGRE_UTFALL: (state, action: PayloadAction<IUtfallPayload>) => {
       return { ...state, utfall: action.payload.utfall };
@@ -146,7 +150,14 @@ export function lagreInternVurderingEpos(
         },
         { "Content-Type": "application/json" }
       )
-        .pipe(map((payload: { response: any }) => lagreInternVurdering(payload.response)))
+        .pipe(
+          map((payload: { response: any }) =>
+            LAGRE_INTERN_VURDERING({
+              ...payload.response,
+              internVurdering: action.payload.internVurdering,
+            })
+          )
+        )
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
@@ -208,7 +219,7 @@ export function lagreOmgjoeringsgrunnEpos(
         },
         { "Content-Type": "application/json" }
       )
-        .pipe(map((payload: { response: any }) => LAGRE_INTERN_VURDERING(payload.response)))
+        .pipe(map((payload: { response: any }) => LAGRE_OMGJOERINGSGRUNN(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {

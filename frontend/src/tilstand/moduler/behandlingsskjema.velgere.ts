@@ -1,5 +1,5 @@
-import { RootStateOrAny } from "react-redux";
+import { RootState } from "../root";
 
-export function velgBehandlingsskjema(state: RootStateOrAny) {
+export function velgBehandlingsskjema(state: RootState) {
   return state.behandlingsskjema;
 }

@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row } from "../../../styled-components/Row";
-import { GrunnerPerUtfall, IKlage } from "../../../tilstand/moduler/klagebehandling";
+import {
+  GrunnerPerUtfall,
+  IKlage,
+  lasterDokumenter,
+} from "../../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
 import { Filter, IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
@@ -15,9 +19,11 @@ import {
   settKlageInfo,
 } from "../../../tilstand/moduler/behandlingsskjema";
 import { BasertPaaHjemmel } from "./BasertPaaLovhjemmel";
-import AutosaveProgressIndicator, { AutosaveStatus } from "./autosave-progress";
+import LagringsIndikator from "./AutolagreElement";
 import { InternVurdering } from "./InternVurdering";
 import { velgBehandlingsskjema } from "../../../tilstand/moduler/behandlingsskjema.velgere";
+import debounce from "lodash.debounce";
+import { Textarea } from "nav-frontend-skjema";
 
 export function UtfallSkjema() {
   const kodeverk = useSelector(velgKodeverk);
@@ -34,8 +40,6 @@ export function UtfallSkjema() {
   const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(
     faaOmgjoeringsgrunnObjekt(klage.vedtak[0].grunn) ?? gyldigeOmgjoeringsgrunner[0]
   );
-
-  const [autosaveStatus, setAutosaveStatus] = useState<AutosaveStatus>(AutosaveStatus.SAVED);
 
   const [valgteHjemler, settValgteHjemler] = useState<Filter[]>(
     klage.hjemler.map((hjemmel) => faaHjemmelFilter("" + hjemmel))
@@ -115,16 +119,6 @@ export function UtfallSkjema() {
     );
   }
 
-  function oppdaterInternVurdering(internVurdering: string) {
-    dispatch(
-      lagreInternVurdering({
-        klagebehandlingid: klage.id,
-        internVurdering: internVurdering,
-        klagebehandlingVersjon: klage.klagebehandlingVersjon,
-      })
-    );
-  }
-
   function faaUtfallObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
     if (utfallnavn === null) {
       return null;
@@ -140,14 +134,8 @@ export function UtfallSkjema() {
       gyldigeOmgjoeringsgrunner.find((obj: IKodeverkVerdi) => obj.navn === omgjoeringnavn) ?? null
     );
   }
-  const isFirstRun = useRef(true);
 
   useEffect(() => {
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
-
     if (behandlingsskjema.lasterKlage) {
       let valgteHjemlerVerdier = valgteHjemler.map((f) => f.value as string);
       dispatch(
@@ -161,13 +149,16 @@ export function UtfallSkjema() {
     }
   }, []);
 
+  let isFirstRunHjemler = useRef(true);
   useEffect(() => {
-    if (behandlingsskjema.lasterKlage) {
+    if (isFirstRunHjemler.current) {
+      isFirstRunHjemler.current = false;
+      return;
+    }
+    if (!klage.klageLastet || behandlingsskjema.lasterKlage) {
       return;
     }
     let valgteHjemlerVerdier = valgteHjemler.map((h) => h.value);
-
-    setAutosaveStatus(AutosaveStatus.SAVING);
 
     if (utfall && behandlingsskjema.utfall !== utfall.id) {
       velgUtfall(utfall);
@@ -180,16 +171,28 @@ export function UtfallSkjema() {
     ) {
       velgHjemler(valgteHjemler);
     }
-    if (behandlingsskjema.internVurdering !== internVurdering) {
-      const timeout = setTimeout(() => {
-        oppdaterInternVurdering(internVurdering);
-        if (behandlingsskjema.internVurdering === internVurdering) {
-          setAutosaveStatus(AutosaveStatus.SAVED);
-        }
-      }, 1000);
-      return () => clearTimeout(timeout); // Oppdater kun 1s etter at bruker slutter å skrive
+  }, [utfall, omgjoeringsgrunn, valgteHjemler]);
+
+  let isFirstRunInternVurdering = useRef(true);
+  useEffect(() => {
+    if (isFirstRunInternVurdering.current) {
+      isFirstRunInternVurdering.current = false;
+      return;
     }
-  }, [utfall, omgjoeringsgrunn, valgteHjemler, internVurdering]);
+    if (!klage.klageLastet || behandlingsskjema.lasterKlage) {
+      return;
+    }
+    const timeout = setTimeout(() => {
+      dispatch(
+        lagreInternVurdering({
+          klagebehandlingid: klage.id,
+          internVurdering: internVurdering,
+          klagebehandlingVersjon: klage.klagebehandlingVersjon,
+        })
+      );
+    }, 1500);
+    return () => clearTimeout(timeout);
+  }, [internVurdering]);
 
   return (
     <div className={"detaljer"}>
@@ -219,7 +222,7 @@ export function UtfallSkjema() {
         />
       </Row>
       <Row>
-        <AutosaveProgressIndicator autosaveStatus={autosaveStatus} />
+        <LagringsIndikator autosaveStatus={behandlingsskjema.lagrerVurdering} />
       </Row>
     </div>
   );

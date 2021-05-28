@@ -1,10 +1,9 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { Textarea } from "nav-frontend-skjema";
 
 interface InterfaceInternVurderingProps {
   internVurdering: string;
-  // endreInternVurdering: (internVurdering: string) => void;
-  settInternVurdering: (internVurdering: string) => void;
+  settInternVurdering: Function;
 }
 
 export function InternVurdering({
@@ -14,7 +13,7 @@ export function InternVurdering({
   return (
     <Textarea
       id="internVurdering"
-      value={internVurdering ?? ""}
+      value={internVurdering}
       label="Vurdering av kvalitet for intern bruk:"
       maxLength={0}
       onChange={(e) => {
