@@ -194,16 +194,12 @@ export function UtfallSkjema() {
   return (
     <div className={"detaljer"}>
       <Row>
-        <Utfall
-          utfallAlternativer={kodeverk.utfall}
-          utfall={faaUtfallObjekt(klage.vedtak[0].utfall)}
-          velgUtfall={velgUtfall}
-        />
+        <Utfall utfallAlternativer={kodeverk.utfall} utfall={utfall} velgUtfall={velgUtfall} />
       </Row>
       <Row>
         <BasertPaaHjemmel
           gyldigeHjemler={gyldigeHjemler}
-          valgteHjemler={klage.hjemler.map((hjemmel) => faaHjemmelFilter("" + hjemmel))}
+          valgteHjemler={valgteHjemler}
           velgHjemler={velgHjemler}
         />
       </Row>
