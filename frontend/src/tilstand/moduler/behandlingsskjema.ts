@@ -2,12 +2,13 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { catchError, map, retryWhen, switchMap, withLatestFrom } from "rxjs/operators";
-import { concat } from "rxjs";
+import { catchError, map, retryWhen, switchMap, timeout, withLatestFrom } from "rxjs/operators";
+import { concat, of } from "rxjs";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { IKlage } from "./klagebehandling";
 import { displayToast, feiletHandling, skjulToaster } from "./meg";
 import { RootState } from "../root";
+import { FEILET, MOTTATT, RaderMedMetadata, RaderMedMetadataUtvidet } from "./oppgave";
 
 //==========
 // Interfaces
@@ -19,12 +20,14 @@ export interface IKlageInfoPayload {
   hjemler: string[];
   internVurdering: string;
 }
+
 export interface IUtfallPayload {
   klagebehandlingid: string;
   vedtakid: string;
   utfall: string | null;
   klagebehandlingVersjon: number;
 }
+
 export interface IOmgjoeringsgrunnPayload {
   klagebehandlingid: string;
   vedtakid: string;
@@ -159,21 +162,24 @@ export function lagreUtfallEpos(
     withLatestFrom(state$),
     switchMap(([action]) => {
       const lagreUtfallUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/utfall`;
-      return put(
+      const lagre = put(
         lagreUtfallUrl,
         {
           utfall: action.payload.utfall,
           klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
         },
         { "Content-Type": "application/json" }
-      )
-        .pipe(map((payload: { response: any }) => lagreUtfall(payload.response)))
-        .pipe(
-          catchError((error) => {
-            let err = error?.response?.detail || "ukjent feil";
-            return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
-          })
-        );
+      ).pipe(
+        timeout(5000),
+        map((payload: { response: any }) => lagreUtfall(payload.response))
+      );
+      return lagre.pipe(
+        retryWhen(provIgjenStrategi()),
+        catchError((error) => {
+          let err = error?.response?.detail || "ukjent feil";
+          return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
+        })
+      );
     })
   );
 }
