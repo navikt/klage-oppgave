@@ -85,7 +85,7 @@ export const behandlingsvedtakSlice = createSlice({
     SETT_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
       return { ...state, internVurdering: action.payload.internVurdering };
     },
-    SETT_UTFALL: (state, action: PayloadAction<IUtfallPayload>) => {
+    LAGRE_UTFALL: (state, action: PayloadAction<IUtfallPayload>) => {
       return { ...state, utfall: action.payload.utfall };
     },
     SETT_OMGJOERINGSGRUNN: (state, action: PayloadAction<IOmgjoeringsgrunnPayload>) => {
@@ -103,6 +103,7 @@ export default behandlingsvedtakSlice.reducer;
 // Actions
 //==========
 
+const { LAGRE_UTFALL } = behandlingsvedtakSlice.actions;
 export const settKlageInfo = createAction<IKlageInfoPayload>("behandlingsvedtak/SETT_KLAGE_INFO");
 
 export const lagreInternVurdering = createAction<IInternVurderingPayload>(
@@ -171,7 +172,7 @@ export function lagreUtfallEpos(
         { "Content-Type": "application/json" }
       ).pipe(
         timeout(5000),
-        map((payload: { response: any }) => lagreUtfall(payload.response))
+        map((payload: { response: any }) => LAGRE_UTFALL(payload.response))
       );
       return lagre.pipe(
         retryWhen(provIgjenStrategi()),
