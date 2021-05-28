@@ -82,16 +82,16 @@ export const behandlingsvedtakSlice = createSlice({
         lasterKlage: false,
       };
     },
-    SETT_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
+    LAGRE_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
       return { ...state, internVurdering: action.payload.internVurdering };
     },
     LAGRE_UTFALL: (state, action: PayloadAction<IUtfallPayload>) => {
       return { ...state, utfall: action.payload.utfall };
     },
-    SETT_OMGJOERINGSGRUNN: (state, action: PayloadAction<IOmgjoeringsgrunnPayload>) => {
+    LAGRE_OMGJOERINGSGRUNN: (state, action: PayloadAction<IOmgjoeringsgrunnPayload>) => {
       return { ...state, grunn: action.payload.omgjoeringsgrunn };
     },
-    SETT_HJEMLER: (state, action: PayloadAction<IHjemlerPayload>) => {
+    LAGRE_HJEMLER: (state, action: PayloadAction<IHjemlerPayload>) => {
       return { ...state, hjemler: action.payload.hjemler };
     },
   },
@@ -103,7 +103,12 @@ export default behandlingsvedtakSlice.reducer;
 // Actions
 //==========
 
-const { LAGRE_UTFALL } = behandlingsvedtakSlice.actions;
+const {
+  LAGRE_UTFALL,
+  LAGRE_OMGJOERINGSGRUNN,
+  LAGRE_INTERN_VURDERING,
+  LAGRE_HJEMLER,
+} = behandlingsvedtakSlice.actions;
 export const settKlageInfo = createAction<IKlageInfoPayload>("behandlingsvedtak/SETT_KLAGE_INFO");
 
 export const lagreInternVurdering = createAction<IInternVurderingPayload>(
@@ -203,7 +208,7 @@ export function lagreOmgjoeringsgrunnEpos(
         },
         { "Content-Type": "application/json" }
       )
-        .pipe(map((payload: { response: any }) => lagreOmgjoeringsgrunn(payload.response)))
+        .pipe(map((payload: { response: any }) => LAGRE_INTERN_VURDERING(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
@@ -233,7 +238,7 @@ export function lagreHjemlerEpos(
         },
         { "Content-Type": "application/json" }
       )
-        .pipe(map((payload: { response: any }) => lagreHjemler(payload.response)))
+        .pipe(map((payload: { response: any }) => LAGRE_HJEMLER(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
