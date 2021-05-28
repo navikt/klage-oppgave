@@ -149,12 +149,7 @@ export function UtfallSkjema() {
     }
   }, []);
 
-  let isFirstRunHjemler = useRef(true);
   useEffect(() => {
-    if (isFirstRunHjemler.current) {
-      isFirstRunHjemler.current = false;
-      return;
-    }
     if (!klage.klageLastet || behandlingsskjema.lasterKlage) {
       return;
     }
