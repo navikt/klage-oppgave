@@ -166,7 +166,7 @@ export function UtfallSkjema() {
     ) {
       velgHjemler(valgteHjemler);
     }
-  }, [utfall, omgjoeringsgrunn, valgteHjemler]);
+  }, [utfall, omgjoeringsgrunn, valgteHjemler, behandlingsskjema]);
 
   let isFirstRunInternVurdering = useRef(true);
   useEffect(() => {
