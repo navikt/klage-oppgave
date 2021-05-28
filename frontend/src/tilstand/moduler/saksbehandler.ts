@@ -7,6 +7,7 @@ import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { OppgaveParams, oppgaveRequest } from "./oppgave";
 import { settOppgaverFerdigLastet, settOppgaverLaster } from "./oppgavelaster";
+import { displayToast, skjulToaster } from "./meg";
 
 //==========
 // Type defs
@@ -156,23 +157,6 @@ interface IError {
       feilmelding?: string;
     };
   };
-}
-
-function displayToast(error: IError) {
-  const message =
-    error?.response?.detail?.feilmelding ||
-    error?.response?.detail ||
-    error?.message ||
-    "generisk feilmelding";
-  return toasterSett({
-    display: true,
-    type: "feil",
-    feilmelding: message as string,
-  });
-}
-
-function skjulToaster() {
-  return toasterSkjul();
 }
 
 export const TILDEL_EPICS = [tildelEpos, fradelEpos, settLasterEpos];

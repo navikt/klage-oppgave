@@ -1,31 +1,51 @@
-import { combineReducers, createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { catchError, map, retryWhen, switchMap, withLatestFrom, concat } from "rxjs/operators";
+import { catchError, map, retryWhen, switchMap, timeout, withLatestFrom } from "rxjs/operators";
+import { concat, of } from "rxjs";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { feiletHandling } from "./meg";
-import { toasterSett, toasterSkjul } from "./toaster";
+import { IKlage } from "./klagebehandling";
+import { displayToast, feiletHandling, skjulToaster } from "./meg";
+import { RootState } from "../root";
+import { FEILET, MOTTATT, RaderMedMetadata, RaderMedMetadataUtvidet } from "./oppgave";
 
 //==========
 // Interfaces
 //==========
 
+export interface IKlageInfoPayload {
+  utfall: string | null;
+  grunn: string | null;
+  hjemler: string[];
+  internVurdering: string;
+}
+
 export interface IUtfallPayload {
   klagebehandlingid: string;
   vedtakid: string;
   utfall: string | null;
+  klagebehandlingVersjon: number;
 }
+
 export interface IOmgjoeringsgrunnPayload {
   klagebehandlingid: string;
   vedtakid: string;
   omgjoeringsgrunn: string | null;
+  klagebehandlingVersjon: number;
 }
 
 export interface IHjemlerPayload {
   klagebehandlingid: string;
   vedtakid: string;
   hjemler: string[];
+  klagebehandlingVersjon: number;
+}
+
+export interface IInternVurderingPayload {
+  klagebehandlingid: string;
+  internVurdering: string;
+  klagebehandlingVersjon: number;
 }
 
 export interface IInternVurderingPayload {
@@ -37,75 +57,63 @@ export interface IInternVurderingPayload {
 // Reducer
 //==========
 
-const initialStateBehandlingsskjema = {
-  internVurdering: "",
-  klagebehandlingVersjon: 3,
-};
-
-export const behandlingsskjemaSlice = createSlice({
-  name: "behandlingsskjema",
-  initialState: initialStateBehandlingsskjema,
-  reducers: {
-    SETT_INTERN_VURDERING: (state, action: PayloadAction<string>) => {
-      return { ...state, internVurdering: action.payload };
-    },
-  },
-});
-
 const initialStateBehandlingsVedtak = {
   id: "",
   utfall: null as null | string,
   brevMottakere: [],
-  hjemler: [] as string[],
   grunn: null as null | string,
-  klagebehandlingVersjon: 3,
+  hjemler: [] as string[],
+  internVurdering: "",
+  lasterKlage: true,
+  lagrerVurdering: false,
+  klagebehandlingVersjon: 0,
 };
 
 export const behandlingsvedtakSlice = createSlice({
   name: "behandlingsvedtak",
   initialState: initialStateBehandlingsVedtak,
   reducers: {
+    SETT_KLAGE_INFO: (state, action: PayloadAction<IKlageInfoPayload>) => {
+      return {
+        ...state,
+        utfall: action.payload.utfall,
+        grunn: action.payload.grunn,
+        hjemler: action.payload.hjemler,
+        internVurdering: action.payload.internVurdering,
+        lasterKlage: false,
+      };
+    },
     SETT_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
-      return { ...state, internVurdering: action.payload.internVurdering };
+      return { ...state, lagrerVurdering: true };
     },
-    INTERN_VURDERING_SATT: (state) => {
-      console.log("Intern vurdering satt");
-      return state;
+    LAGRE_INTERN_VURDERING: (state, action: PayloadAction<IInternVurderingPayload>) => {
+      return { ...state, lagrerVurdering: false, internVurdering: action.payload.internVurdering };
     },
-    SETT_UTFALL: (state, action: PayloadAction<IUtfallPayload>) => {
+    LAGRE_UTFALL: (state, action: PayloadAction<IUtfallPayload>) => {
       return { ...state, utfall: action.payload.utfall };
     },
-    UTFALL_SATT: (state) => {
-      console.log("Utfall satt");
-      return state;
-    },
-    SETT_OMGJOERINGSGRUNN: (state, action: PayloadAction<IOmgjoeringsgrunnPayload>) => {
+    LAGRE_OMGJOERINGSGRUNN: (state, action: PayloadAction<IOmgjoeringsgrunnPayload>) => {
       return { ...state, grunn: action.payload.omgjoeringsgrunn };
     },
-    OMGJOERINGSGRUNN_SATT: (state) => {
-      console.log("Omgjøringsgrunn satt");
-      return state;
-    },
-    SETT_HJEMLER: (state, action: PayloadAction<IHjemlerPayload>) => {
+    LAGRE_HJEMLER: (state, action: PayloadAction<IHjemlerPayload>) => {
       return { ...state, hjemler: action.payload.hjemler };
-    },
-    HJEMLER_SATT: (state) => {
-      console.log("Hjemler satt");
-      return state;
     },
   },
 });
 
-const behandlingsskjema = combineReducers({
-  behandlingsskjema: behandlingsskjemaSlice.reducer,
-  behandlingsvedtak: behandlingsvedtakSlice.reducer,
-});
-
-export default behandlingsskjema;
+export default behandlingsvedtakSlice.reducer;
 
 //==========
 // Actions
 //==========
+
+const {
+  LAGRE_UTFALL,
+  LAGRE_OMGJOERINGSGRUNN,
+  LAGRE_INTERN_VURDERING,
+  LAGRE_HJEMLER,
+} = behandlingsvedtakSlice.actions;
+export const settKlageInfo = createAction<IKlageInfoPayload>("behandlingsvedtak/SETT_KLAGE_INFO");
 
 export const lagreInternVurdering = createAction<IInternVurderingPayload>(
   "behandlingsvedtak/SETT_INTERN_VURDERING"
@@ -120,17 +128,13 @@ export const lagreOmgjoeringsgrunn = createAction<IOmgjoeringsgrunnPayload>(
 
 export const lagreHjemler = createAction<IHjemlerPayload>("behandlingsvedtak/SETT_HJEMLER");
 
-export const oppdatertBehandlingsskjema = createAction<boolean>(
-  "klagebehandling/BEHANDLINGSSKJEMA_OPPDATERT"
-);
-
 //==========
 // Epos
 //==========
 
 export function lagreInternVurderingEpos(
   action$: ActionsObservable<PayloadAction<IInternVurderingPayload>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { put }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -140,10 +144,20 @@ export function lagreInternVurderingEpos(
       const lagreInternVurderingUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/detaljer/internvurdering`;
       return put(
         lagreInternVurderingUrl,
-        { internVurdering: action.payload.internVurdering, klagebehandlingVersjon: 3 },
+        {
+          internVurdering: action.payload.internVurdering,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
-        .pipe(map((payload: { response: any }) => internVurderingSatt(payload.response)))
+        .pipe(
+          map((payload: { response: any }) =>
+            LAGRE_INTERN_VURDERING({
+              ...payload.response,
+              internVurdering: action.payload.internVurdering,
+            })
+          )
+        )
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
@@ -165,19 +179,24 @@ export function lagreUtfallEpos(
     withLatestFrom(state$),
     switchMap(([action]) => {
       const lagreUtfallUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/utfall`;
-      return put(
+      const lagre = put(
         lagreUtfallUrl,
-        { utfall: action.payload.utfall, klagebehandlingVersjon: 3 },
+        {
+          utfall: action.payload.utfall,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
-      )
-        .pipe(map((payload: { response: any }) => lagreUtfall(payload.response)))
-        .pipe(
-          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
-          catchError((error) => {
-            let err = error?.response?.detail || "ukjent feil";
-            return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
-          })
-        );
+      ).pipe(
+        timeout(5000),
+        map((payload: { response: any }) => LAGRE_UTFALL(payload.response))
+      );
+      return lagre.pipe(
+        retryWhen(provIgjenStrategi()),
+        catchError((error) => {
+          let err = error?.response?.detail || "ukjent feil";
+          return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
+        })
+      );
     })
   );
 }
@@ -194,10 +213,13 @@ export function lagreOmgjoeringsgrunnEpos(
       const lagreOmgjoeringsgrunnUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/grunn`;
       return put(
         lagreOmgjoeringsgrunnUrl,
-        { grunn: action.payload.omgjoeringsgrunn, klagebehandlingVersjon: 3 },
+        {
+          grunn: action.payload.omgjoeringsgrunn,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
-        .pipe(map((payload: { response: any }) => lagreOmgjoeringsgrunn(payload.response)))
+        .pipe(map((payload: { response: any }) => LAGRE_OMGJOERINGSGRUNN(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
@@ -211,7 +233,7 @@ export function lagreOmgjoeringsgrunnEpos(
 
 export function lagreHjemlerEpos(
   action$: ActionsObservable<PayloadAction<IHjemlerPayload>>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { put }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -221,10 +243,13 @@ export function lagreHjemlerEpos(
       const lagreHjemlerUrl = `/api/klagebehandlinger/${action.payload.klagebehandlingid}/vedtak/${action.payload.vedtakid}/hjemler`;
       return put(
         lagreHjemlerUrl,
-        { hjemler: action.payload.hjemler, klagebehandlingVersjon: 3 },
+        {
+          hjemler: action.payload.hjemler,
+          klagebehandlingVersjon: action.payload.klagebehandlingVersjon,
+        },
         { "Content-Type": "application/json" }
       )
-        .pipe(map((payload: { response: any }) => lagreHjemler(payload.response)))
+        .pipe(map((payload: { response: any }) => LAGRE_HJEMLER(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
@@ -246,16 +271,3 @@ export const BEHANDLINGSSKJEMA_EPICS = [
 //==========
 // Vis feilmeldinger ved feil
 //==========
-
-function displayToast(error: string) {
-  const message = error || "Kunne ikke lagre innstillinger";
-  return toasterSett({
-    display: true,
-    type: "feil",
-    feilmelding: message,
-  });
-}
-
-function skjulToaster() {
-  return toasterSkjul();
-}
