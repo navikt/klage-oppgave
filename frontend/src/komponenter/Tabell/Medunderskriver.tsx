@@ -13,7 +13,7 @@ function MedunderskriverStatus({ id, children }: { id: any; children: any }) {
     .map((t) => [t.id, t.medunderskriverident, t.erMedunderskriver])
     .reduce(Object.assign, {});
 
-  if (oppgaven[0][1]) {
+  if (oppgaven[0][1] !== null) {
     if (oppgaven[0][1] === meg.id) {
       return (
         <td data-testid={`${id}-text`}>
