@@ -10,7 +10,7 @@ function MedunderskriverStatus({ id, children }: { id: any; children: any }) {
 
   let oppgaven = Object.values(rader)
     .filter((o) => o.id === id)
-    .map((t) => [t.id, t.erMedunderskriver, t.saksbehandler])
+    .map((t) => [t.id, t.medunderskriverident, t.saksbehandler])
     .reduce(Object.assign, {});
 
   if (oppgaven[0][1]) {

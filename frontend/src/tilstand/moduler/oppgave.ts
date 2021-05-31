@@ -41,7 +41,8 @@ export interface OppgaveRad {
   saksbehandler: string;
   avsluttetAvSaksbehandler?: string;
   utfall?: string;
-  erMedunderskriver?: string;
+  medunderskriverident?: string;
+  erMedunderskriver?: boolean;
 }
 
 export interface OppgaveRadMedFunksjoner extends OppgaveRad {
@@ -135,14 +136,8 @@ export interface RaderMedMetadataUtvidet extends RaderMedMetadata {
 // Reducer
 //==========
 export function MottatteRader(payload: RaderMedMetadataUtvidet, state: OppgaveState) {
-  const {
-    antallTreffTotalt,
-    start,
-    antall,
-    projeksjon,
-    tildeltSaksbehandler,
-    transformasjoner,
-  } = payload;
+  const { antallTreffTotalt, start, antall, projeksjon, tildeltSaksbehandler, transformasjoner } =
+    payload;
   state.transformasjoner = transformasjoner;
 
   // for API-sortering
@@ -263,13 +258,8 @@ export default oppgaveSlice.reducer;
 //==========
 // Actions
 //==========
-export const {
-  HENTET_KODEVERK,
-  MOTTATT_FERDIGSTILTE,
-  MOTTATT,
-  FEILET,
-  HENTET_UGATTE,
-} = oppgaveSlice.actions;
+export const { HENTET_KODEVERK, MOTTATT_FERDIGSTILTE, MOTTATT, FEILET, HENTET_UGATTE } =
+  oppgaveSlice.actions;
 export const enkeltOppgave = createAction<OppgaveParams>("klagebehandlinger/HENT_ENKELTOPPGAVE");
 export const oppgaveRequest = createAction<OppgaveParams>("klagebehandlinger/HENT");
 export const ferdigstilteRequest = createAction<OppgaveParams>("klagebehandlinger/HENT_FULLFORTE");

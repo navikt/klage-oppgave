@@ -7,13 +7,6 @@ import Medunderskriver from "./Medunderskriver";
 import { screen } from "@testing-library/dom";
 
 describe("Medunderskriver", () => {
-  /*
-    1. medunderskriverident = null => return children
-    2. Sendt til medunderskriver og saksbehandler ikke er medunderskriver = false
-    3. Send til medunderskriver og saksbehandler er medunderskriver = true
-    4. Medunderskriver har godkjent = null , og feltet finalized er satt til tidspunktet den ble godkjent. (Dette feltet er ikke med i KlagebehandlingListView (ennå), disse klagebehandlingene dukker ikke opp i den vanlige lista..)
-    */
-
   test('Vis "medunderskriver" som status', () => {
     let meg = {
       id: "saksbehandler1",
