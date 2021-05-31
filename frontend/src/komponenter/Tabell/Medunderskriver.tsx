@@ -10,10 +10,12 @@ function MedunderskriverStatus({ id, children }: { id: any; children: any }) {
 
   let oppgaven = Object.values(rader)
     .filter((o) => o.id === id)
-    .map((t) => [t.id, t.medunderskriverident, t.saksbehandler])
+    .map((t) => [t.id, t.medunderskriverident, t.erMedunderskriver])
     .reduce(Object.assign, {});
 
-  if (oppgaven[0][1]) {
+  if (oppgaven[0][2] === null) {
+    return children;
+  } else if (oppgaven[0][1]) {
     if (oppgaven[0][1] === meg.id) {
       return (
         <td data-testid={`${id}-text`}>
