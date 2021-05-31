@@ -16,7 +16,7 @@ import { ReactNode } from "react";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { settEnhetHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
-import { feiletHandling } from "./klagebehandling";
+import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
 import { fradelMegHandling, ITildelOppgave, tildelMegHandling } from "./saksbehandler";
 import { settOppgaverFerdigLastet } from "./oppgavelaster";
 
@@ -64,6 +64,10 @@ export interface IKodeverkVerdi {
   beskrivelse: string;
 }
 
+export interface IKodeverkVerdiMedHjemler extends IKodeverkVerdi {
+  hjemler: [IKodeverkVerdi];
+}
+
 export interface Filtrering {
   /**
    * Aktive filtere som brukes til å filtrere rader i tabellen.
@@ -94,9 +98,9 @@ export interface OppgaveRader {
 
 export interface Transformasjoner {
   filtrering: {
-    typer: string[] | Filter[];
-    temaer: string[] | Filter[];
-    hjemler: string[] | Filter[];
+    typer: string[] | undefined;
+    temaer: string[] | undefined;
+    hjemler: string[] | undefined;
   };
   sortering: {
     type: "frist" | "mottatt";
@@ -114,9 +118,13 @@ export type OppgaveState = {
   meta: Metadata;
   lasterData: boolean;
   kodeverk: {
-    id?: number;
-    navn?: string;
-    beskrivelse?: string;
+    hjemmel: IKodeverkVerdi[];
+    type: IKodeverkVerdi[];
+    utfall: IKodeverkVerdi[];
+    grunnerPerUtfall: GrunnerPerUtfall[];
+    hjemlerPerTema: IKodeverkVerdiMedHjemler[];
+    hjemler: IKodeverkVerdi[];
+    tema: IKodeverkVerdi[];
   };
 };
 export interface RaderMedMetadata {
@@ -175,7 +183,17 @@ export const oppgaveSlice = createSlice({
       rader: [],
     },
     lasterData: true,
-    kodeverk: {},
+    kodeverk: {
+      utfall: [{ id: "", navn: "", beskrivelse: "" }],
+      hjemler: [{ id: "", navn: "", beskrivelse: "" }],
+      hjemlerPerTema: [
+        { id: "", navn: "", beskrivelse: "", hjemler: [{ id: "", navn: "", beskrivelse: "" }] },
+      ],
+      hjemmel: [{ id: "", navn: "", beskrivelse: "" }],
+      type: [{ id: "", navn: "", beskrivelse: "" }],
+      tema: [{ id: "", navn: "", beskrivelse: "" }],
+      grunnerPerUtfall: [{ utfallId: "", grunner: [{ id: "", navn: "", beskrivelse: "" }] }],
+    },
     meta: {
       antall: 0,
       totalAntall: 0,

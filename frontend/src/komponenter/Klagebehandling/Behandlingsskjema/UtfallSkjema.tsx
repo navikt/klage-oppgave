@@ -51,14 +51,14 @@ export function UtfallSkjema() {
     const hjemmelObj = kodeverk.hjemmel.find(
       (hjemmel: IKodeverkVerdi) => hjemmel.id === hjemmelkode
     );
-    return { label: hjemmelObj.beskrivelse, value: hjemmelObj.id };
+    return { label: hjemmelObj!.beskrivelse, value: hjemmelObj!.id };
   }
 
   function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi | null): IKodeverkVerdi[] {
     if (!utfall) {
       return [];
     }
-    return kodeverk.grunnerPerUtfall.find((obj: GrunnerPerUtfall) => obj.utfallId == utfall.id)
+    return kodeverk.grunnerPerUtfall.find((obj: GrunnerPerUtfall) => obj.utfallId == utfall.id)!
       .grunner;
   }
 
