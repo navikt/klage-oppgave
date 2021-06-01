@@ -315,7 +315,7 @@ export default function Klagebehandling() {
   }
 
   let kjonn = "M";
-  if (klage?.sakenGjelderKjoenn.length) kjonn = klage?.sakenGjelderKjoenn[0];
+  if (klage?.sakenGjelderKjoenn) kjonn = klage?.sakenGjelderKjoenn.substr(0, 1).toLocaleUpperCase();
 
   return (
     <Oppsett
