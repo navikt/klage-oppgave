@@ -314,6 +314,9 @@ export default function Klagebehandling() {
     );
   }
 
+  let kjonn = "M";
+  if (klage?.sakenGjelderKjoenn.length) kjonn = klage?.sakenGjelderKjoenn[0];
+
   return (
     <Oppsett
       backLink={"/mineoppgaver"}
@@ -328,10 +331,8 @@ export default function Klagebehandling() {
             data-tip={`${fornavn(klage)} ${mellomnavn(klage)} ${etternavn(klage)}`}
             data-delay-show={1000}
           >
-            <Kjonn
-              theme={{ bgColor: klage?.sakenGjelderKjoenn[0] === "M" ? "#3385D1" : "#ba3a26" }}
-            >
-              {klage?.sakenGjelderKjoenn[0] === "M" ? (
+            <Kjonn theme={{ bgColor: kjonn === "M" ? "#3385D1" : "#ba3a26" }}>
+              {kjonn === "M" ? (
                 <img alt="Ekstern lenke" src={IkonMann} />
               ) : (
                 <img alt="Ekstern lenke" src={IkonKvinne} />
