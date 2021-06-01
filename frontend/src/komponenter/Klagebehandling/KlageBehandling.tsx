@@ -99,7 +99,7 @@ const Navn = styled.span`
 const Kjonn = styled.span`
   font-weight: bold;
   padding-right: 0.1em;
-  background: #ba3a26;
+  background: ${(props) => props.theme.bgColor};
   border-radius: 50%;
   width: 1.3em;
   height: 1.3em;
@@ -328,7 +328,9 @@ export default function Klagebehandling() {
             data-tip={`${fornavn(klage)} ${mellomnavn(klage)} ${etternavn(klage)}`}
             data-delay-show={1000}
           >
-            <Kjonn>
+            <Kjonn
+              theme={{ bgColor: klage?.sakenGjelderKjoenn[0] === "M" ? "#3385D1" : "#ba3a26" }}
+            >
               {klage?.sakenGjelderKjoenn[0] === "M" ? (
                 <img alt="Ekstern lenke" src={IkonMann} />
               ) : (
