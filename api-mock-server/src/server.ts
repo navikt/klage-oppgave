@@ -300,31 +300,6 @@ app.post(
   }
 );
 
-app.post(
-  "/ansatte/:id/klagebehandlinger/:oppgaveid/saksbehandlertildeling",
-  async (req, res) => {
-    const result = await tildelSaksbehandler({
-      oppgaveId: req.params?.oppgaveid,
-      navIdent: req.params?.id,
-      klagebehandlingVersjon: req.body.klagebehandlingVersjon,
-    } as ISaksbehandler)
-      .then((result) => res.status(200).send({ status: "OK" }))
-      .catch((err) => res.status(err.status).send(err.body));
-  }
-);
-app.post(
-  "/ansatte/:id/klagebehandlinger/:oppgaveid/saksbehandlerfradeling",
-  async (req, res) => {
-    return await fradelSaksbehandler({
-      oppgaveId: req.params?.oppgaveid,
-      navIdent: req.params?.id,
-      klagebehandlingVersjon: req.body.klagebehandlingVersjon,
-    } as ISaksbehandler)
-      .then((result) => res.status(200).send({ status: "OK" }))
-      .catch((err) => res.status(err.status).send(err.body));
-  }
-);
-
 app.put(
   "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/utfall",
   async (req, res) => {
