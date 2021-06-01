@@ -103,9 +103,9 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
           <NavLink to={"/innstillinger"} className={classNames({ enhet: true, navlink: true })}>
             Innstillinger
           </NavLink>
-          <NavLink to={"/internal/logout"} className={classNames({ enhet: true, navlink: true })}>
+          <a href={"/internal/logout"} className={classNames({ enhet: true, navlink: true })}>
             Logg ut
-          </NavLink>
+          </a>
         </div>
       </div>
     </BrukerBoks>
