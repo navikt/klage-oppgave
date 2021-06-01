@@ -51,7 +51,7 @@ export function UtfallSkjema() {
     const hjemmelObj = kodeverk.hjemmel.find(
       (hjemmel: IKodeverkVerdi) => hjemmel.id === hjemmelkode
     );
-    return { label: hjemmelObj!.beskrivelse, value: hjemmelObj!.id };
+    return { label: hjemmelObj?.beskrivelse, value: hjemmelObj?.id };
   }
 
   function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi | null): IKodeverkVerdi[] {

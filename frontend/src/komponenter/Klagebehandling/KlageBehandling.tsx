@@ -20,6 +20,10 @@ import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
 import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
+// @ts-ignore
+import IkonMann from "../mann.svg";
+// @ts-ignore
+import IkonKvinne from "../kvinne.svg";
 
 const IkonHake = styled.img`
   position: absolute;
@@ -99,10 +103,11 @@ const Kjonn = styled.span`
   border-radius: 50%;
   width: 1.3em;
   height: 1.3em;
+  padding: 2px;
   color: white;
   justify-content: center;
   display: inline-flex;
-  margin: 0 0.25em 0 0;
+  margin: 0 5px 0 0;
 `;
 
 const Personnummer = styled.span`
@@ -323,7 +328,13 @@ export default function Klagebehandling() {
             data-tip={`${fornavn(klage)} ${mellomnavn(klage)} ${etternavn(klage)}`}
             data-delay-show={1000}
           >
-            <Kjonn>{klage?.sakenGjelderKjoenn[0]}</Kjonn>
+            <Kjonn>
+              {klage?.sakenGjelderKjoenn[0] === "M" ? (
+                <img alt="Ekstern lenke" src={IkonMann} />
+              ) : (
+                <img alt="Ekstern lenke" src={IkonKvinne} />
+              )}
+            </Kjonn>
             <Navn>{`${fornavn(klage)} ${mellomnavn(klage)} ${etternavn(klage)}`}</Navn>
             <span>/</span>
             <Personnummer>{klage.sakenGjelderFoedselsnummer}</Personnummer>
