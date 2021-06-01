@@ -1,15 +1,16 @@
-import React, { ChangeEvent } from "react";
+import React, { useState } from "react";
 import { Textarea } from "nav-frontend-skjema";
+import { useKanEndre } from "../utils/useKlagebehandlingUpdater";
 
 interface InterfaceInternVurderingProps {
-  internVurdering: string;
-  settInternVurdering: Function;
+  defaultValue: string;
+  onChange: Function;
 }
 
-export function InternVurdering({
-  internVurdering,
-  settInternVurdering,
-}: InterfaceInternVurderingProps) {
+export function InternVurdering({ defaultValue, onChange }: InterfaceInternVurderingProps) {
+  const [internVurdering, settInternVurdering] = useState<string>(defaultValue);
+  const kanEndre = useKanEndre();
+
   return (
     <Textarea
       id="internVurdering"
@@ -18,10 +19,12 @@ export function InternVurdering({
       maxLength={0}
       onChange={(e) => {
         settInternVurdering(e.target.value);
+        onChange(e.target.value);
       }}
       style={{
         minHeight: "80px",
       }}
+      readOnly={!kanEndre}
     />
   );
 }

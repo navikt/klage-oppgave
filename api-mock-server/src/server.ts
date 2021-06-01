@@ -331,25 +331,43 @@ app.post(
 app.put(
   "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/utfall",
   async (req, res) => {
-    res.status(200).send("OK");
+    res.status(200).json({
+      ...klagebehandlingDetaljerView,
+      vedtak: [
+        { ...klagebehandlingDetaljerView.vedtak[0], utfall: req.body.utfall },
+      ],
+    });
   }
 );
 app.put(
   "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/grunn",
   async (req, res) => {
-    res.status(200).send("OK");
+    res.status(200).json({
+      ...klagebehandlingDetaljerView,
+      vedtak: [
+        { ...klagebehandlingDetaljerView.vedtak[0], grunn: req.body.grunn },
+      ],
+    });
   }
 );
 app.put(
   "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/hjemler",
   async (req, res) => {
-    res.status(200).send("OK");
+    res.status(200).json({
+      ...klagebehandlingDetaljerView,
+      vedtak: [
+        { ...klagebehandlingDetaljerView.vedtak[0], hjemler: req.body.hjemler },
+      ],
+    });
   }
 );
 app.put(
   "/klagebehandlinger/:klagebehandlingid/detaljer/internvurdering",
   async (req, res) => {
-    res.status(200).send("OK");
+    res.status(200).json({
+      ...klagebehandlingDetaljerView,
+      internVurdering: req.body.internVurdering,
+    });
   }
 );
 

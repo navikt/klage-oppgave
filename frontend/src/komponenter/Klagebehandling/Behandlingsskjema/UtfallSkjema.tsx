@@ -1,226 +1,145 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useMemo, useState } from "react";
 import { Row } from "../../../styled-components/Row";
-import {
-  GrunnerPerUtfall,
-  IKlage,
-  lasterDokumenter,
-} from "../../../tilstand/moduler/klagebehandling";
-import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
-import { Filter, IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
 import { Omgjoeringsgrunn } from "./Omgjoeringsgrunn";
 import { Utfall } from "./Utfall";
-import { velgKodeverk } from "../../../tilstand/moduler/oppgave.velgere";
-import {
-  lagreHjemler,
-  lagreInternVurdering,
-  lagreOmgjoeringsgrunn,
-  lagreUtfall,
-  settKlageInfo,
-} from "../../../tilstand/moduler/behandlingsskjema";
 import { BasertPaaHjemmel } from "./BasertPaaLovhjemmel";
-import LagringsIndikator from "./AutolagreElement";
 import { InternVurdering } from "./InternVurdering";
-import { velgBehandlingsskjema } from "../../../tilstand/moduler/behandlingsskjema.velgere";
-import debounce from "lodash.debounce";
-import { Textarea } from "nav-frontend-skjema";
+import { velgKodeverk } from "../../../tilstand/moduler/kodeverk.velgere";
+import { IKodeverkVerdi } from "../../../tilstand/moduler/kodeverk";
+import { useAppDispatch, useAppSelector } from "../../../tilstand/konfigurerTilstand";
+import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
+import { OPPDATER_KLAGEBEHANDLING } from "../../../tilstand/moduler/klagebehandling/state";
+import NavFrontendSpinner from "nav-frontend-spinner";
+import { arrayEquals, isNotUndefined } from "../utils/helpers";
+interface UtfallSkjemaProps {
+  klagebehandling: IKlagebehandling;
+}
 
-export function UtfallSkjema() {
-  const kodeverk = useSelector(velgKodeverk);
-  const klage: IKlage = useSelector(velgKlage);
-  const behandlingsskjema = useSelector(velgBehandlingsskjema);
-  const dispatch = useDispatch();
+export const UtfallSkjema = ({ klagebehandling }: UtfallSkjemaProps) => {
+  const dispatch = useAppDispatch();
+  const { kodeverk, lasterKodeverk } = useAppSelector(velgKodeverk);
 
-  const [utfall, settUtfall] = useState<IKodeverkVerdi | null>(
-    faaUtfallObjekt(klage.vedtak[0].utfall) ?? null
+  const {
+    id,
+    internVurdering,
+    tema,
+    vedtak: [vedtak],
+  } = klagebehandling;
+
+  const utfallObjekt = useMemo<IKodeverkVerdi | null>(
+    () => (lasterKodeverk ? null : kodeverk.utfall.find(({ id }) => id === vedtak.utfall) ?? null),
+    [vedtak.utfall, kodeverk.utfall, lasterKodeverk, kodeverk.utfall.length]
   );
-  const [gyldigeOmgjoeringsgrunner, settGyldigeOmgjoeringsgrunner] = useState<IKodeverkVerdi[]>(
-    faaOmgjoeringsgrunner(utfall)
-  );
-  const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(
-    faaOmgjoeringsgrunnObjekt(klage.vedtak[0].grunn) ?? gyldigeOmgjoeringsgrunner[0]
-  );
 
-  const [valgteHjemler, settValgteHjemler] = useState<Filter[]>(
-    klage.hjemler.map((hjemmel) => faaHjemmelFilter("" + hjemmel))
-  );
-
-  const [internVurdering, settInternVurdering] = useState<string>(klage.internVurdering ?? "");
-
-  function faaHjemmelFilter(hjemmelkode: string): Filter {
-    const hjemmelObj = kodeverk.hjemmel.find(
-      (hjemmel: IKodeverkVerdi) => hjemmel.id === hjemmelkode
-    );
-    return { label: hjemmelObj?.beskrivelse, value: hjemmelObj?.id };
-  }
-
-  function faaOmgjoeringsgrunner(utfall: IKodeverkVerdi | null): IKodeverkVerdi[] {
-    if (!utfall) {
+  const gyldigeOmgjoeringsgrunner = useMemo<IKodeverkVerdi[]>(() => {
+    if (lasterKodeverk || !utfallObjekt) {
       return [];
     }
-    return kodeverk.grunnerPerUtfall.find((obj: GrunnerPerUtfall) => obj.utfallId == utfall.id)!
-      .grunner;
-  }
-
-  const gyldigeHjemler = faaGyldigeHjemler(klage.tema);
-
-  function faaGyldigeHjemler(tema: string): Filter[] {
-    let temahjemler: IKodeverkVerdi[] = [];
-    let gyldigeHjemler: Filter[] = [];
-
-    temahjemler =
-      kodeverk.hjemlerPerTema.filter((_hjemler: any) => _hjemler.temaId === tema)[0]?.hjemler || [];
-
-    temahjemler.forEach((hjemmel: IKodeverkVerdi) => {
-      gyldigeHjemler.push({ label: hjemmel.beskrivelse, value: hjemmel.id.toString() });
-    });
-    return gyldigeHjemler;
-  }
-
-  function visOmgjoeringsgrunner(): boolean {
-    return gyldigeOmgjoeringsgrunner.length > 0;
-  }
-
-  const velgUtfall = (utfall: IKodeverkVerdi | null) => {
-    settUtfall(utfall);
-    dispatch(
-      lagreUtfall({
-        klagebehandlingid: klage.id,
-        klagebehandlingVersjon: klage.klagebehandlingVersjon,
-        vedtakid: klage.vedtak[0].id,
-        utfall: utfall ? utfall.id : null,
-      })
-    );
-    const omgjoeringsgrunner = faaOmgjoeringsgrunner(utfall);
-    settGyldigeOmgjoeringsgrunner(omgjoeringsgrunner);
-  };
-
-  function velgOmgjoeringsgrunn(omgjoeringsgrunn: IKodeverkVerdi | null) {
-    settOmgjoeringsgrunn(omgjoeringsgrunn);
-    dispatch(
-      lagreOmgjoeringsgrunn({
-        klagebehandlingid: klage.id,
-        klagebehandlingVersjon: klage.klagebehandlingVersjon,
-        vedtakid: klage.vedtak[0].id,
-        omgjoeringsgrunn: omgjoeringsgrunn ? omgjoeringsgrunn.id : null,
-      })
-    );
-  }
-
-  function velgHjemler(hjemler: Filter[]) {
-    settValgteHjemler(hjemler);
-    dispatch(
-      lagreHjemler({
-        klagebehandlingid: klage.id,
-        vedtakid: klage.vedtak[0].id,
-        klagebehandlingVersjon: klage.klagebehandlingVersjon,
-        hjemler: hjemler.map((f) => f.value as string),
-      })
-    );
-  }
-
-  function faaUtfallObjekt(utfallnavn: string | null): IKodeverkVerdi | null {
-    if (utfallnavn === null) {
-      return null;
-    }
-    return kodeverk.utfall.find((obj: IKodeverkVerdi) => obj.navn === utfallnavn) ?? null;
-  }
-
-  function faaOmgjoeringsgrunnObjekt(omgjoeringnavn: string | null): IKodeverkVerdi | null {
-    if (omgjoeringnavn === null) {
-      return null;
-    }
     return (
-      gyldigeOmgjoeringsgrunner.find((obj: IKodeverkVerdi) => obj.navn === omgjoeringnavn) ?? null
+      kodeverk.grunnerPerUtfall.find(({ utfallId }) => utfallId == utfallObjekt.id)?.grunner ?? []
+    );
+  }, [utfallObjekt, lasterKodeverk, kodeverk.grunnerPerUtfall]);
+
+  const omgjoeringsgrunnObjekt = useMemo<IKodeverkVerdi | null>(() => {
+    if (vedtak.grunn === null) {
+      return null;
+    }
+    return gyldigeOmgjoeringsgrunner.find(({ id }) => id === vedtak.grunn) ?? null;
+  }, [vedtak.grunn, gyldigeOmgjoeringsgrunner]);
+
+  const valgteHjemler = useMemo<IKodeverkVerdi[]>(() => {
+    if (lasterKodeverk) {
+      return [];
+    }
+    return vedtak.hjemler
+      .map((kode) => kodeverk.hjemmel.find(({ id }) => id === kode))
+      .filter(isNotUndefined);
+  }, [vedtak.hjemler, lasterKodeverk, kodeverk.hjemmel]);
+
+  const gyldigeHjemler = useMemo(() => {
+    if (lasterKodeverk) {
+      return [];
+    }
+    return kodeverk.hjemlerPerTema.find(({ temaId }) => temaId === tema)?.hjemler || [];
+  }, [tema, lasterKodeverk, kodeverk.hjemlerPerTema]);
+
+  const visOmgjoeringsgrunner = useMemo<boolean>(
+    () => gyldigeOmgjoeringsgrunner.length > 0,
+    [gyldigeOmgjoeringsgrunner.length]
+  );
+
+  const [uiUtfall, settUiUtfall] = useState<IKodeverkVerdi | null>(utfallObjekt);
+  const [uiOmgjoeringsgrunn, settUiOmgjoeringsgrunn] =
+    useState<IKodeverkVerdi | null>(omgjoeringsgrunnObjekt);
+  const [uiValgteHjemler, settUiValgteHjemler] = useState<IKodeverkVerdi[]>(valgteHjemler);
+  const [uiInternVurdering, settUiInternVurdering] = useState<string>(internVurdering);
+
+  useEffect(() => {
+    const grunn = uiOmgjoeringsgrunn?.id ?? null;
+    const hjemler = uiValgteHjemler.map(({ id }) => id).filter(isNotUndefined);
+    const utfall = uiUtfall?.id ?? null;
+
+    if (
+      uiInternVurdering === internVurdering &&
+      grunn === vedtak.grunn &&
+      arrayEquals(hjemler, vedtak.hjemler) &&
+      utfall === vedtak.utfall
+    ) {
+      return;
+    }
+
+    dispatch(
+      OPPDATER_KLAGEBEHANDLING({
+        internVurdering: uiInternVurdering,
+        id,
+        vedtak: [
+          {
+            ...vedtak,
+            grunn,
+            hjemler,
+            utfall,
+          },
+        ],
+      })
+    );
+  }, [id, uiUtfall?.id, uiInternVurdering, uiOmgjoeringsgrunn?.id, uiValgteHjemler]);
+
+  if (lasterKodeverk) {
+    return (
+      <div className={"detaljer"}>
+        <NavFrontendSpinner />
+      </div>
     );
   }
-
-  useEffect(() => {
-    if (behandlingsskjema.lasterKlage) {
-      let valgteHjemlerVerdier = valgteHjemler.map((f) => f.value as string);
-      dispatch(
-        settKlageInfo({
-          utfall: utfall ? utfall.id : null,
-          grunn: omgjoeringsgrunn ? omgjoeringsgrunn.id : null,
-          hjemler: valgteHjemlerVerdier,
-          internVurdering: internVurdering,
-        })
-      );
-    }
-  }, []);
-
-  let { lasterKlage } = behandlingsskjema;
-
-  useEffect(() => {
-    if (behandlingsskjema.lasterKlage) {
-      return;
-    }
-    let valgteHjemlerVerdier = valgteHjemler.map((h) => h.value);
-
-    if (utfall && behandlingsskjema.utfall !== utfall.id) {
-      velgUtfall(utfall);
-    }
-    if (omgjoeringsgrunn && behandlingsskjema.grunn !== omgjoeringsgrunn.id) {
-      velgOmgjoeringsgrunn(omgjoeringsgrunn);
-    }
-    if (
-      behandlingsskjema.hjemler.slice().sort().toString() !== valgteHjemlerVerdier.sort().toString()
-    ) {
-      velgHjemler(valgteHjemler);
-    }
-  }, [utfall, omgjoeringsgrunn, valgteHjemler, lasterKlage]);
-
-  let isFirstRunInternVurdering = useRef(true);
-  useEffect(() => {
-    if (isFirstRunInternVurdering.current) {
-      isFirstRunInternVurdering.current = false;
-      return;
-    }
-    if (!klage.klageLastet || behandlingsskjema.lasterKlage) {
-      return;
-    }
-    const timeout = setTimeout(() => {
-      dispatch(
-        lagreInternVurdering({
-          klagebehandlingid: klage.id,
-          internVurdering: internVurdering,
-          klagebehandlingVersjon: klage.klagebehandlingVersjon,
-        })
-      );
-    }, 1500);
-    return () => clearTimeout(timeout);
-  }, [internVurdering]);
 
   return (
     <div className={"detaljer"}>
       <Row>
-        <Utfall utfallAlternativer={kodeverk.utfall} utfall={utfall} velgUtfall={velgUtfall} />
+        <Utfall
+          utfallAlternativer={kodeverk.utfall}
+          defaultUtfall={utfallObjekt}
+          onChange={settUiUtfall}
+        />
       </Row>
       <Row>
         <BasertPaaHjemmel
           gyldigeHjemler={gyldigeHjemler}
-          valgteHjemler={valgteHjemler}
-          velgHjemler={velgHjemler}
+          defaultValue={valgteHjemler}
+          onChange={settUiValgteHjemler}
         />
       </Row>
-      {visOmgjoeringsgrunner() && (
+      {visOmgjoeringsgrunner && (
         <Row>
           <Omgjoeringsgrunn
             gyldigeOmgjoeringsgrunner={gyldigeOmgjoeringsgrunner}
-            omgjoeringsgrunn={omgjoeringsgrunn}
-            velgOmgjoeringsgrunn={velgOmgjoeringsgrunn}
+            defaultValue={omgjoeringsgrunnObjekt}
+            onChange={settUiOmgjoeringsgrunn}
           />
         </Row>
       )}
       <Row>
-        <InternVurdering
-          internVurdering={internVurdering}
-          settInternVurdering={settInternVurdering}
-        />
-      </Row>
-      <Row>
-        <LagringsIndikator autosaveStatus={behandlingsskjema.lagrerVurdering} />
+        <InternVurdering defaultValue={internVurdering} onChange={settUiInternVurdering} />
       </Row>
     </div>
   );
-}
+};

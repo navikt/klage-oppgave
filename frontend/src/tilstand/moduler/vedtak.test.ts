@@ -3,9 +3,10 @@ import { ActionsObservable } from "redux-observable";
 import { marbles } from "rxjs-marbles/jest";
 import { TestScheduler } from "rxjs/testing";
 import { AjaxResponse } from "rxjs/internal-compatibility";
-import { DONE, lastOppVedlegg, lastOppVedtakEpos } from "./vedtak";
+import { DONE, lastOppVedlegg, lastOppVedleggEpos } from "./vedtak";
 import { Dependencies } from "../konfigurerTilstand";
-import { IVedlegg, VEDLEGG_OPPLASTET } from "./klagebehandling";
+import { VEDLEGG_OPPDATERT } from "./klagebehandling/state";
+import { IVedleggResponse } from "./klagebehandling/types";
 
 class FormDataMock implements FormData {
   [Symbol.iterator] = jest.fn();
@@ -33,15 +34,19 @@ describe("Vedtak epos", () => {
   });
 
   test(
-    "Last opp vedtak",
+    "Last opp vedlegg",
     marbles(() => {
       ts.run((m) => {
         global.FormData = FormDataMock;
 
-        const mockLastetOppResponse: IVedlegg = {
-          name: "test.pdf",
-          content: "base64content",
-          size: 123,
+        const mockLastetOppResponse: IVedleggResponse = {
+          klagebehandlingVersjon: 1,
+          modified: "2021-12-31",
+          file: {
+            name: "test.pdf",
+            size: 123,
+            opplastet: "2021-12-31",
+          },
         };
 
         const makeMockResponse = (response: any = null): AjaxResponse => ({
@@ -79,13 +84,13 @@ describe("Vedtak epos", () => {
           }),
         };
         const expectedActions = {
-          a: VEDLEGG_OPPLASTET({ vedtakId: "", vedlegg: mockLastetOppResponse }),
+          a: VEDLEGG_OPPDATERT(mockLastetOppResponse),
           b: DONE(),
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable("a", inputActions));
 
-        const actual = lastOppVedtakEpos(action$, null, mockDependencies as Dependencies);
+        const actual = lastOppVedleggEpos(action$, null, mockDependencies as Dependencies);
         ts.expectObservable(actual).toBe("(ab)", expectedActions);
       });
     })

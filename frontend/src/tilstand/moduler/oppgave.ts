@@ -18,6 +18,7 @@ import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
 import { settOppgaverFerdigLastet } from "./oppgavelaster";
 import { Dependencies } from "../konfigurerTilstand";
+import { IKodeverkVerdi, IKodeverkVerdiMedHjemler } from "./kodeverk";
 
 const R = require("ramda");
 
@@ -56,16 +57,6 @@ export interface Filter {
    */
   label: ReactNode;
   value?: string;
-}
-
-export interface IKodeverkVerdi {
-  id: string;
-  navn: string;
-  beskrivelse: string;
-}
-
-export interface IKodeverkVerdiMedHjemler extends IKodeverkVerdi {
-  hjemler: [IKodeverkVerdi];
 }
 
 export interface Filtrering {
@@ -187,9 +178,7 @@ export const oppgaveSlice = createSlice({
     kodeverk: {
       utfall: [{ id: "", navn: "", beskrivelse: "" }],
       hjemler: [{ id: "", navn: "", beskrivelse: "" }],
-      hjemlerPerTema: [
-        { id: "", navn: "", beskrivelse: "", hjemler: [{ id: "", navn: "", beskrivelse: "" }] },
-      ],
+      hjemlerPerTema: [{ temaId: "", hjemler: [{ id: "", navn: "", beskrivelse: "" }] }],
       hjemmel: [{ id: "", navn: "", beskrivelse: "" }],
       type: [{ id: "", navn: "", beskrivelse: "" }],
       tema: [{ id: "", navn: "", beskrivelse: "" }],

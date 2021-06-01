@@ -1,16 +1,20 @@
 import React, { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../tilstand/konfigurerTilstand";
-import { velgKlage } from "../../../../tilstand/moduler/klagebehandlinger.velgere";
-import { lastMedunderskrivere } from "../../../../tilstand/moduler/medunderskrivere";
-import { velgMedunderskrivere } from "../../../../tilstand/moduler/medunderskrivere.velgere";
+import { IKlagebehandling } from "../../../../tilstand/moduler/klagebehandling/stateTypes";
+import { lastMedunderskrivere } from "../../../../tilstand/moduler/medunderskrivere/actions";
+import { velgMedunderskrivere } from "../../../../tilstand/moduler/medunderskrivere/selectors";
 import { velgMeg } from "../../../../tilstand/moduler/meg.velgere";
 import { StatusBoksMedTittel } from "./styled-components/status-boks";
 
-export const VisSattMedunderskriver = () => {
+interface VisSattMedunderskriverProps {
+  klagebehandling: IKlagebehandling;
+}
+
+export const VisSattMedunderskriver = ({ klagebehandling }: VisSattMedunderskriverProps) => {
   const dispatch = useAppDispatch();
   const { id } = useAppSelector(velgMeg);
   const { medunderskrivere } = useAppSelector(velgMedunderskrivere);
-  const { medunderskriverident, tema } = useAppSelector(velgKlage);
+  const { medunderskriverident, tema } = klagebehandling;
 
   useEffect(() => {
     dispatch(lastMedunderskrivere({ id, tema }));

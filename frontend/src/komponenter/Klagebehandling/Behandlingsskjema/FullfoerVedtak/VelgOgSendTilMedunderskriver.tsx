@@ -1,17 +1,29 @@
 import React, { useState, useMemo } from "react";
 import { useAppSelector } from "../../../../tilstand/konfigurerTilstand";
-import { velgKlage } from "../../../../tilstand/moduler/klagebehandlinger.velgere";
-import { velgMedunderskrivere } from "../../../../tilstand/moduler/medunderskrivere.velgere";
+import { velgMedunderskrivere } from "../../../../tilstand/moduler/medunderskrivere/selectors";
 import { SendTilMedunderskriver } from "./SendTilMedunderskriver";
 import { TilbakeTilOppgaverLenke } from "./styled-components/tilbake-link";
 import { VisSattMedunderskriver } from "./VisSattMedunderskriver";
 import { VelgMedunderskriver } from "./VelgMedunderskriver";
 import { velgMeg } from "../../../../tilstand/moduler/meg.velgere";
+import { IKlagebehandling } from "../../../../tilstand/moduler/klagebehandling/stateTypes";
+import { useIsSaved } from "../../utils/useKlagebehandlingUpdater";
 
-export const VelgOgSendTilMedunderskriver = () => {
+interface VelgOgSendTilMedunderskriverProps {
+  klagebehandling: IKlagebehandling;
+}
+
+export const VelgOgSendTilMedunderskriver = ({
+  klagebehandling,
+}: VelgOgSendTilMedunderskriverProps) => {
   const { id } = useAppSelector(velgMeg);
   const { loading, medunderskrivere } = useAppSelector(velgMedunderskrivere);
-  const { medunderskriverident, vedtak } = useAppSelector(velgKlage);
+  const isSaved = useIsSaved();
+  const {
+    tema,
+    medunderskriverident,
+    vedtak: [vedtak],
+  } = klagebehandling;
   const [valgtMedunderskriver, settValgtMedunderskriver] = useState<string | undefined>(
     medunderskriverident ?? undefined
   );
@@ -30,17 +42,13 @@ export const VelgOgSendTilMedunderskriver = () => {
   if (typeof medunderskriverident === "string" && medunderskriverident.length !== 0) {
     return (
       <>
-        <VisSattMedunderskriver />
+        <VisSattMedunderskriver klagebehandling={klagebehandling} />
         <TilbakeTilOppgaverLenke to={"/mineoppgaver"}>Tilbake til oppgaver</TilbakeTilOppgaverLenke>
       </>
     );
   }
 
-  if (vedtak.length === 0) {
-    return null;
-  }
-
-  const { file } = vedtak[0];
+  const { file } = vedtak;
   // Hvis det ikke er lastet opp et vedtak.
   if (file === null) {
     return null;
@@ -48,9 +56,14 @@ export const VelgOgSendTilMedunderskriver = () => {
 
   return (
     <>
-      <VelgMedunderskriver value={valgtMedunderskriver} onSelect={settValgtMedunderskriver} />
+      <VelgMedunderskriver
+        tema={tema}
+        value={valgtMedunderskriver}
+        onSelect={settValgtMedunderskriver}
+      />
       <SendTilMedunderskriver
-        disabled={loading || !isValidSelection}
+        klagebehandling={klagebehandling}
+        disabled={loading || !isValidSelection || !isSaved}
         medunderskriverident={valgtMedunderskriver}
       />
     </>

@@ -1,29 +1,33 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useMemo } from "react";
 import { Knapp } from "nav-frontend-knapper";
 import { useAppDispatch, useAppSelector } from "../../../../tilstand/konfigurerTilstand";
-import { velgKlage } from "../../../../tilstand/moduler/klagebehandlinger.velgere";
 import { velgMeg } from "../../../../tilstand/moduler/meg.velgere";
 import { lastOppVedlegg } from "../../../../tilstand/moduler/vedtak";
 import { velgVedtak } from "../../../../tilstand/moduler/vedtak.velgere";
+import { IKlagebehandling } from "../../../../tilstand/moduler/klagebehandling/stateTypes";
 
-export const LastOppVedlegg = () => {
+interface LastOppVedleggProps {
+  klagebehandling: IKlagebehandling;
+}
+
+export const LastOppVedlegg = ({ klagebehandling }: LastOppVedleggProps) => {
   const dispatch = useAppDispatch();
+  const { loading } = useAppSelector(velgVedtak);
+  const { id, valgtEnhet, enheter } = useAppSelector(velgMeg);
 
   const {
     id: klagebehandlingId,
     klagebehandlingVersjon,
-    vedtak,
-    medunderskriverident,
     avsluttetAvSaksbehandler,
-  } = useAppSelector(velgKlage);
-  const { loading } = useAppSelector(velgVedtak);
-  const { id, valgtEnhet, enheter } = useAppSelector(velgMeg);
-  const activeVedtak = vedtak[0];
-  const { id: vedtakId, file } = activeVedtak;
-  const journalfoerendeEnhet = enheter[valgtEnhet].id;
+    medunderskriverident,
+    vedtak: [vedtak],
+  } = klagebehandling;
+  const { id: vedtakId, file } = vedtak;
+
+  const journalfoerendeEnhet = useMemo(() => enheter[valgtEnhet]?.id, [enheter, valgtEnhet]);
 
   const fileInput = useRef<HTMLInputElement>(null);
-  const handleVedtakClick = useCallback(
+  const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.preventDefault();
       fileInput.current?.click();
@@ -31,7 +35,7 @@ export const LastOppVedlegg = () => {
     [fileInput]
   );
 
-  const uploadVedtak = useCallback(
+  const uploadVedlegg = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       event.preventDefault();
 
@@ -61,14 +65,14 @@ export const LastOppVedlegg = () => {
 
   return (
     <>
-      <Knapp onClick={handleVedtakClick} disabled={loading} style={{ marginTop: "1em" }}>
-        Last opp vedtak
+      <Knapp onClick={handleClick} disabled={loading} style={{ marginTop: "1em" }}>
+        Last opp vedlegg
       </Knapp>
       <input
         type="file"
         accept=".pdf"
         ref={fileInput}
-        onChange={uploadVedtak}
+        onChange={uploadVedlegg}
         style={{ display: "none" }}
         disabled={loading}
       />

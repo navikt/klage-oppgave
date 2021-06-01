@@ -7,12 +7,18 @@ import routing, { ROUTING_EPICS } from "./moduler/router";
 import toaster, { TOASTER_EPICS } from "./moduler/toaster";
 import oppgavelaster, { OPPGAVELASTER_EPOS } from "./moduler/oppgavelaster";
 import featureToggles, { UNLEASH_EPICS } from "./moduler/unleash";
-import klagebehandling, { KLAGEBEHANDLING_EPICS } from "./moduler/klagebehandling";
+import klagebehandling, { KLAGEBEHANDLING_EPOS } from "./moduler/klagebehandling";
 import token, { EXPIRE_EPICS } from "./moduler/token";
-import behandlingsskjema, { BEHANDLINGSSKJEMA_EPICS } from "./moduler/behandlingsskjema";
 import admin, { ADMIN_EPICS } from "./moduler/admin";
 import vedtak, { VEDTAK_EPOS } from "./moduler/vedtak";
-import medunderskrivere, { MEDUNDERSKRIVERE_EPOS } from "./moduler/medunderskrivere";
+import { MEDUNDERSKRIVERE_EPOS } from "./moduler/medunderskrivere/epics";
+import { medunderskrivere } from "./moduler/medunderskrivere/state";
+import kodeverk, { KODEVERK_EPICS } from "./moduler/kodeverk";
+import {
+  klagebehandling as klagebehandlingState,
+  KLAGEBEHANDLING_EPICS,
+} from "./moduler/klagebehandling/state";
+import { dokumenter, DOKUMENTER_EPICS } from "./moduler/dokumenter/state";
 
 const epics = [
   ...OPPGAVER_EPICS,
@@ -21,13 +27,15 @@ const epics = [
   ...TILDEL_EPICS,
   ...UNLEASH_EPICS,
   ...TOASTER_EPICS,
-  ...KLAGEBEHANDLING_EPICS,
   ...ROUTING_EPICS,
   ...EXPIRE_EPICS,
-  ...BEHANDLINGSSKJEMA_EPICS,
   ...ADMIN_EPICS,
   ...VEDTAK_EPOS,
   ...MEDUNDERSKRIVERE_EPOS,
+  ...KODEVERK_EPICS,
+  ...KLAGEBEHANDLING_EPOS,
+  ...KLAGEBEHANDLING_EPICS,
+  ...DOKUMENTER_EPICS,
 ];
 export const rootEpic = combineEpics.apply(combineEpics, epics);
 
@@ -37,14 +45,16 @@ const rootReducer = combineReducers({
   routing,
   toaster,
   oppgavelaster,
+  klagebehandlingState,
   klagebehandling,
   featureToggles,
   saksbehandler,
   token,
-  behandlingsskjema,
   admin,
   vedtak,
   medunderskrivere,
+  kodeverk,
+  dokumenter,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

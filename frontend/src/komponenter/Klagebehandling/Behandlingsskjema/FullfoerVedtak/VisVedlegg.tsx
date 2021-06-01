@@ -1,26 +1,29 @@
-import React, { useCallback, useMemo } from "react";
-import { File as PreviewFile } from "forhandsvisningsfil";
-import { slettVedlegg } from "../../../../tilstand/moduler/vedtak";
-import { useAppDispatch, useAppSelector } from "../../../../tilstand/konfigurerTilstand";
+import React, { useMemo, useState } from "react";
+import { Page } from "react-pdf";
+import NavFrontendSpinner from "nav-frontend-spinner";
+import { useAppSelector } from "../../../../tilstand/konfigurerTilstand";
 import { FilInfoBeholder } from "./styled-components/filinfo-beholder";
 import { OpplastetFilNavnTittel } from "./styled-components/opplastet-filnavn-tittel";
 import { OpplastetVedleggTittel } from "./styled-components/opplastet-vedlegg-tittel";
-import { StyledForhandsvisningsfil } from "./styled-components/forhandvisningsfil";
-import { velgKlage } from "../../../../tilstand/moduler/klagebehandlinger.velgere";
 import { velgVedtak } from "../../../../tilstand/moduler/vedtak.velgere";
 import { velgMeg } from "../../../../tilstand/moduler/meg.velgere";
+import { IKlagebehandling } from "../../../../tilstand/moduler/klagebehandling/stateTypes";
+import { PDF } from "./styled-components/pdf";
+import { isoDateTimeToPretty } from "../../../../domene/datofunksjoner";
 
-export const VisVedlegg = () => {
-  const dispatch = useAppDispatch();
-  const {
-    id: klagebehandlingId,
-    vedtak,
-    klagebehandlingVersjon,
-    medunderskriverident,
-    avsluttetAvSaksbehandler,
-  } = useAppSelector(velgKlage);
+interface VisVedleggProps {
+  klagebehandling: IKlagebehandling;
+}
+
+export const VisVedlegg = ({ klagebehandling }: VisVedleggProps) => {
   const { loading } = useAppSelector(velgVedtak);
   const { id } = useAppSelector(velgMeg);
+  const {
+    id: klagebehandlingId,
+    avsluttetAvSaksbehandler,
+    medunderskriverident,
+    vedtak: [vedtak],
+  } = klagebehandling;
 
   const kanSlettes = useMemo(
     // Om vedtaket er lastet, ikke avsluttet og du ikke er medunderskriver.
@@ -28,71 +31,63 @@ export const VisVedlegg = () => {
     [avsluttetAvSaksbehandler]
   );
 
-  const { id: vedtakId, file } = vedtak[0];
-
-  const deleteVedtak = useCallback(
-    (_: PreviewFile) =>
-      dispatch(
-        slettVedlegg({
-          klagebehandlingId,
-          vedtakId,
-          klagebehandlingVersjon,
-        })
-      ),
-    [klagebehandlingId, vedtakId]
-  );
+  const { id: vedtakId, file } = vedtak;
 
   const vedleggLink = useMemo(
     () => `/api/klagebehandlinger/${klagebehandlingId}/vedtak/${vedtakId}/pdf`,
     [klagebehandlingId, vedtakId]
   );
 
+  const [sider, settSider] = useState(0);
+
+  const opplastetFormatert = useMemo(
+    () => isoDateTimeToPretty(file?.opplastet ?? null),
+    [file?.opplastet]
+  );
+
+  const sizeFormatert = useMemo(() => formatSize(file?.size ?? 0), [file?.size]);
+
   if (file === null) {
     return null;
   }
 
-  const { content, name, size } = file;
   return (
     <>
-      <FilVisning
-        file={{
-          content: { base64: content },
-          name,
-          size,
-          mimetype: "application/pdf",
-        }}
-        onDelete={deleteVedtak}
-        showDeleteButton={kanSlettes}
-        fileLink={vedleggLink}
-      />
+      <a href={vedleggLink} title="Åpne PDF i ny fane." target="_blank">
+        <PDF
+          file={vedleggLink}
+          onLoadSuccess={({ numPages }) => settSider(numPages)}
+          options={options}
+          error={<span>Kunne ikke hente PDF</span>}
+          loading={<NavFrontendSpinner />}
+        >
+          <Page pageNumber={1} width={264} />
+        </PDF>
+      </a>
+
       <FilInfoBeholder>
         <OpplastetVedleggTittel>VEDLEGG - OPPLASTET</OpplastetVedleggTittel>
         <OpplastetFilNavnTittel>Filnavn</OpplastetFilNavnTittel>
-        <span>{name}</span>
+        <span>{file.name}</span>
+        <div>Opplastet: {opplastetFormatert}</div>
+        <div>Sider: {sider}</div>
+        <div>Filstørrelse: {sizeFormatert}</div>
       </FilInfoBeholder>
     </>
   );
 };
 
-interface FilVisningProps {
-  file: PreviewFile;
-  onDelete: (file: PreviewFile) => void;
-  showDeleteButton: boolean;
-  fileLink: string;
-}
+const options = {
+  cMapUrl: "cmaps/",
+  cMapPacked: true,
+};
 
-const FilVisning = ({ file, onDelete, showDeleteButton, fileLink }: FilVisningProps) => {
-  if (file.id === null) {
-    return null;
+const formatSize = (bytes: number): string => {
+  if (bytes < 1000) {
+    return `${bytes} byte`;
   }
-
-  return (
-    <StyledForhandsvisningsfil
-      file={file}
-      showDeleteButton={showDeleteButton}
-      onDeleteFile={onDelete}
-      scale={2.5}
-      onContentClick={() => window.open(fileLink, "_blank")}
-    />
-  );
+  if (bytes < 1000 * 1000) {
+    return `${bytes / 1000} kB`;
+  }
+  return `${bytes / 1000 / 1000} mB`;
 };

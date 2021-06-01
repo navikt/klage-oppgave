@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Oppsett from "./Oppsett";
 import FiltrerbarHeader, { settFilter } from "./Tabell/FiltrerbarHeader";
-import { Filter, IKodeverkVerdi } from "../tilstand/moduler/oppgave";
+import { IKodeverkVerdi } from "../tilstand/moduler/kodeverk";
+import { Filter } from "../tilstand/moduler/oppgave";
 import { useSelector } from "react-redux";
 import { velgFiltrering, velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
@@ -20,11 +21,10 @@ import {
 import styled from "styled-components";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
 
-function initState(filter: Array<string> | undefined) {
+function initState(filter: Array<string> | undefined): Filter[] {
   if ("undefined" === typeof filter) {
     return [];
   }
-  if (!Array.isArray(filter)) return [{ label: filter }];
   return filter.map(function (f: string) {
     return { label: f, value: f };
   });
