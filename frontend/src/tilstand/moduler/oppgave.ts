@@ -48,6 +48,7 @@ export interface OppgaveRad {
 export interface OppgaveRadMedFunksjoner extends OppgaveRad {
   settValgtOppgave: Function;
   utvidetProjeksjon: "UTVIDET" | boolean | undefined;
+  it: number;
 }
 
 export interface Filter {

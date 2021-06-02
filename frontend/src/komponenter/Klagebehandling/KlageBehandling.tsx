@@ -14,7 +14,7 @@ import qs from "qs";
 import { useDispatch, useSelector } from "react-redux";
 import { hentKlageHandling, IKlage } from "../../tilstand/moduler/klagebehandling";
 import { velgKlage } from "../../tilstand/moduler/klagebehandlinger.velgere";
-import KlagebehandlingKontainer from "./KlagebehandlingKontainer";
+import KlagebehandlingBeholder from "./KlagebehandlingBeholder";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import EksterneLenker from "./EksterneLenker";
 import styled from "styled-components";
@@ -371,7 +371,7 @@ export default function Klagebehandling() {
           />
         </Kontrollpanel>
 
-        <KlagebehandlingKontainer faner={faner} />
+        <KlagebehandlingBeholder faner={faner} />
       </>
     </Oppsett>
   );

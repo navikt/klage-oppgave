@@ -86,7 +86,7 @@ const TilknyttetTittel = styled.div`
   color: #0067c5;
 `;
 
-const DokumentBeholder = styled.div`
+const SideBeholder = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.theme.dokumentgrid};
   margin: 0 0.25em 0 0;
@@ -313,7 +313,7 @@ export default function KlagebehandlingBeholder({ faner }: { faner: IFaner }) {
   const [dokumentgrid, settDokumentgrid] = useState("1fr 1fr 1fr 1fr");
 
   return (
-    <DokumentBeholder theme={{ dokumentgrid }}>
+    <SideBeholder data-testid={"behandlingsdetaljer"} theme={{ dokumentgrid }}>
       <DokumentTabell
         settAktivPDF={settAktivPDF}
         settjournalpostId={settjournalpostId}
@@ -357,7 +357,7 @@ export default function KlagebehandlingBeholder({ faner }: { faner: IFaner }) {
 
       <Behandlingsskjema skjult={!faner.detaljer.checked} />
       <FullforVedtak skjult={!faner.vedtak.checked} />
-    </DokumentBeholder>
+    </SideBeholder>
   );
 }
 

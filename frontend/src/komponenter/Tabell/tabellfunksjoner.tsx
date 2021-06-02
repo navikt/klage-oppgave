@@ -102,13 +102,13 @@ const OppgaveTabellRad = ({
   tema,
   hjemmel,
   frist,
-  mottatt,
   klagebehandlingVersjon,
   person,
   utvidetProjeksjon,
   settValgtOppgave,
   avsluttetAvSaksbehandler,
   utfall,
+  it,
 }: OppgaveRadMedFunksjoner) => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
@@ -127,7 +127,7 @@ const OppgaveTabellRad = ({
 
   return (
     <TableRow className="table-filter">
-      <TableCell onClick={() => rerouteToKlage(location)}>
+      <TableCell data-testid={`linkbehandling${it}`} onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${type}`}>
           {kodeverk?.type
             ? kodeverk?.type?.filter((h: IKodeverkVerdi) => h.id == type)[0]?.beskrivelse ??
@@ -200,10 +200,11 @@ export const genererTabellRader = (
   klagebehandlinger: OppgaveRader,
   utvidetProjeksjon: "UTVIDET" | boolean | undefined
 ): JSX.Element[] =>
-  klagebehandlinger.rader.map((rad: OppgaveRad) => (
+  klagebehandlinger.rader.map((rad: OppgaveRad, it) => (
     <OppgaveTabellRad
       key={rad.id}
       {...rad}
+      it={it}
       utvidetProjeksjon={utvidetProjeksjon}
       settValgtOppgave={settValgOppgaveId}
     />
