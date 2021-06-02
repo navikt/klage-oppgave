@@ -3,7 +3,7 @@ name: E2E-tester
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/30 8-16 * * MON-FRI'
+    - cron: '*/30 6-14 * * MON-FRI'
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
