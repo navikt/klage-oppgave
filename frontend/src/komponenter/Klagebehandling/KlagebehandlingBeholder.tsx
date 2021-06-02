@@ -288,6 +288,11 @@ const Feil = styled.div`
   margin: 1em;
 `;
 
+const SkjultKnapp = styled.button`
+  height: 0;
+  opacity: 0;
+`;
+
 export default function KlagebehandlingBeholder({ faner }: { faner: IFaner }) {
   const [aktivPDF, settAktivPDF] = useState(false);
   const [journalpostId, settjournalpostId] = useState(0);
@@ -607,10 +612,11 @@ function DokumentTabell(props: {
                   </RightAlign>
                 </DokumentSjekkboks>
                 {item.vedlegg.length > 0 && (
-                  <VedleggBeholder>
+                  <VedleggBeholder data-testid={"vedlegg"}>
                     {item.vedlegg.map((vedlegg: any, idx: number) => (
                       <VedleggRad key={`vedlegg-${idx}${item.dokumentInfoId}`}>
                         <VedleggTittel
+                          data-testid={`vedlegg-${idx}`}
                           onClick={() =>
                             item.harTilgangTilArkivvariant
                               ? hentPreview({
@@ -647,6 +653,7 @@ function DokumentTabell(props: {
                         </DokumentSjekkboks>
                       </VedleggRad>
                     ))}
+                    <SkjultKnapp>Klikk for flere</SkjultKnapp>
                   </VedleggBeholder>
                 )}
               </DokumentRad>
