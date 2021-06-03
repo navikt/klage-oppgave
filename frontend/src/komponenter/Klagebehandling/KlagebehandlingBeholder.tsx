@@ -543,7 +543,7 @@ function DokumentTabell(props: {
             Se alle dokumenter
           </VisTilknyttedeKnapp>
         </DokumenterNav>
-        <List>
+        <List data-testid={"dokumenter"}>
           {liste.map((item: IDokument) => (
             <ListItem key={item.journalpostId + item.dokumentInfoId}>
               <DokumentRad>
