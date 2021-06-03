@@ -16,14 +16,16 @@ import token, { EXPIRE_EPICS } from "./moduler/token";
 import behandlingsskjema, { BEHANDLINGSSKJEMA_EPICS } from "./moduler/behandlingsskjema";
 import admin, { ADMIN_EPICS } from "./moduler/admin";
 
-const epics: Array<(
-  $action: ActionsObservable<PayloadAction<any>>,
-  $state: StateObservable<RootStateOrAny>,
-  ajaxDelete: AjaxCreationMethod,
-  getJSON: AjaxCreationMethod,
-  put: AjaxCreationMethod,
-  post: AjaxCreationMethod
-) => Observable<PayloadAction<any>>> = [
+const epics: Array<
+  (
+    $action: ActionsObservable<PayloadAction<any>>,
+    $state: any, //todo rett opp i denne
+    ajaxDelete: AjaxCreationMethod,
+    getJSON: AjaxCreationMethod,
+    put: AjaxCreationMethod,
+    post: AjaxCreationMethod
+  ) => Observable<PayloadAction<any>>
+> = [
   ...OPPGAVER_EPICS,
   ...MEG_EPICS,
   ...OPPGAVELASTER_EPOS,
