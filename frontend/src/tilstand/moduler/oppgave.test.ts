@@ -335,7 +335,7 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const initState = ({
+    const initState = {
       rader: [],
       transformasjoner: {
         sortering: {
@@ -344,7 +344,7 @@ describe("Oppgave epos", () => {
       },
       meta: {},
       lasterData: false,
-    } as unknown) as OppgaveState;
+    } as unknown as OppgaveState;
     const resultState = MottatteRader(mockedResponse, initState);
     expect(resultState.meta.side).toStrictEqual(1);
   });
@@ -369,7 +369,7 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const initState = ({
+    const initState = {
       rader: [],
       transformasjoner: {
         sortering: {
@@ -380,7 +380,7 @@ describe("Oppgave epos", () => {
         projeksjon: "UTVIDET",
       },
       lasterData: false,
-    } as unknown) as OppgaveState;
+    } as unknown as OppgaveState;
     const resultState = MottatteRader(mockedResponse, initState);
     expect(resultState.meta.side).toStrictEqual(2);
   });
@@ -403,7 +403,7 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const initState = ({
+    const initState = {
       rader: [],
       transformasjoner: {
         sortering: {
@@ -412,7 +412,7 @@ describe("Oppgave epos", () => {
       },
       meta: {},
       lasterData: false,
-    } as unknown) as OppgaveState;
+    } as unknown as OppgaveState;
     const resultState = MottatteRader(mockedResponse, initState);
     expect(resultState.meta.side).toStrictEqual(3);
     expect(resultState.meta.sider).toStrictEqual(5);
@@ -436,7 +436,7 @@ describe("Oppgave epos", () => {
         },
       },
     };
-    const initState = ({
+    const initState = {
       rader: [],
       transformasjoner: {
         sortering: {
@@ -445,7 +445,7 @@ describe("Oppgave epos", () => {
       },
       meta: {},
       lasterData: false,
-    } as unknown) as OppgaveState;
+    } as unknown as OppgaveState;
     const resultState = MottatteRader(mockedResponse, initState);
     expect(resultState.meta.side).toStrictEqual(5);
   });
@@ -531,8 +531,7 @@ describe("Oppgave epos", () => {
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = hentOppgaverEpos(action$, state$, <AjaxCreationMethod>dependencies);
+        const actual$ = hentOppgaverEpos(action$, <AjaxCreationMethod>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -611,8 +610,7 @@ describe("Oppgave epos", () => {
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = hentOppgaverEpos(action$, state$, <AjaxCreationMethod>dependencies);
+        const actual$ = hentOppgaverEpos(action$, <AjaxCreationMethod>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -664,9 +662,8 @@ describe("Oppgave epos", () => {
           },
         };
 
-        const state$ = new StateObservable(hot("-a", observableValues), initState);
         spyOn(dependencies, "getJSON").and.returnValue(throwError({ status: 503 }));
-        expectObservable(hentOppgaverEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+        expectObservable(hentOppgaverEpos(action$, <AjaxCreationMethod>dependencies)).toBe(
           "12001ms s",
           observableValues
         );

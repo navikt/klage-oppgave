@@ -424,13 +424,11 @@ export function hentFullforteOppgaverEpos(
 
 export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type, settEnhetHandling.type),
-    withLatestFrom(state$),
-    switchMap(([action, state]) => {
+    switchMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
