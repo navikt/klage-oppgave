@@ -22,6 +22,7 @@ import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
 import { fradelMegHandling, ITildelOppgave, tildelMegHandling } from "./saksbehandler";
 import { settOppgaverFerdigLastet } from "./oppgavelaster";
+import { RootState } from "../root";
 
 const R = require("ramda");
 const { ascend, descend, prop, sort } = R;
@@ -428,6 +429,7 @@ export function hentFullforteOppgaverEpos(
 
 export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -439,7 +441,6 @@ export function hentOppgaverEpos(
       );
       const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl)
         .pipe(
-          timeout(5000),
           map((klagebehandlinger) => {
             if (action.payload.ferdigstiltFom) {
               return MOTTATT_FERDIGSTILTE({

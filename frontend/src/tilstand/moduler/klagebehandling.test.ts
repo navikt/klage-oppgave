@@ -96,7 +96,12 @@ describe("Oppgave epos", () => {
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const actual$ = klagebehandlingEpos(action$, <AjaxCreationMethod>dependencies);
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
+        const actual$ = klagebehandlingEpos(
+          action$,
+          state$ as RootStateOrAny,
+          <AjaxCreationMethod>dependencies
+        );
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })

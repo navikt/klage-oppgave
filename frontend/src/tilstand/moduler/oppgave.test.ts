@@ -18,6 +18,7 @@ import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { hentMegEpos, hentMegHandling } from "./meg";
+import { RootStateOrAny } from "react-redux";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
@@ -531,7 +532,12 @@ describe("Oppgave epos", () => {
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const actual$ = hentOppgaverEpos(action$, <AjaxCreationMethod>dependencies);
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
+        const actual$ = hentOppgaverEpos(
+          action$,
+          state$ as RootStateOrAny,
+          <AjaxCreationMethod>dependencies
+        );
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -610,7 +616,12 @@ describe("Oppgave epos", () => {
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
-        const actual$ = hentOppgaverEpos(action$, <AjaxCreationMethod>dependencies);
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
+        const actual$ = hentOppgaverEpos(
+          action$,
+          state$ as RootStateOrAny,
+          <AjaxCreationMethod>dependencies
+        );
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -662,11 +673,11 @@ describe("Oppgave epos", () => {
           },
         };
 
+        const state$ = new StateObservable(hot("-a", observableValues), initState);
         spyOn(dependencies, "getJSON").and.returnValue(throwError({ status: 503 }));
-        expectObservable(hentOppgaverEpos(action$, <AjaxCreationMethod>dependencies)).toBe(
-          "12001ms s",
-          observableValues
-        );
+        expectObservable(
+          hentOppgaverEpos(action$, state$ as RootStateOrAny, <AjaxCreationMethod>dependencies)
+        ).toBe("12001ms s", observableValues);
       });
     })
   );

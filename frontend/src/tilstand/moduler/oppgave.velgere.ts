@@ -13,6 +13,7 @@ export function velgSideLaster(state: RootState) {
 export function velgFiltrering(state: RootState) {
   return state.klagebehandlinger.transformasjoner.filtrering;
 }
+
 export function velgSortering(state: RootState) {
   return state.klagebehandlinger.transformasjoner.sortering;
 }

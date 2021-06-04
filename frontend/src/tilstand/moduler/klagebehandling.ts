@@ -285,11 +285,13 @@ const R = require("ramda");
 
 export function klagebehandlingEpos(
   action$: ActionsObservable<PayloadAction<string>>,
+  state$: StateObservable<RootState>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(hentKlageHandling.type),
-    mergeMap((action) => {
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
       return getJSON<IKlage>(klageUrl(action.payload))
         .pipe(
           timeout(5000),
@@ -320,11 +322,13 @@ export function klagebehandlingEpos(
 
 export function klagebehandlingDokumenterAlleEpos(
   action$: ActionsObservable<PayloadAction<IDokumentParams>>,
+  state$: StateObservable<RootStateOrAny>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(hentDokumentAlleHandling.type),
-    mergeMap((action) => {
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
       let ref = action.payload.ref;
       let { historyNavigate } = action.payload;
       let klageUrl = `/api/klagebehandlinger/${action.payload.id}/alledokumenter?antall=10&forrigeSide=${ref}`;
@@ -363,6 +367,7 @@ export function klagebehandlingDokumenterAlleEpos(
 
 export function HentDokumentForhandsvisningEpos(
   action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
+  state$: StateObservable<RootStateOrAny>,
   { get }: AjaxCreationMethod
 ) {
   return action$.pipe(
@@ -376,11 +381,13 @@ export function HentDokumentForhandsvisningEpos(
 
 export function klagebehandlingDokumenterTilordnedeEpos(
   action$: ActionsObservable<PayloadAction<IDokumentParams>>,
+  state$: StateObservable<RootStateOrAny>,
   { getJSON }: AjaxCreationMethod
 ) {
   return action$.pipe(
     ofType(hentDokumentTilordnedeHandling.type, tilordnetDokumentHandling.type),
-    mergeMap((action) => {
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
       let ref = action.payload.ref;
       let { historyNavigate } = action.payload;
       let klageUrl = `/api/klagebehandlinger/${action.payload.id}/dokumenter`;
@@ -419,6 +426,7 @@ export function klagebehandlingDokumenterTilordnedeEpos(
 
 export function ToggleKlageDokumentEpos(
   action$: ActionsObservable<PayloadAction<IDokumentPayload>>,
+  state$: StateObservable<RootStateOrAny>,
   { post }: AjaxCreationMethod
 ) {
   return action$.pipe(

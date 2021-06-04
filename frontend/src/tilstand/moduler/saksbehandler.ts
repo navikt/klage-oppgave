@@ -1,8 +1,8 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, of } from "rxjs";
-import { catchError, mergeMap, switchMap, timeout, withLatestFrom } from "rxjs/operators";
+import { concat, of, timer } from "rxjs";
+import { catchError, debounce, mergeMap, switchMap, timeout, withLatestFrom } from "rxjs/operators";
 import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { OppgaveParams, oppgaveRequest } from "./oppgave";
