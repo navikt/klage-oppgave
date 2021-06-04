@@ -5,6 +5,8 @@ import { concat, of, timer } from "rxjs";
 import {
   catchError,
   debounce,
+  debounceTime,
+  exhaustMap,
   map,
   mergeMap,
   retryWhen,
@@ -14,7 +16,7 @@ import {
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { AjaxCreationMethod, AjaxResponse } from "rxjs/internal-compatibility";
 import { settEnhetHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
@@ -60,6 +62,7 @@ export interface Filter {
   label: ReactNode;
   value?: string;
 }
+
 export interface IKodeverkVerdi {
   id: string;
   navn: string;
@@ -129,6 +132,7 @@ export type OppgaveState = {
     tema: IKodeverkVerdi[];
   };
 };
+
 export interface RaderMedMetadata {
   antallTreffTotalt: number;
   klagebehandlinger: OppgaveRad[];
@@ -483,24 +487,22 @@ export function hentUtgaatteFristerEpos(
         `/api/ansatte/${action.payload.ident}/antallklagebehandlingermedutgaattefrister`,
         action.payload
       );
-      const hentOppgaver = getJSON<{ antall: number }>(oppgaveUrl).pipe(
-        timeout(5000),
+      const hentUtgaatteFrister = getJSON<{ antall: number }>(oppgaveUrl).pipe(
         map((response) =>
           HENTET_UGATTE({
             antall: response.antall,
           } as RaderMedMetadataUtvidet)
         )
       );
-      return hentOppgaver.pipe(
+      return hentUtgaatteFrister.pipe(
         retryWhen(provIgjenStrategi()),
-        catchError((error) => {
-          let err = error?.response?.detail || "ukjent feil";
+        catchError(() => {
           return concat([
-            feiletHandling(err),
+            feiletHandling("ukjent feil"),
             toasterSett({
               display: true,
               type: "feil",
-              feilmelding: `Henting av utgått frister feilet (${err})`,
+              feilmelding: `Henting av utgåtte frister feilet`,
             }),
             toasterSkjul(),
           ]);
