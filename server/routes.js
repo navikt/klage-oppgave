@@ -176,7 +176,9 @@ const setup = (authClient) => {
   // serve static files
   const buildPath = path.resolve(__dirname, "../frontend/dist");
   router.use("/", express.static(buildPath, { index: false }));
-  router.use("/favicon.ico", express.static(buildPath, { index: false }));
+  const staticPath = path.resolve(__dirname, "../frontend/dist/static");
+  router.use(express.static(staticPath, { index: false }));
+
   router.use("*", (req, res) => {
     res.sendFile("index.html", { root: buildPath });
   });
