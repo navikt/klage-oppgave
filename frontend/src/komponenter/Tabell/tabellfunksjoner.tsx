@@ -23,8 +23,8 @@ import MedunderskriverStatus from "./Medunderskriver";
 const R = require("ramda");
 
 const velgOppgave = R.curry(
-  (settValgtOppgave: Function, id: string, klagebehandlingVersjon: number) =>
-    tildelOppgave(settValgtOppgave, id, klagebehandlingVersjon)
+  (settValgtOppgave: Function, id: string, klagebehandlingVersjon: number, it: number) =>
+    tildelOppgave(settValgtOppgave, id, klagebehandlingVersjon, it)
 );
 
 const TableRow = styled.tr`
@@ -115,7 +115,7 @@ const OppgaveTabellRad = ({
   const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id)(meg.enheter[meg.valgtEnhet].id);
 
   const curriedVisHandlinger = visHandlinger(fradelOppgave)(id);
-  const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);
+  const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id)(it);
   const kodeverk = useSelector(velgKodeverk);
 
   const location = useLocation();
@@ -180,12 +180,16 @@ const OppgaveTabellRad = ({
   );
 };
 
-function tildelOppgave(settValgtOppgave: Function, id: string, klagebehandlingVersjon: number) {
-  let [it] = useState(0);
+function tildelOppgave(
+  settValgtOppgave: Function,
+  id: string,
+  klagebehandlingVersjon: number,
+  it: number
+) {
   return (
     <TableCell>
       <Knapp
-        data-testid={`tildelknapp${it++}`}
+        data-testid={`tildelknapp${it}`}
         className={"knapp"}
         onClick={(e) => settValgtOppgave({ id, klagebehandlingVersjon })}
       >
