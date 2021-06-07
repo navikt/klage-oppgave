@@ -7,7 +7,7 @@ on:
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
 jobs:
-  build:
+  deploytodev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -48,3 +48,21 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: nais/dev.yaml
           VARS: nais/vars.yaml
+  e2etest:
+    name: E2E-test av deploy
+    needs: deploytodev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set UUID
+        id: generate-uuid
+        uses: filipstefansson/uuid-action@v1.1
+      - name: Run acceptance tests
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          VAR: app=kabal,jobname=klage-job-${{ steps.generate-uuid.outputs.uuid }}
+          TEAM: klage
+          RESOURCE: deploy/e2ejob.yml
+        timeout-minutes: 5
