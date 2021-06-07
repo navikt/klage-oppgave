@@ -115,7 +115,7 @@ const OppgaveTabellRad = ({
   const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id)(meg.enheter[meg.valgtEnhet].id);
 
   const curriedVisHandlinger = visHandlinger(fradelOppgave)(id);
-  const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id)(it);
+  const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);
   const kodeverk = useSelector(velgKodeverk);
 
   const location = useLocation();
@@ -172,7 +172,7 @@ const OppgaveTabellRad = ({
       {utfall ? <TableCell>{utfall}</TableCell> : null}
       {!utfall &&
         location.pathname.startsWith("/oppgaver") &&
-        curriedVelgOppgave(klagebehandlingVersjon)}
+        curriedVelgOppgave(klagebehandlingVersjon)(it)}
       {!utfall &&
         location.pathname.startsWith("/mineoppgaver") &&
         curriedVisHandlinger(klagebehandlingVersjon)}
