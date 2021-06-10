@@ -99,6 +99,7 @@ export default ({ startSide, antallSider, pathname }: IPaginering): JSX.Element 
           Forrige
         </span>
       )}
+
       {out.map((element) => element)}
       {startSide + 1 <= antallSider && (
         <NavLink
