@@ -72,6 +72,7 @@ export default ({ startSide, antallSider, pathname }: IPaginering): JSX.Element 
         ...
       </span>
     );
+
     out.push(
       <NavLink
         className={"paginering_padding active"}
