@@ -66,3 +66,33 @@ jobs:
           TEAM: klage
           RESOURCE: deploy/e2ejob.yml
         timeout-minutes: 5
+  deployprod:
+    name: Deploy to prod-gcp
+    needs: e2etest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        name: Checkout code
+      - name: Lag tag for image
+        run: echo "TAG=$( git log -1 --pretty=oneline main | cut -d ' ' -f 1)" >> $GITHUB_ENV
+      - name: Lag full image referanse
+        run: echo "IMAGE=$BASEIMAGE:$TAG" >> $GITHUB_ENV
+      - uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: nais/prod-deploy.yaml
+          VARS: nais/prod.json
+          SESSION_KEY: ${{ secrets.klage-session-key }}
+      - name: Generate release version
+        run: |
+          TIME=$(TZ="Europe/Oslo" date +%Y.%m.%d-%H.%M)
+          COMMIT=$(git rev-parse --short=7 HEAD)
+          VERSION=$TIME-$COMMIT
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: ${{ env.VERSION }}
