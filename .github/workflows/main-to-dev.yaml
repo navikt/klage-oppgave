@@ -81,7 +81,7 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
-          RESOURCE: nais/prod-deploy.yaml
+          RESOURCE: nais/prod.yaml
           VARS: nais/prod.json
           SESSION_KEY: ${{ secrets.klage-session-key }}
       - name: Generate release version
