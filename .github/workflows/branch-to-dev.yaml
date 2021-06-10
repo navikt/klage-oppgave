@@ -8,8 +8,8 @@ on:
       - '!main'
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:${{ github.sha }}
-  LATEST: docker.pkg.github.com/${{ github.repository }}/klage-oppgave:latest  
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/kabal-frontend:${{ github.sha }}
+  LATEST: docker.pkg.github.com/${{ github.repository }}/kabal-frontend:latest
 jobs:
   build:
     runs-on: ubuntu-latest

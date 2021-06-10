@@ -25,4 +25,4 @@ spec:
   accessPolicy: # for GCP
     inbound:
       rules:
-        - application: klage-oppgave
+        - application: kabal-frontend
