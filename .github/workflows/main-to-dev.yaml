@@ -73,10 +73,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
         name: Checkout code
-      - name: Lag tag for image
-        run: echo "TAG=$( git log -1 --pretty=oneline main | cut -d ' ' -f 1)" >> $GITHUB_ENV
-      - name: Lag full image referanse
-        run: echo "IMAGE=$BASEIMAGE:$TAG" >> $GITHUB_ENV
       - uses: nais/deploy/actions/deploy@master
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
