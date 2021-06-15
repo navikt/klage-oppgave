@@ -14,4 +14,5 @@ export const Beholder = styled.section<BeholderProps>`
   padding-bottom: 0.25em;
   height: 100%;
   overflow: scroll;
+  min-width: 30em;
 `;
