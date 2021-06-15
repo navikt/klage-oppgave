@@ -1,41 +1,47 @@
 import { Select } from "nav-frontend-skjema";
-import React from "react";
-import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
+import React, { useState } from "react";
+import { IKodeverkVerdi } from "../../../tilstand/moduler/kodeverk";
+import { useKanEndre } from "../utils/useKlagebehandlingUpdater";
 
 interface OmgjoeringsgrunnProps {
   gyldigeOmgjoeringsgrunner: IKodeverkVerdi[];
-  omgjoeringsgrunn: IKodeverkVerdi | null;
-  velgOmgjoeringsgrunn: (omgjoeringsgrunn: IKodeverkVerdi | null) => void;
+  defaultValue: IKodeverkVerdi | null;
+  onChange: (omgjoeringsgrunn: IKodeverkVerdi | null) => void;
 }
-export function Omgjoeringsgrunn({
+export const Omgjoeringsgrunn = ({
   gyldigeOmgjoeringsgrunner,
-  omgjoeringsgrunn,
-  velgOmgjoeringsgrunn,
-}: OmgjoeringsgrunnProps) {
+  defaultValue,
+  onChange,
+}: OmgjoeringsgrunnProps) => {
+  const [omgjoeringsgrunn, settOmgjoeringsgrunn] = useState<IKodeverkVerdi | null>(defaultValue);
+  const kanEndre = useKanEndre();
+
   return (
     <Select
+      disabled={!kanEndre}
       label="Omgjøringsgrunn:"
       bredde="l"
-      value={gyldigeOmgjoeringsgrunner.findIndex(
-        (omgjoeringObj: IKodeverkVerdi) => omgjoeringObj.id === omgjoeringsgrunn?.id
-      )}
+      value={omgjoeringsgrunn?.id}
       onChange={(e) => {
         if (!e.target.value) {
-          velgOmgjoeringsgrunn(null);
+          onChange(null);
+          settOmgjoeringsgrunn(null);
         } else {
-          const valgtOmgjoeringsgrunn = gyldigeOmgjoeringsgrunner[e.target.value];
-          velgOmgjoeringsgrunn(valgtOmgjoeringsgrunn);
+          const valgtOmgjoeringsgrunn =
+            gyldigeOmgjoeringsgrunner.find(({ id }) => e.target.value === id) ?? null;
+          onChange(valgtOmgjoeringsgrunn);
+          settOmgjoeringsgrunn(valgtOmgjoeringsgrunn);
         }
       }}
     >
       <option value={undefined}>Velg omgjøringsgrunn</option>
-      {gyldigeOmgjoeringsgrunner.map((omgjoeringObj, index) => {
+      {gyldigeOmgjoeringsgrunner.map(({ navn, id }) => {
         return (
-          <option key={index} value={index}>
-            {omgjoeringObj.navn}
+          <option key={id} value={id}>
+            {navn}
           </option>
         );
       })}
     </Select>
   );
-}
+};

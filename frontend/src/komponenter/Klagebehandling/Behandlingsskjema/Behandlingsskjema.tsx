@@ -1,9 +1,5 @@
-import { IKlage } from "../../../tilstand/moduler/klagebehandling";
-import { useSelector } from "react-redux";
-import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
 import React from "react";
 import { temaOversettelse, typeOversettelse } from "../../../domene/forkortelser";
-
 import styled from "styled-components";
 import { HeaderRow, Row } from "../../../styled-components/Row";
 import { FraNavEnhet } from "./FraNavEnhet";
@@ -11,6 +7,8 @@ import { faaFulltNavnMedFnr, InfofeltStatisk } from "./TekstDisplay";
 import { UtfallSkjema } from "./UtfallSkjema";
 import { OversendtKA } from "./OversendtKA";
 import { MottattFoersteinstans } from "./MottattFoersteinstans";
+import { useAppSelector } from "../../../tilstand/konfigurerTilstand";
+import { velgKlagebehandling } from "../../../tilstand/moduler/klagebehandling/selectors";
 
 const Kontainer = styled.div`
   display: ${(props) => props.theme.display};
@@ -49,27 +47,29 @@ const KlageBoks = styled.div`
 `;
 
 function Klager() {
-  const klage: IKlage = useSelector(velgKlage);
-  return (
-    <InfofeltStatisk
-      header="Klager"
-      info={faaFulltNavnMedFnr(klage.sakenGjelderNavn, klage.sakenGjelderFoedselsnummer)}
-    />
-  );
+  const klagebehandling = useAppSelector(velgKlagebehandling);
+  const info =
+    klagebehandling === null
+      ? "-"
+      : faaFulltNavnMedFnr(
+          klagebehandling.sakenGjelderNavn,
+          klagebehandling.sakenGjelderFoedselsnummer
+        );
+  return <InfofeltStatisk header="Klager" info={info} />;
 }
 
 function VurderingFraFoersteinstans() {
-  const klage: IKlage = useSelector(velgKlage);
+  const klagebehandling = useAppSelector(velgKlagebehandling);
   return (
     <InfofeltStatisk
       header="Melding fra førsteinstans for intern bruk"
-      info={klage.kommentarFraFoersteinstans || "-"}
+      info={klagebehandling?.kommentarFraFoersteinstans || "-"}
     />
   );
 }
 
 function TyperTemaer() {
-  const klage: IKlage = useSelector(velgKlage);
+  const klagebehandling = useAppSelector(velgKlagebehandling);
 
   return (
     <Detaljer>
@@ -77,7 +77,9 @@ function TyperTemaer() {
         <b>Type:</b>
         <ul className={"detaljliste"}>
           <li>
-            <div className={"etikett etikett--type"}>{typeOversettelse(klage.type) ?? "-"}</div>
+            <div className={"etikett etikett--type"}>
+              {typeOversettelse(klagebehandling?.type) ?? "-"}
+            </div>
           </li>
         </ul>
       </div>
@@ -87,7 +89,7 @@ function TyperTemaer() {
         <ul className={"detaljliste"}>
           <li>
             <div className={"etikett etikett--sykepenger"}>
-              {temaOversettelse(klage.tema) ?? "-"}
+              {temaOversettelse(klagebehandling?.tema) ?? "-"}
             </div>
           </li>
         </ul>
@@ -97,6 +99,12 @@ function TyperTemaer() {
 }
 
 export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
+  const klagebehandling = useAppSelector(velgKlagebehandling);
+
+  if (klagebehandling === null) {
+    return null;
+  }
+
   return (
     <Kontainer theme={{ display: !skjult ? "grid" : "none", width: "40em" }}>
       <KlageBoks>
@@ -128,7 +136,7 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
       <KlageBoks>
         <HeaderRow></HeaderRow>
         <div>
-          <UtfallSkjema />
+          <UtfallSkjema klagebehandling={klagebehandling} />
         </div>
       </KlageBoks>
     </Kontainer>

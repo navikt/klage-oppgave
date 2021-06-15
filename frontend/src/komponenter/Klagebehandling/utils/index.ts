@@ -17,7 +17,7 @@ interface Response {
 }
 
 function loadItems(startCursor = 0): Promise<Response> {
-  const klage: IKlage = useSelector(velgKlage);
+  const klage = useSelector(velgKlage);
 
   return new Promise((resolve) => {
     let newArray: Item[] = [];

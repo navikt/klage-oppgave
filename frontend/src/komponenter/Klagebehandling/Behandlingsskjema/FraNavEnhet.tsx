@@ -1,16 +1,14 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { IKlage } from "../../../tilstand/moduler/klagebehandling";
-import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
+import { useAppSelector } from "../../../tilstand/konfigurerTilstand";
+import { velgKlagebehandling } from "../../../tilstand/moduler/klagebehandling/selectors";
 import { InfofeltStatisk } from "./TekstDisplay";
 
 export function FraNavEnhet() {
-  const klage: IKlage = useSelector(velgKlage);
+  const klagebehandling = useAppSelector(velgKlagebehandling);
+  const info =
+    klagebehandling === null
+      ? "-"
+      : klagebehandling.fraNAVEnhetNavn + " - " + klagebehandling.fraNAVEnhet;
 
-  return (
-    <InfofeltStatisk
-      header="Fra NAV-enhet"
-      info={klage.fraNAVEnhetNavn + " - " + klage.fraNAVEnhet}
-    />
-  );
+  return <InfofeltStatisk header="Fra NAV-enhet" info={info} />;
 }

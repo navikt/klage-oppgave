@@ -1,39 +1,42 @@
 import { Select } from "nav-frontend-skjema";
-import React from "react";
-import { IKodeverkVerdi } from "../../../tilstand/moduler/oppgave";
+import React, { useState } from "react";
+import { IKodeverkVerdi } from "../../../tilstand/moduler/kodeverk";
+import { useKanEndre } from "../utils/useKlagebehandlingUpdater";
 
 interface UtfallProps {
   utfallAlternativer: IKodeverkVerdi[];
-  utfall: IKodeverkVerdi | null;
-  velgUtfall: (utfall: IKodeverkVerdi | null) => void;
+  defaultUtfall: IKodeverkVerdi | null;
+  onChange: (utfall: IKodeverkVerdi | null) => void;
 }
-export function Utfall({ utfallAlternativer, utfall, velgUtfall }: UtfallProps) {
+export const Utfall = ({ utfallAlternativer, defaultUtfall, onChange }: UtfallProps) => {
+  const [utfall, settUtfall] = useState<IKodeverkVerdi | null>(defaultUtfall);
+  const kanEndre = useKanEndre();
+
   return (
     <Select
+      disabled={!kanEndre}
       label="Utfall/resultat:"
       bredde="m"
-      value={
-        utfall
-          ? "" + utfallAlternativer.findIndex((obj: IKodeverkVerdi) => obj.id === utfall.id)
-          : undefined
-      }
+      value={utfall?.id}
       onChange={(e) => {
         if (!e.target.value) {
-          velgUtfall(null);
+          settUtfall(null);
+          onChange(null);
         } else {
-          const valgtUtfall = utfallAlternativer[e.target.value];
-          velgUtfall(valgtUtfall);
+          const valgtUtfall = utfallAlternativer.find(({ id }) => id === e.target.value) ?? null;
+          settUtfall(valgtUtfall);
+          onChange(valgtUtfall);
         }
       }}
     >
       <option value={undefined}>Velg utfall</option>
-      {utfallAlternativer.map((utfallObj, index) => {
+      {utfallAlternativer.map(({ navn, id }) => {
         return (
-          <option key={index} value={index}>
-            {utfallObj.navn}
+          <option key={id} value={id}>
+            {navn}
           </option>
         );
       })}
     </Select>
   );
-}
+};

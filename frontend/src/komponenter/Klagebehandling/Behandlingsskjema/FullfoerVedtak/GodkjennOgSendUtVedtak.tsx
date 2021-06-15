@@ -1,28 +1,35 @@
 import React, { useCallback, useMemo } from "react";
 import { Knapp } from "nav-frontend-knapper";
 import { useAppDispatch, useAppSelector } from "../../../../tilstand/konfigurerTilstand";
-import { velgKlage } from "../../../../tilstand/moduler/klagebehandlinger.velgere";
 import { velgMeg } from "../../../../tilstand/moduler/meg.velgere";
 import { fullfoerVedtak } from "../../../../tilstand/moduler/vedtak";
 import { velgVedtak } from "../../../../tilstand/moduler/vedtak.velgere";
 import { StatusBoksMedTittel } from "./styled-components/status-boks";
 import { TilbakeTilOppgaverLenke } from "./styled-components/tilbake-link";
 import { INavn } from "../../../../tilstand/moduler/klagebehandling";
+import { IKlagebehandling } from "../../../../tilstand/moduler/klagebehandling/stateTypes";
+import { useIsSaved } from "../../utils/useKlagebehandlingUpdater";
 
-export const GodkjennOgSendUtVedtak = () => {
+interface GodkjennOgSendUtVedtakProps {
+  klagebehandling: IKlagebehandling;
+}
+
+export const GodkjennOgSendUtVedtak = ({ klagebehandling }: GodkjennOgSendUtVedtakProps) => {
   const dispatch = useAppDispatch();
   const { id, enheter, valgtEnhet } = useAppSelector(velgMeg);
+  const isSaved = useIsSaved();
   const {
     id: klagebehandlingId,
     klagebehandlingVersjon,
     medunderskriverident,
-    vedtak,
+    vedtak: [vedtak],
     sakenGjelderNavn,
-  } = useAppSelector(velgKlage);
+  } = klagebehandling;
   const { loading } = useAppSelector(velgVedtak);
 
-  const { id: vedtakId, ferdigstilt, file } = vedtak[0];
-  const journalfoerendeEnhet = enheter[valgtEnhet].id;
+  const { id: vedtakId, ferdigstilt, file } = vedtak;
+
+  const journalfoerendeEnhet = useMemo(() => enheter[valgtEnhet]?.id, [enheter, valgtEnhet]);
 
   const godkjennOgSendUt = useCallback(
     () =>
@@ -34,7 +41,7 @@ export const GodkjennOgSendUtVedtak = () => {
           vedtakId,
         })
       ),
-    [klagebehandlingId, vedtakId]
+    [journalfoerendeEnhet, klagebehandlingId, klagebehandlingVersjon, vedtakId]
   );
 
   const harVedlegg = useMemo(() => file !== null, [file]);
@@ -60,12 +67,19 @@ export const GodkjennOgSendUtVedtak = () => {
     <Knapp
       onClick={godkjennOgSendUt}
       style={{ marginTop: "1em" }}
-      disabled={loading || !harVedlegg}
+      disabled={loading || !harVedlegg || !isSaved}
     >
       Godkjenn og send ut vedtak
     </Knapp>
   );
 };
 
-const formaterNavn = ({ fornavn, mellomnavn, etternavn }: INavn): string =>
-  [fornavn, mellomnavn, etternavn].filter((n) => typeof n === "string" && n.length !== 0).join(" ");
+const formaterNavn = (navn: INavn | null): string => {
+  if (navn === null) {
+    return "-";
+  }
+  const { fornavn, mellomnavn, etternavn } = navn;
+  return [fornavn, mellomnavn, etternavn]
+    .filter((n) => typeof n === "string" && n.length !== 0)
+    .join(" ");
+};

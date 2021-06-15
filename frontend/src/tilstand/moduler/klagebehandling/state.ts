@@ -1,0 +1,135 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { initialState } from "./initialState";
+import { hentKlagebehandlingEpic, lagreKlagebehandlingEpic, settOpptattEpic } from "./epics";
+import { IKlagebehandling, TilknyttetDokument } from "./stateTypes";
+import {
+  IKlagebehandlingOppdatering,
+  IKlagebehandlingOppdateringResponse,
+  IMedunderskriverSatt,
+  IVedleggResponse,
+  IVedtakFullfoertResponse,
+} from "./types";
+
+export const klagebehandlingSlice = createSlice({
+  name: "klagebehandling",
+  initialState,
+  reducers: {
+    SETT_KLAGEBEHANDLING: (state, { payload }: PayloadAction<IKlagebehandling>) => ({
+      ...state,
+      lagretVersjon: createLagretVersjon({ ...payload, klagebehandlingId: payload.id }),
+      klagebehandling: payload,
+    }),
+    OPPDATER_KLAGEBEHANDLING: (state, action: PayloadAction<Partial<IKlagebehandling>>) => {
+      if (state.klagebehandling === null) {
+        return state;
+      }
+      return {
+        ...state,
+        klagebehandling: { ...state.klagebehandling, ...action.payload },
+      };
+    },
+    KLAGEBEHANDLING_LAGRET: (
+      state,
+      action: PayloadAction<IKlagebehandlingOppdateringResponse & IKlagebehandlingOppdatering>
+    ) => {
+      if (state.klagebehandling === null) {
+        return state;
+      }
+      return {
+        ...state,
+        lagretVersjon: createLagretVersjon(action.payload),
+        klagebehandling: { ...state.klagebehandling, ...action.payload },
+      };
+    },
+    TILKNYTT_DOKUMENT: (state, action: PayloadAction<TilknyttetDokument>) => {
+      state.klagebehandling?.tilknyttedeDokumenter.push(action.payload);
+      return state;
+    },
+    FRAKOBLE_DOKUMENT: (state, { payload }: PayloadAction<TilknyttetDokument>) => {
+      if (state.klagebehandling === null) {
+        return;
+      }
+      state.klagebehandling.tilknyttedeDokumenter =
+        state.klagebehandling.tilknyttedeDokumenter.filter(
+          ({ dokumentInfoId, journalpostId }) =>
+            dokumentInfoId !== payload.dokumentInfoId && journalpostId !== payload.journalpostId
+        );
+      return state;
+    },
+    MEDUNDERSKRIVER_SATT: (state, { payload }: PayloadAction<IMedunderskriverSatt>) => {
+      if (state.klagebehandling === null) {
+        return state;
+      }
+      state.klagebehandling.medunderskriverident = payload.medunderskriverident;
+      state.klagebehandling.datoSendtMedunderskriver = payload.datoSendtMedunderskriver;
+      state.klagebehandling.klagebehandlingVersjon = payload.klagebehandlingVersjon;
+      state.klagebehandling.modified = payload.modified;
+      return state;
+    },
+    VEDLEGG_OPPDATERT: (state, action: PayloadAction<IVedleggResponse>) => {
+      if (state.klagebehandling === null) {
+        return state;
+      }
+      const [vedtak] = state.klagebehandling.vedtak;
+      if (typeof vedtak !== "undefined") {
+        const { klagebehandlingVersjon, modified, file } = action.payload;
+        state.klagebehandling.klagebehandlingVersjon = klagebehandlingVersjon;
+        state.klagebehandling.modified = modified;
+        vedtak.file = file;
+      }
+      return state;
+    },
+    VEDTAK_FULLFOERT: (state, { payload }: PayloadAction<IVedtakFullfoertResponse>) => {
+      if (state.klagebehandling === null) {
+        return state;
+      }
+      state.klagebehandling.avsluttetAvSaksbehandler = payload.avsluttetAvSaksbehandler;
+      state.klagebehandling.klagebehandlingVersjon = payload.klagebehandlingVersjon;
+      state.klagebehandling.modified = payload.modified;
+      const [vedtak] = state.klagebehandling.vedtak;
+      if (typeof vedtak !== "undefined") {
+        vedtak.ferdigstilt = payload.ferdigstilt;
+      }
+      return state;
+    },
+    OPPTATT: (state) => ({ ...state, opptatt: true }),
+    LEDIG: (state) => ({ ...state, opptatt: false }),
+    ERROR: (state, { payload }: PayloadAction<string>) => ({ ...state, error: payload }),
+  },
+});
+
+export const {
+  SETT_KLAGEBEHANDLING,
+  OPPDATER_KLAGEBEHANDLING,
+  TILKNYTT_DOKUMENT,
+  FRAKOBLE_DOKUMENT,
+  KLAGEBEHANDLING_LAGRET,
+  VEDLEGG_OPPDATERT,
+  VEDTAK_FULLFOERT,
+  MEDUNDERSKRIVER_SATT,
+  OPPTATT,
+  LEDIG,
+  ERROR,
+} = klagebehandlingSlice.actions;
+
+export const KLAGEBEHANDLING_EPICS = [
+  lagreKlagebehandlingEpic,
+  settOpptattEpic,
+  hentKlagebehandlingEpic,
+];
+
+export const klagebehandling = klagebehandlingSlice.reducer;
+
+const createLagretVersjon = ({
+  internVurdering,
+  klagebehandlingId,
+  klagebehandlingVersjon,
+  tilknyttedeDokumenter,
+  vedtak,
+}: IKlagebehandlingOppdatering) => ({
+  internVurdering,
+  klagebehandlingId,
+  klagebehandlingVersjon,
+  tilknyttedeDokumenter,
+  vedtak,
+});

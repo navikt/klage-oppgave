@@ -1,18 +1,16 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { isoDateToPretty } from "../../../domene/datofunksjoner";
-import { formattedDate } from "../../../domene/datofunksjoner";
-import { IKlage } from "../../../tilstand/moduler/klagebehandling";
-import { velgKlage } from "../../../tilstand/moduler/klagebehandlinger.velgere";
+import { useAppSelector } from "../../../tilstand/konfigurerTilstand";
+import { velgKlagebehandling } from "../../../tilstand/moduler/klagebehandling/selectors";
 import { InfofeltStatisk } from "./TekstDisplay";
 
 export function MottattFoersteinstans() {
-  const klage: IKlage = useSelector(velgKlage);
+  const klagebehandling = useAppSelector(velgKlagebehandling);
 
   return (
     <InfofeltStatisk
       header="Mottatt førsteinstans"
-      info={isoDateToPretty(klage.mottattFoersteinstans) ?? "-"}
+      info={isoDateToPretty(klagebehandling?.mottattFoersteinstans ?? null) ?? "-"}
     />
   );
 }

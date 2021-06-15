@@ -38,15 +38,15 @@ export const klagebehandlingDetaljerView = {
   fraSaksbehandlerident: "Z994674",
   eoes: null,
   raadfoertMedLege: null,
-  internVurdering: null,
+  internVurdering: "",
   sendTilbakemelding: null,
   tilbakemelding: null,
   klagebehandlingVersjon: 3,
   vedtak: [
     {
       id: "214d1485-5a26-4aec-86e4-19395fa54f87",
-      utfall: "Opprettholdt",
-      grunn: "Feil i bevisvurderingen",
+      utfall: "6",
+      grunn: "3",
       hjemler: [],
       brevMottakere: [],
       ferdigstilt: null,
@@ -54,4 +54,5 @@ export const klagebehandlingDetaljerView = {
     },
   ],
   kommentarFraFoersteinstans: null,
+  tilknyttedeDokumenter: [],
 };

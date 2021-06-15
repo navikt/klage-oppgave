@@ -1,9 +1,5 @@
-import {
-  IKodeverkVerdi,
-  OppgaveRad,
-  OppgaveRader,
-  OppgaveRadMedFunksjoner,
-} from "../../tilstand/moduler/oppgave";
+import { OppgaveRad, OppgaveRader, OppgaveRadMedFunksjoner } from "../../tilstand/moduler/oppgave";
+import { IKodeverkVerdi } from "../../tilstand/moduler/kodeverk";
 import React, { useRef, useState } from "react";
 import EtikettBase from "nav-frontend-etiketter";
 import { Knapp } from "nav-frontend-knapper";
@@ -13,9 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fradelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 // @ts-ignore
-import PilOppHoeyre from "../../komponenter/arrow.svg";
 import { NavLink, useHistory, useLocation } from "react-router-dom";
-import { formattedDate, isoDateToPretty } from "../../domene/datofunksjoner";
+import { formattedDate } from "../../domene/datofunksjoner";
 import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
 import styled from "styled-components";
 import MedunderskriverStatus from "./Medunderskriver";
@@ -161,7 +156,7 @@ const OppgaveTabellRad = ({
       {utvidetProjeksjon && (
         <TableCell>
           <div className="fnr-lenke-wrap">
-            <NavLink to={`/klagebehandling/${id}&side=klagen`}> {person?.fnr || "mangler"}</NavLink>
+            <NavLink to={`/klagebehandling/${id}`}> {person?.fnr || "mangler"}</NavLink>
           </div>
         </TableCell>
       )}

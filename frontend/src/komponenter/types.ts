@@ -10,16 +10,6 @@ export interface FiltrerbarHeaderProps {
   kolonner?: number;
 }
 
-export interface SelectListHeaderProps {
-  label?: string;
-  children: ReactNode | ReactNode[];
-  onSelect: (filter: Filter | Filter[], override?: boolean) => void;
-  valgmuligheter: Filter[];
-  dispatchFunc: Function;
-  aktiveValgmuligheter: Filter[];
-  kolonner?: number;
-}
-
 export interface UseOnInteractOutsideParameters {
   ref: React.RefObject<HTMLElement>;
   onInteractOutside: () => void;

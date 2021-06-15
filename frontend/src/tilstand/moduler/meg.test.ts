@@ -10,6 +10,7 @@ import megTilstand, {
   hentInnstillingerHandling,
   hentMegEpos,
   hentMegHandling,
+  IInnstillinger,
 } from "./meg";
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
@@ -140,10 +141,10 @@ describe("'Meg' epos", () => {
             innstillinger: undefined,
           },
         };
-        const mockedResponse = {
-          aktiveHjemler: [{ navn: "8-1", label: "8-1" }],
-          aktiveTemaer: [{ navn: "43", label: "Sykepenger" }],
-          aktiveTyper: [{ navn: "test-enhet", label: "42" }],
+        const mockedResponse: IInnstillinger = {
+          aktiveHjemler: [{ value: "8-1", label: "8-1" }],
+          aktiveTemaer: [{ value: "43", label: "Sykepenger" }],
+          aktiveTyper: [{ value: "test-enhet", label: "42" }],
           aktiveFaner: { dokumenter: { checked: true } },
         };
         const reducerResponse = hentetInnstillingerHandling(mockedResponse);

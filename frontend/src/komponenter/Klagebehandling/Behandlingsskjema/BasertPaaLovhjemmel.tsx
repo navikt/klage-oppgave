@@ -1,16 +1,16 @@
 import EtikettBase from "nav-frontend-etiketter";
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
+import { IKodeverkVerdi } from "../../../tilstand/moduler/kodeverk";
 import { Filter } from "../../../tilstand/moduler/oppgave";
-import filterReducer from "../../Tabell/filterReducer";
-import MultipleChoiceHeader, { settHjemmel } from "./MultipleChoiceHeader";
-
-const R = require("ramda");
+import { isNotUndefined } from "../utils/helpers";
+import { useKanEndre } from "../utils/useKlagebehandlingUpdater";
+import { MultipleChoiceHeader } from "./MultipleChoiceHeader";
 
 interface BasertPaaHjemmelProps {
-  gyldigeHjemler: Filter[];
-  valgteHjemler: Filter[];
-  velgHjemler: (hjemler: Filter[]) => void;
+  gyldigeHjemler: IKodeverkVerdi[];
+  defaultValue: IKodeverkVerdi[];
+  onChange: (hjemler: IKodeverkVerdi[]) => void;
 }
 
 const Etikettliste = styled.div`
@@ -30,56 +30,66 @@ export function forkortet(hjemmel: string): string {
 
 export function BasertPaaHjemmel({
   gyldigeHjemler,
-  valgteHjemler,
-  velgHjemler,
+  defaultValue,
+  onChange,
 }: BasertPaaHjemmelProps) {
-  const { filter_state, filter_dispatch } = filterReducer(10, 0);
-  const settFiltrering = (type: string, payload: Filter[]) => {
-    filter_dispatch({ type, payload });
-  };
+  const [valgteHjemler, settValgteHjemler] = useState<IKodeverkVerdi[]>(defaultValue);
+  const kanEndre = useKanEndre();
 
-  const settHjemler = (hjemler: Filter[]) => {
-    R.curry(settFiltrering)("sett_aktive_hjemler")(hjemler);
-    velgHjemler(hjemler);
-  };
-
-  const hjemmelTagsDisplay = () => {
-    if (gyldigeHjemler.length > 0) {
-      if (valgteHjemler.length > 0) {
-        return (
-          <Etikettliste>
-            {valgteHjemler
-              .map((hjemmel) => forkortet("" + hjemmel.label))
-              .sort((a: string, b: string) => {
-                return +a.replace(/[§-]/g, "") - +b.replace(/[§-]/g, "");
-              })
-              .map((hjemmelTag) => {
-                return (
-                  <EtikettBase key={hjemmelTag} type="info" className={`etikett-type`}>
-                    {forkortet("" + hjemmelTag)}
-                  </EtikettBase>
-                );
-              })}
-          </Etikettliste>
-        );
-      } else {
-        return "Velg hjemmel";
-      }
-    } else {
+  const hjemmelTagsDisplay = useMemo(() => {
+    if (gyldigeHjemler.length === 0) {
       return "Ingen hjemler under valgt tema";
     }
-  };
+    if (valgteHjemler.length === 0) {
+      return "Velg hjemmel";
+    }
+    return (
+      <Etikettliste>
+        {valgteHjemler
+          .map((hjemmel) => forkortet(hjemmel.beskrivelse))
+          .sort(
+            (a: string, b: string) =>
+              Number.parseInt(a.replace(/[§-]/g, ""), 10) -
+              Number.parseInt(b.replace(/[§-]/g, ""), 10)
+          )
+          .map((hjemmelTag) => (
+            <EtikettBase key={hjemmelTag} type="info" className={`etikett-type`}>
+              {forkortet(hjemmelTag)}
+            </EtikettBase>
+          ))}
+      </Etikettliste>
+    );
+  }, [gyldigeHjemler.length, valgteHjemler.length, valgteHjemler]);
+
+  const valgMuligheter = useMemo<Filter[]>(
+    () => gyldigeHjemler.map(({ id, beskrivelse }) => ({ label: beskrivelse, value: id })),
+    [gyldigeHjemler]
+  );
+
+  const valgteMulighet = useMemo<Filter[]>(
+    () => valgteHjemler.map(({ id, beskrivelse }) => ({ label: beskrivelse, value: id })),
+    [valgteHjemler]
+  );
+
+  const onSelect = useCallback((hjemler: Filter[]) => {
+    const valgte = hjemler
+      .map(({ value }) => gyldigeHjemler.find(({ id }) => id === value))
+      .filter(isNotUndefined);
+
+    settValgteHjemler(valgte);
+    onChange(valgte);
+  }, []);
 
   return (
     <div>
       <MultipleChoiceHeader
         label="Utfallet er basert på lovhjemmel:"
-        valgmuligheter={gyldigeHjemler}
-        onSelect={(hjemmel) => settHjemmel(settHjemler, hjemmel, valgteHjemler)}
-        dispatchFunc={settHjemmel}
-        aktiveValgmuligheter={valgteHjemler}
+        valgmuligheter={valgMuligheter}
+        onSelect={onSelect}
+        defaultValgte={valgteMulighet}
+        disabled={!kanEndre}
       >
-        {hjemmelTagsDisplay()}
+        {hjemmelTagsDisplay}
       </MultipleChoiceHeader>
     </div>
   );

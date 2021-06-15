@@ -1,11 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-
-interface Bruker {
-  fornavn?: string;
-  mellomnavn?: string;
-  etternavn?: string;
-}
+import { INavn } from "../../../tilstand/moduler/klagebehandling/stateTypes";
 
 const Info = styled.div`
   p {
@@ -22,12 +17,24 @@ export function InfofeltStatisk(props: { header: string; info: string }) {
   );
 }
 
-export const faaFulltNavn = (bruker: Bruker): string => {
-  let name = bruker.fornavn ?? "";
-  name += bruker.mellomnavn ? " " + bruker.mellomnavn : "";
-  name += bruker.etternavn ? " " + bruker.etternavn : "";
-  return name;
+export const faaFulltNavn = (navn: INavn | null): string => {
+  if (navn === null) {
+    return "-";
+  }
+  const { fornavn, mellomnavn, etternavn } = navn;
+  const navnListe = [fornavn, mellomnavn, etternavn].filter(
+    (n) => typeof n === "string" && n.length !== 0
+  );
+  if (navnListe.length === 0) {
+    return "-";
+  }
+  return navnListe.join(" ");
 };
 
-export const faaFulltNavnMedFnr = (bruker: Bruker, fnr: string) =>
-  faaFulltNavn(bruker) + " (" + fnr + ")";
+export const faaFulltNavnMedFnr = (navn: INavn | null, fnr: string | null) => {
+  const fulltNavn = faaFulltNavn(navn);
+  if (typeof fnr === "string" && fnr.length === 11) {
+    return `${fulltNavn} (${fnr})`;
+  }
+  return fulltNavn;
+};

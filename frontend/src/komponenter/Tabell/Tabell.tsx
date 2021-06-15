@@ -2,10 +2,10 @@ import {
   Filter,
   ferdigstilteRequest,
   hentUtgatte,
-  IKodeverkVerdi,
   kodeverkRequest,
   oppgaveRequest,
 } from "../../tilstand/moduler/oppgave";
+import { IKodeverkVerdi } from "../../tilstand/moduler/kodeverk";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import {
@@ -70,15 +70,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const utvidetProjeksjon = useSelector(velgProjeksjon);
   const location = useLocation();
 
-  const [showDebug, setDebug] = useState(false);
-  useEffect(() => {
-    document.addEventListener("keydown", (e) => {
-      if (e.ctrlKey && e.key === "D") {
-        setDebug(!showDebug);
-      }
-    });
-  });
-
   interface ParamTypes {
     side: string | undefined;
   }
@@ -89,9 +80,8 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const [forrigeStart, settForrigeStart] = useState<number>(1);
 
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
-  const [forrigeHjemmelFilter, settForrigeHjemmelFilter] = useState<string[] | undefined>(
-    undefined
-  );
+  const [forrigeHjemmelFilter, settForrigeHjemmelFilter] =
+    useState<string[] | undefined>(undefined);
 
   const [temaFilter, settTemaFilter] = useState<string[] | undefined>(undefined);
   const [forrigeTemaFilter, settForrigeTemaFilter] = useState<string[] | undefined>(undefined);
@@ -194,11 +184,10 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
     let hjemler: Filter[] = [];
     if (innstillinger?.aktiveTemaer) {
-      console.log("innstillinger?.aktiveTemaer", innstillinger?.aktiveTemaer);
       let temahjemler: IKodeverkVerdi[] = [];
       innstillinger.aktiveTemaer.map((tema: Filter) => {
         temahjemler = temahjemler.concat(
-          kodeverk.hjemlerPerTema.filter((_hjemler: any) => _hjemler.temaId === tema.value!)[0]
+          kodeverk.hjemlerPerTema.filter((_hjemler) => _hjemler.temaId === tema.value!)[0]
             ?.hjemler || []
         );
       });

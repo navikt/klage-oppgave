@@ -1,101 +1,29 @@
-import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction } from "@reduxjs/toolkit";
 import { concat, of } from "rxjs";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { catchError, map, mergeMap, retryWhen, switchMap, timeout } from "rxjs/operators";
-import { toasterSett, toasterSkjul } from "./toaster";
-import { RootState } from "../root";
-import { Dependencies } from "../konfigurerTilstand";
-import { provIgjenStrategi } from "../../utility/rxUtils";
-import { MEDUNDERSKRIVER_SATT } from "./klagebehandling";
-import { CustomError } from "./error-types";
+import { toasterSett, toasterSkjul } from "../toaster";
+import { RootState } from "../../root";
+import { Dependencies } from "../../konfigurerTilstand";
+import { provIgjenStrategi } from "../../../utility/rxUtils";
+import { MEDUNDERSKRIVER_SATT } from "../klagebehandling/state";
+import { CustomError } from "../error-types";
+import {
+  IMedunderskrivereInput,
+  IMedunderskriverePayload,
+  ISettMedunderskriverParams,
+  ISettMedunderskriverResponse,
+} from "./types";
+import { lastMedunderskrivere, settMedunderskriver } from "./actions";
+import { IMedunderskriverSatt } from "../klagebehandling/types";
+import { DONE, ERROR, LASTET, LOADING } from "./state";
 
-//==========
-// Type defs
-//==========
-export interface IMedunderskrivereState {
-  medunderskrivere: IMedunderskriver[];
-  loading: boolean;
-}
-
-export interface IMedunderskriverePayload {
-  tema: string;
-  medunderskrivere: IMedunderskriver[];
-}
-
-export interface IMedunderskriver {
-  navn: string;
-  ident: string;
-}
-
-export interface IMedunderskrivereInput {
-  id: string;
-  tema: string;
-}
-
-interface ISettMedunderskriverParams {
-  klagebehandlingId: string;
-  medunderskriverident: string;
-  klagebehandlingVersjon: number;
-}
-
-interface ISettMedunderskriverPayload {
-  medunderskriverident: string | null;
-}
-
-//==========
-// Reducer
-//==========
-export const initialState: IMedunderskrivereState = {
-  medunderskrivere: [],
-  loading: false,
-};
-
-export const slice = createSlice({
-  name: "medunderskrivere",
-  initialState: initialState,
-  reducers: {
-    LASTET: (state, action: PayloadAction<IMedunderskriverePayload>) => ({
-      medunderskrivere: action.payload.medunderskrivere,
-      loading: false,
-    }),
-    LOADING: (state) => {
-      state.loading = true;
-      return state;
-    },
-    DONE: (state) => {
-      state.loading = false;
-      return state;
-    },
-    ERROR: (state, action: PayloadAction<Error>) => {
-      console.error(action.payload);
-      state.loading = false;
-      return state;
-    },
-  },
-});
-
-export default slice.reducer;
-
-//==========
-// Actions
-//==========
-export const { LASTET, LOADING, DONE, ERROR } = slice.actions;
-export const lastMedunderskrivere = createAction<IMedunderskrivereInput>(
-  "medunderskrivere/LAST_MEDUNDERSKRIVERE"
-);
-export const settMedunderskriver = createAction<ISettMedunderskriverParams>(
-  "medunderskrivere/SETT_MEDUNDERSKRIVER"
-);
-
-//==========
-// Epos
-//==========
 export const loadingMedunderskrivereEpos = (action$: ActionsObservable<PayloadAction<never>>) =>
   action$.pipe(ofType(lastMedunderskrivere.type, settMedunderskriver.type), map(LOADING));
 
 export const settMedunderskriverEpos = (
   action$: ActionsObservable<PayloadAction<ISettMedunderskriverParams>>,
-  state$: StateObservable<RootState>,
+  _: StateObservable<RootState> | null,
   { ajax }: Dependencies
 ) =>
   action$.pipe(
@@ -115,8 +43,11 @@ export const settMedunderskriverEpos = (
         .pipe(
           timeout(5000),
           map((res) => res.response),
-          map(({ medunderskriverident }: ISettMedunderskriverPayload) => medunderskriverident),
-          mergeMap((ident) => of(MEDUNDERSKRIVER_SATT(ident), DONE()))
+          map<ISettMedunderskriverResponse, IMedunderskriverSatt>((res) => ({
+            ...res,
+            medunderskriverident,
+          })),
+          mergeMap((p) => of(MEDUNDERSKRIVER_SATT(p), DONE()))
         )
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 3 })),
@@ -138,7 +69,7 @@ export const settMedunderskriverEpos = (
 
 export const lastMedunderskrivereEpos = (
   action$: ActionsObservable<PayloadAction<IMedunderskrivereInput>>,
-  state$: StateObservable<RootState>,
+  _: StateObservable<RootState> | null,
   { ajax }: Dependencies
 ) =>
   action$.pipe(
@@ -183,6 +114,7 @@ const getMedunderskrivereURL = (id: string, tema: string) =>
 
 const isMedunderskriverePayload = (payload: any): payload is IMedunderskriverePayload =>
   typeof payload === "object" &&
+  payload !== null &&
   Array.isArray(payload.medunderskrivere) &&
   payload.medunderskrivere.every(
     (m: any) => typeof m === "object" && typeof m.ident === "string" && typeof m.navn === "string"

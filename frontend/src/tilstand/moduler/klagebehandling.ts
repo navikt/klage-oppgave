@@ -14,7 +14,7 @@ import {
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { IInnstillinger } from "./meg";
-import { IKodeverkVerdi } from "./oppgave";
+import { IKodeverkVerdi } from "./kodeverk";
 import { RootState } from "../root";
 import { Dependencies } from "../konfigurerTilstand";
 
@@ -69,7 +69,7 @@ export interface IKlage {
   dokumenterTilordnede?: any;
   currentPDF: string;
   dokumenterOppdatert: string;
-  internVurdering: string;
+  internVurdering: string | null;
   kommentarFraFoersteinstans: string;
   vedtak: Array<Vedtak>;
   medunderskriverident: string | null;
@@ -518,7 +518,7 @@ export function ToggleKlageDokumentEpos(
   );
 }
 
-export const KLAGEBEHANDLING_EPICS = [
+export const KLAGEBEHANDLING_EPOS = [
   klagebehandlingEpos,
   klagebehandlingDokumenterTilordnedeEpos,
   klagebehandlingDokumenterAlleEpos,

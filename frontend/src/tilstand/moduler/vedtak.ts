@@ -5,16 +5,10 @@ import { catchError, map, mergeMap, switchMap, timeout } from "rxjs/operators";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { RootState } from "../root";
 import { Dependencies } from "../konfigurerTilstand";
-import {
-  HENTET,
-  IKlage,
-  IVedlegg,
-  VEDLEGG_OPPLASTET,
-  VEDLEGG_SLETTET,
-  Vedtak,
-} from "./klagebehandling";
 import { fromPromise } from "rxjs/internal-compatibility";
 import { CustomError } from "./error-types";
+import { VEDLEGG_OPPDATERT, VEDTAK_FULLFOERT } from "./klagebehandling/state";
+import { IVedleggResponse, IVedtakFullfoertResponse } from "./klagebehandling/types";
 
 //==========
 // Type defs
@@ -89,7 +83,7 @@ export const loadingVedtakEpos = (action$: ActionsObservable<PayloadAction<never
 
 export const slettVedleggEpos = (
   action$: ActionsObservable<PayloadAction<IVedleggDeleteInput>>,
-  state$: StateObservable<RootState> | null,
+  _: StateObservable<RootState> | null,
   { fromFetch }: Dependencies
 ) =>
   action$.pipe(
@@ -103,14 +97,26 @@ export const slettVedleggEpos = (
           "content-type": "application/json",
         },
       }).pipe(
-        timeout(5000),
+        timeout(30000),
         mergeMap((res) => {
           if (res.ok) {
-            return fromPromise<Vedtak>(res.json());
+            return fromPromise(res.json());
           }
-          throw new Error("Kunne ikke slette vedtak.");
+          throw new Error("Kunne ikke slette vedlegg.");
         }),
-        mergeMap((vedtak) => of(VEDLEGG_SLETTET(vedtak), DONE())),
+        map((response) => {
+          if (isOfType<IVedleggResponse>(response, VEDLEGG_RESPONSE_KEYS)) {
+            return response;
+          }
+          console.error(
+            "Unexpected response from API.",
+            response,
+            "Expected",
+            VEDLEGG_RESPONSE_KEYS
+          );
+          throw new Error("Unexpected response from API.");
+        }),
+        mergeMap((res) => of(VEDLEGG_OPPDATERT(res), DONE())),
         catchError((error: CustomError) => {
           const message = error.response?.detail ?? "Ukjent feil";
           return concat([ERROR(error), displayToast(message), toasterSkjul()]);
@@ -119,7 +125,7 @@ export const slettVedleggEpos = (
     })
   );
 
-export const lastOppVedtakEpos = (
+export const lastOppVedleggEpos = (
   action$: ActionsObservable<PayloadAction<IVedleggInput>>,
   _: StateObservable<RootState> | null,
   { ajax }: Dependencies
@@ -139,22 +145,19 @@ export const lastOppVedtakEpos = (
 
       return ajax.post(lastOppURL, formData).pipe(
         timeout(30000),
-        map(({ response, status }) => {
-          if (status === 200 && isVedlegg(response)) {
+        map(({ response }) => {
+          if (isOfType<IVedleggResponse>(response, VEDLEGG_RESPONSE_KEYS)) {
             return response;
           }
-          console.error("Unexpected response from API.", response);
+          console.error(
+            "Unexpected response from API.",
+            response,
+            "Expected",
+            VEDLEGG_RESPONSE_KEYS
+          );
           throw new Error("Unexpected response from API.");
         }),
-        mergeMap((vedlegg) =>
-          of(
-            VEDLEGG_OPPLASTET({
-              vedtakId,
-              vedlegg,
-            }),
-            DONE()
-          )
-        ),
+        mergeMap((vedlegg) => of(VEDLEGG_OPPDATERT(vedlegg), DONE())),
         catchError((error: CustomError) => {
           const message = error.response?.detail ?? "Ukjent feil";
           return concat([ERROR(error), displayToast(message), toasterSkjul()]);
@@ -166,7 +169,7 @@ export const lastOppVedtakEpos = (
 
 export const fullfoerVedtakEpos = (
   action$: ActionsObservable<PayloadAction<IFullfoerVedtakParams>>,
-  state$: StateObservable<RootState> | null,
+  _: StateObservable<RootState> | null,
   { ajax }: Dependencies
 ) =>
   action$.pipe(
@@ -182,9 +185,15 @@ export const fullfoerVedtakEpos = (
           { "content-type": "application/json" }
         )
         .pipe(
-          timeout(5000),
-          map(({ response }) => response),
-          mergeMap((klage: IKlage) => of(HENTET(klage), DONE())),
+          timeout(15000),
+          map(({ response }) => {
+            if (isOfType<IVedtakFullfoertResponse>(response, VEDTAK_FULLFOERT_TYPE)) {
+              return response;
+            }
+            console.error("Unexpected response from API.", response);
+            throw new Error("Unexpected response from API.");
+          }),
+          mergeMap((res: IVedtakFullfoertResponse) => of(VEDTAK_FULLFOERT(res), DONE())),
           catchError((error: CustomError) => {
             const message = error.response?.detail ?? "Ukjent feil";
             return concat([ERROR(error), displayToast(message), toasterSkjul()]);
@@ -195,7 +204,7 @@ export const fullfoerVedtakEpos = (
 
 export const VEDTAK_EPOS = [
   loadingVedtakEpos,
-  lastOppVedtakEpos,
+  lastOppVedleggEpos,
   fullfoerVedtakEpos,
   slettVedleggEpos,
 ];
@@ -203,16 +212,49 @@ export const VEDTAK_EPOS = [
 const getVedtakURL = (klagebehandlingId: string, vedtakId: string) =>
   `/api/klagebehandlinger/${klagebehandlingId}/vedtak/${vedtakId}`;
 
-const VEDLEGG_KEYS = [
-  ["name", "string"],
-  ["size", "number"],
-  ["content", "string"],
-];
-const isVedlegg = (payload: any): payload is IVedlegg => {
-  if (typeof payload === "object") {
+interface Properties {
+  [key: string]: "string" | "number" | "object" | Properties;
+}
+
+const VEDTAK_FULLFOERT_TYPE: Properties = {
+  klagebehandlingVersjon: "number",
+  modified: "string", // LocalDateTime;
+  ferdigstilt: "string", // LocalDateTime;
+  avsluttetAvSaksbehandler: "string", // LocalDate;
+};
+
+const VEDLEGG_KEYS: Properties = {
+  name: "string",
+  size: "number",
+  opplastet: "string",
+};
+
+const VEDLEGG_RESPONSE_KEYS: Properties = {
+  klagebehandlingVersjon: "number",
+  modified: "string",
+  file: VEDLEGG_KEYS,
+};
+
+const isOfType = <T>(payload: any, type: Properties): payload is T => {
+  if (typeof payload === "object" && payload !== null) {
     const keys = Object.keys(payload);
-    return VEDLEGG_KEYS.every(
-      ([key, type]) => keys.includes(key) && (typeof payload[key] === type || payload[key] === null)
+    const expectedKeys = Object.keys(type);
+    return (
+      keys.length === expectedKeys.length &&
+      expectedKeys.every((key) => {
+        if (!keys.includes(key)) {
+          return false;
+        }
+        const t = type[key];
+        const d = payload[key];
+        if (typeof t === "string") {
+          return typeof d === t;
+        }
+        if (d === null) {
+          return true;
+        }
+        return isOfType(d, t);
+      })
     );
   }
   return false;
