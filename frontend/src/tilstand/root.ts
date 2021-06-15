@@ -1,12 +1,8 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { RootStateOrAny } from "react-redux";
-import { ActionsObservable, combineEpics, StateObservable } from "redux-observable";
-import { Observable } from "rxjs";
+import { combineEpics } from "redux-observable";
 import { combineReducers } from "redux";
 import klagebehandlinger, { OPPGAVER_EPICS } from "./moduler/oppgave";
 import meg, { MEG_EPICS } from "./moduler/meg";
 import saksbehandler, { TILDEL_EPICS } from "./moduler/saksbehandler";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
 import routing, { ROUTING_EPICS } from "./moduler/router";
 import toaster, { TOASTER_EPICS } from "./moduler/toaster";
 import oppgavelaster, { OPPGAVELASTER_EPOS } from "./moduler/oppgavelaster";
@@ -15,17 +11,10 @@ import klagebehandling, { KLAGEBEHANDLING_EPICS } from "./moduler/klagebehandlin
 import token, { EXPIRE_EPICS } from "./moduler/token";
 import behandlingsskjema, { BEHANDLINGSSKJEMA_EPICS } from "./moduler/behandlingsskjema";
 import admin, { ADMIN_EPICS } from "./moduler/admin";
+import vedtak, { VEDTAK_EPOS } from "./moduler/vedtak";
+import medunderskrivere, { MEDUNDERSKRIVERE_EPOS } from "./moduler/medunderskrivere";
 
-const epics: Array<
-  (
-    $action: ActionsObservable<PayloadAction<any>>,
-    $state: any, //todo rett opp i denne
-    ajaxDelete: AjaxCreationMethod,
-    getJSON: AjaxCreationMethod,
-    put: AjaxCreationMethod,
-    post: AjaxCreationMethod
-  ) => Observable<PayloadAction<any>>
-> = [
+const epics = [
   ...OPPGAVER_EPICS,
   ...MEG_EPICS,
   ...OPPGAVELASTER_EPOS,
@@ -37,6 +26,8 @@ const epics: Array<
   ...EXPIRE_EPICS,
   ...BEHANDLINGSSKJEMA_EPICS,
   ...ADMIN_EPICS,
+  ...VEDTAK_EPOS,
+  ...MEDUNDERSKRIVERE_EPOS,
 ];
 export const rootEpic = combineEpics.apply(combineEpics, epics);
 
@@ -52,6 +43,8 @@ const rootReducer = combineReducers({
   token,
   behandlingsskjema,
   admin,
+  vedtak,
+  medunderskrivere,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

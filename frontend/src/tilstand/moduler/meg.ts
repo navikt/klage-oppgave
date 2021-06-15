@@ -1,7 +1,7 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, from, of } from "rxjs";
+import { concat } from "rxjs";
 import {
   catchError,
   concatAll,
@@ -13,10 +13,9 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { AjaxCreationMethod, AjaxObservable, ajaxPost } from "rxjs/internal-compatibility";
 import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
 import { toasterSett, toasterSkjul } from "./toaster";
-import { ReactFragment, ReactNode } from "react";
+import { Dependencies } from "../konfigurerTilstand";
 
 //==========
 // Interfaces
@@ -185,13 +184,14 @@ let resultData: any;
 export function hentMegEpos(
   action$: ActionsObservable<PayloadAction>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(hentMegHandling.type),
     withLatestFrom(state$),
     mergeMap(([action, state]) => {
-      return getJSON<GraphOgEnhet>(megUrl)
+      return ajax
+        .getJSON<GraphOgEnhet>(megUrl)
         .pipe(
           timeout(5000),
           map((response: Graphdata) => {
@@ -206,7 +206,7 @@ export function hentMegEpos(
         )
         .pipe(
           map((graphData) => {
-            return getJSON<Array<IEnhetData>>(`/api/ansatte/${graphData.id}/enheter`).pipe(
+            return ajax.getJSON<Array<IEnhetData>>(`/api/ansatte/${graphData.id}/enheter`).pipe(
               timeout(5000),
               map((response: Array<IEnhetData>) => {
                 return concat([
@@ -251,15 +251,16 @@ export function hentMegEpos(
 export function hentInnstillingerEpos(
   action$: ActionsObservable<PayloadAction<IHentInnstilingerPayload>>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(hentInnstillingerHandling.type),
     withLatestFrom(state$),
     mergeMap(([action]) => {
-      return getJSON<IInnstillinger>(
-        `${innstillingerUrl}/${action.payload.navIdent}/${action.payload.enhetId}`
-      )
+      return ajax
+        .getJSON<IInnstillinger>(
+          `${innstillingerUrl}/${action.payload.navIdent}/${action.payload.enhetId}`
+        )
         .pipe(
           timeout(5000),
           map((response: IInnstillinger) => {
@@ -285,20 +286,21 @@ export function hentInnstillingerEpos(
 export function settInnstillingerEpos(
   action$: ActionsObservable<PayloadAction<IInnstillingerPayload>>,
   state$: StateObservable<RootStateOrAny>,
-  { post }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(settInnstillingerHandling.type),
     switchMap((action) => {
-      return post(
-        innstillingerUrl,
-        {
-          navIdent: action.payload.navIdent,
-          enhetId: action.payload.enhetId,
-          innstillinger: JSON.stringify(action.payload.innstillinger),
-        },
-        { "Content-Type": "application/json" }
-      )
+      return ajax
+        .post(
+          innstillingerUrl,
+          {
+            navIdent: action.payload.navIdent,
+            enhetId: action.payload.enhetId,
+            innstillinger: JSON.stringify(action.payload.innstillinger),
+          },
+          { "Content-Type": "application/json" }
+        )
         .pipe(map((payload: { response: IInnstillinger }) => sattInnstillinger(payload.response)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),

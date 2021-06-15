@@ -1,12 +1,9 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, of, timer } from "rxjs";
+import { concat, of } from "rxjs";
 import {
   catchError,
-  debounce,
-  debounceTime,
-  exhaustMap,
   map,
   mergeMap,
   retryWhen,
@@ -16,16 +13,13 @@ import {
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
-import { AjaxCreationMethod, AjaxResponse } from "rxjs/internal-compatibility";
 import { settEnhetHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
-import { fradelMegHandling, ITildelOppgave, tildelMegHandling } from "./saksbehandler";
 import { settOppgaverFerdigLastet } from "./oppgavelaster";
-import { RootState } from "../root";
+import { Dependencies } from "../konfigurerTilstand";
 
 const R = require("ramda");
-const { ascend, descend, prop, sort } = R;
 
 //==========
 // Type defs
@@ -334,7 +328,7 @@ export function buildQuery(url: string, data: OppgaveParams) {
 export function hentEnkeltOppgaveEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(enkeltOppgave.type),
@@ -345,7 +339,7 @@ export function hentEnkeltOppgaveEpos(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
       );
-      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
+      const hentOppgaver = ajax.getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
         timeout(5000),
         map((klagebehandlinger) =>
           MOTTATT({
@@ -369,13 +363,13 @@ export function hentEnkeltOppgaveEpos(
 export function hentKodeverk(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(kodeverkRequest.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      const hent = getJSON<any>("/api/kodeverk").pipe(
+      const hent = ajax.getJSON<any>("/api/kodeverk").pipe(
         timeout(5000),
         map((kodeverk) => HENTET_KODEVERK(kodeverk))
       );
@@ -390,7 +384,7 @@ export function hentKodeverk(
 export function hentFullforteOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(ferdigstilteRequest.type),
@@ -400,7 +394,8 @@ export function hentFullforteOppgaverEpos(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
       );
-      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl)
+      const hentOppgaver = ajax
+        .getJSON<RaderMedMetadata>(oppgaveUrl)
         .pipe(
           timeout(5000),
           map((klagebehandlinger) => {
@@ -429,8 +424,8 @@ export function hentFullforteOppgaverEpos(
 
 export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootState>,
-  { getJSON }: AjaxCreationMethod
+  state$: StateObservable<RootStateOrAny>,
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type, settEnhetHandling.type),
@@ -439,7 +434,8 @@ export function hentOppgaverEpos(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
       );
-      const hentOppgaver = getJSON<RaderMedMetadata>(oppgaveUrl)
+      const hentOppgaver = ajax
+        .getJSON<RaderMedMetadata>(oppgaveUrl)
         .pipe(
           map((klagebehandlinger) => {
             if (action.payload.ferdigstiltFom) {
@@ -478,7 +474,7 @@ export function hentOppgaverEpos(
 export function hentUtgaatteFristerEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>,
-  { getJSON }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(hentUtgatte.type),
@@ -488,7 +484,8 @@ export function hentUtgaatteFristerEpos(
         `/api/ansatte/${action.payload.ident}/antallklagebehandlingermedutgaattefrister`,
         action.payload
       );
-      const hentUtgaatteFrister = getJSON<{ antall: number }>(oppgaveUrl).pipe(
+      const hentUtgaatteFrister = ajax.getJSON<{ antall: number }>(oppgaveUrl).pipe(
+        timeout(5000),
         map((response) =>
           HENTET_UGATTE({
             antall: response.antall,

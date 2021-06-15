@@ -1,7 +1,8 @@
 import { RootStateOrAny } from "react-redux";
+import { RootState } from "../root";
 import { IEnhetData, IInnstillinger } from "./meg";
 
-export function velgMeg(state: RootStateOrAny) {
+export function velgMeg(state: RootState) {
   return state.meg;
 }
 export function velgEnheter(state: RootStateOrAny) {

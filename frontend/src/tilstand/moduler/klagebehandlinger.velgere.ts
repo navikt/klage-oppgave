@@ -1,5 +1,3 @@
 import { RootState } from "../root";
 
-export function velgKlage(state: RootState) {
-  return state.klagebehandling;
-}
+export const velgKlage = (state: RootState) => state.klagebehandling;

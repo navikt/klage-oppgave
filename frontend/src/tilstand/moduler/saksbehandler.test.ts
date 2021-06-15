@@ -5,7 +5,7 @@ import { fradelEpos, fradelMegHandling, tildelEpos, tildelMegHandling } from "./
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { OppgaveParams } from "./oppgave";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
+import { Dependencies } from "../konfigurerTilstand";
 
 describe("TILDEL 'Meg' epos", () => {
   let ts: TestScheduler;
@@ -78,7 +78,9 @@ describe("TILDEL 'Meg' epos", () => {
           },
         };
         const dependencies = {
-          post: (url: string) => of(mockedResponse),
+          ajax: {
+            post: (url: string) => of(mockedResponse),
+          },
         };
 
         const observableValues = {
@@ -133,7 +135,9 @@ describe("TILDEL 'Meg' epos", () => {
           response: {},
         };
         const dependencies = {
-          post: (url: string) => of(mockedResponse),
+          ajax: {
+            post: (url: string) => of(mockedResponse),
+          },
         };
 
         const observableValues = {
@@ -158,7 +162,7 @@ describe("TILDEL 'Meg' epos", () => {
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = fradelEpos(action$, state$, <any>dependencies);
+        const actual$ = fradelEpos(action$, state$, <Dependencies>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -184,7 +188,9 @@ describe("TILDEL 'Meg' epos", () => {
           response: {},
         };
         const dependencies = {
-          post: (url: string) => of(mockedResponse),
+          ajax: {
+            post: (url: string) => of(mockedResponse),
+          },
         };
 
         const observableValues = {
@@ -206,13 +212,13 @@ describe("TILDEL 'Meg' epos", () => {
             type: "toaster/SKJUL",
           },
         };
-        spyOn(dependencies, "post").and.returnValue(
+        spyOn(dependencies.ajax, "post").and.returnValue(
           throwError({ message: "fradeling feilet", status: 503 })
         );
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = fradelEpos(action$, state$, <any>dependencies);
+        const actual$ = fradelEpos(action$, state$, <Dependencies>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -233,7 +239,9 @@ describe("TILDEL 'Meg' epos", () => {
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
         const dependencies = {
-          post: (url: string) => of({}),
+          ajax: {
+            post: (url: string) => of({}),
+          },
         };
 
         const observableValues = {
@@ -257,10 +265,10 @@ describe("TILDEL 'Meg' epos", () => {
         };
 
         const state$ = new StateObservable(hot("-a", observableValues), {});
-        spyOn(dependencies, "post").and.returnValue(
+        spyOn(dependencies.ajax, "post").and.returnValue(
           throwError({ message: "tildeling feilet", status: 503 })
         );
-        expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+        expectObservable(tildelEpos(action$, state$, <Dependencies>dependencies)).toBe(
           "-(txu)",
           observableValues
         );
@@ -283,7 +291,9 @@ describe("TILDEL 'Meg' epos", () => {
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
         const dependencies = {
-          post: (url: string) => of({}),
+          ajax: {
+            post: (url: string) => of({}),
+          },
         };
 
         const observableValues = {
@@ -307,13 +317,13 @@ describe("TILDEL 'Meg' epos", () => {
         };
 
         const state$ = new StateObservable(hot("-a", observableValues), {});
-        spyOn(dependencies, "post").and.returnValue(
+        spyOn(dependencies.ajax, "post").and.returnValue(
           throwError({
             message: "tildeling feilet",
             status: 503,
           })
         );
-        expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+        expectObservable(tildelEpos(action$, state$, <Dependencies>dependencies)).toBe(
           "-(txu)",
           observableValues
         );
@@ -336,7 +346,9 @@ describe("TILDEL 'Meg' epos", () => {
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
         const dependencies = {
-          post: (url: string) => of({}),
+          ajax: {
+            post: (url: string) => of({}),
+          },
         };
 
         const observableValues = {
@@ -360,13 +372,13 @@ describe("TILDEL 'Meg' epos", () => {
         };
 
         const state$ = new StateObservable(hot("-a", observableValues), {});
-        spyOn(dependencies, "post").and.returnValue(
+        spyOn(dependencies.ajax, "post").and.returnValue(
           throwError({
             message: "tildeling feilet",
             status: 503,
           })
         );
-        expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+        expectObservable(tildelEpos(action$, state$, <Dependencies>dependencies)).toBe(
           "-(txu)",
           observableValues
         );
@@ -389,7 +401,9 @@ describe("TILDEL 'Meg' epos", () => {
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
         const dependencies = {
-          post: (url: string) => of({}),
+          ajax: {
+            post: (url: string) => of({}),
+          },
         };
 
         const observableValues = {
@@ -415,12 +429,12 @@ describe("TILDEL 'Meg' epos", () => {
         };
 
         const state$ = new StateObservable(hot("a", observableValues), {});
-        spyOn(dependencies, "post").and.returnValue(
+        spyOn(dependencies.ajax, "post").and.returnValue(
           throwError({
             status: 503,
           })
         );
-        expectObservable(tildelEpos(action$, state$, <AjaxCreationMethod>dependencies)).toBe(
+        expectObservable(tildelEpos(action$, state$, <Dependencies>dependencies)).toBe(
           "-(txu)",
           observableValues
         );

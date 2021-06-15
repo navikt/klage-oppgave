@@ -6,19 +6,13 @@ import {
   hentOppgaverEpos,
   oppgaveRequest,
   MOTTATT,
-  RaderMedMetadata,
   RaderMedMetadataUtvidet,
-  oppgaveSlice,
   MottatteRader,
   OppgaveState,
-  OppgaveRad,
-  Transformasjoner,
 } from "./oppgave";
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
-import { AjaxCreationMethod } from "rxjs/internal-compatibility";
-import { hentMegEpos, hentMegHandling } from "./meg";
-import { RootStateOrAny } from "react-redux";
+import { Dependencies } from "../konfigurerTilstand";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
@@ -503,7 +497,9 @@ describe("Oppgave epos", () => {
         };
 
         const dependencies = {
-          getJSON: (url: string) => of(mockedResponse),
+          ajax: {
+            getJSON: (url: string) => of(mockedResponse),
+          },
         };
 
         const initState = {
@@ -533,11 +529,7 @@ describe("Oppgave epos", () => {
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = hentOppgaverEpos(
-          action$,
-          state$ as RootStateOrAny,
-          <AjaxCreationMethod>dependencies
-        );
+        const actual$ = hentOppgaverEpos(action$, state$, <Dependencies>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -584,7 +576,9 @@ describe("Oppgave epos", () => {
         };
 
         const dependencies = {
-          getJSON: (url: string) => of(mockedResponse),
+          ajax: {
+            getJSON: (url: string) => of(mockedResponse),
+          },
         };
 
         const initState = {
@@ -617,11 +611,7 @@ describe("Oppgave epos", () => {
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = hentOppgaverEpos(
-          action$,
-          state$ as RootStateOrAny,
-          <AjaxCreationMethod>dependencies
-        );
+        const actual$ = hentOppgaverEpos(action$, state$, <Dependencies>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -654,7 +644,9 @@ describe("Oppgave epos", () => {
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
         const dependencies = {
-          getJSON: (url: string) => of({}),
+          ajax: {
+            getJSON: (url: string) => of({}),
+          },
         };
 
         const initState = {
@@ -674,10 +666,11 @@ describe("Oppgave epos", () => {
         };
 
         const state$ = new StateObservable(hot("-a", observableValues), initState);
-        spyOn(dependencies, "getJSON").and.returnValue(throwError({ status: 503 }));
-        expectObservable(
-          hentOppgaverEpos(action$, state$ as RootStateOrAny, <AjaxCreationMethod>dependencies)
-        ).toBe("12001ms s", observableValues);
+        spyOn(dependencies.ajax, "getJSON").and.returnValue(throwError({ status: 503 }));
+        expectObservable(hentOppgaverEpos(action$, state$, <Dependencies>dependencies)).toBe(
+          "12001ms s",
+          observableValues
+        );
       });
     })
   );

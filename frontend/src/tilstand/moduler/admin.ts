@@ -1,11 +1,11 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { catchError, concatMap, map, mergeMap, retryWhen, switchMap } from "rxjs/operators";
-import { AjaxCreationMethod, ajaxPost } from "rxjs/internal-compatibility";
-import { concat, Observable, of } from "rxjs";
+import { catchError, map, retryWhen, switchMap } from "rxjs/operators";
+import { concat } from "rxjs";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { provIgjenStrategi } from "../../utility/rxUtils";
+import { Dependencies } from "../konfigurerTilstand";
 
 //==========
 // Interfaces
@@ -52,13 +52,14 @@ export const elasticResponse = createAction<any>("admin/ELASTIC_RESPONSE");
 export function adminEpos(
   action$: ActionsObservable<PayloadAction>,
   state$: StateObservable<RootStateOrAny>,
-  { post }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(gjenbyggElasticHandling.type),
     switchMap((action) => {
       const url = `/api/internal/elasticadmin/rebuild`;
-      return post(url, {}, { "Content-Type": "application/json" })
+      return ajax
+        .post(url, {}, { "Content-Type": "application/json" })
         .pipe(map((payload) => elasticResponse(payload)))
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),

@@ -1,14 +1,15 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react";
-import IkonSystem from "./icons/IkonSystem";
+import { useSelector } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
 import classNames from "classnames";
+import IkonSystem from "./icons/IkonSystem";
 import "./Header.less";
-import { useDispatch, useSelector } from "react-redux";
 import { valgtEnhet, velgEnheter, velgMeg } from "../../tilstand/moduler/meg.velgere";
 import { settEnhetHandling } from "../../tilstand/moduler/meg";
 import { useOnInteractOutside } from "../Tabell/FiltrerbarHeader";
 import styled from "styled-components";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
+import { useAppDispatch } from "../../tilstand/konfigurerTilstand";
 
 const BrukerBoks = styled.div`
   z-index: 2;
@@ -35,7 +36,7 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   const enhetNo = useSelector(valgtEnhet);
   const enheter = useSelector(velgEnheter);
   const person = useSelector(velgMeg);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const featureToggles = useSelector(velgFeatureToggles);
   const history = useHistory();
@@ -65,7 +66,6 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
 
   return (
     <BrukerBoks className={"bruker-boks"}>
-      <div style={{ color: "white" }}>{JSON.stringify(person.enhetId)}</div>
       <button
         className={classNames(aapen ? "header__lukkeknapp" : "header__aapneknapp")}
         onClick={() => setAapen((a) => !a)}
@@ -85,7 +85,10 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
           {enheter.map((enhet, index) => {
             return (
               <div
-                className={classNames({ enhet: true, active: person.enhetId == enhet.id })}
+                className={classNames({
+                  enhet: true,
+                  active: person.enheter[person.valgtEnhet].id === enhet.id,
+                })}
                 key={enhet.id}
               >
                 <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>

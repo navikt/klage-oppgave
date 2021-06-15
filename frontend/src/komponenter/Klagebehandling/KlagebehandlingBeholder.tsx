@@ -25,7 +25,7 @@ import CloseSVG from "../cancelblack.svg";
 import ExtLink from "../extlink.svg";
 import Behandlingsskjema from "./Behandlingsskjema/Behandlingsskjema";
 import { IFaner } from "./KlageBehandling";
-import FullforVedtak from "./Behandlingsskjema/FullforVedtak";
+import FullforVedtak from "./Behandlingsskjema/FullfoerVedtak/FullforVedtak";
 import { Checkbox } from "nav-frontend-skjema";
 
 export interface IDokument {
