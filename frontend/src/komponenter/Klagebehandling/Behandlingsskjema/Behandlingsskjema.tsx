@@ -108,7 +108,7 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
 }
 
 const Beholder = styled.section<{ skjult: boolean }>`
-  display: ${(props) => (props.skjult ? "grid" : "none")};
+  display: ${(props) => (props.skjult ? "none" : "grid")};
   margin: 0.25em 0.25em 0.25em 0.25em;
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
