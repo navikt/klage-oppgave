@@ -13,7 +13,6 @@ export const DokumenterBeholder = styled.section<{ fullvisning: boolean }>`
 
 export const DokumenterFullvisning = styled.div`
   display: flex;
-  height: 100%;
   overflow: auto;
   flex-flow: column;
 `;
