@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
+    "prestart": "npm test",
     "start": "env-cmd -f .env.development concurrently --kill-others \"tsc -w\" \"nodemon dist/server.js\"",
     "test": "env-cmd -f .env.test jest"
   },

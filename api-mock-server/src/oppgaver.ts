@@ -283,12 +283,9 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
     params.push(antall);
     db.all(sql, params, (err: any, rader: any) => {
       if (err) {
-        console.log(sql);
-        console.log(params);
         reject(err);
       }
 
-      console.log({ ferdigstiltFom });
       if (ferdigstiltFom) {
         resolve(
           rader.map((rad: any) => ({
