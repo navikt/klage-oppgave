@@ -38,7 +38,7 @@ const LagringsIndikator = (props: Props) => {
       <Popover
         ankerEl={anker}
         onRequestClose={() => setAnker(undefined)}
-        orientering={PopoverOrientering.OverHoyre}
+        orientering={PopoverOrientering.UnderHoyre}
       >
         <p style={{ padding: "16px" }}>Endringene lagres automatisk.</p>
       </Popover>
