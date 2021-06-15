@@ -6,6 +6,7 @@ import { concat, Observable, of } from "rxjs";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { RootState } from "../root";
+import { Dependencies } from "../konfigurerTilstand";
 
 //==========
 // Interfaces
@@ -112,7 +113,7 @@ const performSearch = (
 export function sokEpos(
   action$: ActionsObservable<PayloadAction<IPersonSokPayload>>,
   state$: StateObservable<RootState>,
-  { post }: AjaxCreationMethod
+  { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(startSok.type),
@@ -120,7 +121,7 @@ export function sokEpos(
     switchMap((action) => {
       return concat(
         of(SOK_LASTER(true)),
-        performSearch(action.payload, post),
+        performSearch(action.payload, ajax.post),
         of(SOK_LASTER(false))
       );
     })
