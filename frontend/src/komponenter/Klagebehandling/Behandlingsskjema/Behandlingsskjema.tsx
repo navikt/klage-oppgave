@@ -10,42 +10,6 @@ import { MottattFoersteinstans } from "./MottattFoersteinstans";
 import { useAppSelector } from "../../../tilstand/konfigurerTilstand";
 import { velgKlagebehandling } from "../../../tilstand/moduler/klagebehandling/selectors";
 
-const Kontainer = styled.div`
-  display: ${(props) => props.theme.display};
-  margin: 0.25em 0.25em 0.25em 0.25em;
-  background: white;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 4px;
-  width: ${(props) => props.theme.width};
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-`;
-
-const Detaljer = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const KlageBoks = styled.div`
-  width: 100%;
-  background: white;
-  padding: 1.5em 1.5em 0.25em 1.5em;
-  display: flex;
-  flex-direction: column;
-  > div {
-    flex-basis: 42px;
-  }
-
-  &:not(:first-child) {
-    border-left: 1px solid #c9c9c9;
-  }
-
-  h1 {
-    font-size: 1.25em;
-    font-weight: 600;
-  }
-`;
-
 function Klager() {
   const klagebehandling = useAppSelector(velgKlagebehandling);
   const info =
@@ -106,7 +70,7 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
   }
 
   return (
-    <Kontainer theme={{ display: !skjult ? "grid" : "none", width: "40em" }}>
+    <Beholder skjult={skjult}>
       <KlageBoks>
         <HeaderRow>
           <h1>Behandlingsdetaljer</h1>
@@ -139,6 +103,44 @@ export default function Behandlingsskjema({ skjult }: { skjult: boolean }) {
           <UtfallSkjema klagebehandling={klagebehandling} />
         </div>
       </KlageBoks>
-    </Kontainer>
+    </Beholder>
   );
 }
+
+const Beholder = styled.section<{ skjult: boolean }>`
+  display: ${(props) => (props.skjult ? "grid" : "none")};
+  margin: 0.25em 0.25em 0.25em 0.25em;
+  background: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  width: 40em;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  height: 100%;
+  overflow: scroll;
+`;
+
+const Detaljer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const KlageBoks = styled.div`
+  width: 100%;
+  background: white;
+  padding: 1.5em 1.5em 0.25em 1.5em;
+  display: flex;
+  flex-direction: column;
+  > div {
+    flex-basis: 42px;
+  }
+
+  &:not(:first-child) {
+    border-left: 1px solid #c9c9c9;
+  }
+
+  h1 {
+    font-size: 1.25em;
+    font-weight: 600;
+  }
+`;

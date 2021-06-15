@@ -38,6 +38,7 @@ export const KlagebehandlingBeholder = ({
 const SideBeholder = styled.div<{ grid: string }>`
   display: grid;
   grid-template-columns: ${({ grid }) => grid};
+  grid-template-rows: 100%;
   margin: 0 0.25em 0 0;
   height: calc(100% - 3em);
   max-height: 100%;

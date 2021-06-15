@@ -72,13 +72,14 @@ const FullBeholder = styled.section`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   position: relative;
+  overflow: hidden;
 `;
 
 const PreviewBeholder = styled.div`
   display: block;
   width: 100%;
-  max-height: 100%;
-  overflow: hidden;
+  height: 100%;
+  overflow: scroll;
 `;
 
 const Preview = styled.div`
