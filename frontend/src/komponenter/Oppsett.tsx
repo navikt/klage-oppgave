@@ -103,6 +103,11 @@ export default function Oppsett({
                 Mine&nbsp;Oppgaver
               </NavLink>
             </li>
+            <li>
+              <NavLink className="link" to="/sok">
+                Søk&nbsp;på&nbsp;person
+              </NavLink>
+            </li>
           </ul>
         </nav>
         <div className={`toaster ${visFeilmelding.display ? "active" : ""}`}>

@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import store from "./tilstand/konfigurerTilstand";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import MineSaker from "./komponenter/MineSaker";
+import Sok from "./komponenter/Sok";
 import AlleSaker from "./komponenter/AlleSaker";
 import Innstillinger from "./komponenter/Innstillinger";
 import { hentMegHandling } from "./tilstand/moduler/meg";
@@ -23,6 +24,7 @@ ReactDOM.render(
           <Route exact path="/oppgaver/:side" render={() => <AlleSaker />} />
           <Route exact path="/mineoppgaver" render={() => <MineSaker />} />
           <Route exact path="/mineoppgaver/:side" render={() => <MineSaker />} />
+          <Route exact path="/sok" render={() => <Sok />} />
           <Route exact path="/innstillinger" render={() => <Innstillinger />} />
           <Route exact path="/kvalitetsskjema" render={() => <Kvalitetsskjema />} />
           <Route exact path="/admin" render={() => <Admin />} />

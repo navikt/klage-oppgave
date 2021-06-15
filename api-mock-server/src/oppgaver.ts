@@ -76,8 +76,6 @@ export async function tildelSaksbehandler(params: ISaksbehandler) {
       [params.navIdent, params.oppgaveId, params.klagebehandlingVersjon],
       (err: any, rader: any) => {
         if (err) {
-          console.log(sql);
-          console.log(params);
           reject(err);
         }
         resolve(rader);
@@ -108,8 +106,6 @@ export async function fradelSaksbehandler(params: ISaksbehandler) {
       [params.oppgaveId, params.klagebehandlingVersjon],
       (err: any, rader: any) => {
         if (err) {
-          console.log(sql);
-          console.log(params);
           reject(err);
         }
         resolve(rader);
@@ -145,7 +141,6 @@ export async function toggleDokument({
   let erValgt = await new Promise((resolve, reject) =>
     db.all(fetch_sql, params, (err: any, rad: any) => {
       if (err) {
-        console.log({ fetch_sql, params });
         reject(err);
       }
       resolve(rad[0].valgt);
@@ -157,7 +152,6 @@ export async function toggleDokument({
   await new Promise((resolve, reject) =>
     db.run(endret_sql, params2, (err: any) => {
       if (err) {
-        console.log({ endret_sql, params });
         reject(err);
       }
       resolve("");
@@ -186,7 +180,6 @@ export async function toggleVedlegg({
   let erValgt = await new Promise((resolve, reject) =>
     db.all(fetch_sql, params, (err: any, rad: any) => {
       if (err) {
-        console.log({ fetch_sql, params });
         reject(err);
       }
       resolve(rad[0].valgt);
@@ -198,7 +191,6 @@ export async function toggleVedlegg({
   await new Promise((resolve, reject) =>
     db.run(endret_sql, params2, (err: any) => {
       if (err) {
-        console.log({ endret_sql, params });
         reject(err);
       }
       resolve("");
