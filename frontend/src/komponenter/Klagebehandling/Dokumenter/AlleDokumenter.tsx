@@ -114,13 +114,16 @@ export const AlleDokumenter = ({
               </DokumentSjekkboks>
               {dokument.vedlegg.length > 0 && (
                 <VedleggBeholder data-testid={"vedlegg"}>
-                  {dokument.vedlegg.map((vedlegg: any, idx: number) => (
+                  {dokument.vedlegg.map((vedlegg, idx) => (
                     <VedleggRad key={`vedlegg-${idx}${dokument.dokumentInfoId}`}>
                       <VedleggTittel
                         data-testid={`vedlegg-${idx}`}
                         onClick={() =>
-                          dokument.harTilgangTilArkivvariant
-                            ? settDokument(dokument)
+                          vedlegg.harTilgangTilArkivvariant
+                            ? settDokument({
+                                ...dokument,
+                                ...vedlegg,
+                              })
                             : console.error("ingen tilgang")
                         }
                       >
@@ -135,7 +138,12 @@ export const AlleDokumenter = ({
                             disabled={!dokument.harTilgangTilArkivvariant}
                             defaultChecked={dokument.tilknyttet}
                             className={"dokument-sjekkboks"}
-                            onClick={(e) => onCheck(e, dokument)}
+                            onClick={(e) =>
+                              onCheck(e, {
+                                ...dokument,
+                                ...vedlegg,
+                              })
+                            }
                           />
                         </RightAlign>
                       </DokumentSjekkboks>
