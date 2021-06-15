@@ -49,11 +49,8 @@ export const AlleDokumenter = ({
   const kanEndre = useKanEndre();
 
   const onCheck = useCallback(
-    (
-      { currentTarget }: React.MouseEvent<HTMLInputElement, MouseEvent>,
-      { tilknyttet, ...dokument }: ITilknyttetDokument
-    ) => {
-      dispatch(currentTarget.checked ? tilknyttDokument(dokument) : frakobleDokument(dokument));
+    (checked: boolean, { tilknyttet, ...dokument }: ITilknyttetDokument) => {
+      dispatch(checked ? tilknyttDokument(dokument) : frakobleDokument(dokument));
     },
     [dispatch]
   );
@@ -108,7 +105,7 @@ export const AlleDokumenter = ({
                     defaultChecked={dokument.tilknyttet}
                     checked={dokument.tilknyttet}
                     className={"dokument-sjekkboks"}
-                    onClick={(e) => onCheck(e, dokument)}
+                    onClick={(e) => onCheck(e.currentTarget.checked, dokument)}
                   />
                 </RightAlign>
               </DokumentSjekkboks>
@@ -139,7 +136,7 @@ export const AlleDokumenter = ({
                             defaultChecked={dokument.tilknyttet}
                             className={"dokument-sjekkboks"}
                             onClick={(e) =>
-                              onCheck(e, {
+                              onCheck(e.currentTarget.checked, {
                                 ...dokument,
                                 ...vedlegg,
                               })
