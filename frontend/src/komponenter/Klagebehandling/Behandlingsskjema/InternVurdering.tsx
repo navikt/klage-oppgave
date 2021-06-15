@@ -13,6 +13,7 @@ export function InternVurdering({ defaultValue, onChange }: InterfaceInternVurde
 
   return (
     <Textarea
+      data-testid="internVurdering"
       id="internVurdering"
       value={internVurdering}
       label="Vurdering av kvalitet for intern bruk:"
