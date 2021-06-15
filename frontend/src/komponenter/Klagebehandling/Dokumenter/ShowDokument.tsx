@@ -66,7 +66,7 @@ const options = {
 const FullBeholder = styled.section`
   display: block;
   min-width: 40em;
-  max-height: 100%;
+  height: 100%;
   margin: 0.25em 0.5em;
   background: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);

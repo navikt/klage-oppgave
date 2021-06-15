@@ -43,6 +43,8 @@ const SideBeholder = styled.div<{ grid: string }>`
   height: calc(100% - 3em);
   max-height: 100%;
   overflow-x: scroll;
+  overflow-y: hidden;
+  padding-bottom: 0.5em;
   @media screen and (max-width: 1400px) {
     height: calc(100% - 6.25em);
   }
