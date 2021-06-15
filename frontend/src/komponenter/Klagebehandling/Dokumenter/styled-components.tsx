@@ -17,10 +17,7 @@ export const DokumenterFullvisning = styled.div`
   flex-flow: column;
 `;
 
-export const DokumenterMinivisning = styled.div`
-  height: 100%;
-  overflow: auto;
-`;
+export const DokumenterMinivisning = styled.div``;
 
 export const Tilknyttet = styled.div`
   padding: 0.5em 1em;
