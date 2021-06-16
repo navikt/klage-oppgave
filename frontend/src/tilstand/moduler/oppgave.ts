@@ -495,6 +495,7 @@ export function hentUtgaatteFristerEpos(
   return action$.pipe(
     ofType(hentUtgatte.type),
     withLatestFrom(state$),
+    debounceTime(500),
     concatMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/antallklagebehandlingermedutgaattefrister`,
@@ -509,8 +510,8 @@ export function hentUtgaatteFristerEpos(
       );
       return hentUtgaatteFrister.pipe(
         retryWhen(provIgjenStrategi()),
-        catchError(() => {
-          return concat([
+        catchError(() =>
+          concat([
             feiletHandling("ukjent feil"),
             toasterSett({
               display: true,
@@ -518,8 +519,8 @@ export function hentUtgaatteFristerEpos(
               feilmelding: `Henting av utgåtte frister feilet`,
             }),
             toasterSkjul(),
-          ]);
-        })
+          ])
+        )
       );
     })
   );
