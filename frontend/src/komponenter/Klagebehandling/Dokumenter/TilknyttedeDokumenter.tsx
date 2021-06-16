@@ -6,7 +6,7 @@ import {
   Tilknyttet,
   TilknyttetDato,
   TilknyttetTittel,
-} from "./styled-components";
+} from "./styled-components/styled-components";
 
 interface TilknyttedeDokumenterProps {
   dokumenter: IDokument[];

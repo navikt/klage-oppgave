@@ -26,6 +26,7 @@ export interface IKodeverk {
   hjemmel: IKodeverkVerdi[];
   type: IKodeverkVerdi[];
   utfall: IKodeverkVerdi[];
+  grunn: IKodeverkVerdi[];
   grunnerPerUtfall: GrunnerPerUtfall[];
   hjemlerPerTema: IKodeverkVerdiMedHjemler[];
   hjemler: IKodeverkVerdi[];
@@ -44,13 +45,14 @@ export type IKodeverkState = {
 const initialState: IKodeverkState = {
   lasterKodeverk: true,
   kodeverk: {
-    utfall: [{ id: "", navn: "", beskrivelse: "" }],
-    hjemler: [{ id: "", navn: "", beskrivelse: "" }],
-    hjemlerPerTema: [{ temaId: "", hjemler: [{ id: "", navn: "", beskrivelse: "" }] }],
-    hjemmel: [{ id: "", navn: "", beskrivelse: "" }],
-    type: [{ id: "", navn: "", beskrivelse: "" }],
-    tema: [{ id: "", navn: "", beskrivelse: "" }],
-    grunnerPerUtfall: [{ utfallId: "", grunner: [{ id: "", navn: "", beskrivelse: "" }] }],
+    utfall: [],
+    hjemler: [],
+    hjemlerPerTema: [],
+    hjemmel: [],
+    type: [],
+    tema: [],
+    grunn: [],
+    grunnerPerUtfall: [],
   },
 };
 

@@ -10,7 +10,7 @@ import {
 import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
 import { velgKlagebehandling } from "../../../tilstand/moduler/klagebehandling/selectors";
 import { ShowDokument } from "./ShowDokument";
-import { DokumenterBeholder } from "./styled-components";
+import { DokumenterBeholder } from "./styled-components/styled-components";
 import { TilknyttedeDokumenter } from "./TilknyttedeDokumenter";
 import { DokumenterProps, ITilknyttetDokument } from "./typer";
 import { AlleDokumenter } from "./AlleDokumenter";

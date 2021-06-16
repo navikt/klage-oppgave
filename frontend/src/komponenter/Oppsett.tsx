@@ -8,7 +8,7 @@ interface LayoutType {
   backLink?: string;
   customClass?: string;
   contentClass?: string;
-  children: JSX.Element;
+  children: JSX.Element[] | JSX.Element;
 }
 
 import { useSelector } from "react-redux";
@@ -42,7 +42,6 @@ export default function Oppsett({
   const kodeverk = useSelector(velgKodeverk);
   const dispatch = useAppDispatch();
   const [generellTilgang, settTilgang] = useState<boolean | undefined>(undefined);
-  const history = useHistory();
 
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
