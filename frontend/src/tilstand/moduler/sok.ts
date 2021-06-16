@@ -76,7 +76,7 @@ const performSearch = (
   payload: IPersonSokPayload,
   post: { (url: string, body?: any, headers?: Object | undefined): Observable<AjaxResponse> }
 ) => {
-  const url = `/api/ansatte/${payload.navIdent}/klagebehandlinger/personsok`;
+  const url = `/api/ansatte/${payload.navIdent}/klagebehandlinger/personsoek`;
   let body = {
     fnr: payload.fnr,
     start: payload.start,
