@@ -3,8 +3,9 @@ import { Checkbox } from "nav-frontend-skjema";
 import { formattedDate } from "../../../domene/datofunksjoner";
 import { useAppDispatch, useAppSelector } from "../../../tilstand/konfigurerTilstand";
 import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
-import { List, ListItem } from "../List";
+import { List, ListItem } from "./styled-components/List";
 import {
+  DokumentCheckbox,
   DokumentDato,
   DokumenterFullvisning,
   DokumentRad,
@@ -16,7 +17,7 @@ import {
   VedleggBeholder,
   VedleggRad,
   VedleggTittel,
-} from "./styled-components";
+} from "./styled-components/styled-components";
 import { ITilknyttetDokument } from "./typer";
 import {
   velgDokumenterLoading,
@@ -28,7 +29,7 @@ import {
   hentDokumenter,
   tilknyttDokument,
 } from "../../../tilstand/moduler/dokumenter/actions";
-import { useKanEndre } from "../utils/useKlagebehandlingUpdater";
+import { useKanEndre } from "../utils/hooks";
 
 interface AlleDokumenterProps {
   dokumenter: ITilknyttetDokument[];
@@ -98,13 +99,12 @@ export const AlleDokumenter = ({
 
               <DokumentSjekkboks>
                 <RightAlign>
-                  <Checkbox
+                  <DokumentCheckbox
                     readOnly={!kanEndre}
                     label={""}
                     disabled={!dokument.harTilgangTilArkivvariant}
                     defaultChecked={dokument.tilknyttet}
                     checked={dokument.tilknyttet}
-                    className={"dokument-sjekkboks"}
                     onClick={(e) => onCheck(e.currentTarget.checked, dokument)}
                   />
                 </RightAlign>
@@ -129,12 +129,11 @@ export const AlleDokumenter = ({
 
                       <DokumentSjekkboks className={"dokument-sjekkboks"}>
                         <RightAlign>
-                          <Checkbox
+                          <DokumentCheckbox
                             readOnly={!kanEndre}
                             label={""}
                             disabled={!dokument.harTilgangTilArkivvariant}
                             defaultChecked={dokument.tilknyttet}
-                            className={"dokument-sjekkboks"}
                             onClick={(e) =>
                               onCheck(e.currentTarget.checked, {
                                 ...dokument,
