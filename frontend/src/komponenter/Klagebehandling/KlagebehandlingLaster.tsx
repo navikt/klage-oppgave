@@ -11,7 +11,6 @@ import {
   velgKlagebehandling,
   velgKlagebehandlingError,
 } from "../../tilstand/moduler/klagebehandling/selectors";
-import { velgKodeverk } from "../../tilstand/moduler/kodeverk.velgere";
 import Oppsett from "../Oppsett";
 import { Klagebehandling } from "./KlageBehandling";
 
@@ -20,7 +19,6 @@ export const KlagebehandlingLaster = () => {
   const dispatch = useAppDispatch();
   const klagebehandling = useAppSelector(velgKlagebehandling);
   const klagebehandlingError = useAppSelector(velgKlagebehandlingError);
-  const { lasterKodeverk } = useAppSelector(velgKodeverk);
 
   useEffect(() => {
     if (id.length > 0) {
