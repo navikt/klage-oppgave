@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Header } from "./Header/Header";
 import Alertstripe from "nav-frontend-alertstriper";
-import * as R from "ramda";
-
-interface LayoutType {
-  visMeny: boolean;
-  backLink?: string;
-  customClass?: string;
-  contentClass?: string;
-  children: JSX.Element[] | JSX.Element;
-}
-
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { NavLink, useHistory } from "react-router-dom";
@@ -22,10 +12,20 @@ import { velgExpire } from "../tilstand/moduler/token.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { hentExpiry } from "../tilstand/moduler/token";
-import { kodeverkRequest } from "../tilstand/moduler/oppgave";
-import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
 import { toasterSkjul } from "../tilstand/moduler/toaster";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
+import { hentKodeverk } from "../tilstand/moduler/kodeverk";
+import { velgKodeverk } from "../tilstand/moduler/kodeverk.velgere";
+
+const R = require("ramda");
+
+interface LayoutType {
+  visMeny: boolean;
+  backLink?: string;
+  customClass?: string;
+  contentClass?: string;
+  children: JSX.Element[] | JSX.Element;
+}
 
 export default function Oppsett({
   visMeny,
@@ -46,10 +46,15 @@ export default function Oppsett({
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
     dispatch(hentFeatureToggleHandling("klage.admin"));
+    dispatch(hentFeatureToggleHandling("klage.listFnr"));
+
     //sjekk innlogging
     dispatch(hentExpiry());
-    dispatch(kodeverkRequest());
-  }, []);
+    if (R.empty(kodeverk)) {
+      console.log(kodeverk);
+      dispatch(hentKodeverk());
+    }
+  }, [dispatch, hentKodeverk]);
   useEffect(() => {
     const interval = setInterval(() => {
       let expiration = expireTime;
@@ -76,7 +81,7 @@ export default function Oppsett({
   if (!generellTilgang) {
     return <div>Beklager, men din bruker har ikke tilgang til denne siden</div>;
   }
-  if (R.isEmpty(kodeverk)) {
+  if (R.isEmpty(kodeverk) || R.isEmpty(person.id)) {
     return <NavFrontendSpinner />;
   }
 
@@ -100,6 +105,11 @@ export default function Oppsett({
             <li>
               <NavLink className="link" to="/mineoppgaver">
                 Mine&nbsp;Oppgaver
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className="link" to="/sok">
+                Søk&nbsp;på&nbsp;person
               </NavLink>
             </li>
           </ul>

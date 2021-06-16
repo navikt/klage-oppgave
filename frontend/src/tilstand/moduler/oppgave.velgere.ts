@@ -20,6 +20,3 @@ export function velgSortering(state: RootState) {
 export function velgProjeksjon(state: RootState) {
   return state.klagebehandlinger.meta.projeksjon;
 }
-export function velgKodeverk(state: RootState) {
-  return state.klagebehandlinger.kodeverk;
-}

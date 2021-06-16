@@ -1,8 +1,7 @@
 import {
-  Filter,
   ferdigstilteRequest,
+  Filter,
   hentUtgatte,
-  kodeverkRequest,
   oppgaveRequest,
 } from "../../tilstand/moduler/oppgave";
 import { IKodeverkVerdi } from "../../tilstand/moduler/kodeverk";
@@ -15,11 +14,9 @@ import {
   velgMeg,
 } from "../../tilstand/moduler/meg.velgere";
 import {
-  velgOppgaver,
-  velgSideLaster,
-  velgProjeksjon,
-  velgKodeverk,
   velgFerdigstilteOppgaver,
+  velgOppgaver,
+  velgProjeksjon,
 } from "../../tilstand/moduler/oppgave.velgere";
 import { tildelMegHandling } from "../../tilstand/moduler/saksbehandler";
 import "../../stilark/Tabell.less";
@@ -28,36 +25,20 @@ import FiltrerbarHeader, { settFilter } from "./FiltrerbarHeader";
 import { valgtOppgaveType } from "../types";
 import { genererTabellRader } from "./tabellfunksjoner";
 import Paginering, { visAntallTreff } from "../Paginering/Paginering";
-import { useHistory, useParams, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import NavFrontendSpinner from "nav-frontend-spinner";
-import { routingRequest } from "../../tilstand/moduler/router";
 import { velgForrigeSti } from "../../tilstand/moduler/router.velgere";
-import { hentInnstillingerHandling, settInnstillingerHandling } from "../../tilstand/moduler/meg";
-import { hentFeatureToggleHandling } from "../../tilstand/moduler/unleash";
+import { hentInnstillingerHandling } from "../../tilstand/moduler/meg";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
 
 import filterReducer from "./filterReducer";
-import Debug from "./Debug";
-import styled from "styled-components";
-import { filter } from "rxjs/operators";
 import { velgOppgaveLaster } from "../../tilstand/moduler/oppgavelaster.velgere";
 import { settOppgaverLaster } from "../../tilstand/moduler/oppgavelaster";
+import { ParamTypes } from "./interfaces";
+import { Feil, FullforteOppgaver, IkkeFiltrerbarHeader } from "./Styled";
+import { velgKodeverk } from "../../tilstand/moduler/kodeverk.velgere";
 
 const R = require("ramda");
-
-const Feil = styled.div`
-  display: block;
-  margin: 0 1em;
-`;
-
-const IkkeFiltrerbarHeader = styled.th`
-  display: block;
-  padding: 1em;
-`;
-
-const FullforteOppgaver = styled.div`
-  margin: 4em 0 0 0;
-`;
 
 function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const dispatch = useDispatch();
@@ -70,14 +51,8 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const utvidetProjeksjon = useSelector(velgProjeksjon);
   const location = useLocation();
 
-  interface ParamTypes {
-    side: string | undefined;
-  }
-
   let { side } = useParams<ParamTypes>();
   let tolketStart = parseInt(side as string, 10) || 1;
-
-  const [forrigeStart, settForrigeStart] = useState<number>(1);
 
   const [hjemmelFilter, settHjemmelFilter] = useState<string[] | undefined>(undefined);
   const [forrigeHjemmelFilter, settForrigeHjemmelFilter] =
@@ -118,28 +93,15 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
     filter_state?.transformasjoner?.sortering?.frist || "synkende";
   const sorteringMottatt: "synkende" | "stigende" =
     filter_state?.transformasjoner?.sortering?.mottatt || "synkende";
-
-  /** NAVIDENT
-   * Vi ønsker å hente oppgaver når NAVIDENT og EnhetsID er satt
-   */
-  useEffect(() => {
-    if (meg.id) {
-      filter_dispatch({ type: "sett_navident", payload: meg });
-    }
-  }, [meg.id, location.pathname]);
-
-  /** UTVIDET PROJEKSJON
-   * Med dette flagget kommer det persondata fra kabal-api. Dette skal skrus
-   * på for "MINE OPPGAVER" og dersom det er skrudd på i featuretoggles.
-   */
   const [visFnr, settVisFnr] = useState<boolean>(location.pathname.startsWith("/mineoppgaver"));
+
   useEffect(() => {
-    dispatch(hentFeatureToggleHandling("klage.listFnr"));
-  }, []);
+    filter_dispatch({ type: "sett_navident", payload: meg });
+  }, [filter_dispatch, meg]);
 
   useEffect(() => {
     filter_dispatch({ type: "sett_projeksjon", payload: utvidetProjeksjon });
-  }, [utvidetProjeksjon]);
+  }, [utvidetProjeksjon, filter_dispatch]);
 
   useEffect(() => {
     const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.listFnr");
@@ -149,26 +111,18 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
         filter_dispatch({ type: "sett_projeksjon", payload: tilgangEnabled.isEnabled });
       }
     }
-  }, [featureToggles]);
+  }, [featureToggles, settVisFnr, filter_dispatch, location]);
 
-  const [innstillingerHentet, settInnstillingerHentet] = useState(false);
   useEffect(() => {
-    if (meg.id) {
-      if (!innstillingerHentet) {
-        settInnstillingerHentet(true);
-        dispatch(
-          hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id })
-        );
-      }
-    }
-  }, [valgtEnhetIdx, meg.id]);
+    dispatch(hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id }));
+  }, [meg, enheter, valgtEnhetIdx]);
 
   useEffect(() => {
     let lovligeTemaer: Filter[] = [];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: string | any) => {
-        if (kodeverk?.tema) {
-          let kodeverkTema = kodeverk.tema.filter(
+        if (kodeverk.kodeverk.tema) {
+          let kodeverkTema = kodeverk.kodeverk.tema.filter(
             (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
           )[0];
           if (kodeverkTema?.id)
@@ -187,7 +141,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       let temahjemler: IKodeverkVerdi[] = [];
       innstillinger.aktiveTemaer.map((tema: Filter) => {
         temahjemler = temahjemler.concat(
-          kodeverk.hjemlerPerTema.filter((_hjemler) => _hjemler.temaId === tema.value!)[0]
+          kodeverk.kodeverk.hjemlerPerTema.filter((_hjemler) => _hjemler.temaId === tema.value!)[0]
             ?.hjemler || []
         );
       });
@@ -198,16 +152,16 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       settGyldigeHjemler(hjemler);
     } else if (innstillinger?.aktiveHjemler) {
       settGyldigeHjemler(innstillinger.aktiveHjemler);
-    } else if (kodeverk.hjemmel) {
-      kodeverk.hjemmel.map((hjemmel: IKodeverkVerdi) => {
+    } else if (kodeverk.kodeverk.hjemmel) {
+      kodeverk.kodeverk.hjemmel.map((hjemmel: IKodeverkVerdi) => {
         hjemler.push({ label: hjemmel.beskrivelse, value: hjemmel.id.toString() });
       });
       settGyldigeHjemler(hjemler);
     }
 
     let typer: Filter[] = [];
-    if (kodeverk.type) {
-      kodeverk.type.map((verdi: IKodeverkVerdi) => {
+    if (kodeverk.kodeverk.type) {
+      kodeverk.kodeverk.type.map((verdi: IKodeverkVerdi) => {
         typer.push({ label: verdi.beskrivelse, value: verdi.id.toString() });
       });
       if (innstillinger?.aktiveTyper) settGyldigeTyper(innstillinger.aktiveTyper);
@@ -479,7 +433,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
   useEffect(() => {
     const ny_start = (tolketStart - 1) * antall;
-    settForrigeStart(filter_state.start);
     filter_dispatch({ type: "sett_start", payload: ny_start });
     settStart(ny_start);
   }, [antall, tolketStart, forrigeSti, location.pathname]);

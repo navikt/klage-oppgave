@@ -11,7 +11,6 @@ import {
   velgKlagebehandling,
   velgKlagebehandlingError,
 } from "../../tilstand/moduler/klagebehandling/selectors";
-import { hentKodeverk } from "../../tilstand/moduler/kodeverk";
 import { velgKodeverk } from "../../tilstand/moduler/kodeverk.velgere";
 import Oppsett from "../Oppsett";
 import { Klagebehandling } from "./KlageBehandling";
@@ -31,10 +30,6 @@ export const KlagebehandlingLaster = () => {
       dispatch(unloadKlagebehandling());
     };
   }, [id, dispatch]);
-
-  useEffect(() => {
-    dispatch(hentKodeverk());
-  }, []);
 
   if (id.length === 0 || klagebehandling === null || lasterKodeverk) {
     return (
