@@ -83,13 +83,7 @@ const performSearch = (
     antall: payload.antall,
   };
 
-  return post(
-    url,
-    {
-      body,
-    },
-    { "Content-Type": "application/json" }
-  )
+  return post(url, body, { "Content-Type": "application/json" })
     .pipe(map((payload) => SOK_RESPONSE(payload)))
     .pipe(
       retryWhen(provIgjenStrategi({ maksForsok: 1 })),

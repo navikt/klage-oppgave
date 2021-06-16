@@ -103,9 +103,16 @@ app.get("/kodeverk", (req, res) => {
   let kodeverk = JSON.parse(data);
   res.send(kodeverk);
 });
-app.get("/ansatte/:navIdent/klagebehandlinger/personsok", (req, res) => {
+app.get("/ansatte/:navIdent/klagebehandlinger/personsoek", (req, res) => {
   let navIdent = req.params?.navIdent;
   let { fnr, start, antall } = req.body;
+  res.send({
+    fnr,
+    start,
+    antall,
+    navIdent,
+    antallTrefftotalt: 0,
+  });
 });
 
 app.get("/klagebehandlinger/:id/detaljer", async (req, res) =>
