@@ -424,7 +424,6 @@ export function debounceOppgavehentingEpos(
   return action$.pipe(
     ofType(oppgaveRequest.type),
     mergeMap((action) => {
-      console.log("debounce");
       return concat(of(settOppgaverLaster()), of(oppgaveRequestReal(action.payload)));
     }),
     debounceTime(throttleWait)
@@ -454,7 +453,6 @@ export function hentOppgaverEpos(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
       );
-      console.log("hent real");
       const hentOppgaver = ajax
         .getJSON<RaderMedMetadata>(oppgaveUrl)
         .pipe(
@@ -481,7 +479,6 @@ export function hentOppgaverEpos(
         )
         .pipe(
           mergeMap((value) => {
-            console.log("ferdig lastet");
             return concat([value, settOppgaverFerdigLastet()]);
           })
         );
