@@ -31,7 +31,7 @@ export const KlagebehandlingLaster = () => {
     };
   }, [id, dispatch]);
 
-  if (id.length === 0 || klagebehandling === null || lasterKodeverk) {
+  if (id.length === 0 || klagebehandling === null) {
     return (
       <div style={{ margin: "40vh auto 0 auto" }}>
         <NavFrontendSpinner />
