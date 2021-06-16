@@ -19,12 +19,12 @@ import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
-import { settOppgaverFerdigLastet } from "./oppgavelaster";
+import { settOppgaverFerdigLastet, settOppgaverLaster } from "./oppgavelaster";
 import { Dependencies } from "../konfigurerTilstand";
 import { IKodeverkVerdi, IKodeverkVerdiMedHjemler } from "./kodeverk";
 
 const R = require("ramda");
-let throttleWait = 500;
+let throttleWait = 1500;
 
 //==========
 // Type defs
@@ -405,7 +405,7 @@ export function hentFullforteOppgaverEpos(
         )
         .pipe(
           mergeMap((value) => {
-            return concat([value, settOppgaverFerdigLastet()]);
+            return concat([value]);
           })
         );
       return hentOppgaver.pipe(
@@ -423,8 +423,22 @@ export function debounceOppgavehentingEpos(
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type),
-    debounceTime(throttleWait),
-    mergeMap((action) => of(oppgaveRequestReal(action.payload)))
+    mergeMap((action) => {
+      console.log("debounce");
+      return concat(of(settOppgaverLaster()), of(oppgaveRequestReal(action.payload)));
+    }),
+    debounceTime(throttleWait)
+  );
+}
+
+export function settLasterOppgaverEpos(
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
+  state$: StateObservable<RootStateOrAny>,
+  { ajax }: Dependencies
+) {
+  return action$.pipe(
+    ofType(oppgaveRequest.type),
+    switchMap(() => of(settOppgaverLaster()))
   );
 }
 
@@ -440,6 +454,7 @@ export function hentOppgaverEpos(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
       );
+      console.log("hent real");
       const hentOppgaver = ajax
         .getJSON<RaderMedMetadata>(oppgaveUrl)
         .pipe(
@@ -466,6 +481,7 @@ export function hentOppgaverEpos(
         )
         .pipe(
           mergeMap((value) => {
+            console.log("ferdig lastet");
             return concat([value, settOppgaverFerdigLastet()]);
           })
         );
@@ -521,5 +537,6 @@ export const OPPGAVER_EPICS = [
   hentFullforteOppgaverEpos,
   hentUtgaatteFristerEpos,
   hentOppgaverEpos,
+  settLasterOppgaverEpos,
   debounceOppgavehentingEpos,
 ];
