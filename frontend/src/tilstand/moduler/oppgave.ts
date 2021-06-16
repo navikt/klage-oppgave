@@ -335,7 +335,6 @@ export function hentEnkeltOppgaveEpos(
         action.payload
       );
       const hentOppgaver = ajax.getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
-        timeout(5000),
         map((klagebehandlinger) =>
           MOTTATT({
             start: action.payload.start,
@@ -364,10 +363,9 @@ export function hentKodeverk(
     ofType(kodeverkRequest.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      const hent = ajax.getJSON<any>("/api/kodeverk").pipe(
-        timeout(5000),
-        map((kodeverk) => HENTET_KODEVERK(kodeverk))
-      );
+      const hent = ajax
+        .getJSON<any>("/api/kodeverk")
+        .pipe(map((kodeverk) => HENTET_KODEVERK(kodeverk)));
       return hent.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => of(FEILET(error)))
@@ -391,7 +389,6 @@ export function hentFullforteOppgaverEpos(
       const hentOppgaver = ajax
         .getJSON<RaderMedMetadata>(oppgaveUrl)
         .pipe(
-          timeout(5000),
           map((klagebehandlinger) => {
             return MOTTATT_FERDIGSTILTE({
               start: action.payload.start,
@@ -504,7 +501,6 @@ export function hentUtgaatteFristerEpos(
         action.payload
       );
       const hentUtgaatteFrister = ajax.getJSON<{ antall: number }>(oppgaveUrl).pipe(
-        timeout(5000),
         map((response) =>
           HENTET_UGATTE({
             antall: response.antall,
