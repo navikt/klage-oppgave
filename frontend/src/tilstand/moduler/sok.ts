@@ -7,6 +7,7 @@ import { toasterSett, toasterSkjul } from "./toaster";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { RootState } from "../root";
 import { Dependencies } from "../konfigurerTilstand";
+import { OppgaveRad } from "./oppgave";
 
 //==========
 // Interfaces
@@ -35,6 +36,11 @@ interface IPersonSokPayload {
   projeksjon?: Projeksjon;
 }
 
+export interface IPersonResult {
+  antallTreffTotalt: number;
+  personer: any;
+}
+
 //==========
 // Reducer
 //==========
@@ -42,7 +48,10 @@ export const sokSlice = createSlice({
   name: "sok",
   initialState: {
     laster: false,
-    response: "",
+    response: {
+      antallTreffTotalt: 0,
+      personer: [],
+    },
   },
   reducers: {
     SOK: (state, action: PayloadAction) => {
@@ -56,7 +65,7 @@ export const sokSlice = createSlice({
       state.laster = action.payload;
       return state;
     },
-    SOK_RESPONSE: (state, action: PayloadAction<any>) => {
+    SOK_RESPONSE: (state, action: PayloadAction<IPersonResult>) => {
       state.laster = false;
       state.response = action.payload;
       return state;
@@ -84,7 +93,7 @@ const performSearch = (
   };
 
   return post(url, body, { "Content-Type": "application/json" })
-    .pipe(map((payload) => SOK_RESPONSE(payload)))
+    .pipe(map((payload) => SOK_RESPONSE(payload.response)))
     .pipe(
       retryWhen(provIgjenStrategi({ maksForsok: 1 })),
       catchError((error) => {
