@@ -103,7 +103,7 @@ app.get("/kodeverk", (req, res) => {
   let kodeverk = JSON.parse(data);
   res.send(kodeverk);
 });
-app.get("/ansatte/:navIdent/klagebehandlinger/personsoek", (req, res) => {
+app.post("/ansatte/:navIdent/klagebehandlinger/personsoek", (req, res) => {
   let navIdent = req.params?.navIdent;
   let { fnr, start, antall } = req.body;
   console.log({ fnr, start, antall, navIdent });
