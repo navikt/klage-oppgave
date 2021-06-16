@@ -36,57 +36,6 @@ export default function EksterneLenker({ id, fnr }: EksterneLenkerProps) {
           <Ikon alt="Ekstern lenke" src={ExtLink} />
         </Lenke2>
       </Knapperad>
-
-      <Knapperad>
-        <Lenke
-          target="_blank"
-          aria-label={"Ekstern lenke til Vedtaksløningen for denne personen"}
-          href={vedtaksEnvironment(window.location.hostname)}
-        >
-          Vedtaksløsning
-        </Lenke>
-        <Lenke2
-          target="_blank"
-          aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={vedtaksEnvironment(window.location.hostname)}
-        >
-          <Ikon alt="Ekstern lenke" src={ExtLink} />
-        </Lenke2>
-      </Knapperad>
-
-      <Knapperad>
-        <Lenke
-          target="_blank"
-          aria-label={"Ekstern lenke til A-inntekt for denne personen"}
-          href={aInntektEnvironment(window.location.hostname)}
-        >
-          A-inntekt
-        </Lenke>
-        <Lenke2
-          target="_blank"
-          aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={aInntektEnvironment(window.location.hostname)}
-        >
-          <Ikon alt="Ekstern lenke" src={ExtLink} />
-        </Lenke2>
-      </Knapperad>
-
-      <Knapperad>
-        <Lenke
-          target="_blank"
-          aria-label={"Ekstern lenke til Modia for denne personen"}
-          href={modiaEnvironment(window.location.hostname)}
-        >
-          Modia
-        </Lenke>
-        <Lenke2
-          target="_blank"
-          aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={modiaEnvironment(window.location.hostname)}
-        >
-          <Ikon alt="Ekstern lenke" src={ExtLink} />
-        </Lenke2>
-      </Knapperad>
     </Knapper>
   );
 }
