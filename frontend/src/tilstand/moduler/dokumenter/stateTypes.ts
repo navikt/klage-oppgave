@@ -1,9 +1,13 @@
 export interface IDokumenterState {
-  dokumenter: IDokument[];
-  tilknyttedeDokumenter: IDokument[];
+  dokumenter: IDokumentListe;
+  tilknyttedeDokumenter: IDokumentListe;
   pageReference: string | null;
-  loading: boolean;
   error: string | null;
+}
+
+export interface IDokumentListe {
+  loading: boolean;
+  dokumenter: IDokument[];
 }
 
 export interface IDokument {

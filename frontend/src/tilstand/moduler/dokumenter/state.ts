@@ -16,31 +16,45 @@ export const dokumenterSlice = createSlice({
   reducers: {
     NULLSTILL_DOKUMENTER: (state) => ({
       ...state,
-      dokumenter: [],
-      loading: false,
+      ...initialState,
     }),
-    LEGG_TIL_DOKUMENTER: (state, action: PayloadAction<IDokumenterRespons>) => ({
-      ...state,
-      dokumenter: [...state.dokumenter, ...action.payload.dokumenter],
-      pageReference: action.payload.pageReference,
-      loading: false,
-    }),
-    TILKNYTT_DOKUMENT: (state, action: PayloadAction<IDokument>) => {
-      state.tilknyttedeDokumenter.push(action.payload);
-      return state;
-    },
-    FRAKOBLE_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
-      state.tilknyttedeDokumenter = state.tilknyttedeDokumenter.filter(
-        ({ dokumentInfoId, journalpostId }) =>
-          dokumentInfoId !== payload.dokumentInfoId || journalpostId !== payload.journalpostId
-      );
+    LEGG_TIL_DOKUMENTER: (state, { payload }: PayloadAction<IDokumenterRespons>) => {
+      state.pageReference = payload.pageReference;
+      state.dokumenter.dokumenter = payload.dokumenter;
+      state.dokumenter.loading = false;
       return state;
     },
     SETT_TILKNYTTEDE_DOKUMENTER: (state, action: PayloadAction<IDokument[]>) => {
-      state.tilknyttedeDokumenter = action.payload;
+      state.tilknyttedeDokumenter.dokumenter = action.payload;
+      state.tilknyttedeDokumenter.loading = false;
       return state;
     },
-    LOADING: (state) => ({ ...state, loading: true }),
+    TILKNYTT_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
+      const exists = state.tilknyttedeDokumenter.dokumenter.some(
+        (e) =>
+          e.dokumentInfoId === payload.dokumentInfoId && e.journalpostId === payload.journalpostId
+      );
+      if (exists) {
+        return state;
+      }
+      state.tilknyttedeDokumenter.dokumenter.push(payload);
+      return state;
+    },
+    FRAKOBLE_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
+      state.tilknyttedeDokumenter.dokumenter = state.tilknyttedeDokumenter.dokumenter.filter(
+        ({ dokumentInfoId, journalpostId }) =>
+          !(dokumentInfoId === payload.dokumentInfoId && journalpostId === payload.journalpostId)
+      );
+      return state;
+    },
+    DOKUMENTER_LOADING: (state) => {
+      state.dokumenter.loading = true;
+      return state;
+    },
+    TILKNYTTEDE_DOKUMENTER_LOADING: (state) => {
+      state.tilknyttedeDokumenter.loading = true;
+      return state;
+    },
     ERROR: (state, action: PayloadAction<string>) => ({
       ...state,
       error: action.payload,
@@ -51,7 +65,8 @@ export const dokumenterSlice = createSlice({
 
 export const {
   LEGG_TIL_DOKUMENTER,
-  LOADING,
+  DOKUMENTER_LOADING,
+  TILKNYTTEDE_DOKUMENTER_LOADING,
   ERROR,
   NULLSTILL_DOKUMENTER,
   TILKNYTT_DOKUMENT,

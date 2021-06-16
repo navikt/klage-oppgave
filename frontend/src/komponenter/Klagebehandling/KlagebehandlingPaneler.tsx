@@ -24,9 +24,10 @@ export const KlagebehandlingPaneler = ({ faner, klagebehandling }: Klagebehandli
         skjult={!faner.dokumenter.checked}
         settFullvisning={settFullvisning}
         fullvisning={fullvisning}
+        klagebehandling={klagebehandling}
       />
-      <Behandlingsdetaljer skjult={!faner.detaljer.checked} />
-      <FullforVedtak skjult={!faner.vedtak.checked} />
+      <Behandlingsdetaljer skjult={!faner.detaljer.checked} klagebehandling={klagebehandling} />
+      <FullforVedtak skjult={!faner.vedtak.checked} klagebehandling={klagebehandling} />
     </SideBeholder>
   );
 };

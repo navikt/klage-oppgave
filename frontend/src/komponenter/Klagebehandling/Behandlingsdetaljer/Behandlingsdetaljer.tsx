@@ -2,19 +2,18 @@ import React from "react";
 import styled from "styled-components";
 import { HeaderRow } from "../../../styled-components/Row";
 import { Kvalitetsskjema } from "./Kvalitetsskjema/Kvalitetsskjema";
-import { useAppSelector } from "../../../tilstand/konfigurerTilstand";
-import { velgKlagebehandling } from "../../../tilstand/moduler/klagebehandling/selectors";
 import { Detaljer } from "./Detaljer/Detaljer";
 import { useKanEndre } from "../utils/hooks";
 import { ReadOnlyKvalitetsskjema } from "./ReadOnlyKvalitetsskjema/ReadOnlyKvalitetsskjema";
+import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
 
-export const Behandlingsdetaljer = ({ skjult }: { skjult: boolean }) => {
-  const klagebehandling = useAppSelector(velgKlagebehandling);
+interface BehandlingsdetaljerProps {
+  skjult: boolean;
+  klagebehandling: IKlagebehandling;
+}
+
+export const Behandlingsdetaljer = ({ skjult, klagebehandling }: BehandlingsdetaljerProps) => {
   const kanEndre = useKanEndre();
-
-  if (klagebehandling === null) {
-    return null;
-  }
 
   return (
     <Beholder skjult={skjult}>

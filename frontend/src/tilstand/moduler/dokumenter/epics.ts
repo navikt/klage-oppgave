@@ -18,17 +18,22 @@ import {
 } from "./actions";
 import {
   ERROR,
-  LOADING,
+  DOKUMENTER_LOADING,
   LEGG_TIL_DOKUMENTER,
   TILKNYTT_DOKUMENT,
   FRAKOBLE_DOKUMENT,
   SETT_TILKNYTTEDE_DOKUMENTER,
+  TILKNYTTEDE_DOKUMENTER_LOADING,
 } from "./state";
 import { IDokument } from "./stateTypes";
 import { IDokumenterParams, IDokumenterRespons } from "./types";
 
 export const loadingDokumenterEpic = (action$: ActionsObservable<PayloadAction<never>>) =>
-  action$.pipe(ofType(hentDokumenter.type), map(LOADING));
+  action$.pipe(ofType(hentDokumenter.type), map(DOKUMENTER_LOADING));
+
+export const loadingTilknyttedeDokumenterEpic = (
+  action$: ActionsObservable<PayloadAction<never>>
+) => action$.pipe(ofType(hentTilknyttedeDokumenter.type), map(TILKNYTTEDE_DOKUMENTER_LOADING));
 
 export const hentDokumenterEpic = (
   action$: ActionsObservable<PayloadAction<IDokumenterParams>>,

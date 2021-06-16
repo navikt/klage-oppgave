@@ -15,10 +15,9 @@ import vedtak, { VEDTAK_EPOS } from "./moduler/vedtak";
 import { MEDUNDERSKRIVERE_EPOS } from "./moduler/medunderskrivere/epics";
 import { medunderskrivere } from "./moduler/medunderskrivere/state";
 import kodeverk, { KODEVERK_EPICS } from "./moduler/kodeverk";
-import {
-  klagebehandling as klagebehandlingState,
-  KLAGEBEHANDLING_EPICS,
-} from "./moduler/klagebehandling/state";
+import { klagebehandling as klagebehandlingState } from "./moduler/klagebehandling/state";
+import { KLAGEBEHANDLING_EPICS } from "./moduler/klagebehandling/epics";
+
 import { dokumenter, DOKUMENTER_EPICS } from "./moduler/dokumenter/state";
 
 const epics = [

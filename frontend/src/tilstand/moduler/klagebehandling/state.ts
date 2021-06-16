@@ -14,6 +14,10 @@ export const klagebehandlingSlice = createSlice({
   name: "klagebehandling",
   initialState,
   reducers: {
+    UNLOAD_KLAGEBEHANDLING: (state) => ({
+      ...state,
+      ...initialState,
+    }),
     SETT_KLAGEBEHANDLING: (state, { payload }: PayloadAction<IKlagebehandling>) => ({
       ...state,
       lagretVersjon: createLagretVersjon({ ...payload, klagebehandlingId: payload.id }),
@@ -41,8 +45,18 @@ export const klagebehandlingSlice = createSlice({
         klagebehandling: { ...state.klagebehandling, ...action.payload },
       };
     },
-    TILKNYTT_DOKUMENT: (state, action: PayloadAction<TilknyttetDokument>) => {
-      state.klagebehandling?.tilknyttedeDokumenter.push(action.payload);
+    TILKNYTT_DOKUMENT: (state, { payload }: PayloadAction<TilknyttetDokument>) => {
+      if (state.klagebehandling === null) {
+        return state;
+      }
+      const exists = state.klagebehandling.tilknyttedeDokumenter.some(
+        ({ dokumentInfoId, journalpostId }) =>
+          dokumentInfoId === payload.dokumentInfoId && journalpostId === payload.journalpostId
+      );
+      if (exists) {
+        return state;
+      }
+      state.klagebehandling.tilknyttedeDokumenter.push(payload);
       return state;
     },
     FRAKOBLE_DOKUMENT: (state, { payload }: PayloadAction<TilknyttetDokument>) => {
@@ -99,6 +113,7 @@ export const klagebehandlingSlice = createSlice({
 });
 
 export const {
+  UNLOAD_KLAGEBEHANDLING,
   SETT_KLAGEBEHANDLING,
   OPPDATER_KLAGEBEHANDLING,
   TILKNYTT_DOKUMENT,
@@ -111,12 +126,6 @@ export const {
   LEDIG,
   ERROR,
 } = klagebehandlingSlice.actions;
-
-export const KLAGEBEHANDLING_EPICS = [
-  lagreKlagebehandlingEpic,
-  settOpptattEpic,
-  hentKlagebehandlingEpic,
-];
 
 export const klagebehandling = klagebehandlingSlice.reducer;
 

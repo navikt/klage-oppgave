@@ -1,9 +1,11 @@
 import { IDokumenterState } from "./stateTypes";
 
 export const initialState: IDokumenterState = {
-  dokumenter: [],
-  tilknyttedeDokumenter: [],
+  dokumenter: {
+    loading: false,
+    dokumenter: [],
+  },
+  tilknyttedeDokumenter: { loading: false, dokumenter: [] },
   pageReference: null,
-  loading: false,
   error: null,
 };
