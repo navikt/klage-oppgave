@@ -445,7 +445,7 @@ export function hentOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(oppgaveRequestReal.type),
-    mergeMap((action) => {
+    concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
@@ -495,7 +495,7 @@ export function hentUtgaatteFristerEpos(
   return action$.pipe(
     ofType(hentUtgatte.type),
     withLatestFrom(state$),
-    switchMap(([action, state]) => {
+    concatMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/antallklagebehandlingermedutgaattefrister`,
         action.payload
