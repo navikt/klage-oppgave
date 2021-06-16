@@ -1,9 +1,10 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { concat, of } from "rxjs";
+import { asyncScheduler, concat, of } from "rxjs";
+
 import {
-  auditTime,
+  throttleTime,
   catchError,
   concatMap,
   map,
@@ -21,8 +22,10 @@ import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
 import { settOppgaverFerdigLastet } from "./oppgavelaster";
 import { Dependencies } from "../konfigurerTilstand";
 import { IKodeverkVerdi, IKodeverkVerdiMedHjemler } from "./kodeverk";
+import { SchedulerLike } from "rxjs/src/internal/types";
 
 const R = require("ramda");
+let throttleWait = 500;
 
 //==========
 // Type defs
@@ -379,7 +382,7 @@ export function hentFullforteOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(ferdigstilteRequest.type),
-    auditTime(500),
+    throttleTime(throttleWait, asyncScheduler, { leading: false, trailing: true }),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
@@ -421,7 +424,7 @@ export function hentOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type, settEnhetHandling.type),
-    auditTime(500),
+    throttleTime(throttleWait, asyncScheduler, { leading: false, trailing: true }),
     concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
@@ -471,7 +474,7 @@ export function hentUtgaatteFristerEpos(
 ) {
   return action$.pipe(
     ofType(hentUtgatte.type),
-    auditTime(500),
+    throttleTime(throttleWait),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
