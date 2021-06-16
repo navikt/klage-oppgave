@@ -280,7 +280,6 @@ export const ferdigstilteRequest = createAction<OppgaveParams>("klagebehandlinge
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("klagebehandlinger/UTSNITT");
 export const oppgaveHentingFeilet = createAction("klagebehandlinger/FEILET");
 export const hentUtgatte = createAction<OppgaveParams>("klagebehandlinger/HENT_UTGAATTE");
-export const kodeverkRequest = createAction("klagebehandlinger/HENT_KODEVERK");
 
 //==========
 // Sortering og filtrering
@@ -347,26 +346,6 @@ export function hentEnkeltOppgaveEpos(
         )
       );
       return hentOppgaver.pipe(
-        retryWhen(provIgjenStrategi()),
-        catchError((error) => of(FEILET(error)))
-      );
-    })
-  );
-}
-
-export function hentKodeverk(
-  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>,
-  { ajax }: Dependencies
-) {
-  return action$.pipe(
-    ofType(kodeverkRequest.type),
-    withLatestFrom(state$),
-    switchMap(([action, state]) => {
-      const hent = ajax
-        .getJSON<any>("/api/kodeverk")
-        .pipe(map((kodeverk) => HENTET_KODEVERK(kodeverk)));
-      return hent.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => of(FEILET(error)))
       );
@@ -527,7 +506,6 @@ export function hentUtgaatteFristerEpos(
 }
 
 export const OPPGAVER_EPICS = [
-  hentKodeverk,
   hentFullforteOppgaverEpos,
   hentUtgaatteFristerEpos,
   hentOppgaverEpos,

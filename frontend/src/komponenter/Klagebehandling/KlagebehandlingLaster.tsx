@@ -11,8 +11,6 @@ import {
   velgKlagebehandling,
   velgKlagebehandlingError,
 } from "../../tilstand/moduler/klagebehandling/selectors";
-import { hentKodeverk } from "../../tilstand/moduler/kodeverk";
-import { velgKodeverk } from "../../tilstand/moduler/kodeverk.velgere";
 import Oppsett from "../Oppsett";
 import { Klagebehandling } from "./KlageBehandling";
 
@@ -21,7 +19,6 @@ export const KlagebehandlingLaster = () => {
   const dispatch = useAppDispatch();
   const klagebehandling = useAppSelector(velgKlagebehandling);
   const klagebehandlingError = useAppSelector(velgKlagebehandlingError);
-  const { lasterKodeverk } = useAppSelector(velgKodeverk);
 
   useEffect(() => {
     if (id.length > 0) {
@@ -32,11 +29,7 @@ export const KlagebehandlingLaster = () => {
     };
   }, [id, dispatch]);
 
-  useEffect(() => {
-    dispatch(hentKodeverk());
-  }, []);
-
-  if (id.length === 0 || klagebehandling === null || lasterKodeverk) {
+  if (id.length === 0 || klagebehandling === null) {
     return (
       <div style={{ margin: "40vh auto 0 auto" }}>
         <NavFrontendSpinner />

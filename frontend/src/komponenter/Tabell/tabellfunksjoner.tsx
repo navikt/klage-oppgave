@@ -11,9 +11,9 @@ import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 // @ts-ignore
 import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { formattedDate } from "../../domene/datofunksjoner";
-import { velgKodeverk } from "../../tilstand/moduler/oppgave.velgere";
 import styled from "styled-components";
 import MedunderskriverStatus from "./Medunderskriver";
+import { velgKodeverk } from "../../tilstand/moduler/kodeverk.velgere";
 
 const R = require("ramda");
 
@@ -124,17 +124,17 @@ const OppgaveTabellRad = ({
     <TableRow className="table-filter">
       <TableCell data-testid={`linkbehandling${it}`} onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${type}`}>
-          {kodeverk?.type
-            ? kodeverk?.type?.filter((h: IKodeverkVerdi) => h.id == type)[0]?.beskrivelse ??
-              `ukjent type ${type}`
+          {kodeverk?.kodeverk.type
+            ? kodeverk?.kodeverk.type?.filter((h: IKodeverkVerdi) => h.id == type)[0]
+                ?.beskrivelse ?? `ukjent type ${type}`
             : "mangler"}
         </EtikettBase>
       </TableCell>
       <TableCell onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${tema}`}>
-          {kodeverk?.tema
-            ? kodeverk?.tema?.filter((h: IKodeverkVerdi) => h.id == tema)[0]?.beskrivelse ??
-              `ukjent tema ${tema}`
+          {kodeverk?.kodeverk.tema
+            ? kodeverk?.kodeverk.tema?.filter((h: IKodeverkVerdi) => h.id == tema)[0]
+                ?.beskrivelse ?? `ukjent tema ${tema}`
             : "mangler"}
         </EtikettBase>
       </TableCell>
@@ -142,9 +142,9 @@ const OppgaveTabellRad = ({
       <TableCell onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${hjemmel}`}>
           {hjemmel
-            ? kodeverk?.hjemmel
-              ? kodeverk?.hjemmel?.filter((h: IKodeverkVerdi) => h.id == hjemmel)[0]?.beskrivelse ??
-                `ukjent hjemmel ${hjemmel}`
+            ? kodeverk?.kodeverk.hjemmel
+              ? kodeverk?.kodeverk.hjemmel?.filter((h: IKodeverkVerdi) => h.id == hjemmel)[0]
+                  ?.beskrivelse ?? `ukjent hjemmel ${hjemmel}`
               : "mangler"
             : "mangler"}
         </EtikettBase>

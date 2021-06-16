@@ -4,7 +4,7 @@ import FiltrerbarHeader, { settFilter } from "./Tabell/FiltrerbarHeader";
 import { IKodeverkVerdi } from "../tilstand/moduler/kodeverk";
 import { Filter } from "../tilstand/moduler/oppgave";
 import { useSelector } from "react-redux";
-import { velgFiltrering, velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
+import { velgFiltrering } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
 import { Knapp } from "nav-frontend-knapper";
 import {
@@ -20,6 +20,7 @@ import {
 } from "../tilstand/moduler/meg";
 import styled from "styled-components";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
+import { velgKodeverk } from "../tilstand/moduler/kodeverk.velgere";
 
 function initState(filter: Array<string> | undefined): Filter[] {
   if ("undefined" === typeof filter) {
@@ -63,8 +64,8 @@ const Innstillinger = (): JSX.Element => {
     let lovligeTemaer: Filter[] = [];
     if (enheter.length > 0) {
       enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: string | any) => {
-        if (kodeverk?.tema) {
-          let kodeverkTema = kodeverk.tema.filter(
+        if (kodeverk?.kodeverk.tema) {
+          let kodeverkTema = kodeverk.kodeverk.tema.filter(
             (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
           )[0];
           if (kodeverkTema?.id)
@@ -78,16 +79,16 @@ const Innstillinger = (): JSX.Element => {
     settLovligeTemaer(lovligeTemaer);
 
     let hjemler: Filter[] = [];
-    if (kodeverk.hjemmel) {
-      kodeverk.hjemmel.map((hjemmel: IKodeverkVerdi) => {
+    if (kodeverk.kodeverk.hjemmel) {
+      kodeverk.kodeverk.hjemmel.map((hjemmel: IKodeverkVerdi) => {
         hjemler.push({ label: hjemmel.beskrivelse, value: hjemmel.id.toString() });
       });
       settGyldigeHjemler(hjemler);
     }
 
     let typer: Filter[] = [];
-    if (kodeverk.type) {
-      kodeverk.type.map((verdi: IKodeverkVerdi) => {
+    if (kodeverk.kodeverk.type) {
+      kodeverk.kodeverk.type.map((verdi: IKodeverkVerdi) => {
         typer.push({ label: verdi.beskrivelse, value: verdi.id.toString() });
       });
       settGyldigeTyper(typer);

@@ -1,19 +1,19 @@
 import { useSelector } from "react-redux";
 import { IKodeverkVerdi } from "../tilstand/moduler/kodeverk";
-import { velgKodeverk } from "../tilstand/moduler/oppgave.velgere";
+import { velgKodeverk } from "../tilstand/moduler/kodeverk.velgere";
 
 export const temaOversettelse = (temaId?: string | null): string => {
   const kodeverk = useSelector(velgKodeverk);
-  if (kodeverk.tema && typeof temaId === "string") {
-    return kodeverk.tema.find((t: IKodeverkVerdi) => t.id == temaId)?.navn ?? "";
+  if (kodeverk.kodeverk.tema && typeof temaId === "string") {
+    return kodeverk.kodeverk.tema.find((t: IKodeverkVerdi) => t.id == temaId)?.navn ?? "";
   }
   return "";
 };
 
 export const typeOversettelse = (typeId?: string | null): string => {
   const kodeverk = useSelector(velgKodeverk);
-  if (kodeverk.type && typeof typeId === "string") {
-    return kodeverk.type.find((t: IKodeverkVerdi) => t.id == typeId)?.navn ?? "";
+  if (kodeverk.kodeverk.type && typeof typeId === "string") {
+    return kodeverk.kodeverk.type.find((t: IKodeverkVerdi) => t.id == typeId)?.navn ?? "";
   }
   return "";
 };

@@ -5,10 +5,12 @@ import { concat } from "rxjs";
 import {
   catchError,
   concatAll,
+  debounceTime,
   map,
   mergeMap,
   retryWhen,
   switchMap,
+  throttleTime,
   timeout,
   withLatestFrom,
 } from "rxjs/operators";
@@ -148,13 +150,11 @@ export const hentetHandling = createAction<Partial<MegType>>("meg/MEG_HENTET");
 export const settEnhetHandling = createAction<number>("meg/SETT_ENHET");
 export const hentetEnhetHandling = createAction<Array<IEnhetData>>("meg/ENHETER_HENTET");
 export const sattInnstillinger = createAction<IInnstillinger>("meg/INNSTILLINGER_SATT");
-export const hentInnstillingerHandling = createAction<IHentInnstilingerPayload>(
-  "meg/HENT_INNSTILLINGER"
-);
+export const hentInnstillingerHandling =
+  createAction<IHentInnstilingerPayload>("meg/HENT_INNSTILLINGER");
 export const hentetInnstillingerHandling = createAction<IInnstillinger>("meg/INNSTILLINGER_HENTET");
-export const settInnstillingerHandling = createAction<IInnstillingerPayload>(
-  "meg/INNSTILLINGER_SETT"
-);
+export const settInnstillingerHandling =
+  createAction<IInnstillingerPayload>("meg/INNSTILLINGER_SETT");
 export const feiletHandling = createAction<string>("meg/FEILET");
 
 //==========
@@ -255,8 +255,8 @@ export function hentInnstillingerEpos(
 ) {
   return action$.pipe(
     ofType(hentInnstillingerHandling.type),
-    withLatestFrom(state$),
-    mergeMap(([action]) => {
+    throttleTime(200),
+    mergeMap((action) => {
       return ajax
         .getJSON<IInnstillinger>(
           `${innstillingerUrl}/${action.payload.navIdent}/${action.payload.enhetId}`
