@@ -2,29 +2,34 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { concat, of } from "rxjs";
+
 import {
   catchError,
+  concatMap,
+  debounceTime,
   map,
   mergeMap,
   retryWhen,
   switchMap,
+  throttleTime,
   timeout,
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
-import { settEnhetHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
-import { settOppgaverFerdigLastet } from "./oppgavelaster";
+import { settOppgaverFerdigLastet, settOppgaverLaster } from "./oppgavelaster";
 import { Dependencies } from "../konfigurerTilstand";
 import { IKodeverkVerdi, IKodeverkVerdiMedHjemler } from "./kodeverk";
 
 const R = require("ramda");
+let throttleWait = 1500;
 
 //==========
 // Type defs
 //==========
+
 export interface OppgaveRad {
   id: string;
   person?: {
@@ -270,6 +275,7 @@ export const { HENTET_KODEVERK, MOTTATT_FERDIGSTILTE, MOTTATT, FEILET, HENTET_UG
   oppgaveSlice.actions;
 export const enkeltOppgave = createAction<OppgaveParams>("klagebehandlinger/HENT_ENKELTOPPGAVE");
 export const oppgaveRequest = createAction<OppgaveParams>("klagebehandlinger/HENT");
+export const oppgaveRequestReal = createAction<OppgaveParams>("klagebehandlinger/HENTER_OPPGAVER");
 export const ferdigstilteRequest = createAction<OppgaveParams>("klagebehandlinger/HENT_FULLFORTE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("klagebehandlinger/UTSNITT");
 export const oppgaveHentingFeilet = createAction("klagebehandlinger/FEILET");
@@ -329,7 +335,6 @@ export function hentEnkeltOppgaveEpos(
         action.payload
       );
       const hentOppgaver = ajax.getJSON<RaderMedMetadata>(oppgaveUrl).pipe(
-        timeout(5000),
         map((klagebehandlinger) =>
           MOTTATT({
             start: action.payload.start,
@@ -358,10 +363,9 @@ export function hentKodeverk(
     ofType(kodeverkRequest.type),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
-      const hent = ajax.getJSON<any>("/api/kodeverk").pipe(
-        timeout(5000),
-        map((kodeverk) => HENTET_KODEVERK(kodeverk))
-      );
+      const hent = ajax
+        .getJSON<any>("/api/kodeverk")
+        .pipe(map((kodeverk) => HENTET_KODEVERK(kodeverk)));
       return hent.pipe(
         retryWhen(provIgjenStrategi()),
         catchError((error) => of(FEILET(error)))
@@ -377,8 +381,7 @@ export function hentFullforteOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(ferdigstilteRequest.type),
-    withLatestFrom(state$),
-    switchMap(([action, state]) => {
+    switchMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
@@ -386,7 +389,6 @@ export function hentFullforteOppgaverEpos(
       const hentOppgaver = ajax
         .getJSON<RaderMedMetadata>(oppgaveUrl)
         .pipe(
-          timeout(5000),
           map((klagebehandlinger) => {
             return MOTTATT_FERDIGSTILTE({
               start: action.payload.start,
@@ -400,7 +402,7 @@ export function hentFullforteOppgaverEpos(
         )
         .pipe(
           mergeMap((value) => {
-            return concat([value, settOppgaverFerdigLastet()]);
+            return concat([value]);
           })
         );
       return hentOppgaver.pipe(
@@ -411,14 +413,39 @@ export function hentFullforteOppgaverEpos(
   );
 }
 
+export function debounceOppgavehentingEpos(
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
+  state$: StateObservable<RootStateOrAny>,
+  { ajax }: Dependencies
+) {
+  return action$.pipe(
+    ofType(oppgaveRequest.type),
+    mergeMap((action) => {
+      return concat(of(settOppgaverLaster()), of(oppgaveRequestReal(action.payload)));
+    }),
+    debounceTime(throttleWait)
+  );
+}
+
+export function settLasterOppgaverEpos(
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
+  state$: StateObservable<RootStateOrAny>,
+  { ajax }: Dependencies
+) {
+  return action$.pipe(
+    ofType(oppgaveRequest.type),
+    switchMap(() => of(settOppgaverLaster()))
+  );
+}
+
 export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>,
   { ajax }: Dependencies
 ) {
   return action$.pipe(
-    ofType(oppgaveRequest.type, settEnhetHandling.type),
-    switchMap((action) => {
+    ofType(oppgaveRequestReal.type),
+    concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
@@ -468,13 +495,13 @@ export function hentUtgaatteFristerEpos(
   return action$.pipe(
     ofType(hentUtgatte.type),
     withLatestFrom(state$),
-    switchMap(([action, state]) => {
+    debounceTime(500),
+    concatMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/antallklagebehandlingermedutgaattefrister`,
         action.payload
       );
       const hentUtgaatteFrister = ajax.getJSON<{ antall: number }>(oppgaveUrl).pipe(
-        timeout(5000),
         map((response) =>
           HENTET_UGATTE({
             antall: response.antall,
@@ -483,8 +510,8 @@ export function hentUtgaatteFristerEpos(
       );
       return hentUtgaatteFrister.pipe(
         retryWhen(provIgjenStrategi()),
-        catchError(() => {
-          return concat([
+        catchError(() =>
+          concat([
             feiletHandling("ukjent feil"),
             toasterSett({
               display: true,
@@ -492,8 +519,8 @@ export function hentUtgaatteFristerEpos(
               feilmelding: `Henting av utgåtte frister feilet`,
             }),
             toasterSkjul(),
-          ]);
-        })
+          ])
+        )
       );
     })
   );
@@ -504,4 +531,6 @@ export const OPPGAVER_EPICS = [
   hentFullforteOppgaverEpos,
   hentUtgaatteFristerEpos,
   hentOppgaverEpos,
+  settLasterOppgaverEpos,
+  debounceOppgavehentingEpos,
 ];

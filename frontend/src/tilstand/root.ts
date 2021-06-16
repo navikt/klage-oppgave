@@ -10,6 +10,7 @@ import featureToggles, { UNLEASH_EPICS } from "./moduler/unleash";
 import klagebehandling, { KLAGEBEHANDLING_EPOS } from "./moduler/klagebehandling";
 import token, { EXPIRE_EPICS } from "./moduler/token";
 import admin, { ADMIN_EPICS } from "./moduler/admin";
+import sok, { SOK_EPICS } from "./moduler/sok";
 import vedtak, { VEDTAK_EPOS } from "./moduler/vedtak";
 import { MEDUNDERSKRIVERE_EPOS } from "./moduler/medunderskrivere/epics";
 import { medunderskrivere } from "./moduler/medunderskrivere/state";
@@ -36,6 +37,7 @@ const epics = [
   ...KLAGEBEHANDLING_EPOS,
   ...KLAGEBEHANDLING_EPICS,
   ...DOKUMENTER_EPICS,
+  ...SOK_EPICS,
 ];
 export const rootEpic = combineEpics.apply(combineEpics, epics);
 
@@ -55,6 +57,7 @@ const rootReducer = combineReducers({
   medunderskrivere,
   kodeverk,
   dokumenter,
+  sok,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

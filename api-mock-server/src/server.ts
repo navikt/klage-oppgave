@@ -103,6 +103,15 @@ app.get("/kodeverk", (req, res) => {
   let kodeverk = JSON.parse(data);
   res.send(kodeverk);
 });
+app.post("/ansatte/:navIdent/klagebehandlinger/personsoek", (req, res) => {
+  let navIdent = req.params?.navIdent;
+  let { fnr, start, antall } = req.body;
+  let data = require("fs")
+    .readFileSync(path.resolve(__dirname, "../fixtures/personsok.json"))
+    .toString("utf8");
+  console.log({ fnr, start, antall, navIdent });
+  res.send(data);
+});
 
 app.get("/klagebehandlinger/:id/detaljer", async (req, res) =>
   res.send(klagebehandlingDetaljerView)
@@ -255,6 +264,7 @@ app.post(
       keepExtensions: true,
       maxFields: 3,
     });
+    // @ts-ignore
     form.parse(req, async (err, fields, files) => {
       if (typeof err !== "undefined" && err !== null) {
         console.error("Upload error", err);

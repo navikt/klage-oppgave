@@ -269,12 +269,8 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
     if (!filter_state.ident) {
       //todo dette er ikke riktig, ident skal ikke mangle
-      console.debug("%c mangler ident!", "background: #b00b55; color: #ffffff");
+      //console.debug("%c mangler ident!", "background: #b00b55; color: #ffffff");
       ident = meg.id;
-      if (enheter) {
-        console.debug(enheter);
-      }
-      //enhetId = meg?.enheter[meg?.valgtEnhet].id ||0;
     }
     if (ident && enhetId) {
       console.debug(
@@ -335,33 +331,34 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           },
         })
       );
-      dispatch(
-        ferdigstilteRequest({
-          ident: ident,
-          antall: filter_state.antall,
-          start: filter_state.start || 0,
-          enhetId: enhetId,
-          ferdigstiltFom: "2021-05-07",
-          projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
-          tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
-          transformasjoner: {
-            filtrering: {
-              hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
-              typer: toValue(filter_state.transformasjoner.filtrering.typer),
-              temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+      location.pathname.startsWith("/mineoppgaver") &&
+        dispatch(
+          ferdigstilteRequest({
+            ident: ident,
+            antall: filter_state.antall,
+            start: filter_state.start || 0,
+            enhetId: enhetId,
+            ferdigstiltFom: "2021-05-07",
+            projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
+            tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
+            transformasjoner: {
+              filtrering: {
+                hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
+                typer: toValue(filter_state.transformasjoner.filtrering.typer),
+                temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+              },
+              sortering: {
+                type: sortType,
+                frist:
+                  sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
+                mottatt:
+                  sortType === "mottatt"
+                    ? sortOrder
+                    : filter_state.transformasjoner.sortering.mottatt,
+              },
             },
-            sortering: {
-              type: sortType,
-              frist:
-                sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
-              mottatt:
-                sortType === "mottatt"
-                  ? sortOrder
-                  : filter_state.transformasjoner.sortering.mottatt,
-            },
-          },
-        })
-      );
+          })
+        );
     }
   };
 
@@ -459,16 +456,10 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           "%chenter oppgaver basert på endring/setting av filter ",
           "background: #af7; color: #222255"
         );
-        if (filter_state.transformasjoner.type === "frist")
-          dispatchTransformering({
-            sortType: filter_state.transformasjoner.sortering.type,
-            sortOrder: filter_state.transformasjoner.sortering.frist,
-          });
-        else
-          dispatchTransformering({
-            sortType: filter_state.transformasjoner.sortering.type,
-            sortOrder: filter_state.transformasjoner.sortering.mottatt,
-          });
+        dispatchTransformering({
+          sortType: filter_state.transformasjoner.sortering.type,
+          sortOrder: filter_state.transformasjoner.sortering.frist,
+        });
       }
     }
     settForrigeHjemmelFilter(hjemmelFilter);
@@ -478,17 +469,11 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
   useEffect(() => {
     if (filter_state.meta.kan_hente_oppgaver || start > -1) {
-      console.debug("%chenter oppgaver", "background: #222; color: #bada55");
-      if (filter_state.transformasjoner.type === "frist")
-        dispatchTransformering({
-          sortType: filter_state.transformasjoner.sortering.type,
-          sortOrder: filter_state.transformasjoner.sortering.frist,
-        });
-      else
-        dispatchTransformering({
-          sortType: filter_state.transformasjoner.sortering.type,
-          sortOrder: filter_state.transformasjoner.sortering.mottatt,
-        });
+      //console.debug("%chenter oppgaver", "background: #222; color: #bada55");
+      dispatchTransformering({
+        sortType: filter_state.transformasjoner.sortering.type,
+        sortOrder: filter_state.transformasjoner.sortering.frist,
+      });
     }
   }, [start, filter_state.meta.kan_hente_oppgaver, meg, enheter]);
 
