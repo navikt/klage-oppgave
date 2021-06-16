@@ -4,6 +4,7 @@ import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { concat, of } from "rxjs";
 import {
   catchError,
+  concatMap,
   map,
   mergeMap,
   retryWhen,
@@ -378,6 +379,7 @@ export function hentFullforteOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(ferdigstilteRequest.type),
+    throttleTime(500),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
@@ -420,7 +422,7 @@ export function hentOppgaverEpos(
   return action$.pipe(
     ofType(oppgaveRequest.type, settEnhetHandling.type),
     throttleTime(500),
-    switchMap((action) => {
+    concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
