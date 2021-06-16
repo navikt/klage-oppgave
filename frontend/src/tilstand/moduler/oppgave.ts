@@ -8,6 +8,7 @@ import {
   mergeMap,
   retryWhen,
   switchMap,
+  throttleTime,
   timeout,
   withLatestFrom,
 } from "rxjs/operators";
@@ -418,6 +419,7 @@ export function hentOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type, settEnhetHandling.type),
+    throttleTime(500),
     switchMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,

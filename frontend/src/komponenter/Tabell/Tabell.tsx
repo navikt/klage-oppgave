@@ -335,33 +335,34 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           },
         })
       );
-      dispatch(
-        ferdigstilteRequest({
-          ident: ident,
-          antall: filter_state.antall,
-          start: filter_state.start || 0,
-          enhetId: enhetId,
-          ferdigstiltFom: "2021-05-07",
-          projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
-          tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
-          transformasjoner: {
-            filtrering: {
-              hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
-              typer: toValue(filter_state.transformasjoner.filtrering.typer),
-              temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+      location.pathname.startsWith("/mineoppgaver") &&
+        dispatch(
+          ferdigstilteRequest({
+            ident: ident,
+            antall: filter_state.antall,
+            start: filter_state.start || 0,
+            enhetId: enhetId,
+            ferdigstiltFom: "2021-05-07",
+            projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
+            tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
+            transformasjoner: {
+              filtrering: {
+                hjemler: toValue(filter_state.transformasjoner.filtrering.hjemler),
+                typer: toValue(filter_state.transformasjoner.filtrering.typer),
+                temaer: toValue(filter_state.transformasjoner.filtrering.temaer),
+              },
+              sortering: {
+                type: sortType,
+                frist:
+                  sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
+                mottatt:
+                  sortType === "mottatt"
+                    ? sortOrder
+                    : filter_state.transformasjoner.sortering.mottatt,
+              },
             },
-            sortering: {
-              type: sortType,
-              frist:
-                sortType === "frist" ? sortOrder : filter_state.transformasjoner.sortering.frist,
-              mottatt:
-                sortType === "mottatt"
-                  ? sortOrder
-                  : filter_state.transformasjoner.sortering.mottatt,
-            },
-          },
-        })
-      );
+          })
+        );
     }
   };
 
