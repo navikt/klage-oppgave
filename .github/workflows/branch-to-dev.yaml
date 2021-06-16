@@ -62,6 +62,32 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: nais/dev.yaml
           VARS: nais/vars.yaml
+  deployprod:
+    name: Deploy to prod-gcp
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        name: Checkout code
+      - uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: nais/prod.yaml
+          VARS: nais/prod.json
+          SESSION_KEY: ${{ secrets.klage-session-key }}
+      - name: Generate release version
+        run: |
+          TIME=$(TZ="Europe/Oslo" date +%Y.%m.%d-%H.%M)
+          COMMIT=$(git rev-parse --short=7 HEAD)
+          VERSION=$TIME-$COMMIT
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: ${{ env.VERSION }}
   e2etest:
     name: E2E-test av deploy
     needs: deploytodev
