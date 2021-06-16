@@ -494,10 +494,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
     settForrigeStart(filter_state.start);
     filter_dispatch({ type: "sett_start", payload: ny_start });
     settStart(ny_start);
-    dispatchTransformering({
-      sortType: filter_state.transformasjoner.sortering.type,
-      sortOrder: filter_state.transformasjoner.sortering.mottatt,
-    });
   }, [antall, tolketStart, forrigeSti, location.pathname]);
 
   const filtrerType = (filtre: Filter[]) => {

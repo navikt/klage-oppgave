@@ -6,6 +6,7 @@ import { concat, of } from "rxjs";
 import {
   catchError,
   concatMap,
+  debounceTime,
   map,
   mergeMap,
   retryWhen,
@@ -16,7 +17,6 @@ import {
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
-import { settEnhetHandling } from "./meg";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
 import { settOppgaverFerdigLastet } from "./oppgavelaster";
@@ -275,6 +275,7 @@ export const { HENTET_KODEVERK, MOTTATT_FERDIGSTILTE, MOTTATT, FEILET, HENTET_UG
   oppgaveSlice.actions;
 export const enkeltOppgave = createAction<OppgaveParams>("klagebehandlinger/HENT_ENKELTOPPGAVE");
 export const oppgaveRequest = createAction<OppgaveParams>("klagebehandlinger/HENT");
+export const oppgaveRequestReal = createAction<OppgaveParams>("klagebehandlinger/HENTER_OPPGAVER");
 export const ferdigstilteRequest = createAction<OppgaveParams>("klagebehandlinger/HENT_FULLFORTE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("klagebehandlinger/UTSNITT");
 export const oppgaveHentingFeilet = createAction("klagebehandlinger/FEILET");
@@ -382,9 +383,7 @@ export function hentFullforteOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(ferdigstilteRequest.type),
-    throttleTime(throttleWait),
-    withLatestFrom(state$),
-    switchMap(([action, state]) => {
+    switchMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
@@ -417,15 +416,26 @@ export function hentFullforteOppgaverEpos(
   );
 }
 
+export function debounceOppgavehentingEpos(
+  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
+  state$: StateObservable<RootStateOrAny>,
+  { ajax }: Dependencies
+) {
+  return action$.pipe(
+    ofType(oppgaveRequest.type),
+    debounceTime(throttleWait),
+    mergeMap((action) => of(oppgaveRequestReal(action.payload)))
+  );
+}
+
 export function hentOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>,
   { ajax }: Dependencies
 ) {
   return action$.pipe(
-    ofType(oppgaveRequest.type, settEnhetHandling.type),
-    throttleTime(throttleWait),
-    concatMap((action) => {
+    ofType(oppgaveRequestReal.type),
+    mergeMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
         action.payload
@@ -474,7 +484,6 @@ export function hentUtgaatteFristerEpos(
 ) {
   return action$.pipe(
     ofType(hentUtgatte.type),
-    throttleTime(throttleWait),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
@@ -512,4 +521,5 @@ export const OPPGAVER_EPICS = [
   hentFullforteOppgaverEpos,
   hentUtgaatteFristerEpos,
   hentOppgaverEpos,
+  debounceOppgavehentingEpos,
 ];
