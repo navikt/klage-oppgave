@@ -469,6 +469,7 @@ export function hentUtgaatteFristerEpos(
 ) {
   return action$.pipe(
     ofType(hentUtgatte.type),
+    throttleTime(500),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
