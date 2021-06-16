@@ -1,16 +1,16 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
-import { asyncScheduler, concat, of } from "rxjs";
+import { concat, of } from "rxjs";
 
 import {
-  throttleTime,
   catchError,
   concatMap,
   map,
   mergeMap,
   retryWhen,
   switchMap,
+  throttleTime,
   timeout,
   withLatestFrom,
 } from "rxjs/operators";
@@ -22,7 +22,6 @@ import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
 import { settOppgaverFerdigLastet } from "./oppgavelaster";
 import { Dependencies } from "../konfigurerTilstand";
 import { IKodeverkVerdi, IKodeverkVerdiMedHjemler } from "./kodeverk";
-import { SchedulerLike } from "rxjs/src/internal/types";
 
 const R = require("ramda");
 let throttleWait = 500;
@@ -30,6 +29,7 @@ let throttleWait = 500;
 //==========
 // Type defs
 //==========
+
 export interface OppgaveRad {
   id: string;
   person?: {
@@ -382,7 +382,7 @@ export function hentFullforteOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(ferdigstilteRequest.type),
-    throttleTime(throttleWait, asyncScheduler, { leading: false, trailing: true }),
+    throttleTime(throttleWait),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
@@ -424,7 +424,7 @@ export function hentOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type, settEnhetHandling.type),
-    throttleTime(throttleWait, asyncScheduler, { leading: false, trailing: true }),
+    throttleTime(throttleWait),
     concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
