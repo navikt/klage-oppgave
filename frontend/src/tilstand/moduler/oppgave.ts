@@ -5,11 +5,11 @@ import { concat, of } from "rxjs";
 import {
   catchError,
   concatMap,
-  debounceTime,
   map,
   mergeMap,
   retryWhen,
   switchMap,
+  throttleTime,
   timeout,
   withLatestFrom,
 } from "rxjs/operators";
@@ -379,7 +379,7 @@ export function hentFullforteOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(ferdigstilteRequest.type),
-    debounceTime(500),
+    throttleTime(50),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
@@ -421,7 +421,7 @@ export function hentOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type, settEnhetHandling.type),
-    debounceTime(500),
+    throttleTime(50),
     concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
@@ -452,7 +452,7 @@ export function hentOppgaverEpos(
           })
         )
         .pipe(
-          map((value) => {
+          mergeMap((value) => {
             return concat([value, settOppgaverFerdigLastet()]);
           })
         );
@@ -471,7 +471,7 @@ export function hentUtgaatteFristerEpos(
 ) {
   return action$.pipe(
     ofType(hentUtgatte.type),
-    debounceTime(500),
+    throttleTime(50),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(

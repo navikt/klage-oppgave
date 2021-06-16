@@ -36,7 +36,24 @@ interface IPersonSokPayload {
   projeksjon?: Projeksjon;
 }
 
-export interface IPersonResult {
+interface Person {
+  id: string;
+  person: any;
+  type: number;
+  tema: number;
+  hjemmel: string;
+  mottatt: string;
+  klagebehandlingVersjon: number;
+  erMedunderskriver: boolean;
+  harMedunderskriver: boolean;
+  medunderskriverident?: string;
+  utfall?: string;
+  avsluttetAvSaksbehandler?: boolean;
+  erTildelt?: boolean;
+  tildeltSaksbehandlerident: string;
+}
+
+interface IPersonResult {
   antallTreffTotalt: number;
   personer: any;
 }
@@ -67,7 +84,10 @@ export const sokSlice = createSlice({
     },
     SOK_RESPONSE: (state, action: PayloadAction<IPersonResult>) => {
       state.laster = false;
-      state.response = action.payload;
+      state.response = {
+        antallTreffTotalt: action.payload.antallTreffTotalt,
+        personer: action.payload.personer ?? [],
+      };
       return state;
     },
   },
