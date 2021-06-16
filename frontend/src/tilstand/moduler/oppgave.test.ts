@@ -4,7 +4,7 @@ import { marbles } from "rxjs-marbles/jest";
 import {
   buildQuery,
   hentOppgaverEpos,
-  oppgaveRequest,
+  oppgaveRequestReal,
   MOTTATT,
   RaderMedMetadataUtvidet,
   MottatteRader,
@@ -457,7 +457,7 @@ describe("Oppgave epos", () => {
         const expectedMarble = "(cd)-";
 
         const inputValues = {
-          a: oppgaveRequest({
+          a: oppgaveRequestReal({
             ident: "ZATHRAS",
             enhetId: "42",
             antall: 2,
@@ -543,7 +543,7 @@ describe("Oppgave epos", () => {
         const expectedMarble = "(cd)-";
 
         const inputValues = {
-          a: oppgaveRequest({
+          a: oppgaveRequestReal({
             ident: "ZATHRAS",
             enhetId: "42",
             antall: 5,
@@ -622,7 +622,7 @@ describe("Oppgave epos", () => {
     marbles(() => {
       ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
         const inputValues = {
-          a: oppgaveRequest({
+          a: oppgaveRequestReal({
             ident: "ZATHRAS",
             enhetId: "42",
             antall: 5,
