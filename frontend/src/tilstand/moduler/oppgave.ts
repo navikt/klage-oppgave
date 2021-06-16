@@ -3,13 +3,13 @@ import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { concat, of } from "rxjs";
 import {
+  auditTime,
   catchError,
   concatMap,
   map,
   mergeMap,
   retryWhen,
   switchMap,
-  throttleTime,
   timeout,
   withLatestFrom,
 } from "rxjs/operators";
@@ -379,7 +379,7 @@ export function hentFullforteOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(ferdigstilteRequest.type),
-    throttleTime(50),
+    auditTime(100),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
@@ -421,7 +421,7 @@ export function hentOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type, settEnhetHandling.type),
-    throttleTime(50),
+    auditTime(100),
     concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
@@ -471,7 +471,7 @@ export function hentUtgaatteFristerEpos(
 ) {
   return action$.pipe(
     ofType(hentUtgatte.type),
-    throttleTime(50),
+    auditTime(100),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
