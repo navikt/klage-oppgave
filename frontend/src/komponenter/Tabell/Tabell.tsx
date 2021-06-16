@@ -269,12 +269,8 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
     if (!filter_state.ident) {
       //todo dette er ikke riktig, ident skal ikke mangle
-      console.debug("%c mangler ident!", "background: #b00b55; color: #ffffff");
+      //console.debug("%c mangler ident!", "background: #b00b55; color: #ffffff");
       ident = meg.id;
-      if (enheter) {
-        console.debug(enheter);
-      }
-      //enhetId = meg?.enheter[meg?.valgtEnhet].id ||0;
     }
     if (ident && enhetId) {
       console.debug(
@@ -479,7 +475,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
   useEffect(() => {
     if (filter_state.meta.kan_hente_oppgaver || start > -1) {
-      console.debug("%chenter oppgaver", "background: #222; color: #bada55");
+      //console.debug("%chenter oppgaver", "background: #222; color: #bada55");
       if (filter_state.transformasjoner.type === "frist")
         dispatchTransformering({
           sortType: filter_state.transformasjoner.sortering.type,
@@ -498,6 +494,10 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
     settForrigeStart(filter_state.start);
     filter_dispatch({ type: "sett_start", payload: ny_start });
     settStart(ny_start);
+    dispatchTransformering({
+      sortType: filter_state.transformasjoner.sortering.type,
+      sortOrder: filter_state.transformasjoner.sortering.mottatt,
+    });
   }, [antall, tolketStart, forrigeSti, location.pathname]);
 
   const filtrerType = (filtre: Filter[]) => {
