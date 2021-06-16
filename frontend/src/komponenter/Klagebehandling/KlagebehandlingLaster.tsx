@@ -3,7 +3,10 @@ import React, { useEffect } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../tilstand/konfigurerTilstand";
-import { hentKlagebehandling } from "../../tilstand/moduler/klagebehandling/actions";
+import {
+  hentKlagebehandling,
+  unloadKlagebehandling,
+} from "../../tilstand/moduler/klagebehandling/actions";
 import {
   velgKlagebehandling,
   velgKlagebehandlingError,
@@ -24,7 +27,10 @@ export const KlagebehandlingLaster = () => {
     if (id.length > 0) {
       dispatch(hentKlagebehandling(id));
     }
-  }, [id]);
+    return () => {
+      dispatch(unloadKlagebehandling());
+    };
+  }, [id, dispatch]);
 
   useEffect(() => {
     dispatch(hentKodeverk());

@@ -6,8 +6,15 @@ import { provIgjenStrategi } from "../../../utility/rxUtils";
 import { Dependencies } from "../../konfigurerTilstand";
 import { RootState } from "../../root";
 import { toasterSett, toasterSkjul } from "../toaster";
-import { hentKlagebehandling, lagreKlagebehandling } from "./actions";
-import { ERROR, KLAGEBEHANDLING_LAGRET, LEDIG, OPPTATT, SETT_KLAGEBEHANDLING } from "./state";
+import { hentKlagebehandling, lagreKlagebehandling, unloadKlagebehandling } from "./actions";
+import {
+  ERROR,
+  KLAGEBEHANDLING_LAGRET,
+  LEDIG,
+  OPPTATT,
+  SETT_KLAGEBEHANDLING,
+  UNLOAD_KLAGEBEHANDLING,
+} from "./state";
 import { IKlagebehandling } from "./stateTypes";
 import {
   IKlagebehandlingOppdatering,
@@ -26,6 +33,12 @@ export interface IKlagebehandlingPayload {
   utfall: string | null;
   tilknyttedeDokumenter: TilknyttetDokument[];
 }
+
+export const unloadKlagebehandlingEpic = (
+  action$: ActionsObservable<PayloadAction<never>>,
+  _: StateObservable<RootState> | null,
+  __: Dependencies
+) => action$.pipe(ofType(unloadKlagebehandling.type), map(UNLOAD_KLAGEBEHANDLING));
 
 export const settOpptattEpic = (
   action$: ActionsObservable<PayloadAction<IKlagebehandlingOppdatering>>,
@@ -119,3 +132,10 @@ export const hentKlagebehandlingEpic = (
         )
     )
   );
+
+export const KLAGEBEHANDLING_EPICS = [
+  lagreKlagebehandlingEpic,
+  settOpptattEpic,
+  hentKlagebehandlingEpic,
+  unloadKlagebehandlingEpic,
+];

@@ -1,18 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
-import NavFrontendSpinner from "nav-frontend-spinner";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../tilstand/konfigurerTilstand";
 import {
-  velgDokumenter,
-  velgDokumenterLoading,
-  velgDokumenterPageReference,
+  velgAlleDokumenter,
   velgTilknyttedeDokumenter,
 } from "../../../tilstand/moduler/dokumenter/selectors";
 import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
-import { velgKlagebehandling } from "../../../tilstand/moduler/klagebehandling/selectors";
 import { ShowDokument } from "./ShowDokument";
 import { DokumenterBeholder } from "./styled-components/styled-components";
 import { TilknyttedeDokumenter } from "./TilknyttedeDokumenter";
-import { DokumenterProps, ITilknyttetDokument } from "./typer";
 import { AlleDokumenter } from "./AlleDokumenter";
 import {
   hentDokumenter,
@@ -20,48 +15,45 @@ import {
 } from "../../../tilstand/moduler/dokumenter/actions";
 import { NULLSTILL_DOKUMENTER } from "../../../tilstand/moduler/dokumenter/state";
 import { Header } from "./Header";
+import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
 
-export const Dokumenter = (props: DokumenterProps) => {
+export interface DokumenterProps {
+  skjult: boolean;
+  settFullvisning: (fullvisning: boolean) => void;
+  fullvisning: boolean;
+  klagebehandling: IKlagebehandling;
+}
+
+export const Dokumenter = ({
+  skjult,
+  settFullvisning,
+  fullvisning,
+  klagebehandling,
+}: DokumenterProps) => {
   const dispatch = useAppDispatch();
-  const klagebehandling = useAppSelector(velgKlagebehandling);
-  const loading = useAppSelector(velgDokumenterLoading);
-  const dokumenter = useAppSelector(velgDokumenter);
+  const alleDokumenter = useAppSelector(velgAlleDokumenter);
   const tilknyttedeDokumenter = useAppSelector(velgTilknyttedeDokumenter);
-  const pageReference = useAppSelector(velgDokumenterPageReference);
   const [dokument, settDokument] = useState<IDokument | null>(null);
 
-  const alleDokumenter = useMemo<ITilknyttetDokument[]>(
-    () =>
-      dokumenter.map((dokument) => ({
-        ...dokument,
-        tilknyttet:
-          klagebehandling?.tilknyttedeDokumenter.some((t) => dokumentMatcher(t, dokument)) ?? false,
-      })),
-    [dokumenter, klagebehandling?.tilknyttedeDokumenter]
-  );
-
   useEffect(() => {
-    if (klagebehandling !== null) {
-      dispatch(hentDokumenter({ klagebehandlingId: klagebehandling.id, pageReference }));
-      dispatch(hentTilknyttedeDokumenter(klagebehandling.id));
-    }
+    dispatch(hentDokumenter({ klagebehandlingId: klagebehandling.id, pageReference: null }));
+    dispatch(hentTilknyttedeDokumenter(klagebehandling.id));
     return () => {
       dispatch(NULLSTILL_DOKUMENTER());
     };
-  }, [klagebehandling?.id]);
+  }, [klagebehandling.id, dispatch]);
 
-  if (props.skjult) {
+  const visDokument = useCallback(
+    (dokument: IDokument) => {
+      if (dokument.harTilgangTilArkivvariant) {
+        settDokument(dokument);
+      }
+    },
+    [settDokument]
+  );
+
+  if (skjult) {
     return null;
-  }
-
-  const { settFullvisning, fullvisning } = props;
-
-  if (klagebehandling === null || (loading && dokumenter.length === 0)) {
-    return (
-      <DokumenterBeholder fullvisning={fullvisning}>
-        <NavFrontendSpinner />
-      </DokumenterBeholder>
-    );
   }
 
   return (
@@ -71,13 +63,14 @@ export const Dokumenter = (props: DokumenterProps) => {
         <TilknyttedeDokumenter
           skjult={fullvisning}
           dokumenter={tilknyttedeDokumenter}
-          settDokument={settDokument}
+          visDokument={visDokument}
+          klagebehandling={klagebehandling}
         />
         <AlleDokumenter
           skjult={!fullvisning}
           dokumenter={alleDokumenter}
-          settDokument={settDokument}
-          klagebehandlingId={klagebehandling.id}
+          visDokument={visDokument}
+          klagebehandling={klagebehandling}
         />
       </DokumenterBeholder>
       <ShowDokument
@@ -88,11 +81,3 @@ export const Dokumenter = (props: DokumenterProps) => {
     </>
   );
 };
-
-interface ComparableDokument {
-  dokumentInfoId: string | null;
-  journalpostId: string;
-}
-
-const dokumentMatcher = (a: ComparableDokument, b: ComparableDokument) =>
-  a.dokumentInfoId === b.dokumentInfoId && a.journalpostId === b.journalpostId;

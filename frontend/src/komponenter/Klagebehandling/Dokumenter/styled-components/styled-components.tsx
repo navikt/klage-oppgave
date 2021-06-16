@@ -18,9 +18,14 @@ export const DokumenterFullvisning = styled.div`
   flex-flow: column;
 `;
 
-export const DokumenterMinivisning = styled.div``;
+export const DokumenterMinivisning = styled.ul`
+  display: block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
 
-export const Tilknyttet = styled.div`
+export const Tilknyttet = styled.li`
   padding: 0.5em 1em;
 `;
 
@@ -28,9 +33,10 @@ export const TilknyttetDato = styled.div`
   font-size: 12px;
 `;
 
-export const TilknyttetTittel = styled.div`
+export const TilknyttetTittel = styled.div<{ tilknyttet: boolean }>`
   font-size: 16px;
   color: #0067c5;
+  text-decoration: ${(props) => (props.tilknyttet ? "none" : "line-through")};
 `;
 
 export const RightAlign = styled.div`
