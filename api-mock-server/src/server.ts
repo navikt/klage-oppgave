@@ -2,14 +2,7 @@ import { App } from "@tinyhttp/app";
 import { logger } from "@tinyhttp/logger";
 import { cors } from "@tinyhttp/cors";
 import formidable, { File } from "formidable";
-import {
-  filtrerOppgaver,
-  fradelSaksbehandler,
-  ISaksbehandler,
-  tildelSaksbehandler,
-  toggleDokument,
-  toggleVedlegg,
-} from "./oppgaver";
+import { filtrerOppgaver, toggleDokument, toggleVedlegg } from "./oppgaver";
 import { OppgaveQuery } from "./types";
 import fs from "fs";
 import path from "path";
@@ -119,34 +112,41 @@ app.get("/klagebehandlinger/:id/detaljer", async (req, res) =>
 
 app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
   const query = req.query;
-  let forrigeSide = query.forrigeSide || undefined;
+  const forrigeSide =
+    typeof query.forrigeSide === "string" ? query.forrigeSide : "";
   let pageReference: string | null;
   let start: number;
 
-  if (forrigeSide == "null") {
-    pageReference = "side1";
-    start = 0;
-  } else if (forrigeSide == "side1") {
-    pageReference = "side2";
-    start = 10;
-  } else if (forrigeSide == "side2") {
-    pageReference = "side3";
-    start = 20;
-  } else if (forrigeSide == "side3") {
-    pageReference = "side4";
-    start = 30;
-  } else {
-    start = 40;
-    pageReference = null;
+  switch (forrigeSide) {
+    case "":
+      pageReference = "side1";
+      start = 0;
+      break;
+    case "side1":
+      pageReference = "side2";
+      start = 10;
+      break;
+    case "side2":
+      pageReference = "side3";
+      start = 20;
+      break;
+    case "side3":
+      pageReference = "side4";
+      start = 30;
+      break;
+    default:
+      start = 40;
+      pageReference = null;
+      break;
   }
 
-  let data = await hentDokumenter(start);
-  res.send({
-    forrigeSide,
-    dokumenter: data,
+  const dokumenter = await hentDokumenter(start);
+  res.json({
+    dokumenter,
     pageReference,
   });
 });
+
 app.get("/klagebehandlinger/:id/dokumenter", async (req, res) => {
   const data = fs.readFileSync(
     path.resolve(__dirname, "../fixtures/dokumenter.json"),
