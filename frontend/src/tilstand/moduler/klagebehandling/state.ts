@@ -66,7 +66,7 @@ export const klagebehandlingSlice = createSlice({
       state.klagebehandling.tilknyttedeDokumenter =
         state.klagebehandling.tilknyttedeDokumenter.filter(
           ({ dokumentInfoId, journalpostId }) =>
-            dokumentInfoId !== payload.dokumentInfoId && journalpostId !== payload.journalpostId
+            !(dokumentInfoId === payload.dokumentInfoId && journalpostId === payload.journalpostId)
         );
       return state;
     },
