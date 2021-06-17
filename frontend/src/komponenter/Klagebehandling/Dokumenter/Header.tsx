@@ -9,13 +9,7 @@ interface HeaderProps {
 export const Header = ({ fullvisning, settFullvisning }: HeaderProps) => (
   <DokumenterNav>
     <DokumenterTittel>Dokumenter</DokumenterTittel>
-    <VisTilknyttedeKnapp
-      onClick={() => {
-        settFullvisning(!fullvisning);
-        // props.settDokumentGrid("15.5em 1fr 1fr 1fr");
-        // props.settDokumentGrid("1fr 1fr 1fr 1fr");
-      }}
-    >
+    <VisTilknyttedeKnapp onClick={() => settFullvisning(!fullvisning)}>
       {getText(fullvisning)}
     </VisTilknyttedeKnapp>
   </DokumenterNav>
@@ -39,6 +33,7 @@ const DokumenterTittel = styled.h1`
 `;
 
 const VisTilknyttedeKnapp = styled.button`
+  cursor: pointer;
   margin: 0 0.75em 1em 0.75em;
   padding: 0.3em 0.55em;
   height: 2em;
