@@ -6,13 +6,10 @@ import { concat, of } from "rxjs";
 import {
   catchError,
   concatMap,
-  debounceTime,
   map,
   mergeMap,
   retryWhen,
   switchMap,
-  throttleTime,
-  timeout,
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
@@ -275,7 +272,6 @@ export const { HENTET_KODEVERK, MOTTATT_FERDIGSTILTE, MOTTATT, FEILET, HENTET_UG
   oppgaveSlice.actions;
 export const enkeltOppgave = createAction<OppgaveParams>("klagebehandlinger/HENT_ENKELTOPPGAVE");
 export const oppgaveRequest = createAction<OppgaveParams>("klagebehandlinger/HENT");
-export const oppgaveRequestReal = createAction<OppgaveParams>("klagebehandlinger/HENTER_OPPGAVER");
 export const ferdigstilteRequest = createAction<OppgaveParams>("klagebehandlinger/HENT_FULLFORTE");
 export const oppgaverUtsnitt = createAction<[OppgaveRad]>("klagebehandlinger/UTSNITT");
 export const oppgaveHentingFeilet = createAction("klagebehandlinger/FEILET");
@@ -392,20 +388,6 @@ export function hentFullforteOppgaverEpos(
   );
 }
 
-export function debounceOppgavehentingEpos(
-  action$: ActionsObservable<PayloadAction<OppgaveParams>>,
-  state$: StateObservable<RootStateOrAny>,
-  { ajax }: Dependencies
-) {
-  return action$.pipe(
-    ofType(oppgaveRequest.type),
-    mergeMap((action) => {
-      return concat(of(settOppgaverLaster()), of(oppgaveRequestReal(action.payload)));
-    }),
-    debounceTime(throttleWait)
-  );
-}
-
 export function settLasterOppgaverEpos(
   action$: ActionsObservable<PayloadAction<OppgaveParams>>,
   state$: StateObservable<RootStateOrAny>,
@@ -423,7 +405,7 @@ export function hentOppgaverEpos(
   { ajax }: Dependencies
 ) {
   return action$.pipe(
-    ofType(oppgaveRequestReal.type),
+    ofType(oppgaveRequest.type),
     concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
@@ -474,7 +456,6 @@ export function hentUtgaatteFristerEpos(
   return action$.pipe(
     ofType(hentUtgatte.type),
     withLatestFrom(state$),
-    debounceTime(500),
     concatMap(([action, state]) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/antallklagebehandlingermedutgaattefrister`,
@@ -510,5 +491,4 @@ export const OPPGAVER_EPICS = [
   hentUtgaatteFristerEpos,
   hentOppgaverEpos,
   settLasterOppgaverEpos,
-  debounceOppgavehentingEpos,
 ];
