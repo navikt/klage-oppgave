@@ -311,13 +311,13 @@ app.post(
 
       res.status(200).json({
         id: "UUID",
-        name: vedlegg.name,
-        size: vedlegg.size,
-        uploadedDate: new Date().toISOString(),
-        content: fs.readFileSync(
-          path.resolve(__dirname, "../fixtures/testdocument.pdf"),
-          { encoding: "base64" }
-        ),
+        modified: new Date().toISOString(),
+        klagebehandlingVersjon: 0,
+        file: {
+          name: vedlegg.name,
+          size: vedlegg.size,
+          opplastet: new Date().toISOString(),
+        },
       });
     });
   }
