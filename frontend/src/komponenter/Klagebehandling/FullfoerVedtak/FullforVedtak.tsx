@@ -13,13 +13,18 @@ interface FullforVedtakProps {
   klagebehandling: IKlagebehandling;
 }
 
-export const FullforVedtak = ({ skjult, klagebehandling }: FullforVedtakProps) => (
-  <Beholder skjult={skjult}>
-    <Title>Fullfør vedtak</Title>
-    <VisVedlegg klagebehandling={klagebehandling} />
-    <SlettVedlegg klagebehandling={klagebehandling} />
-    <LastOppVedlegg klagebehandling={klagebehandling} />
-    <VelgOgSendTilMedunderskriver klagebehandling={klagebehandling} />
-    <GodkjennOgSendUtVedtak klagebehandling={klagebehandling} />
-  </Beholder>
-);
+export const FullforVedtak = ({ skjult, klagebehandling }: FullforVedtakProps) => {
+  if (skjult) {
+    return null;
+  }
+  return (
+    <Beholder>
+      <Title>Fullfør vedtak</Title>
+      <VisVedlegg klagebehandling={klagebehandling} />
+      <SlettVedlegg klagebehandling={klagebehandling} />
+      <LastOppVedlegg klagebehandling={klagebehandling} />
+      <VelgOgSendTilMedunderskriver klagebehandling={klagebehandling} />
+      <GodkjennOgSendUtVedtak klagebehandling={klagebehandling} />
+    </Beholder>
+  );
+};

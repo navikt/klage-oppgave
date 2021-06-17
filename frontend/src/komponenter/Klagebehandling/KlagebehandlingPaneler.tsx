@@ -33,20 +33,14 @@ export const KlagebehandlingPaneler = ({ faner, klagebehandling }: Klagebehandli
 };
 
 const SideBeholder = styled.div<{ grid: string }>`
-  display: grid;
-  grid-template-columns: ${({ grid }) => grid};
-  grid-template-rows: 100%;
+  display: flex;
   margin: 0 0.25em 0 0;
   height: calc(100% - 3em);
-  max-height: 100%;
   overflow-x: scroll;
   overflow-y: hidden;
   padding-bottom: 0.5em;
+
   @media screen and (max-width: 1400px) {
     height: calc(100% - 6.25em);
-  }
-
-  &.skjult {
-    display: none;
   }
 `;
