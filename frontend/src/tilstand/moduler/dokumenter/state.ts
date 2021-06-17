@@ -20,7 +20,7 @@ export const dokumenterSlice = createSlice({
     }),
     LEGG_TIL_DOKUMENTER: (state, { payload }: PayloadAction<IDokumenterRespons>) => {
       state.pageReference = payload.pageReference;
-      state.dokumenter.dokumenter = payload.dokumenter;
+      state.dokumenter.dokumenter.concat(payload.dokumenter);
       state.dokumenter.loading = false;
       return state;
     },
