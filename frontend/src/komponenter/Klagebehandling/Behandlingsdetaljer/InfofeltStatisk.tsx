@@ -16,6 +16,6 @@ export const InfofeltStatisk = ({ header, info }: InfofeltProps) => (
 const Info = styled.div`
   p {
     margin: 0;
-    white-space: pre;
+    white-space: pre-wrap;
   }
 `;
