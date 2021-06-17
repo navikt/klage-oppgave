@@ -25,26 +25,6 @@ const app = new App()
 
 const port = 3000; // default port to listen
 
-async function hentOppgaver() {
-  const sqlite3 = require("sqlite3");
-  let db = new sqlite3.Database("./oppgaver.db");
-  let sql = `SELECT Id, frist FROM Oppgaver LIMIT 10`;
-  return new Promise((resolve, reject) => {
-    db.all(sql, (err: any, rad: any) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(rad);
-    });
-    db.close((err: { message: string }) => {
-      if (err) {
-        console.error(err.message);
-      }
-      console.log("Close the database connection.");
-    });
-  });
-}
-
 async function hentDokumenter(offset: number) {
   const sqlite3 = require("sqlite3");
   let db = new sqlite3.Database("./oppgaver.db");
@@ -323,17 +303,6 @@ app.post(
   }
 );
 
-app.post("/klagebehandlinger/:oppgaveid/dokumenter", async (req, res) => {
-  res.status(200).send("OK");
-});
-
-app.post(
-  "/klagebehandlinger/:klagebehandlingid/vedtak/:vedtakid/vedlegg",
-  async (req, res) => {
-    res.status(200).send("OK");
-  }
-);
-
 app.put(
   "/klagebehandlinger/:klagebehandlingid/detaljer/editerbare",
   async (req, res) => {
@@ -432,7 +401,6 @@ app.get("/me", (req, res) => {
 app.listen(
   port,
   () => {
-    /*tslint:disable*/
     console.log(`server started at http://localhost:${port}`);
   },
   "0.0.0.0"
