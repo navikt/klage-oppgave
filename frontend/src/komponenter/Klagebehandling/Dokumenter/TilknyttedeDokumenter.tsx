@@ -49,7 +49,9 @@ export const TilknyttedeDokumenter = ({
     <DokumenterMinivisning>
       {tilknyttedeDokumenter.map(({ dokument, tilknyttet }) => (
         <Tilknyttet key={dokument.journalpostId + dokument.dokumentInfoId}>
-          <TilknyttetDato>{formattedDate(dokument.registrert)}</TilknyttetDato>
+          <TilknyttetDato dateTime={dokument.registrert}>
+            {formattedDate(dokument.registrert)}
+          </TilknyttetDato>
           <TilknyttetTittel tilknyttet={tilknyttet} onClick={() => visDokument(dokument)}>
             {dokument.tittel}
           </TilknyttetTittel>
