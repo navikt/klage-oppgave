@@ -20,7 +20,7 @@ export const Behandlingsdetaljer = ({ skjult, klagebehandling }: Behandlingsdeta
   }
 
   return (
-    <Beholder skjult={skjult}>
+    <Beholder>
       <KlageBoks>
         <Detaljer />
       </KlageBoks>
