@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from "react";
+import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../../domene/datofunksjoner";
 import { useAppDispatch, useAppSelector } from "../../../tilstand/konfigurerTilstand";
 import {
@@ -6,33 +7,33 @@ import {
   IDokumentListe,
   IDokumentVedlegg,
 } from "../../../tilstand/moduler/dokumenter/stateTypes";
-import { List, ListItem } from "./styled-components/List";
-import {
-  DokumentCheckbox,
-  DokumentDato,
-  DokumenterFullvisning,
-  DokumentRad,
-  DokumentSjekkboks,
-  DokumentTema,
-  DokumentTittel,
-  RightAlign,
-  TemaText,
-  VedleggBeholder,
-  VedleggRad,
-  VedleggTittel,
-} from "./styled-components/styled-components";
 import { ITilknyttetDokument, ITilknyttetVedlegg } from "./typer";
 import { velgDokumenterPageReference } from "../../../tilstand/moduler/dokumenter/selectors";
-import { Knapp } from "nav-frontend-knapper";
 import {
   frakobleDokument,
   hentDokumenter,
   tilknyttDokument,
 } from "../../../tilstand/moduler/dokumenter/actions";
 import { useKanEndre } from "../utils/hooks";
-import NavFrontendSpinner from "nav-frontend-spinner";
 import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
 import { dokumentMatcher } from "./helpers";
+import {
+  DokumenterFullvisning,
+  DokumentCheckbox,
+  DokumentDato,
+  DokumentRad,
+  DokumentSjekkboks,
+  DokumentTema,
+  DokumentTittel,
+  List,
+  ListItem,
+  RightAlign,
+  TemaText,
+  VedleggBeholder,
+  VedleggRad,
+  VedleggTittel,
+  StyledLastFlereKnapp,
+} from "./styled-components/fullvisning";
 
 interface AlleDokumenterProps {
   dokumenter: IDokumentListe;
@@ -53,14 +54,10 @@ export const AlleDokumenter = ({
 
   const alleDokumenter = useMemo<ITilknyttetDokument[]>(
     () =>
-      dokumenter.loading
-        ? []
-        : dokumenter.dokumenter.map((dokument) => ({
-            dokument,
-            tilknyttet: klagebehandling.tilknyttedeDokumenter.some((t) =>
-              dokumentMatcher(t, dokument)
-            ),
-          })),
+      dokumenter.dokumenter.map((dokument) => ({
+        dokument,
+        tilknyttet: klagebehandling.tilknyttedeDokumenter.some((t) => dokumentMatcher(t, dokument)),
+      })),
     [dokumenter.dokumenter, dokumenter.loading, klagebehandling.tilknyttedeDokumenter]
   );
 
@@ -82,7 +79,7 @@ export const AlleDokumenter = ({
     return null;
   }
 
-  if (dokumenter.loading) {
+  if (dokumenter.loading && alleDokumenter.length === 0) {
     return <NavFrontendSpinner />;
   }
 
@@ -113,8 +110,7 @@ export const AlleDokumenter = ({
                     label={""}
                     disabled={!dokument.harTilgangTilArkivvariant || !kanEndre}
                     defaultChecked={tilknyttet}
-                    checked={tilknyttet}
-                    onClick={(e) => onCheck(e.currentTarget.checked, dokument)}
+                    onChange={(e) => onCheck(e.currentTarget.checked, dokument)}
                   />
                 </RightAlign>
               </DokumentSjekkboks>
@@ -128,7 +124,7 @@ export const AlleDokumenter = ({
           </ListItem>
         ))}
       </List>
-      <LoadMore
+      <LastFlere
         hasMore={hasMore}
         pageReference={pageReference}
         klagebehandlingId={klagebehandling.id}
@@ -166,6 +162,7 @@ const VedleggListe = ({ klagebehandling, dokument, visDokument, onCheck }: Vedle
     <VedleggBeholder data-testid={"vedlegg"}>
       {vedleggListe.map(({ vedlegg, tilknyttet }) => (
         <VedleggKomponent
+          key={`vedlegg_${dokument.journalpostId}_${vedlegg.dokumentInfoId}`}
           vedlegg={vedlegg}
           dokument={dokument}
           tilknyttet={tilknyttet}
@@ -211,7 +208,7 @@ const VedleggKomponent = ({
             label={""}
             disabled={!dokument.harTilgangTilArkivvariant || !kanEndre}
             defaultChecked={tilknyttet}
-            onClick={(e) => onCheck(e.currentTarget.checked, vedleggDokument)}
+            onChange={(e) => onCheck(e.currentTarget.checked, vedleggDokument)}
           />
         </RightAlign>
       </DokumentSjekkboks>
@@ -226,7 +223,7 @@ interface LoadMoreProps {
   loading: boolean;
 }
 
-const LoadMore = ({ hasMore, pageReference, klagebehandlingId, loading }: LoadMoreProps) => {
+const LastFlere = ({ hasMore, pageReference, klagebehandlingId, loading }: LoadMoreProps) => {
   const dispatch = useAppDispatch();
   const onClick = useCallback(() => {
     dispatch(hentDokumenter({ klagebehandlingId, pageReference }));
@@ -237,8 +234,8 @@ const LoadMore = ({ hasMore, pageReference, klagebehandlingId, loading }: LoadMo
   }
 
   return (
-    <Knapp onClick={onClick} spinner={loading} autoDisableVedSpinner={true}>
+    <StyledLastFlereKnapp onClick={onClick} spinner={loading} autoDisableVedSpinner={true}>
       Last flere
-    </Knapp>
+    </StyledLastFlereKnapp>
   );
 };

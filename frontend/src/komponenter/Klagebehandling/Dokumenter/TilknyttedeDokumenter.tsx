@@ -9,7 +9,7 @@ import {
   Tilknyttet,
   TilknyttetDato,
   TilknyttetTittel,
-} from "./styled-components/styled-components";
+} from "./styled-components/minivisning";
 import { ITilknyttetDokument } from "./typer";
 
 interface TilknyttedeDokumenterProps {

@@ -6,7 +6,7 @@ import {
 } from "../../../tilstand/moduler/dokumenter/selectors";
 import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
 import { ShowDokument } from "./ShowDokument";
-import { DokumenterBeholder } from "./styled-components/styled-components";
+import { DokumenterBeholder } from "./styled-components/container";
 import { TilknyttedeDokumenter } from "./TilknyttedeDokumenter";
 import { AlleDokumenter } from "./AlleDokumenter";
 import {
