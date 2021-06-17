@@ -46,6 +46,7 @@ const Beholder = styled.section`
   border-radius: 4px;
   height: 100%;
   min-width: 40em;
+  max-width: 47.5em;
   overflow-y: auto;
   overflow-x: hidden;
 `;
