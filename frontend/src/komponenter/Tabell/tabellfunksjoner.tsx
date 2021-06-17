@@ -130,17 +130,17 @@ const OppgaveTabellRad = ({
     <TableRow className="table-filter">
       <TableCell data-testid={`linkbehandling${it}`} onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${type}`}>
-          {kodeverk?.kodeverk.type
-            ? kodeverk?.kodeverk.type?.filter((h: IKodeverkVerdi) => h.id == type)[0]
-                ?.beskrivelse ?? `ukjent type ${type}`
+          {kodeverk?.type
+            ? kodeverk?.type?.filter((h: IKodeverkVerdi) => h.id == type)[0]?.beskrivelse ??
+              `ukjent type ${type}`
             : "mangler"}
         </EtikettBase>
       </TableCell>
       <TableCell onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${tema}`}>
-          {kodeverk?.kodeverk.tema
-            ? kodeverk?.kodeverk.tema?.filter((h: IKodeverkVerdi) => h.id == tema)[0]
-                ?.beskrivelse ?? `ukjent tema ${tema}`
+          {kodeverk?.tema
+            ? kodeverk?.tema?.filter((h: IKodeverkVerdi) => h.id == tema)[0]?.beskrivelse ??
+              `ukjent tema ${tema}`
             : "mangler"}
         </EtikettBase>
       </TableCell>
@@ -148,9 +148,9 @@ const OppgaveTabellRad = ({
       <TableCell onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${hjemmel}`}>
           {hjemmel
-            ? kodeverk?.kodeverk.hjemmel
-              ? kodeverk?.kodeverk.hjemmel?.filter((h: IKodeverkVerdi) => h.id == hjemmel)[0]
-                  ?.beskrivelse ?? `ukjent hjemmel ${hjemmel}`
+            ? kodeverk?.hjemmel
+              ? kodeverk?.hjemmel?.filter((h: IKodeverkVerdi) => h.id == hjemmel)[0]?.beskrivelse ??
+                `ukjent hjemmel ${hjemmel}`
               : "mangler"
             : "mangler"}
         </EtikettBase>
