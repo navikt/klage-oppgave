@@ -1,6 +1,6 @@
 import { OppgaveRad, OppgaveRader, OppgaveRadMedFunksjoner } from "../../tilstand/moduler/oppgave";
 import { IKodeverkVerdi } from "../../tilstand/moduler/kodeverk";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import EtikettBase from "nav-frontend-etiketter";
 import { Knapp } from "nav-frontend-knapper";
 import classNames from "classnames";
@@ -13,6 +13,7 @@ import { NavLink, useHistory, useLocation } from "react-router-dom";
 import { formattedDate } from "../../domene/datofunksjoner";
 import styled from "styled-components";
 import MedunderskriverStatus from "./Medunderskriver";
+import { useAppSelector } from "../../tilstand/konfigurerTilstand";
 import { velgKodeverk } from "../../tilstand/moduler/kodeverk.velgere";
 
 const R = require("ramda");
@@ -111,10 +112,15 @@ const OppgaveTabellRad = ({
 
   const curriedVisHandlinger = visHandlinger(fradelOppgave)(id);
   const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);
-  const kodeverk = useSelector(velgKodeverk);
+  const { kodeverk, lasterKodeverk } = useAppSelector(velgKodeverk);
 
   const location = useLocation();
   const history = useHistory();
+
+  const utfallObjekt = useMemo<IKodeverkVerdi | null>(
+    () => (lasterKodeverk ? null : kodeverk.utfall.find(({ id }) => id === utfall) ?? null),
+    [utfall, kodeverk.utfall, lasterKodeverk, kodeverk.utfall.length]
+  );
 
   const rerouteToKlage = (location: any) => {
     if (location.pathname.startsWith("/mineoppgaver")) history.push(`/klagebehandling/${id}`);
@@ -164,11 +170,11 @@ const OppgaveTabellRad = ({
       {avsluttetAvSaksbehandler && <TableCell>{formattedDate(avsluttetAvSaksbehandler)}</TableCell>}
       {!avsluttetAvSaksbehandler && <TableCell>{formattedDate(frist)}</TableCell>}
 
-      {utfall ? <TableCell>{utfall}</TableCell> : null}
-      {!utfall &&
+      {utfallObjekt ? <TableCell>{utfallObjekt.navn}</TableCell> : null}
+      {!utfallObjekt &&
         location.pathname.startsWith("/oppgaver") &&
         curriedVelgOppgave(klagebehandlingVersjon)(it)}
-      {!utfall &&
+      {!utfallObjekt &&
         location.pathname.startsWith("/mineoppgaver") &&
         curriedVisHandlinger(klagebehandlingVersjon)}
     </TableRow>
