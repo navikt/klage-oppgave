@@ -20,7 +20,18 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
       `/api/klagebehandlinger/${klagebehandlingId}/journalposter/${dokument?.journalpostId}/dokumenter/${dokument?.dokumentInfoId}`,
     [dokument]
   );
+
   const [numPages, setNumPages] = useState(0);
+
+  const pageKeys = useMemo<string[]>(() => {
+    if (dokument === null || numPages === 0) {
+      return [];
+    }
+    return Array.from(
+      new Array(numPages),
+      (_, index) => `dokument_${dokument.journalpostId}-${dokument.dokumentInfoId}/page_${index}`
+    );
+  }, [numPages, dokument]);
 
   if (dokument === null) {
     return null;
@@ -47,8 +58,8 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
             loading={<NavFrontendSpinner />}
           >
             <PDFBeholder>
-              {Array.from(new Array(numPages), (el, index) => (
-                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+              {pageKeys.map((key, index) => (
+                <Page key={key} pageNumber={index + 1} width={640} />
               ))}
             </PDFBeholder>
           </Document>
@@ -65,7 +76,7 @@ const options = {
 
 const FullBeholder = styled.section`
   display: block;
-  min-width: 40em;
+  min-width: 640px;
   height: 100%;
   margin: 0.25em 0.5em;
   background: white;
