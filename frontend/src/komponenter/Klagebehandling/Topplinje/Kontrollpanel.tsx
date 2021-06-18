@@ -2,8 +2,6 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
 import { IFaner } from "../KlageBehandling";
-import { useIsSaved } from "../utils/hooks";
-import LagringsIndikator from "./AutolagreElement";
 import EksterneLenker from "./EksterneLenker";
 // @ts-ignore
 import IkonMann from "../../mann.svg";
@@ -21,8 +19,6 @@ interface TopplinjeProps {
 }
 
 export const Topplinje = ({ klagebehandling, faner, settAktiveFaner }: TopplinjeProps) => {
-  const isSaved = useIsSaved();
-
   const toggleFane = useCallback(
     (id: string) =>
       settAktiveFaner({
@@ -77,7 +73,6 @@ export const Topplinje = ({ klagebehandling, faner, settAktiveFaner }: Topplinje
           clickFn={() => toggleFane("vedtak")}
           faner={faner}
         />
-        <LagringsIndikator autosaveStatus={!isSaved} />
       </Knapper>
 
       <EksterneLenker id={klagebehandling.id} fnr={klagebehandling.sakenGjelderFoedselsnummer} />

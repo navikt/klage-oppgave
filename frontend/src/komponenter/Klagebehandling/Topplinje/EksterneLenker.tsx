@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { gosysEnvironment } from "../../../domene/eksterne_systemer";
 //@ts-ignore
 import ExtLink from "../../extlinkblue.svg";
+import LagringsIndikator from "./AutolagreElement";
+import { useIsSaved } from "../utils/hooks";
 
 interface EksterneLenkerProps {
   fnr: string | null;
@@ -13,6 +15,8 @@ export default function EksterneLenker({ id, fnr }: EksterneLenkerProps) {
   if (fnr === null) {
     return null;
   }
+  const isSaved = useIsSaved();
+
   return (
     <Knapper>
       <Knapperad>
@@ -24,6 +28,9 @@ export default function EksterneLenker({ id, fnr }: EksterneLenkerProps) {
           Gosys&nbsp;
           <Ikon alt="Ekstern lenke" src={ExtLink} />
         </Lenke>
+      </Knapperad>
+      <Knapperad>
+        <LagringsIndikator autosaveStatus={!isSaved} />
       </Knapperad>
     </Knapper>
   );

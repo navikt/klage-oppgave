@@ -14,15 +14,6 @@ const AutoLagreBeholder = styled.div`
   justify-content: flex-end;
   color: #78706a;
   text-align: right;
-  margin-top: 4px;
-  @media (max-width: 570px) {
-    position: absolute;
-    right: 1em;
-    top: 6.6em;
-    background: white;
-    border-radius: 0.5em;
-    z-index: 10;
-  }
 `;
 
 const AutosaveContent = styled.div`
@@ -37,7 +28,6 @@ const AutosaveContent = styled.div`
 
 const LagringsIndikator = (props: Props) => {
   const [anker, setAnker] = useState<(EventTarget & HTMLDivElement) | undefined>(undefined);
-
   const togglePopover = (ankerEl: EventTarget & HTMLDivElement): void =>
     setAnker(anker ? undefined : ankerEl);
 
