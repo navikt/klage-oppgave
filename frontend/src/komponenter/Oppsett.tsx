@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Header } from "./Header/Header";
-import Alertstripe from "nav-frontend-alertstriper";
+import Alertstripe, { AlertStripeType } from "nav-frontend-alertstriper";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
-
-import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
+import { velgToasterMelding } from "../tilstand/moduler/toaster/toaster.velgere";
 import { velgExpire } from "../tilstand/moduler/token.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { hentExpiry } from "../tilstand/moduler/token";
-import { toasterSkjul } from "../tilstand/moduler/toaster";
+import { toasterFjern } from "../tilstand/moduler/toaster/toaster";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
 import { hentKodeverk } from "../tilstand/moduler/kodeverk";
 import { velgKodeverk } from "../tilstand/moduler/kodeverk.velgere";
+import { Toaster } from "../styled-components/toaster";
 
 const R = require("ramda");
 
@@ -35,13 +35,25 @@ export default function Oppsett({
   children,
 }: LayoutType) {
   const person = useSelector(velgMeg);
-  const visFeilmelding = useSelector(velgToaster);
   const expireTime = useSelector(velgExpire);
   const feilmelding = useSelector(velgToasterMelding);
   const featureToggles = useSelector(velgFeatureToggles);
   const kodeverk = useSelector(velgKodeverk);
   const dispatch = useAppDispatch();
   const [generellTilgang, settTilgang] = useState<boolean | undefined>(undefined);
+
+  const feilmeldingDisplay = () => {
+    if (!feilmelding) {
+      return null;
+    }
+    return (
+      <Toaster>
+        <Alertstripe onClick={() => dispatch(toasterFjern())} type={feilmelding.type}>
+          <span>{feilmelding.beskrivelse}</span>
+        </Alertstripe>
+      </Toaster>
+    );
+  };
 
   useEffect(() => {
     dispatch(hentFeatureToggleHandling("klage.generellTilgang"));
@@ -113,13 +125,7 @@ export default function Oppsett({
             </li>
           </ul>
         </nav>
-        <div className={`toaster ${visFeilmelding.display ? "active" : ""}`}>
-          {visFeilmelding.display && (
-            <Alertstripe onClick={() => dispatch(toasterSkjul())} type={visFeilmelding.type}>
-              <span>{feilmelding}</span>
-            </Alertstripe>
-          )}
-        </div>
+        {feilmeldingDisplay()}
         <article className={`content ${contentClass}`}>{children}</article>
       </main>
       <footer className="main-footer">Klagesaksbehandling</footer>

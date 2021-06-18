@@ -4,7 +4,7 @@ import klagebehandlinger, { OPPGAVER_EPICS } from "./moduler/oppgave";
 import meg, { MEG_EPICS } from "./moduler/meg";
 import saksbehandler, { TILDEL_EPICS } from "./moduler/saksbehandler";
 import routing, { ROUTING_EPICS } from "./moduler/router";
-import toaster, { TOASTER_EPICS } from "./moduler/toaster";
+import toaster, { TOASTER_EPICS } from "./moduler/toaster/toaster";
 import oppgavelaster, { OPPGAVELASTER_EPOS } from "./moduler/oppgavelaster";
 import featureToggles, { UNLEASH_EPICS } from "./moduler/unleash";
 import klagebehandling, { KLAGEBEHANDLING_EPOS } from "./moduler/klagebehandling";

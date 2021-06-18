@@ -2,7 +2,7 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { concat, of } from "rxjs";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { catchError, map, mergeMap, switchMap, timeout } from "rxjs/operators";
-import { toasterSett, toasterSkjul } from "./toaster";
+import { toasterSett, toasterFjern } from "./toaster/toaster";
 import { RootState } from "../root";
 import { Dependencies } from "../konfigurerTilstand";
 import { fromPromise } from "rxjs/internal-compatibility";
@@ -119,7 +119,7 @@ export const slettVedleggEpos = (
         mergeMap((res) => of(VEDLEGG_OPPDATERT(res), DONE())),
         catchError((error: CustomError) => {
           const message = error.response?.detail ?? "Ukjent feil";
-          return concat([ERROR(error), displayToast(message), toasterSkjul()]);
+          return concat([ERROR(error), displayToast(message), toasterFjern()]);
         })
       );
     })
@@ -160,7 +160,7 @@ export const lastOppVedleggEpos = (
         mergeMap((vedlegg) => of(VEDLEGG_OPPDATERT(vedlegg), DONE())),
         catchError((error: CustomError) => {
           const message = error.response?.detail ?? "Ukjent feil";
-          return concat([ERROR(error), displayToast(message), toasterSkjul()]);
+          return concat([ERROR(error), displayToast(message), toasterFjern()]);
         })
       );
     })
@@ -196,7 +196,7 @@ export const fullfoerVedtakEpos = (
           mergeMap((res: IVedtakFullfoertResponse) => of(VEDTAK_FULLFOERT(res), DONE())),
           catchError((error: CustomError) => {
             const message = error.response?.detail ?? "Ukjent feil";
-            return concat([ERROR(error), displayToast(message), toasterSkjul()]);
+            return concat([ERROR(error), displayToast(message), toasterFjern()]);
           })
         )
     )
@@ -260,9 +260,8 @@ const isOfType = <T>(payload: any, type: Properties): payload is T => {
   return false;
 };
 
-const displayToast = (feilmelding: string) =>
+const displayToast = (beskrivelse: string) =>
   toasterSett({
-    display: true,
     type: "feil",
-    feilmelding,
+    beskrivelse,
   });

@@ -12,7 +12,7 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { toasterSett, toasterSkjul } from "./toaster";
+import { toasterSett, toasterFjern } from "./toaster/toaster";
 import { IInnstillinger } from "./meg";
 import { IKodeverkVerdi } from "./kodeverk";
 import { RootState } from "../root";
@@ -358,11 +358,10 @@ export function klagebehandlingEpos(
             return concat([
               feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
-                display: true,
                 type: "feil",
-                feilmelding: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error?.response?.detail}`,
+                beskrivelse: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error?.response?.detail}`,
               }),
-              toasterSkjul(),
+              toasterFjern(),
             ]);
           })
         );
@@ -404,11 +403,10 @@ export function klagebehandlingDokumenterAlleEpos(
             return concat([
               feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
-                display: true,
                 type: "feil",
-                feilmelding: `Henting av dokumenter feilet: ${error?.response?.detail}`,
+                beskrivelse: `Henting av dokumenter feilet: ${error?.response?.detail}`,
               }),
-              toasterSkjul(),
+              toasterFjern(),
             ]);
           })
         );
@@ -462,11 +460,10 @@ export function klagebehandlingDokumenterTilordnedeEpos(
             return concat([
               feiletHandling(error.response.detail),
               toasterSett({
-                display: true,
                 type: "feil",
-                feilmelding: `Henting av tilordnede dokumenter feilet: ${error.response.detail}`,
+                beskrivelse: `Henting av tilordnede dokumenter feilet: ${error.response.detail}`,
               }),
-              toasterSkjul(),
+              toasterFjern(),
             ]);
           })
         );
@@ -505,11 +502,10 @@ export function ToggleKlageDokumentEpos(
             return concat([
               feiletHandling(error?.response?.detail || "feilet"),
               toasterSett({
-                display: true,
                 type: "feil",
-                feilmelding: `Tilordning av dokument feilet: (${error?.response?.detail})`,
+                beskrivelse: `Tilordning av dokument feilet: (${error?.response?.detail})`,
               }),
-              toasterSkjul(),
+              toasterFjern(),
             ]);
           })
         );

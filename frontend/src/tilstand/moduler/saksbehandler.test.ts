@@ -200,9 +200,8 @@ describe("TILDEL 'Meg' epos", () => {
           a: initState,
           t: {
             payload: {
-              display: true,
               type: "feil",
-              feilmelding: { message: "fradeling feilet", status: 503 },
+              beskrivelse: { message: "fradeling feilet", status: 503 },
             },
             type: "toaster/SETT",
           },
@@ -252,9 +251,8 @@ describe("TILDEL 'Meg' epos", () => {
           a: {},
           t: {
             payload: {
-              display: true,
               type: "feil",
-              feilmelding: { message: "tildeling feilet", status: 503 },
+              beskrivelse: { message: "tildeling feilet", status: 503 },
             },
             type: "toaster/SETT",
           },
@@ -305,9 +303,8 @@ describe("TILDEL 'Meg' epos", () => {
           a: {},
           t: {
             payload: {
-              display: true,
               type: "feil",
-              feilmelding: { message: "tildeling feilet", status: 503 },
+              beskrivelse: { message: "tildeling feilet", status: 503 },
             },
             type: "toaster/SETT",
           },
@@ -361,9 +358,8 @@ describe("TILDEL 'Meg' epos", () => {
           a: {},
           t: {
             payload: {
-              display: true,
               type: "feil",
-              feilmelding: { message: "tildeling feilet", status: 503 },
+              beskrivelse: { message: "tildeling feilet", status: 503 },
             },
             type: "toaster/SETT",
           },
@@ -417,11 +413,8 @@ describe("TILDEL 'Meg' epos", () => {
           a: {},
           t: {
             payload: {
-              display: true,
               type: "feil",
-              feilmelding: {
-                status: 503,
-              },
+              beskrivelse: "status: 503",
             },
             type: "toaster/SETT",
           },

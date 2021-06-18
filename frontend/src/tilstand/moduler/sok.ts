@@ -1,13 +1,12 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { catchError, debounceTime, map, retryWhen, switchMap } from "rxjs/operators";
-import { AjaxCreationMethod, AjaxResponse } from "rxjs/internal-compatibility";
+import { AjaxResponse } from "rxjs/internal-compatibility";
 import { concat, Observable, of } from "rxjs";
-import { toasterSett, toasterSkjul } from "./toaster";
+import { toasterSett, toasterFjern } from "./toaster/toaster";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { RootState } from "../root";
 import { Dependencies } from "../konfigurerTilstand";
-import { OppgaveRad } from "./oppgave";
 
 //==========
 // Interfaces
@@ -130,11 +129,10 @@ const performSearch = (
         return concat([
           SOK_FAIL(),
           toasterSett({
-            display: true,
             type: "feil",
-            feilmelding: `Søk feilet ${error}`,
+            beskrivelse: `Søk feilet ${error}`,
           }),
-          toasterSkjul(),
+          toasterFjern(),
         ]);
       })
     );

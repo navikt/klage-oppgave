@@ -1,17 +1,7 @@
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
-import {
-  toasterSlice,
-  skjulToasterEpos,
-  toasterSett,
-  toasterSkjul,
-  visToasterEpos,
-  toasterInitialState,
-  toasterSatt,
-} from "./toaster";
-import megTilstand, { hentetHandling } from "./meg";
-import { AlertStripeType } from "nav-frontend-alertstriper";
+import { fjernToasterEpos, toasterSett, toasterFjern, visToasterEpos } from "./toaster";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
@@ -29,9 +19,8 @@ describe("Oppgave epos", () => {
       ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
         const inputValues = {
           a: toasterSett({
-            display: true,
             type: "feil",
-            feilmelding: "se opp, en feil",
+            beskrivelse: "se opp, en feil",
           }),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
@@ -41,9 +30,8 @@ describe("Oppgave epos", () => {
           a: initState,
           s: {
             payload: {
-              display: true,
               type: "feil",
-              feilmelding: "se opp, en feil",
+              beskrivelse: "se opp, en feil",
             },
             type: "toaster/SATT",
           },
@@ -60,29 +48,27 @@ describe("Oppgave epos", () => {
     marbles(() => {
       ts.run(({ hot, expectObservable }) => {
         const inputValues = {
-          a: toasterSkjul(),
+          a: toasterFjern(),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
 
         const initState = {
-          display: true,
           type: "feil",
-          feilmelding: "se opp, en feil",
+          beskrivelse: "se opp, en feil",
         };
 
         const observableValues = {
           a: initState,
           s: {
             payload: {
-              display: false,
               type: "feil",
-              feilmelding: toasterInitialState.feilmelding,
+              beskrivelse: "",
             },
             type: "toaster/SATT",
           },
         };
 
-        expectObservable(skjulToasterEpos(action$)).toBe("15001ms s", observableValues);
+        expectObservable(fjernToasterEpos(action$)).toBe("15001ms s", observableValues);
       });
     })
   );

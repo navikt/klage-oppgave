@@ -14,7 +14,7 @@ import {
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { ReactNode } from "react";
-import { toasterSett, toasterSkjul } from "./toaster";
+import { toasterSett, toasterFjern } from "./toaster/toaster";
 import { feiletHandling, GrunnerPerUtfall } from "./klagebehandling";
 import { settOppgaverFerdigLastet, settOppgaverLaster } from "./oppgavelaster";
 import { Dependencies } from "../konfigurerTilstand";
@@ -474,11 +474,10 @@ export function hentUtgaatteFristerEpos(
           concat([
             feiletHandling("ukjent feil"),
             toasterSett({
-              display: true,
               type: "feil",
-              feilmelding: `Henting av utgåtte frister feilet`,
+              beskrivelse: `Henting av utgåtte frister feilet`,
             }),
-            toasterSkjul(),
+            toasterFjern(),
           ])
         )
       );

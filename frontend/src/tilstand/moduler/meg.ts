@@ -16,7 +16,7 @@ import {
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
-import { toasterSett, toasterSkjul } from "./toaster";
+import { toasterSett, toasterFjern } from "./toaster/toaster";
 import { Dependencies } from "../konfigurerTilstand";
 
 //==========
@@ -161,14 +161,13 @@ export const feiletHandling = createAction<string>("meg/FEILET");
 export function displayToast(error: string) {
   const message = error || "Kunne ikke lagre innstillinger";
   return toasterSett({
-    display: true,
     type: "feil",
-    feilmelding: message,
+    beskrivelse: message,
   });
 }
 
 export function skjulToaster() {
-  return toasterSkjul();
+  return toasterFjern();
 }
 
 //==========
