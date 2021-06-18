@@ -127,7 +127,7 @@ const OppgaveTabellRad = ({
   };
 
   return (
-    <TableRow className="table-filter">
+    <TableRow className="table-filter tablerow__link-on-hover">
       <TableCell data-testid={`linkbehandling${it}`} onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${type}`}>
           {kodeverk?.type
