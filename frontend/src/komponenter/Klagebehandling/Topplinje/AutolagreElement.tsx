@@ -15,6 +15,14 @@ const AutoLagreBeholder = styled.div`
   color: #78706a;
   text-align: right;
   margin-top: 4px;
+  @media (max-width: 570px) {
+    position: absolute;
+    right: 1em;
+    top: 6.6em;
+    background: white;
+    border-radius: 0.5em;
+    z-index: 10;
+  }
 `;
 
 const AutosaveContent = styled.div`
@@ -40,7 +48,7 @@ const LagringsIndikator = (props: Props) => {
         onRequestClose={() => setAnker(undefined)}
         orientering={PopoverOrientering.UnderHoyre}
       >
-        <p style={{ padding: "16px" }}>Endringene lagres automatisk.</p>
+        <p style={{ padding: "16px", position: "absolute" }}>Endringene lagres automatisk.</p>
       </Popover>
 
       <AutoLagreBeholder>
