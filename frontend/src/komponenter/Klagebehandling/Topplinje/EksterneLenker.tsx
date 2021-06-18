@@ -64,8 +64,8 @@ const Ikon = styled.img`
 const Knapperad = styled.div`
   display: block;
   width: 100%;
-  margin: 0 0.5em 0 0;
+  margin: 0 1.1em 0 0;
   text-align: center;
-  width: 5em;
+  width: 4.8em;
   white-space: nowrap;
 `;
