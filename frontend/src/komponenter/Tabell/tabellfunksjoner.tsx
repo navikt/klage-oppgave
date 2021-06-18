@@ -23,14 +23,12 @@ const velgOppgave = R.curry(
     tildelOppgave(settValgtOppgave, id, klagebehandlingVersjon, it)
 );
 
-const TableRow = styled.tr`
-  &:hover {
-    background: #e5f3ff !important;
-  }
-`;
+const TableRow = styled.tr``;
+
 const TableCell = styled.td`
   cursor: pointer !important;
 `;
+
 const EndreKnapp = styled.button`
   cursor: pointer !important;
 `;
@@ -127,7 +125,11 @@ const OppgaveTabellRad = ({
   };
 
   return (
-    <TableRow className="table-filter tablerow__link-on-hover">
+    <TableRow
+      className={`${
+        location.pathname.startsWith("/mineoppgaver") ? "tablerow__on_hover" : ""
+      } table-filter`}
+    >
       <TableCell data-testid={`linkbehandling${it}`} onClick={() => rerouteToKlage(location)}>
         <EtikettBase type="info" className={`etikett-${type}`}>
           {kodeverk?.type
@@ -167,8 +169,14 @@ const OppgaveTabellRad = ({
         </TableCell>
       )}
 
-      {avsluttetAvSaksbehandler && <TableCell>{formattedDate(avsluttetAvSaksbehandler)}</TableCell>}
-      {!avsluttetAvSaksbehandler && <TableCell>{formattedDate(frist)}</TableCell>}
+      {avsluttetAvSaksbehandler && (
+        <TableCell onClick={() => rerouteToKlage(location)}>
+          {formattedDate(avsluttetAvSaksbehandler)}
+        </TableCell>
+      )}
+      {!avsluttetAvSaksbehandler && (
+        <TableCell onClick={() => rerouteToKlage(location)}>{formattedDate(frist)}</TableCell>
+      )}
 
       {utfallObjekt ? <TableCell>{utfallObjekt.navn}</TableCell> : null}
       {!utfallObjekt &&
