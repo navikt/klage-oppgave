@@ -5,7 +5,6 @@ require("dotenv-flow").config();
 
 const envVar = ({ name, required = true }) => {
   if (!process.env[name] && required) {
-    console.error(`Missing required environment variable '${name}'`);
     process.exit(1);
   }
   return process.env[name];
@@ -95,15 +94,12 @@ const reverseProxyConfig = () => {
   const config = loadReverseProxyConfig();
   config.apis.forEach((entry, index) => {
     if (!entry.path) {
-      console.error(`API entry ${index} is missing 'path'`);
       process.exit(1);
     }
     if (!entry.url) {
-      console.error(`API entry ${index} is missing 'url'`);
       process.exit(1);
     }
     if (!entry.clientId) {
-      console.error(`API entry ${index} is missing 'clientId'`);
       process.exit(1);
     }
   });
@@ -118,13 +114,8 @@ const loadReverseProxyConfig = () => {
   let config = null;
   if (configPath) {
     try {
-      console.log(
-        `Loading reverse proxy config from '${configPath}' (defined by DOWNSTREAM_APIS_CONFIG_PATH)`
-      );
       config = JSON.parse(fs.readFileSync(path.resolve(configPath), "utf-8"));
-    } catch (err) {
-      console.log(`Could not read config: '${err}'`);
-    }
+    } catch (err) {}
   }
   if (!config) {
     const jsonConfig = envVar({
@@ -134,9 +125,6 @@ const loadReverseProxyConfig = () => {
     if (jsonConfig) {
       config = JSON.parse(jsonConfig);
     } else {
-      console.log(
-        `Loading reverse proxy config from DOWNSTREAM_API_* [CLIENT_ID, PATH, URL]`
-      );
       const scopes = envVar({ name: "DOWNSTREAM_API_SCOPES", required: false });
 
       config = {
