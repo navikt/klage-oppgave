@@ -1,7 +1,7 @@
 import { ActionsObservable, StateObservable } from "redux-observable";
 import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
-import { fjernToasterEpos, toasterSett, toasterFjern, visToasterEpos } from "./toaster";
+import { fjernToasterEpos, initierToaster, toasterFjern, visToasterEpos } from "./toaster";
 
 describe("Oppgave epos", () => {
   let ts: TestScheduler;
@@ -18,7 +18,7 @@ describe("Oppgave epos", () => {
     marbles(() => {
       ts.run(({ hot, cold, expectObservable, expectSubscriptions }) => {
         const inputValues = {
-          a: toasterSett({
+          a: initierToaster({
             type: "feil",
             beskrivelse: "se opp, en feil",
           }),

@@ -3,7 +3,7 @@ import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { catchError, debounceTime, map, retryWhen, switchMap } from "rxjs/operators";
 import { AjaxResponse } from "rxjs/internal-compatibility";
 import { concat, Observable, of } from "rxjs";
-import { toasterSett, toasterFjern } from "./toaster/toaster";
+import { initierToaster } from "./toaster/toaster";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { RootState } from "../root";
 import { Dependencies } from "../konfigurerTilstand";
@@ -128,11 +128,10 @@ const performSearch = (
       catchError((error) => {
         return concat([
           SOK_FAIL(),
-          toasterSett({
+          initierToaster({
             type: "feil",
             beskrivelse: `Søk feilet ${error}`,
           }),
-          toasterFjern(),
         ]);
       })
     );

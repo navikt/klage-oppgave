@@ -43,6 +43,10 @@ export const toasterSlice = createSlice({
         beskrivelse: action.payload.beskrivelse,
       },
     }),
+    FJERN: (state) => ({
+      ...state,
+      feilmelding: null,
+    }),
   },
 });
 
@@ -51,19 +55,22 @@ export default toasterSlice.reducer;
 //==========
 // Actions
 //==========
-export const toasterSett = createAction<Feilmelding>("toaster/SETT");
+export const initierToaster = createAction<Feilmelding>("toaster/SETT");
 export const toasterSatt = createAction<Feilmelding | null>("toaster/SATT");
 export const toasterFjern = createAction("toaster/FJERN");
 
 //==========
 // Epos
 //==========
+
+const ERROR_DISPLAY_DURATION = 15 * 1000;
+
 export function visToasterEpos(
   action$: ActionsObservable<PayloadAction<Feilmelding>>,
   state$: StateObservable<RootStateOrAny>
 ) {
   return action$.pipe(
-    ofType(toasterSett.type),
+    ofType(initierToaster.type),
     withLatestFrom(state$),
     switchMap(([action]) =>
       of(
@@ -72,7 +79,9 @@ export function visToasterEpos(
           beskrivelse: action.payload.beskrivelse,
         })
       )
-    )
+    ),
+    delay(ERROR_DISPLAY_DURATION),
+    switchMap(() => of(toasterFjern()))
   );
 }
 

@@ -2,7 +2,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { concat, of } from "rxjs";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { catchError, map, mergeMap, retryWhen, switchMap, timeout } from "rxjs/operators";
-import { toasterSett, toasterFjern } from "../toaster/toaster";
+import { initierToaster } from "../toaster/toaster";
 import { RootState } from "../../root";
 import { Dependencies } from "../../konfigurerTilstand";
 import { provIgjenStrategi } from "../../../utility/rxUtils";
@@ -55,11 +55,10 @@ export const settMedunderskriverEpos = (
             const message = error.response?.detail ?? "Ukjent feil";
             return concat([
               ERROR(error),
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: `Lagring av medunderskriver feilet. Feilmelding: ${message}`,
               }),
-              toasterFjern(),
             ]);
           })
         )
@@ -90,11 +89,10 @@ export const lastMedunderskrivereEpos = (
           const message = error.response?.detail ?? "Ukjent feil";
           return concat([
             ERROR(error),
-            toasterSett({
+            initierToaster({
               type: "feil",
               beskrivelse: `Kunne ikke laste medunderskrivere. Feilmelding: ${message}`,
             }),
-            toasterFjern(),
           ]);
         })
       );

@@ -5,7 +5,7 @@ import { catchError, map, mergeMap, retryWhen, switchMap, timeout } from "rxjs/o
 import { provIgjenStrategi } from "../../../utility/rxUtils";
 import { Dependencies } from "../../konfigurerTilstand";
 import { RootState } from "../../root";
-import { toasterSett, toasterFjern } from "../toaster/toaster";
+import { initierToaster } from "../toaster/toaster";
 import { hentKlagebehandling, lagreKlagebehandling, unloadKlagebehandling } from "./actions";
 import {
   ERROR,
@@ -76,11 +76,10 @@ export const lagreKlagebehandlingEpic = (
           catchError((error) => {
             let err = error?.response?.detail || "ukjent feil";
             return of(
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: err,
-              }),
-              toasterFjern()
+              })
             );
           })
         )
@@ -120,11 +119,10 @@ export const hentKlagebehandlingEpic = (
           catchError((error) =>
             of(
               ERROR(error?.response?.detail || "feilet"),
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: `Henting av klagebehandling med id ${payload} feilet. Feilmelding: ${error?.response?.detail}`,
-              }),
-              toasterFjern()
+              })
             )
           )
         )

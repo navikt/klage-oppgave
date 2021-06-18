@@ -3,7 +3,7 @@ import { RootStateOrAny } from "react-redux";
 import { ActionsObservable, ofType, StateObservable } from "redux-observable";
 import { catchError, map, retryWhen, switchMap } from "rxjs/operators";
 import { concat } from "rxjs";
-import { toasterSett, toasterFjern } from "./toaster/toaster";
+import { initierToaster } from "./toaster/toaster";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { Dependencies } from "../konfigurerTilstand";
 
@@ -66,11 +66,10 @@ export function adminEpos(
           catchError((error) => {
             return concat([
               stoppLasting(),
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: `Elastic feilet ${error}`,
               }),
-              toasterFjern(),
             ]);
           })
         );
@@ -84,11 +83,10 @@ function toasterSuccessEpos(action$: ActionsObservable<PayloadAction>) {
     switchMap((action) => {
       let beskjed = "Elastic-kommando mottatt og gjennomført!";
       return concat([
-        toasterSett({
+        initierToaster({
           type: "suksess",
           beskrivelse: beskjed,
         }),
-        toasterFjern(),
       ]);
     })
   );

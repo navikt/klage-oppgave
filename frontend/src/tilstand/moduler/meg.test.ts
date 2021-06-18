@@ -15,7 +15,7 @@ import megTilstand, {
 import { ajax } from "rxjs/ajax";
 import { of, throwError } from "rxjs";
 import { oppgaveHentingFeilet } from "./oppgave";
-import { toasterSett, toasterFjern } from "./toaster/toaster";
+import { initierToaster } from "./toaster/toaster";
 import { Dependencies } from "../konfigurerTilstand";
 
 describe("'Meg' epos", () => {
@@ -243,11 +243,7 @@ describe("'Meg' epos", () => {
               type: "feil",
               beskrivelse: "ukjent feil",
             },
-            type: toasterSett.type,
-          },
-          y: {
-            payload: undefined,
-            type: toasterFjern.type,
+            type: initierToaster.type,
           },
         };
 

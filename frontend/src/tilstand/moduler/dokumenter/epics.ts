@@ -9,7 +9,7 @@ import {
   TILKNYTT_DOKUMENT as TILKNYTT_DOKUMENT_TIL_BEHANDLING,
   FRAKOBLE_DOKUMENT as FRAKOBLE_DOKUMENT_FRA_BEHANDLING,
 } from "../klagebehandling/state";
-import { toasterSett, toasterFjern } from "../toaster/toaster";
+import { initierToaster } from "../toaster/toaster";
 import {
   frakobleDokument,
   hentDokumenter,
@@ -55,11 +55,10 @@ export const hentDokumenterEpic = (
           catchError((error) =>
             of(
               ERROR(error?.response?.detail || "feilet"),
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: `Henting av dokumenter for klagebehandling "${klagebehandlingId}" feilet. Feilmelding: ${error?.response?.detail}`,
-              }),
-              toasterFjern()
+              })
             )
           )
         )
@@ -85,11 +84,10 @@ export const hentTilknyttedeDokumenterEpic = (
           catchError((error) =>
             of(
               ERROR(error?.response?.detail || "feilet"),
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: `Henting av tilknyttede dokumenter for klagebehandling "${payload}" feilet. Feilmelding: ${error?.response?.detail}`,
-              }),
-              toasterFjern()
+              })
             )
           )
         )

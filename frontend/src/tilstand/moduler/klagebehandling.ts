@@ -12,7 +12,7 @@ import {
   withLatestFrom,
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
-import { toasterSett, toasterFjern } from "./toaster/toaster";
+import { initierToaster, toasterFjern } from "./toaster/toaster";
 import { IInnstillinger } from "./meg";
 import { IKodeverkVerdi } from "./kodeverk";
 import { RootState } from "../root";
@@ -357,11 +357,10 @@ export function klagebehandlingEpos(
           catchError((error) => {
             return concat([
               feiletHandling(error?.response?.detail || "feilet"),
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error?.response?.detail}`,
               }),
-              toasterFjern(),
             ]);
           })
         );
@@ -402,7 +401,7 @@ export function klagebehandlingDokumenterAlleEpos(
           catchError((error) => {
             return concat([
               feiletHandling(error?.response?.detail || "feilet"),
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: `Henting av dokumenter feilet: ${error?.response?.detail}`,
               }),
@@ -459,7 +458,7 @@ export function klagebehandlingDokumenterTilordnedeEpos(
           catchError((error) => {
             return concat([
               feiletHandling(error.response.detail),
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: `Henting av tilordnede dokumenter feilet: ${error.response.detail}`,
               }),
@@ -501,7 +500,7 @@ export function ToggleKlageDokumentEpos(
           catchError((error) => {
             return concat([
               feiletHandling(error?.response?.detail || "feilet"),
-              toasterSett({
+              initierToaster({
                 type: "feil",
                 beskrivelse: `Tilordning av dokument feilet: (${error?.response?.detail})`,
               }),

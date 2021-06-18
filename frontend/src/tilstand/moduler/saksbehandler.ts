@@ -5,7 +5,7 @@ import { concat, of } from "rxjs";
 import { catchError, mergeMap, switchMap, timeout, withLatestFrom } from "rxjs/operators";
 import { OppgaveParams, oppgaveRequest } from "./oppgave";
 import { settOppgaverFerdigLastet, settOppgaverLaster } from "./oppgavelaster";
-import { displayToast, skjulToaster } from "./meg";
+import { displayToast } from "./meg";
 import { Dependencies } from "../konfigurerTilstand";
 
 //==========
@@ -102,11 +102,7 @@ export function tildelEpos(
             } else return concat([tildeltHandling(response)]);
           })
         )
-        .pipe(
-          catchError((error) =>
-            concat([displayToast(error), settOppgaverFerdigLastet(), skjulToaster()])
-          )
-        );
+        .pipe(catchError((error) => concat([displayToast(error), settOppgaverFerdigLastet()])));
     })
   );
 }
@@ -157,11 +153,7 @@ export function fradelEpos(
             } else return concat([fradeltHandling(response.response)]);
           })
         )
-        .pipe(
-          catchError((error) =>
-            concat([displayToast(error), settOppgaverFerdigLastet(), skjulToaster()])
-          )
-        );
+        .pipe(catchError((error) => concat([displayToast(error), settOppgaverFerdigLastet()])));
     })
   );
 }

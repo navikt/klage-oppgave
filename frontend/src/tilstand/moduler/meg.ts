@@ -16,7 +16,7 @@ import {
 } from "rxjs/operators";
 import { provIgjenStrategi } from "../../utility/rxUtils";
 import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
-import { toasterSett, toasterFjern } from "./toaster/toaster";
+import { initierToaster } from "./toaster/toaster";
 import { Dependencies } from "../konfigurerTilstand";
 
 //==========
@@ -160,14 +160,10 @@ export const feiletHandling = createAction<string>("meg/FEILET");
 //==========
 export function displayToast(error: string) {
   const message = error || "Kunne ikke lagre innstillinger";
-  return toasterSett({
+  return initierToaster({
     type: "feil",
     beskrivelse: message,
   });
-}
-
-export function skjulToaster() {
-  return toasterFjern();
 }
 
 //==========
@@ -233,12 +229,7 @@ export function hentMegEpos(
           catchError((error) => {
             let err = error?.response?.detail || "ukjent feil";
 
-            return concat([
-              feiletHandling(err),
-              oppgaveFeiletHandling(),
-              displayToast(err),
-              skjulToaster(),
-            ]);
+            return concat([feiletHandling(err), oppgaveFeiletHandling(), displayToast(err)]);
           })
         );
     })
@@ -269,11 +260,7 @@ export function hentInnstillingerEpos(
           catchError((error) => {
             let err = error?.response?.detail || "ukjent feil";
 
-            return concat([
-              feiletHandling(err),
-              displayToast("Kunne ikke hente innstillinger"),
-              skjulToaster(),
-            ]);
+            return concat([feiletHandling(err), displayToast("Kunne ikke hente innstillinger")]);
           })
         );
     })
@@ -303,7 +290,7 @@ export function settInnstillingerEpos(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
           catchError((error) => {
             let err = error?.response?.detail || "ukjent feil";
-            return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
+            return concat([feiletHandling(err), displayToast(err)]);
           })
         );
     })
