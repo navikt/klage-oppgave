@@ -58,7 +58,7 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
             loading={<NavFrontendSpinner />}
           >
             {pageKeys.map((key, index) => (
-              <Page key={key} pageNumber={index + 1} width={640} />
+              <PDFPage key={key} pageNumber={index + 1} width={640} />
             ))}
           </Document>
         </Preview>
@@ -135,4 +135,14 @@ const EksternalSVGIkon = styled.img`
 const Feil = styled.div`
   display: block;
   margin: 1em;
+`;
+
+const PDFPage = styled(Page)`
+  /* border-bottom: 1em solid grey; */
+  box-shadow: 0px 1px 6px 3px lightgray;
+  margin-bottom: 1em;
+  &:last-of-type {
+    /* border-bottom: none; */
+    margin-bottom: 0;
+  }
 `;
