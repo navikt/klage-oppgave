@@ -37,6 +37,7 @@ import { settOppgaverLaster } from "../../tilstand/moduler/oppgavelaster";
 import { ParamTypes } from "./interfaces";
 import { Feil, FullforteOppgaver, IkkeFiltrerbarHeader } from "./Styled";
 import { velgKodeverk } from "../../tilstand/moduler/kodeverk.velgere";
+import { dateToISODateString } from "nav-datovelger/lib/utils/dateFormatUtils";
 
 const R = require("ramda");
 
@@ -285,6 +286,9 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           },
         })
       );
+
+      let ferdigstiltFom = new Date();
+      ferdigstiltFom.setDate(ferdigstiltFom.getDate() - 7);
       location.pathname.startsWith("/mineoppgaver") &&
         dispatch(
           ferdigstilteRequest({
@@ -292,7 +296,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
             antall: filter_state.antall,
             start: filter_state.start || 0,
             enhetId: enhetId,
-            ferdigstiltFom: "2021-05-07",
+            ferdigstiltFom: dateToISODateString(ferdigstiltFom),
             projeksjon: filter_state?.projeksjon ? "UTVIDET" : undefined,
             tildeltSaksbehandler: filter_state.tildeltSaksbehandler,
             transformasjoner: {
