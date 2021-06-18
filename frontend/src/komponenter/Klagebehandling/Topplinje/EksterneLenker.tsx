@@ -51,13 +51,9 @@ const Knapper = styled.div`
   }
 `;
 const Lenke = styled.a`
-  margin: 0 0.25em 0 0.5em;
   white-space: nowrap;
   text-decoration: none;
   color: black;
-`;
-const Lenke2 = styled.a`
-  position: relative;
 `;
 const Ikon = styled.img`
   position: absolute;
@@ -70,6 +66,6 @@ const Knapperad = styled.div`
   width: 100%;
   margin: 0 0.5em 0 0;
   text-align: center;
-  width: 7em;
+  width: 5em;
   white-space: nowrap;
 `;
