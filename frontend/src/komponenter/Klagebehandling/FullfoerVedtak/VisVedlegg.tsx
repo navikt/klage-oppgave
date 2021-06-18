@@ -53,17 +53,17 @@ export const VisVedlegg = ({ klagebehandling }: VisVedleggProps) => {
 
   return (
     <>
-      <a href={vedleggLink} title="Åpne PDF i ny fane." target="_blank">
-        <PDF
-          file={vedleggLink}
-          onLoadSuccess={({ numPages }) => settSider(numPages)}
-          options={options}
-          error={<span>Kunne ikke hente PDF</span>}
-          loading={<NavFrontendSpinner />}
-        >
-          <Page pageNumber={1} width={264} />
-        </PDF>
-      </a>
+      <PDF
+        file={vedleggLink}
+        onLoadSuccess={({ numPages }) => settSider(numPages)}
+        options={options}
+        error={<span>Kunne ikke hente PDF</span>}
+        loading={<NavFrontendSpinner />}
+      >
+        <a href={vedleggLink} title="Åpne PDF i ny fane." target="_blank">
+          <Page pageNumber={1} width={263} />
+        </a>
+      </PDF>
 
       <FilInfoBeholder>
         <OpplastetVedleggTittel>VEDLEGG - OPPLASTET</OpplastetVedleggTittel>
