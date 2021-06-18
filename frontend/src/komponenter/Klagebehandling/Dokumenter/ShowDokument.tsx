@@ -57,11 +57,9 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
             error={<Feil>Kunne ikke hente PDF</Feil>}
             loading={<NavFrontendSpinner />}
           >
-            <PDFBeholder>
-              {pageKeys.map((key, index) => (
-                <Page key={key} pageNumber={index + 1} width={640} />
-              ))}
-            </PDFBeholder>
+            {pageKeys.map((key, index) => (
+              <Page key={key} pageNumber={index + 1} width={640} />
+            ))}
           </Document>
         </Preview>
       </PreviewBeholder>
@@ -95,7 +93,7 @@ const PreviewBeholder = styled.div`
 
 const Preview = styled.div`
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
   overflow-x: hidden;
   position: relative;
   z-index: 0;
@@ -131,27 +129,6 @@ const EksternalSVGIkon = styled.img`
   transition: all 0.15s ease-in-out;
   &:hover {
     transform: scale(1.1);
-  }
-`;
-
-const PDFBeholder = styled.div`
-  overflow: auto;
-  overflow-x: hidden; // for safari
-
-  .react-pdf {
-    &__Document {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: fit-content;
-    }
-
-    &__Page {
-      max-width: calc(100% - 1em);
-      canvas {
-        height: auto !important;
-      }
-    }
   }
 `;
 
