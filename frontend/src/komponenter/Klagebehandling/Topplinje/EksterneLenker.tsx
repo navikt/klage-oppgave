@@ -1,11 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import {
-  aInntektEnvironment,
-  gosysEnvironment,
-  modiaEnvironment,
-  vedtaksEnvironment,
-} from "../../../domene/eksterne_systemer";
+import { gosysEnvironment } from "../../../domene/eksterne_systemer";
 //@ts-ignore
 import ExtLink from "../../extlinkblue.svg";
 
@@ -26,15 +21,9 @@ export default function EksterneLenker({ id, fnr }: EksterneLenkerProps) {
           aria-label={"Ekstern lenke til Gosys for denne personen"}
           href={`${gosysEnvironment(window.location.hostname)}/personoversikt/fnr=${fnr}`}
         >
-          Gosys
-        </Lenke>
-        <Lenke2
-          target="_blank"
-          aria-label={"Ekstern lenke til Gosys for denne personen"}
-          href={`${gosysEnvironment(window.location.hostname)}/personoversikt/fnr=${fnr}`}
-        >
+          Gosys&nbsp;
           <Ikon alt="Ekstern lenke" src={ExtLink} />
-        </Lenke2>
+        </Lenke>
       </Knapperad>
     </Knapper>
   );
@@ -43,7 +32,7 @@ export default function EksterneLenker({ id, fnr }: EksterneLenkerProps) {
 const Knapper = styled.div`
   display: flex;
   grid-area: Knapper;
-  justify-content: space-between;
+  justify-self: right;
   border: 1px solid #e7e9e9;
   border-right: 0;
   border-bottom: 0;
