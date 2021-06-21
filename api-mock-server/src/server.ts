@@ -23,7 +23,7 @@ async function hentDokumenter(offset: number) {
   let db = new sqlite3.Database("./oppgaver.db");
   let sql = `SELECT journalpostId, dokumentInfoId, tittel, tema, registrert, harTilgangTilArkivvariant, valgt FROM Dokumenter LIMIT ${offset},10`;
 
-  let dokumenter = await new Promise((resolve, reject) => {
+  const dokumenter: any[] = await new Promise((resolve, reject) => {
     db.all(sql, (err: any, rad: any) => {
       if (err) {
         reject(err);
@@ -40,7 +40,6 @@ async function hentDokumenter(offset: number) {
 
   let i = 0;
   for (; i < 10; i++) {
-    // @ts-ignore
     dokumenter[i].vedlegg = await hentVedlegg();
   }
 
@@ -124,6 +123,8 @@ app.get("/klagebehandlinger/:id/alledokumenter", async (req, res) => {
   res.json({
     dokumenter,
     pageReference,
+    antall: dokumenter.length,
+    totaltAntall: 50,
   });
 });
 
@@ -133,8 +134,11 @@ app.get("/klagebehandlinger/:id/dokumenter", async (req, res) => {
     { encoding: "utf-8" }
   );
   const dokumenter = JSON.parse(data);
-  res.send({
+  res.json({
     dokumenter: dokumenter.dokumenter.slice(0, 5),
+    pageReference: null,
+    antall: 5,
+    totaltAntall: 5,
   });
 });
 

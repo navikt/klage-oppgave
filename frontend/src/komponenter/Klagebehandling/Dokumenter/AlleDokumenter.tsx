@@ -1,14 +1,13 @@
 import React, { useCallback, useMemo } from "react";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { formattedDate } from "../../../domene/datofunksjoner";
-import { useAppDispatch, useAppSelector } from "../../../tilstand/konfigurerTilstand";
+import { useAppDispatch } from "../../../tilstand/konfigurerTilstand";
 import {
   IDokument,
   IDokumentListe,
   IDokumentVedlegg,
 } from "../../../tilstand/moduler/dokumenter/stateTypes";
 import { ITilknyttetDokument, ITilknyttetVedlegg } from "./typer";
-import { velgDokumenterPageReference } from "../../../tilstand/moduler/dokumenter/selectors";
 import {
   frakobleDokument,
   hentDokumenter,
@@ -49,7 +48,6 @@ export const AlleDokumenter = ({
   visDokument,
 }: AlleDokumenterProps) => {
   const dispatch = useAppDispatch();
-  const pageReference = useAppSelector(velgDokumenterPageReference);
   const kanEndre = useKanEndre();
 
   const alleDokumenter = useMemo<ITilknyttetDokument[]>(
@@ -67,13 +65,6 @@ export const AlleDokumenter = ({
     },
     [dispatch]
   );
-
-  const hasMore = useMemo(() => {
-    if (typeof pageReference === "string" || dokumenter.dokumenter.length === 0) {
-      return true;
-    }
-    return false;
-  }, [dokumenter.dokumenter.length, pageReference]);
 
   if (skjult) {
     return null;
@@ -125,8 +116,7 @@ export const AlleDokumenter = ({
         ))}
       </List>
       <LastFlere
-        hasMore={hasMore}
-        pageReference={pageReference}
+        dokumenter={dokumenter}
         klagebehandlingId={klagebehandling.id}
         loading={dokumenter.loading}
       />
@@ -217,17 +207,22 @@ const VedleggKomponent = ({
 };
 
 interface LoadMoreProps {
-  hasMore: boolean;
-  pageReference: string | null;
+  dokumenter: IDokumentListe;
   klagebehandlingId: string;
   loading: boolean;
 }
 
-const LastFlere = ({ hasMore, pageReference, klagebehandlingId, loading }: LoadMoreProps) => {
+const LastFlere = ({ dokumenter, klagebehandlingId, loading }: LoadMoreProps) => {
   const dispatch = useAppDispatch();
-  const onClick = useCallback(() => {
-    dispatch(hentDokumenter({ klagebehandlingId, pageReference }));
-  }, [pageReference, klagebehandlingId]);
+  const onClick = useCallback(
+    () => dispatch(hentDokumenter({ klagebehandlingId, pageReference: dokumenter.pageReference })),
+    [dokumenter.pageReference, klagebehandlingId]
+  );
+  const remaining = useMemo(
+    () => dokumenter.totaltAntall - dokumenter.dokumenter.length,
+    [dokumenter.dokumenter.length, dokumenter.totaltAntall]
+  );
+  const hasMore = useMemo(() => remaining !== 0, [remaining]);
 
   if (!hasMore) {
     return null;
@@ -235,7 +230,7 @@ const LastFlere = ({ hasMore, pageReference, klagebehandlingId, loading }: LoadM
 
   return (
     <StyledLastFlereKnapp onClick={onClick} spinner={loading} autoDisableVedSpinner={true}>
-      Last flere
+      Last flere ({remaining})
     </StyledLastFlereKnapp>
   );
 };

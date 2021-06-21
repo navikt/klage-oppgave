@@ -12,6 +12,8 @@ export interface IDokumentParams {
 export interface IDokumenterRespons {
   dokumenter: IDokument[];
   pageReference: string | null;
+  antall: number;
+  totaltAntall: number;
 }
 
 export interface IDokumenterParams {

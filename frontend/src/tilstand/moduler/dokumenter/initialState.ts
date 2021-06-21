@@ -4,8 +4,14 @@ export const initialState: IDokumenterState = {
   dokumenter: {
     loading: false,
     dokumenter: [],
+    pageReference: null,
+    totaltAntall: 0,
   },
-  tilknyttedeDokumenter: { loading: false, dokumenter: [] },
-  pageReference: null,
+  tilknyttedeDokumenter: {
+    loading: false,
+    dokumenter: [],
+    pageReference: null,
+    totaltAntall: 0,
+  },
   error: null,
 };

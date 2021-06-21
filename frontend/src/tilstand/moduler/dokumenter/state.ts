@@ -19,7 +19,8 @@ export const dokumenterSlice = createSlice({
       ...initialState,
     }),
     LEGG_TIL_DOKUMENTER: (state, { payload }: PayloadAction<IDokumenterRespons>) => {
-      state.pageReference = payload.pageReference;
+      state.dokumenter.pageReference = payload.pageReference;
+      state.dokumenter.totaltAntall = payload.totaltAntall;
       state.dokumenter.dokumenter = [...state.dokumenter.dokumenter, ...payload.dokumenter];
       state.dokumenter.loading = false;
       return state;

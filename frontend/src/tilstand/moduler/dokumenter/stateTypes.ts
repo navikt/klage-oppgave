@@ -1,13 +1,14 @@
 export interface IDokumenterState {
   dokumenter: IDokumentListe;
   tilknyttedeDokumenter: IDokumentListe;
-  pageReference: string | null;
   error: string | null;
 }
 
 export interface IDokumentListe {
   loading: boolean;
   dokumenter: IDokument[];
+  pageReference: string | null;
+  totaltAntall: number;
 }
 
 export interface IDokument {
