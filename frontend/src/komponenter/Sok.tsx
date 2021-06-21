@@ -35,6 +35,11 @@ let SokeTabell = styled.table`
   width: 60em;
 `;
 
+let SokeTabellAvsluttede = styled.table`
+  max-width: 60em;
+  width: 60em;
+  margin: 2em 0 8em 0;
+`;
 let Tr = styled.tr`
   background: #e5f3ff;
 `;
@@ -44,12 +49,15 @@ let Td = styled.td`
   text-align: left;
   padding: 0;
   margin: 0;
+  width: 16em;
 `;
 let TdSenter = styled.td`
   text-align: center;
   border-bottom: 1px solid #c6c2bf;
+  width: 16em;
 `;
 let TdResultat = styled.td`
+  width: 16em;
   text-align: left;
   border-bottom: 1px solid #c6c2bf;
 `;
@@ -88,13 +96,14 @@ function dispatchOppgave(
     tildelMegHandling({
       oppgaveId: oppgaveId,
       ident: navIdent,
+      kjorOppgavesokVedSuksess: false,
       klagebehandlingVersjon: klagebehandlingVersjon,
       enhetId: enhetId,
     })
   );
 }
 
-const Klagebehandlinger = (data: any): JSX.Element => {
+function AapneKlagebehandlinger(data: any): JSX.Element {
   if (!data) return <></>;
   let kodeverk = useSelector(velgKodeverk);
   let meg = useSelector(velgMeg);
@@ -125,15 +134,14 @@ const Klagebehandlinger = (data: any): JSX.Element => {
             <SokeTabell cellSpacing={0} cellPadding={10}>
               <thead>
                 <tr>
-                  <Th>Aktive klager</Th>
-                  <Th />
+                  <Th colSpan={2}>Aktive klager</Th>
                   <Th />
                   <Th>Frist</Th>
                   <Th>Saksbehandler</Th>
                 </tr>
               </thead>
               <tbody>
-                {Object.values(data.klagebehandlinger).map((rad: any) => (
+                {Object.values(data.aapneKlagebehandlinger).map((rad: any) => (
                   <TrBunnramme key={rad.id}>
                     <TdSenter>
                       {rad.type && (
@@ -159,8 +167,10 @@ const Klagebehandlinger = (data: any): JSX.Element => {
                     <TdResultat>{rad.frist}</TdResultat>
                     <TdResultat>
                       {rad.erTildelt
-                        ? "Saksbehandlernavn"
-                        : curriedVelgOppgave(rad.id, rad.klagebehandlingVersjon)}
+                        ? rad.tildeltSaksbehandlerNavn
+                        : rad.saksbehandlerHarTilgang
+                        ? curriedVelgOppgave(rad.id, rad.klagebehandlingVersjon)
+                        : "Ikke tildelt"}
                     </TdResultat>
                   </TrBunnramme>
                 ))}
@@ -171,16 +181,82 @@ const Klagebehandlinger = (data: any): JSX.Element => {
       </tbody>
     </>
   );
-};
+}
+
+function FullforteKlagebehandlinger(data: any): JSX.Element {
+  if (!data) return <></>;
+  let kodeverk = useSelector(velgKodeverk);
+  const KodeverkUtfall = R.curry(Kodeverk)(kodeverk.kodeverk.utfall);
+  const KodeverkHjemmel = R.curry(Kodeverk)(kodeverk.kodeverk.hjemmel);
+  const KodeverkType = R.curry(Kodeverk)(kodeverk.kodeverk.type);
+  const KodeverkTema = R.curry(Kodeverk)(kodeverk.kodeverk.tema);
+
+  return (
+    <>
+      <tbody>
+        <tr>
+          <Td>
+            <SokeTabell cellSpacing={0} cellPadding={10}>
+              <thead>
+                <tr>
+                  <Th colSpan={2}>Fullførte klager siste 12 måneder</Th>
+                  <Th />
+                  <Th>Fullført</Th>
+                  <Th>Utfall</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.values(data.avsluttedeKlagebehandlinger).map((rad: any) => (
+                  <TrBunnramme key={rad.id}>
+                    <TdSenter>
+                      {rad.type && (
+                        <EtikettBase type="info" className={`etikett-type`}>
+                          {KodeverkType(rad.type)}
+                        </EtikettBase>
+                      )}
+                    </TdSenter>
+                    <TdSenter>
+                      {rad.tema && (
+                        <EtikettBase type="info" className={`etikett-tema`}>
+                          {KodeverkTema(rad.tema)}
+                        </EtikettBase>
+                      )}
+                    </TdSenter>
+                    <TdSenter>
+                      {rad.hjemmel && (
+                        <EtikettBase type="info" className={`etikett-hjemmel`}>
+                          {KodeverkHjemmel(rad.hjemmel)}
+                        </EtikettBase>
+                      )}
+                    </TdSenter>
+                    <TdResultat>{rad.avsluttetAvSaksbehandler}</TdResultat>
+                    <TdResultat>{KodeverkUtfall(rad.utfall)}</TdResultat>
+                  </TrBunnramme>
+                ))}
+              </tbody>
+            </SokeTabell>
+          </Td>
+        </tr>
+      </tbody>
+    </>
+  );
+}
 
 const SokeResultat = (data: any): JSX.Element => {
   if (data.antallTreffTotalt === 0 || !data?.personer) return <></>;
   return (
-    <SokeTabell cellSpacing={0} cellPadding={10}>
-      {data.personer?.map((rad: any, idx: number) => (
-        <Klagebehandlinger key={`rad${idx}`} {...rad} />
-      ))}
-    </SokeTabell>
+    <>
+      <SokeTabell cellSpacing={0} cellPadding={10}>
+        {data.personer?.map((rad: any, idx: number) => (
+          <AapneKlagebehandlinger key={`rad${idx}`} {...rad} />
+        ))}
+      </SokeTabell>
+      <SokeTabellAvsluttede cellSpacing={0} cellPadding={10}>
+        {data.personer?.map((rad: any, idx: number) => (
+          <FullforteKlagebehandlinger key={`rad${idx}`} {...rad} />
+        ))}
+      </SokeTabellAvsluttede>
+    </>
   );
 };
 
@@ -197,7 +273,7 @@ const Sok = (): JSX.Element => {
             onChange={(e) =>
               dispatch(
                 startSok({
-                  antall: 10,
+                  antall: 200,
                   navIdent: person.id,
                   start: 0,
                   fnr: e.target.value.trim(),

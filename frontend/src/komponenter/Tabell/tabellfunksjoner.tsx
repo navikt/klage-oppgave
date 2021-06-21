@@ -82,6 +82,7 @@ const leggTilbakeOppgave = R.curry(
       fradelMegHandling({
         oppgaveId: oppgaveId,
         ident: ident,
+        kjorOppgavesokVedSuksess: true,
         klagebehandlingVersjon: klagebehandlingVersjon,
         enhetId: enhetId,
       })

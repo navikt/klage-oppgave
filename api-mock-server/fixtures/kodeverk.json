@@ -1,638 +1,415 @@
 {
-  "eoes": [
+  "antallTreffTotalt": 59,
+  "personer": [
     {
-      "id": "1",
-      "navn": "Riktig",
-      "beskrivelse": "Problemstilling knyttet til EØS/utland er godt håndtert"
-    },
-    {
-      "id": "2",
-      "navn": "Ikke oppdaget",
-      "beskrivelse": "Vedtaksinstansen har ikke oppdaget at saken gjelder EØS/utland"
-    },
-    {
-      "id": "3",
-      "navn": "Feil",
-      "beskrivelse": "Vedtaksinstansen har oppdaget at saken gjelder EØS/utland, men har håndtert saken feil"
-    },
-    {
-      "id": "4",
-      "navn": "Uaktuelt",
-      "beskrivelse": "EØS/utenlandsproblematikk er ikke relevant i saken"
-    }
-  ],
-  "grunn": [
-    {
-      "id": "1",
-      "navn": "Mangelfull utredning",
-      "beskrivelse": "Mangelfull utredning"
-    },
-    {
-      "id": "2",
-      "navn": "Andre saksbehandlingsfeil",
-      "beskrivelse": "Andre saksbehandlingsfeil"
-    },
-    { "id": "3", "navn": "Endret faktum", "beskrivelse": "Endret faktum" },
-    {
-      "id": "4",
-      "navn": "Feil i bevisvurderingen",
-      "beskrivelse": "Feil i bevisvurderingen"
-    },
-    {
-      "id": "5",
-      "navn": "Feil i den generelle lovtolkningen",
-      "beskrivelse": "Feil i den generelle lovtolkningen"
-    },
-    {
-      "id": "6",
-      "navn": "Feil i den konkrete rettsanvendelsen",
-      "beskrivelse": "Feil i den konkrete rettsanvendelsen"
-    }
-  ],
-  "hjemmel": [
-    { "id": "1000", "navn": "FTL", "beskrivelse": "Folketrygdloven" },
-    {
-      "id": "1000.008.002",
-      "navn": "FTL 8-2",
-      "beskrivelse": "Folketrygdloven §8-2"
-    },
-    {
-      "id": "1000.008.003",
-      "navn": "FTL 8-3",
-      "beskrivelse": "Folketrygdloven §8-3"
-    },
-    {
-      "id": "1000.008.004",
-      "navn": "FTL 8-4",
-      "beskrivelse": "Folketrygdloven §8-4"
-    },
-    {
-      "id": "1000.008.007",
-      "navn": "FTL 8-7",
-      "beskrivelse": "Folketrygdloven §8-7"
-    },
-    {
-      "id": "1000.008.008",
-      "navn": "FTL 8-8",
-      "beskrivelse": "Folketrygdloven §8-8"
-    },
-    {
-      "id": "1000.008.012",
-      "navn": "FTL 8-12",
-      "beskrivelse": "Folketrygdloven §8-12"
-    },
-    {
-      "id": "1000.008.013",
-      "navn": "FTL 8-13",
-      "beskrivelse": "Folketrygdloven §8-13"
-    },
-    {
-      "id": "1000.008.015",
-      "navn": "FTL 8-15",
-      "beskrivelse": "Folketrygdloven §8-15"
-    },
-    {
-      "id": "1000.008.020",
-      "navn": "FTL 8-20",
-      "beskrivelse": "Folketrygdloven §8-20"
-    },
-    {
-      "id": "1000.008.028",
-      "navn": "FTL 8-28",
-      "beskrivelse": "Folketrygdloven §8-28"
-    },
-    {
-      "id": "1000.008.029",
-      "navn": "FTL 8-29",
-      "beskrivelse": "Folketrygdloven §8-29"
-    },
-    {
-      "id": "1000.008.030",
-      "navn": "FTL 8-30",
-      "beskrivelse": "Folketrygdloven §8-30"
-    },
-    {
-      "id": "1000.008.034",
-      "navn": "FTL 8-34",
-      "beskrivelse": "Folketrygdloven §8-34"
-    },
-    {
-      "id": "1000.008.035",
-      "navn": "FTL 8-35",
-      "beskrivelse": "Folketrygdloven §8-35"
-    },
-    {
-      "id": "1000.008.036",
-      "navn": "FTL 8-36",
-      "beskrivelse": "Folketrygdloven §8-36"
-    },
-    {
-      "id": "1000.008.037",
-      "navn": "FTL 8-37",
-      "beskrivelse": "Folketrygdloven §8-37"
-    },
-    {
-      "id": "1000.008.038",
-      "navn": "FTL 8-38",
-      "beskrivelse": "Folketrygdloven §8-38"
-    },
-    {
-      "id": "1000.008.039",
-      "navn": "FTL 8-39",
-      "beskrivelse": "Folketrygdloven §8-39"
-    },
-    {
-      "id": "1000.008.040",
-      "navn": "FTL 8-40",
-      "beskrivelse": "Folketrygdloven §8-40"
-    },
-    {
-      "id": "1000.008.041",
-      "navn": "FTL 8-41",
-      "beskrivelse": "Folketrygdloven §8-41"
-    },
-    {
-      "id": "1000.008.042",
-      "navn": "FTL 8-42",
-      "beskrivelse": "Folketrygdloven §8-42"
-    },
-    {
-      "id": "1000.008.043",
-      "navn": "FTL 8-43",
-      "beskrivelse": "Folketrygdloven §8-43"
-    },
-    {
-      "id": "1000.008.047",
-      "navn": "FTL 8-47",
-      "beskrivelse": "Folketrygdloven §8-47"
-    },
-    {
-      "id": "1000.008.049",
-      "navn": "FTL 8-49",
-      "beskrivelse": "Folketrygdloven §8-49"
-    },
-    {
-      "id": "1000.022.003",
-      "navn": "FTL 22-3",
-      "beskrivelse": "Folketrygdloven §22-3"
-    },
-    {
-      "id": "1000.022.012",
-      "navn": "FTL 22-12",
-      "beskrivelse": "Folketrygdloven §22-12"
-    },
-    {
-      "id": "1000.009",
-      "navn": "FTL 9",
-      "beskrivelse": "Folketrygdloven kapittel 9"
-    },
-    {
-      "id": "1000.009.002",
-      "navn": "FTL 9-2",
-      "beskrivelse": "Folketrygdloven §9-2"
-    },
-    {
-      "id": "1000.009.003",
-      "navn": "FTL 9-3",
-      "beskrivelse": "Folketrygdloven §9-3"
-    },
-    {
-      "id": "1000.009.005",
-      "navn": "FTL 9-5",
-      "beskrivelse": "Folketrygdloven §9-5"
-    },
-    {
-      "id": "1000.009.006",
-      "navn": "FTL 9-6",
-      "beskrivelse": "Folketrygdloven §9-6"
-    },
-    {
-      "id": "1000.009.010",
-      "navn": "FTL 9-10",
-      "beskrivelse": "Folketrygdloven §9-10"
-    },
-    {
-      "id": "1000.009.011",
-      "navn": "FTL 9-11",
-      "beskrivelse": "Folketrygdloven §9-11"
-    },
-    {
-      "id": "1000.009.012",
-      "navn": "FTL 9-12",
-      "beskrivelse": "Folketrygdloven §9-12"
-    },
-    {
-      "id": "1000.009.013",
-      "navn": "FTL 9-13",
-      "beskrivelse": "Folketrygdloven §9-13"
-    },
-    {
-      "id": "1000.009.014",
-      "navn": "FTL 9-14",
-      "beskrivelse": "Folketrygdloven §9-14"
-    },
-    {
-      "id": "1000.009.015",
-      "navn": "FTL 9-15",
-      "beskrivelse": "Folketrygdloven §9-15"
-    },
-    {
-      "id": "1000.009.016",
-      "navn": "FTL 9-16",
-      "beskrivelse": "Folketrygdloven §9-16"
-    },
-    { "id": "1002", "navn": "MANGLER", "beskrivelse": "Hjemmel mangler" }
-  ],
-  "raadfoertMedLege": [
-    {
-      "id": "1",
-      "navn": "Mangler",
-      "beskrivelse": "Saken burde vært forelagt for ROL i vedtaksinstansen"
-    },
-    {
-      "id": "2",
-      "navn": "Riktig",
-      "beskrivelse": "Saken er godt nok medisinsk opplyst med ROL-uttalelse i vedtaksinstansen/uten at ROL har blitt konsultert"
-    },
-    {
-      "id": "3",
-      "navn": "Mangelfull",
-      "beskrivelse": "Saken er forelagt ROL i vedtaksinstans, men er fortsatt mangelfullt medisinsk vurdert"
-    },
-    {
-      "id": "4",
-      "navn": "Uaktuelt",
-      "beskrivelse": "Saken handler ikke om trygdemedisinske vurderinger"
-    }
-  ],
-  "type": [{ "id": "1", "navn": "Klage", "beskrivelse": "Klage" }],
-  "tema": [
-    {
-      "id": "27",
-      "navn": "OMS",
-      "beskrivelse": "Omsorgspenger, pleiepenger og opplæringspenger"
-    },
-    { "id": "43", "navn": "SYK", "beskrivelse": "Sykepenger" }
-  ],
-  "utfall": [
-    { "id": "1", "navn": "Trukket", "beskrivelse": "Trukket" },
-    { "id": "2", "navn": "Retur", "beskrivelse": "Retur" },
-    { "id": "3", "navn": "Opphevet", "beskrivelse": "Opphevet" },
-    { "id": "4", "navn": "Medhold", "beskrivelse": "Medhold" },
-    { "id": "5", "navn": "Delvis medhold", "beskrivelse": "Delvis medhold" },
-    { "id": "6", "navn": "Opprettholdt", "beskrivelse": "Opprettholdt" },
-    {
-      "id": "7",
-      "navn": "Ugunst (Ugyldig)",
-      "beskrivelse": "Ugunst (Ugyldig)"
-    },
-    { "id": "8", "navn": "Avvist", "beskrivelse": "Avvist" }
-  ],
-  "hjemlerPerTema": [
-    {
-      "temaId": "27",
-      "hjemler": [
+      "fnr": "20467938577",
+      "navn": "RAUS RHODODENRON",
+      "klagebehandlinger": [
         {
-          "id": "1000.009",
-          "navn": "FTL 9",
-          "beskrivelse": "Folketrygdloven kapittel 9"
+          "id": "0eeb7490-9dd7-4d98-8f9f-7e3e227716e3",
+          "person": null,
+          "type": "1",
+          "tema": "27",
+          "hjemmel": null,
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 7,
+          "klagebehandlingVersjon": 7,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": "6",
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994862",
+          "tildeltSaksbehandlerNavn": "F_Z994862 E_Z994862",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.002",
-          "navn": "FTL 9-2",
-          "beskrivelse": "Folketrygdloven §9-2"
+          "id": "cd24cf76-2988-4bb2-8826-5686f0fbd126",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": "1000.008.035",
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 15,
+          "klagebehandlingVersjon": 15,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": null,
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994862",
+          "tildeltSaksbehandlerNavn": "F_Z994862 E_Z994862",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.003",
-          "navn": "FTL 9-3",
-          "beskrivelse": "Folketrygdloven §9-3"
+          "id": "2166b4cc-b8c7-4b5c-b22a-e9fd0d1ebe36",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": null,
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 3,
+          "klagebehandlingVersjon": 3,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": "2",
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994307",
+          "tildeltSaksbehandlerNavn": "F_Z994307 E_Z994307",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.005",
-          "navn": "FTL 9-5",
-          "beskrivelse": "Folketrygdloven §9-5"
+          "id": "d6ca714a-2c53-464f-90fd-801332dd9013",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": "1000.008.035",
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 245,
+          "klagebehandlingVersjon": 245,
+          "erMedunderskriver": false,
+          "harMedunderskriver": true,
+          "medunderskriverident": "Z994330",
+          "utfall": null,
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994488",
+          "tildeltSaksbehandlerNavn": "F_Z994488 E_Z994488",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.006",
-          "navn": "FTL 9-6",
-          "beskrivelse": "Folketrygdloven §9-6"
+          "id": "5a20de20-ae9e-4e40-a845-2249d7e50254",
+          "person": null,
+          "type": "1",
+          "tema": "27",
+          "hjemmel": "1000.008.004",
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 37,
+          "klagebehandlingVersjon": 37,
+          "erMedunderskriver": false,
+          "harMedunderskriver": true,
+          "medunderskriverident": "Z994488",
+          "utfall": "4",
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994862",
+          "tildeltSaksbehandlerNavn": "F_Z994862 E_Z994862",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.010",
-          "navn": "FTL 9-10",
-          "beskrivelse": "Folketrygdloven §9-10"
+          "id": "4436128d-730f-41d4-ba74-4ed6744e3d31",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": "1000.008.004",
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 5,
+          "klagebehandlingVersjon": 5,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": "6",
+          "avsluttetAvSaksbehandler": "2021-05-28",
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994307",
+          "tildeltSaksbehandlerNavn": "F_Z994307 E_Z994307",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.011",
-          "navn": "FTL 9-11",
-          "beskrivelse": "Folketrygdloven §9-11"
+          "id": "2539c88c-fd71-4672-bc0c-7d94479dddd8",
+          "person": null,
+          "type": "1",
+          "tema": "27",
+          "hjemmel": "1000.008.004",
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 3,
+          "klagebehandlingVersjon": 3,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": null,
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994488",
+          "tildeltSaksbehandlerNavn": "F_Z994488 E_Z994488",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.012",
-          "navn": "FTL 9-12",
-          "beskrivelse": "Folketrygdloven §9-12"
+          "id": "a5581081-cef3-47bd-9f6d-1bbe763cf7b6",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": null,
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 8,
+          "klagebehandlingVersjon": 8,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": "3",
+          "avsluttetAvSaksbehandler": "2021-06-07",
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994861",
+          "tildeltSaksbehandlerNavn": "F_Z994861 E_Z994861",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.013",
-          "navn": "FTL 9-13",
-          "beskrivelse": "Folketrygdloven §9-13"
+          "id": "f5ad6306-368b-4dd5-b1e1-bfe7719c1f04",
+          "person": null,
+          "type": "1",
+          "tema": "27",
+          "hjemmel": "1000.008.004",
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 15,
+          "klagebehandlingVersjon": 15,
+          "erMedunderskriver": false,
+          "harMedunderskriver": true,
+          "medunderskriverident": "Z994488",
+          "utfall": "3",
+          "avsluttetAvSaksbehandler": "2021-06-16",
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994330",
+          "tildeltSaksbehandlerNavn": "F_Z994330 E_Z994330",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.014",
-          "navn": "FTL 9-14",
-          "beskrivelse": "Folketrygdloven §9-14"
+          "id": "92ffe746-f19c-4e71-bb89-2a5b02eee78b",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": null,
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 3,
+          "klagebehandlingVersjon": 3,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": null,
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994929",
+          "tildeltSaksbehandlerNavn": "F_Z994929 E_Z994929",
+          "saksbehandlerHarTilgang": true
+        }
+      ],
+      "aapneKlagebehandlinger": [
+        {
+          "id": "0eeb7490-9dd7-4d98-8f9f-7e3e227716e3",
+          "person": null,
+          "type": "1",
+          "tema": "27",
+          "hjemmel": null,
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 7,
+          "klagebehandlingVersjon": 7,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": "6",
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994862",
+          "tildeltSaksbehandlerNavn": "F_Z994862 E_Z994862",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.015",
-          "navn": "FTL 9-15",
-          "beskrivelse": "Folketrygdloven §9-15"
+          "id": "cd24cf76-2988-4bb2-8826-5686f0fbd126",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": "1000.008.035",
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 15,
+          "klagebehandlingVersjon": 15,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": null,
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994862",
+          "tildeltSaksbehandlerNavn": "F_Z994862 E_Z994862",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.009.016",
-          "navn": "FTL 9-16",
-          "beskrivelse": "Folketrygdloven §9-16"
-        },
-        { "id": "1000", "navn": "FTL", "beskrivelse": "Folketrygdloven" },
-        { "id": "1002", "navn": "MANGLER", "beskrivelse": "Hjemmel mangler" }
-      ]
-    },
-    {
-      "temaId": "43",
-      "hjemler": [
-        {
-          "id": "1000.008.002",
-          "navn": "FTL 8-2",
-          "beskrivelse": "Folketrygdloven §8-2"
-        },
-        {
-          "id": "1000.008.003",
-          "navn": "FTL 8-3",
-          "beskrivelse": "Folketrygdloven §8-3"
+          "id": "2166b4cc-b8c7-4b5c-b22a-e9fd0d1ebe36",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": null,
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 3,
+          "klagebehandlingVersjon": 3,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": "2",
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994307",
+          "tildeltSaksbehandlerNavn": "F_Z994307 E_Z994307",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.008.004",
-          "navn": "FTL 8-4",
-          "beskrivelse": "Folketrygdloven §8-4"
+          "id": "d6ca714a-2c53-464f-90fd-801332dd9013",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": "1000.008.035",
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 245,
+          "klagebehandlingVersjon": 245,
+          "erMedunderskriver": false,
+          "harMedunderskriver": true,
+          "medunderskriverident": "Z994330",
+          "utfall": null,
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994488",
+          "tildeltSaksbehandlerNavn": "F_Z994488 E_Z994488",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.008.007",
-          "navn": "FTL 8-7",
-          "beskrivelse": "Folketrygdloven §8-7"
+          "id": "5a20de20-ae9e-4e40-a845-2249d7e50254",
+          "person": null,
+          "type": "1",
+          "tema": "27",
+          "hjemmel": "1000.008.004",
+          "frist": "2021-08-19",
+          "mottatt": "2021-05-27",
+          "versjon": 37,
+          "klagebehandlingVersjon": 37,
+          "erMedunderskriver": false,
+          "harMedunderskriver": true,
+          "medunderskriverident": "Z994488",
+          "utfall": "4",
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994862",
+          "tildeltSaksbehandlerNavn": "F_Z994862 E_Z994862",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.008.008",
-          "navn": "FTL 8-8",
-          "beskrivelse": "Folketrygdloven §8-8"
+          "id": "2539c88c-fd71-4672-bc0c-7d94479dddd8",
+          "person": null,
+          "type": "1",
+          "tema": "27",
+          "hjemmel": "1000.008.004",
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 3,
+          "klagebehandlingVersjon": 3,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": null,
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994488",
+          "tildeltSaksbehandlerNavn": "F_Z994488 E_Z994488",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.008.012",
-          "navn": "FTL 8-12",
-          "beskrivelse": "Folketrygdloven §8-12"
+          "id": "92ffe746-f19c-4e71-bb89-2a5b02eee78b",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": null,
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 3,
+          "klagebehandlingVersjon": 3,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": null,
+          "avsluttetAvSaksbehandler": null,
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994929",
+          "tildeltSaksbehandlerNavn": "F_Z994929 E_Z994929",
+          "saksbehandlerHarTilgang": true
+        }
+      ],
+      "avsluttedeKlagebehandlinger": [
+        {
+          "id": "4436128d-730f-41d4-ba74-4ed6744e3d31",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": "1000.008.004",
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 5,
+          "klagebehandlingVersjon": 5,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": "6",
+          "avsluttetAvSaksbehandler": "2021-05-28",
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994307",
+          "tildeltSaksbehandlerNavn": "F_Z994307 E_Z994307",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.008.013",
-          "navn": "FTL 8-13",
-          "beskrivelse": "Folketrygdloven §8-13"
+          "id": "a5581081-cef3-47bd-9f6d-1bbe763cf7b6",
+          "person": null,
+          "type": "1",
+          "tema": "43",
+          "hjemmel": null,
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 8,
+          "klagebehandlingVersjon": 8,
+          "erMedunderskriver": false,
+          "harMedunderskriver": false,
+          "medunderskriverident": null,
+          "utfall": "3",
+          "avsluttetAvSaksbehandler": "2021-06-07",
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994861",
+          "tildeltSaksbehandlerNavn": "F_Z994861 E_Z994861",
+          "saksbehandlerHarTilgang": true
         },
         {
-          "id": "1000.008.015",
-          "navn": "FTL 8-15",
-          "beskrivelse": "Folketrygdloven §8-15"
-        },
-        {
-          "id": "1000.008.020",
-          "navn": "FTL 8-20",
-          "beskrivelse": "Folketrygdloven §8-20"
-        },
-        {
-          "id": "1000.008.028",
-          "navn": "FTL 8-28",
-          "beskrivelse": "Folketrygdloven §8-28"
-        },
-        {
-          "id": "1000.008.029",
-          "navn": "FTL 8-29",
-          "beskrivelse": "Folketrygdloven §8-29"
-        },
-        {
-          "id": "1000.008.030",
-          "navn": "FTL 8-30",
-          "beskrivelse": "Folketrygdloven §8-30"
-        },
-        {
-          "id": "1000.008.034",
-          "navn": "FTL 8-34",
-          "beskrivelse": "Folketrygdloven §8-34"
-        },
-        {
-          "id": "1000.008.035",
-          "navn": "FTL 8-35",
-          "beskrivelse": "Folketrygdloven §8-35"
-        },
-        {
-          "id": "1000.008.036",
-          "navn": "FTL 8-36",
-          "beskrivelse": "Folketrygdloven §8-36"
-        },
-        {
-          "id": "1000.008.037",
-          "navn": "FTL 8-37",
-          "beskrivelse": "Folketrygdloven §8-37"
-        },
-        {
-          "id": "1000.008.038",
-          "navn": "FTL 8-38",
-          "beskrivelse": "Folketrygdloven §8-38"
-        },
-        {
-          "id": "1000.008.039",
-          "navn": "FTL 8-39",
-          "beskrivelse": "Folketrygdloven §8-39"
-        },
-        {
-          "id": "1000.008.040",
-          "navn": "FTL 8-40",
-          "beskrivelse": "Folketrygdloven §8-40"
-        },
-        {
-          "id": "1000.008.041",
-          "navn": "FTL 8-41",
-          "beskrivelse": "Folketrygdloven §8-41"
-        },
-        {
-          "id": "1000.008.042",
-          "navn": "FTL 8-42",
-          "beskrivelse": "Folketrygdloven §8-42"
-        },
-        {
-          "id": "1000.008.043",
-          "navn": "FTL 8-43",
-          "beskrivelse": "Folketrygdloven §8-43"
-        },
-        {
-          "id": "1000.008.047",
-          "navn": "FTL 8-47",
-          "beskrivelse": "Folketrygdloven §8-47"
-        },
-        {
-          "id": "1000.008.049",
-          "navn": "FTL 8-49",
-          "beskrivelse": "Folketrygdloven §8-49"
-        },
-        { "id": "1000", "navn": "FTL", "beskrivelse": "Folketrygdloven" },
-        { "id": "1002", "navn": "MANGLER", "beskrivelse": "Hjemmel mangler" }
-      ]
-    }
-  ],
-  "grunnerPerUtfall": [
-    {
-      "utfallId": "5",
-      "grunner": [
-        {
-          "id": "1",
-          "navn": "Mangelfull utredning",
-          "beskrivelse": "Mangelfull utredning"
-        },
-        {
-          "id": "2",
-          "navn": "Andre saksbehandlingsfeil",
-          "beskrivelse": "Andre saksbehandlingsfeil"
-        },
-        { "id": "3", "navn": "Endret faktum", "beskrivelse": "Endret faktum" },
-        {
-          "id": "4",
-          "navn": "Feil i bevisvurderingen",
-          "beskrivelse": "Feil i bevisvurderingen"
-        },
-        {
-          "id": "5",
-          "navn": "Feil i den generelle lovtolkningen",
-          "beskrivelse": "Feil i den generelle lovtolkningen"
-        },
-        {
-          "id": "6",
-          "navn": "Feil i den konkrete rettsanvendelsen",
-          "beskrivelse": "Feil i den konkrete rettsanvendelsen"
+          "id": "f5ad6306-368b-4dd5-b1e1-bfe7719c1f04",
+          "person": null,
+          "type": "1",
+          "tema": "27",
+          "hjemmel": "1000.008.004",
+          "frist": "2021-08-20",
+          "mottatt": "2021-05-28",
+          "versjon": 15,
+          "klagebehandlingVersjon": 15,
+          "erMedunderskriver": false,
+          "harMedunderskriver": true,
+          "medunderskriverident": "Z994488",
+          "utfall": "3",
+          "avsluttetAvSaksbehandler": "2021-06-16",
+          "erTildelt": true,
+          "tildeltSaksbehandlerident": "Z994330",
+          "tildeltSaksbehandlerNavn": "F_Z994330 E_Z994330",
+          "saksbehandlerHarTilgang": true
         }
       ]
-    },
-    {
-      "utfallId": "4",
-      "grunner": [
-        {
-          "id": "1",
-          "navn": "Mangelfull utredning",
-          "beskrivelse": "Mangelfull utredning"
-        },
-        {
-          "id": "2",
-          "navn": "Andre saksbehandlingsfeil",
-          "beskrivelse": "Andre saksbehandlingsfeil"
-        },
-        { "id": "3", "navn": "Endret faktum", "beskrivelse": "Endret faktum" },
-        {
-          "id": "4",
-          "navn": "Feil i bevisvurderingen",
-          "beskrivelse": "Feil i bevisvurderingen"
-        },
-        {
-          "id": "5",
-          "navn": "Feil i den generelle lovtolkningen",
-          "beskrivelse": "Feil i den generelle lovtolkningen"
-        },
-        {
-          "id": "6",
-          "navn": "Feil i den konkrete rettsanvendelsen",
-          "beskrivelse": "Feil i den konkrete rettsanvendelsen"
-        }
-      ]
-    },
-    {
-      "utfallId": "3",
-      "grunner": [
-        {
-          "id": "1",
-          "navn": "Mangelfull utredning",
-          "beskrivelse": "Mangelfull utredning"
-        },
-        {
-          "id": "2",
-          "navn": "Andre saksbehandlingsfeil",
-          "beskrivelse": "Andre saksbehandlingsfeil"
-        },
-        { "id": "3", "navn": "Endret faktum", "beskrivelse": "Endret faktum" },
-        {
-          "id": "4",
-          "navn": "Feil i bevisvurderingen",
-          "beskrivelse": "Feil i bevisvurderingen"
-        },
-        {
-          "id": "5",
-          "navn": "Feil i den generelle lovtolkningen",
-          "beskrivelse": "Feil i den generelle lovtolkningen"
-        },
-        {
-          "id": "6",
-          "navn": "Feil i den konkrete rettsanvendelsen",
-          "beskrivelse": "Feil i den konkrete rettsanvendelsen"
-        }
-      ]
-    },
-    { "utfallId": "8", "grunner": [] },
-    { "utfallId": "6", "grunner": [] },
-    { "utfallId": "2", "grunner": [] },
-    { "utfallId": "1", "grunner": [] },
-    { "utfallId": "7", "grunner": [] }
-  ],
-  "partIdType": [
-    { "id": "PERSON", "navn": "Person", "beskrivelse": "Person" },
-    { "id": "VIRKSOMHET", "navn": "Virksomhet", "beskrivelse": "Virksomhet" }
-  ],
-  "rolle": [
-    { "id": "1", "navn": "Klager", "beskrivelse": "Klager" },
-    { "id": "2", "navn": "Saken gjelder", "beskrivelse": "Den saken gjelder" },
-    {
-      "id": "3",
-      "navn": "Prosessfullmektig",
-      "beskrivelse": "Prosessfullmektig"
-    },
-    { "id": "4", "navn": "Tredjepart", "beskrivelse": "Relevant tredjepart" }
-  ],
-  "fagsystem": [
-    {
-      "id": "1",
-      "navn": "FS36",
-      "beskrivelse": "Vedtaksløsning Foreldrepenger"
-    },
-    {
-      "id": "2",
-      "navn": "FS39",
-      "beskrivelse": "Saksbehandling for Folketrygdloven kapittel 9"
-    },
-    { "id": "3", "navn": "AO01", "beskrivelse": "Arena" },
-    { "id": "4", "navn": "AO11", "beskrivelse": "Grisen" },
-    { "id": "5", "navn": "BISYS", "beskrivelse": "BISYS" },
-    { "id": "6", "navn": "FS38", "beskrivelse": "Melosys" },
-    { "id": "7", "navn": "IT01", "beskrivelse": "Infotrygd" },
-    { "id": "8", "navn": "K9", "beskrivelse": "Sykdom i familien" },
-    { "id": "9", "navn": "OB36", "beskrivelse": "Utbetalingsmelding" },
-    { "id": "10", "navn": "OEBS", "beskrivelse": "OEBS" },
-    { "id": "11", "navn": "PP01", "beskrivelse": "Pesys" },
-    { "id": "12", "navn": "UFM", "beskrivelse": "Unntak fra medlemskap" },
-    { "id": "13", "navn": "BA", "beskrivelse": "Barnetrygd" },
-    { "id": "14", "navn": "EF", "beskrivelse": "Enslig forsørger" },
-    { "id": "15", "navn": "KONT", "beskrivelse": "Kontantstøtte" },
-    { "id": "16", "navn": "SUPSTONAD", "beskrivelse": "Supplerende Stønad" },
-    { "id": "17", "navn": "OMSORGSPENGER", "beskrivelse": "Omsorgspenger" },
-    {
-      "id": "18",
-      "navn": "MANUELL",
-      "beskrivelse": "Manuell registrering av kvalitetsskjema"
     }
-  ],
-  "utsendingStatus": [
-    { "id": "1", "navn": "Ikke sendt", "beskrivelse": "Ikke sendt" },
-    { "id": "2", "navn": "Feilet", "beskrivelse": "Feilet" },
-    { "id": "3", "navn": "Sendt", "beskrivelse": "Sendt" }
   ]
 }

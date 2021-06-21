@@ -387,6 +387,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
         tildelMegHandling({
           oppgaveId: valgtOppgave.id,
           ident: meg.id,
+          kjorOppgavesokVedSuksess: true,
           klagebehandlingVersjon: valgtOppgave.klagebehandlingVersjon,
           enhetId: enheter[valgtEnhetIdx].id,
         })

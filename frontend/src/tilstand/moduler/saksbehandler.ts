@@ -24,6 +24,7 @@ export type ITildelOppgave = {
   oppgaveId: string;
   klagebehandlingVersjon: number;
   enhetId: string;
+  kjorOppgavesokVedSuksess: boolean;
 };
 
 //==========
@@ -139,7 +140,9 @@ export function fradelEpos(
               projeksjon: state$.value.klagebehandlinger.meta.projeksjon,
               tildeltSaksbehandler: state$.value.klagebehandlinger.meta.tildeltSaksbehandler,
             } as OppgaveParams;
-            return concat([fradeltHandling(response.response), oppgaveRequest(params)]);
+            if (action.payload.kjorOppgavesokVedSuksess) {
+              return concat([fradeltHandling(response.response), oppgaveRequest(params)]);
+            } else return concat([fradeltHandling(response.response)]);
           })
         )
         .pipe(
