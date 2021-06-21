@@ -133,9 +133,7 @@ export const megSlice = createSlice({
       state.innstillinger = action.payload;
       return state;
     },
-    FEILET: (state, action: PayloadAction<string>) => {
-      console.error(action.payload);
-    },
+    FEILET: (state, action: PayloadAction<string>) => {},
   },
 });
 

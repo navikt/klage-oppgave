@@ -51,7 +51,6 @@ export default function Oppsett({
     //sjekk innlogging
     dispatch(hentExpiry());
     if (R.empty(kodeverk)) {
-      console.log(kodeverk);
       dispatch(hentKodeverk());
     }
   }, [dispatch, hentKodeverk]);

@@ -266,7 +266,6 @@ export const klageSlice = createSlice({
       ...action.payload,
     }),
     FEILET: (state, action: PayloadAction<string>) => {
-      console.error(action.payload);
       state.klageLastet = true;
       state.klageLastingFeilet = true;
       return state;

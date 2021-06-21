@@ -19,7 +19,6 @@ export const provIgjenStrategi =
         if (forsok > maksForsok || ekskluderteStatuskoder.find((e) => e === error.status)) {
           return throwError(error);
         }
-        console.debug(`Forsøk ${forsok}: prøver igjen (${forsok * ventetidMillisekunder}ms)`);
         return timer(forsok * ventetidMillisekunder);
       }),
       finalize(() => {

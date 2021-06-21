@@ -194,10 +194,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       }
     }
 
-    console.debug(
-      "%chenter oppgaver basert på endring av sortering ",
-      "background: #aa9; color: #222255"
-    );
     dispatchTransformering({ sortType, sortOrder });
     filter_dispatch({ type: "sett_start", payload: 0 });
     history.push(location.pathname.replace(/\d+$/, "1"));
@@ -224,14 +220,9 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
     if (!filter_state.ident) {
       //todo dette er ikke riktig, ident skal ikke mangle
-      //console.debug("%c mangler ident!", "background: #b00b55; color: #ffffff");
       ident = meg.id;
     }
     if (ident && enhetId) {
-      console.debug(
-        "%c -> kjører den faktisk oppgave-spørringen",
-        "background: #222; color: #bada55"
-      );
       dispatch(
         hentUtgatte({
           ident: ident,
@@ -427,7 +418,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
   useEffect(() => {
     if (filter_state.meta.kan_hente_oppgaver || start > -1) {
-      //console.debug("%chenter oppgaver", "background: #222; color: #bada55");
       dispatchTransformering({
         sortType: filter_state.transformasjoner.sortering.type,
         sortOrder: filter_state.transformasjoner.sortering.frist,

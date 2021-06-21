@@ -91,7 +91,6 @@ const setup = (authClient) => {
         res.status(500);
         res.json({ error: "Kunne ikke koble til API" });
       },
-      logLevel: "debug",
       changeOrigin: true,
     })
   );
