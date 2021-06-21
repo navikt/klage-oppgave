@@ -58,7 +58,7 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
             loading={<NavFrontendSpinner />}
           >
             {pageKeys.map((key, index) => (
-              <Page key={key} pageNumber={index + 1} width={640} />
+              <Page key={key} pageNumber={index + 1} width={760} />
             ))}
           </Document>
         </Preview>
@@ -74,7 +74,7 @@ const options = {
 
 const FullBeholder = styled.section`
   display: block;
-  min-width: 640px;
+  min-width: 760px;
   height: 100%;
   margin: 0.25em 0.5em;
   background: white;
