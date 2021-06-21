@@ -572,10 +572,16 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
           </tr>
         </thead>
         <tbody>
-          {genererTabellRader(
-            settValgtOppgave,
-            klagebehandlinger,
-            filter_state?.projeksjon || visFnr
+          {klagebehandlinger.rader.length ? (
+            genererTabellRader(
+              settValgtOppgave,
+              klagebehandlinger,
+              filter_state?.projeksjon || visFnr
+            )
+          ) : (
+            <tr>
+              <td colSpan={visFnr ? 7 : 5}>Ingen oppgaver i liste</td>
+            </tr>
           )}
 
           {klagebehandlinger.meta.sider > 1 && (
