@@ -15,8 +15,13 @@ table.innstillinger {
 
 .tablerow__on_hover {
   &:hover {
-    text-decoration: underline !important;
     background: #e5f3ff !important;
+    text-decoration: underline !important;
+  }
+}
+.tablerow__on_hover > * {
+  &:hover {
+    text-decoration: underline !important;
   }
 }
 
@@ -170,6 +175,13 @@ table.innstillinger > tbody > tr > td > div {
   }
 }
 
+a.fnr,
+a.fnr:link,
+a.fnr:visited {
+  text-decoration: none;
+  color: black;
+}
+
 .fnr-lenke-wrap {
   display: inline-flex;
 
@@ -218,7 +230,13 @@ table.innstillinger > tbody > tr > td > div {
   overflow: hidden;
   white-space: nowrap;
   max-width: 13em;
+}
+
+.etikett:not(.etikett__mine-oppgaver) {
   cursor: default;
+}
+.cursor__pointer {
+  cursor: pointer !important;
 }
 
 @media (max-width: 1000px) {

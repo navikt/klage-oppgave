@@ -25,9 +25,7 @@ const velgOppgave = R.curry(
 
 const TableRow = styled.tr``;
 
-const TableCell = styled.td`
-  cursor: pointer !important;
-`;
+const TableCell = styled.td``;
 
 const EndreKnapp = styled.button`
   cursor: pointer !important;
@@ -90,6 +88,13 @@ const leggTilbakeOppgave = R.curry(
     )
 );
 
+function Kodeverk(kodeverk: any, data: string) {
+  if (!data) return "mangler";
+  return kodeverk
+    ? kodeverk.filter((h: IKodeverkVerdi) => h.id == data)[0]?.beskrivelse ?? `ukjent (${data})`
+    : "mangler";
+}
+
 const OppgaveTabellRad = ({
   id,
   type,
@@ -112,6 +117,10 @@ const OppgaveTabellRad = ({
   const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);
   const { kodeverk, lasterKodeverk } = useAppSelector(velgKodeverk);
 
+  const KodeverkHjemmel = R.curry(Kodeverk)(kodeverk.hjemmel);
+  const KodeverkType = R.curry(Kodeverk)(kodeverk.type);
+  const KodeverkTema = R.curry(Kodeverk)(kodeverk.tema);
+
   const location = useLocation();
   const history = useHistory();
 
@@ -130,52 +139,82 @@ const OppgaveTabellRad = ({
         location.pathname.startsWith("/mineoppgaver") ? "tablerow__on_hover" : ""
       } table-filter`}
     >
-      <TableCell data-testid={`linkbehandling${it}`} onClick={() => rerouteToKlage(location)}>
-        <EtikettBase type="info" className={`etikett-${type}`}>
-          {kodeverk?.type
-            ? kodeverk?.type?.filter((h: IKodeverkVerdi) => h.id == type)[0]?.beskrivelse ??
-              `ukjent type ${type}`
-            : "mangler"}
+      <td
+        className={`${location.pathname.startsWith("/mineoppgaver") ? "cursor__pointer" : ""} `}
+        data-testid={`linkbehandling${it}`}
+        onClick={() => rerouteToKlage(location)}
+      >
+        <EtikettBase
+          type="info"
+          className={`etikett-${type}  ${
+            location.pathname.startsWith("/mineoppgaver") ? "etikett__mine-oppgaver" : ""
+          } `}
+        >
+          {KodeverkType(type)}
         </EtikettBase>
-      </TableCell>
-      <TableCell onClick={() => rerouteToKlage(location)}>
-        <EtikettBase type="info" className={`etikett-${tema}`}>
-          {kodeverk?.tema
-            ? kodeverk?.tema?.filter((h: IKodeverkVerdi) => h.id == tema)[0]?.beskrivelse ??
-              `ukjent tema ${tema}`
-            : "mangler"}
+      </td>
+      <td
+        className={`${location.pathname.startsWith("/mineoppgaver") ? "cursor__pointer" : ""} `}
+        onClick={() => rerouteToKlage(location)}
+      >
+        <EtikettBase
+          type="info"
+          className={`etikett-${tema} ${
+            location.pathname.startsWith("/mineoppgaver") ? "etikett__mine-oppgaver" : ""
+          }`}
+        >
+          {KodeverkTema(tema)}
         </EtikettBase>
-      </TableCell>
+      </td>
 
-      <TableCell onClick={() => rerouteToKlage(location)}>
-        <EtikettBase type="info" className={`etikett-${hjemmel}`}>
-          {hjemmel
-            ? kodeverk?.hjemmel
-              ? kodeverk?.hjemmel?.filter((h: IKodeverkVerdi) => h.id == hjemmel)[0]?.beskrivelse ??
-                `ukjent hjemmel ${hjemmel}`
-              : "mangler"
-            : "mangler"}
+      <td
+        className={`${location.pathname.startsWith("/mineoppgaver") ? "cursor__pointer" : ""} `}
+        onClick={() => rerouteToKlage(location)}
+      >
+        <EtikettBase
+          type="info"
+          className={`etikett-${hjemmel} ${
+            location.pathname.startsWith("/mineoppgaver") ? "etikett__mine-oppgaver" : ""
+          }`}
+        >
+          {KodeverkHjemmel(hjemmel)}
         </EtikettBase>
-      </TableCell>
+      </td>
 
       {utvidetProjeksjon && (
-        <TableCell onClick={() => rerouteToKlage(location)}>{person?.navn || "mangler"}</TableCell>
+        <td
+          className={`${location.pathname.startsWith("/mineoppgaver") ? "cursor__pointer" : ""} `}
+          onClick={() => rerouteToKlage(location)}
+        >
+          {person?.navn || "mangler"}
+        </td>
       )}
       {utvidetProjeksjon && (
-        <TableCell>
-          <div className="fnr-lenke-wrap">
-            <NavLink to={`/klagebehandling/${id}`}> {person?.fnr || "mangler"}</NavLink>
-          </div>
-        </TableCell>
+        <td
+          className={`${location.pathname.startsWith("/mineoppgaver") ? "cursor__pointer" : ""} `}
+        >
+          <NavLink className={"fnr"} to={`/klagebehandling/${id}`}>
+            {" "}
+            {person?.fnr || "mangler"}
+          </NavLink>
+        </td>
       )}
 
       {avsluttetAvSaksbehandler && (
-        <TableCell onClick={() => rerouteToKlage(location)}>
+        <td
+          className={`${location.pathname.startsWith("/mineoppgaver") ? "cursor__pointer" : ""} `}
+          onClick={() => rerouteToKlage(location)}
+        >
           {formattedDate(avsluttetAvSaksbehandler)}
-        </TableCell>
+        </td>
       )}
       {!avsluttetAvSaksbehandler && (
-        <TableCell onClick={() => rerouteToKlage(location)}>{formattedDate(frist)}</TableCell>
+        <td
+          className={`${location.pathname.startsWith("/mineoppgaver") ? "cursor__pointer" : ""} `}
+          onClick={() => rerouteToKlage(location)}
+        >
+          {formattedDate(frist)}
+        </td>
       )}
 
       {utfallObjekt ? <TableCell>{utfallObjekt.navn}</TableCell> : null}
