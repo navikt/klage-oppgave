@@ -51,7 +51,7 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
             </div>
           </PreviewTitle>
         </Preview>
-        <Iframe src={url} />
+        <Iframe src={`${url}#toolbar=0`} />
       </PreviewBeholder>
     </FullBeholder>
   );
