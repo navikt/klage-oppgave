@@ -24,6 +24,7 @@ export type ITildelOppgave = {
   oppgaveId: string;
   klagebehandlingVersjon: number;
   enhetId: string;
+  kjorOppgavesokVedSuksess: boolean;
 };
 
 //==========
@@ -33,13 +34,23 @@ export const saksbehandlerSlice = createSlice({
   name: "saksbehandler",
   initialState: {
     id: "0",
+    tildeler: false,
     klagebehandlingVersjon: 1,
     saksbehandler: {
       navn: "",
       ident: "",
     },
   },
-  reducers: {},
+  reducers: {
+    TILDEL_MEG: (state, action: PayloadAction) => {
+      state.tildeler = true;
+      return state;
+    },
+    TILDELT: (state, action: PayloadAction) => {
+      state.tildeler = false;
+      return state;
+    },
+  },
 });
 
 export default saksbehandlerSlice.reducer;
@@ -86,7 +97,9 @@ export function tildelEpos(
               projeksjon: state$.value.klagebehandlinger.meta.projeksjon,
               tildeltSaksbehandler: state$.value.klagebehandlinger.meta.tildeltSaksbehandler,
             } as OppgaveParams;
-            return concat([tildeltHandling(response), oppgaveRequest(params)]);
+            if (action.payload.kjorOppgavesokVedSuksess) {
+              return concat([tildeltHandling(response), oppgaveRequest(params)]);
+            } else return concat([tildeltHandling(response)]);
           })
         )
         .pipe(
@@ -139,7 +152,9 @@ export function fradelEpos(
               projeksjon: state$.value.klagebehandlinger.meta.projeksjon,
               tildeltSaksbehandler: state$.value.klagebehandlinger.meta.tildeltSaksbehandler,
             } as OppgaveParams;
-            return concat([fradeltHandling(response.response), oppgaveRequest(params)]);
+            if (action.payload.kjorOppgavesokVedSuksess) {
+              return concat([fradeltHandling(response.response), oppgaveRequest(params)]);
+            } else return concat([fradeltHandling(response.response)]);
           })
         )
         .pipe(

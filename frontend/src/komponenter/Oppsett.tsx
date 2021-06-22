@@ -53,7 +53,7 @@ export default function Oppsett({
     if (R.empty(kodeverk)) {
       dispatch(hentKodeverk());
     }
-  }, [dispatch, hentKodeverk]);
+  }, [dispatch, hentKodeverk, hentFeatureToggleHandling]);
   useEffect(() => {
     const interval = setInterval(() => {
       let expiration = expireTime;

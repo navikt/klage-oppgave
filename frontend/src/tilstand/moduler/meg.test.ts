@@ -213,34 +213,6 @@ describe("'Meg' epos", () => {
     });
   });
 
-  it("test meg slice feil", () => {
-    const consoleSpy = spyOn(console, "error");
-    megTilstand(
-      {
-        id: "",
-        navn: "",
-        fornavn: "",
-        mail: "",
-        etternavn: "",
-        valgtEnhet: 0,
-        enheter: [
-          {
-            id: "",
-            navn: "",
-            lovligeTemaer: [{ label: "", value: "" }],
-          },
-        ],
-      },
-      {
-        type: feiletHandling.type,
-        payload: {
-          message: "FEIL",
-        },
-      }
-    );
-    expect(consoleSpy).toBeCalled();
-  });
-
   test(
     "+++ HENT 'MEG' RETRY 3 ganger og så returner FEIL",
     marbles(() => {

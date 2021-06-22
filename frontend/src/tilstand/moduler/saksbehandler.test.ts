@@ -57,6 +57,7 @@ describe("TILDEL 'Meg' epos", () => {
           a: tildelMegHandling({
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
+            kjorOppgavesokVedSuksess: true,
             klagebehandlingVersjon: 5,
             enhetId: "",
           }),
@@ -126,6 +127,7 @@ describe("TILDEL 'Meg' epos", () => {
           a: fradelMegHandling({
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
+            kjorOppgavesokVedSuksess: true,
             klagebehandlingVersjon: 5,
             enhetId: "",
           }),
@@ -179,6 +181,7 @@ describe("TILDEL 'Meg' epos", () => {
           a: fradelMegHandling({
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
+            kjorOppgavesokVedSuksess: true,
             klagebehandlingVersjon: 5,
             enhetId: "",
           }),
@@ -232,6 +235,7 @@ describe("TILDEL 'Meg' epos", () => {
           a: tildelMegHandling({
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
+            kjorOppgavesokVedSuksess: true,
             klagebehandlingVersjon: 5,
             enhetId: "",
           }),
@@ -284,6 +288,7 @@ describe("TILDEL 'Meg' epos", () => {
           a: tildelMegHandling({
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
+            kjorOppgavesokVedSuksess: true,
             klagebehandlingVersjon: 5,
             enhetId: "",
           }),
@@ -339,6 +344,7 @@ describe("TILDEL 'Meg' epos", () => {
           a: tildelMegHandling({
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
+            kjorOppgavesokVedSuksess: true,
             klagebehandlingVersjon: 5,
             enhetId: "",
           }),
@@ -394,6 +400,7 @@ describe("TILDEL 'Meg' epos", () => {
           a: tildelMegHandling({
             oppgaveId: "123456",
             ident: "ZAKSBEHANDLER",
+            kjorOppgavesokVedSuksess: true,
             klagebehandlingVersjon: 5,
             enhetId: "",
           }),
