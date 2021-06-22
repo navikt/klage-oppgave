@@ -50,18 +50,8 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
               <SVGIkon alt="Lukk forhåndsvisning" src={CloseSVG} onClick={close} />
             </div>
           </PreviewTitle>
-          <Document
-            file={url}
-            onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-            options={options}
-            error={<Feil>Kunne ikke hente PDF</Feil>}
-            loading={<NavFrontendSpinner />}
-          >
-            {pageKeys.map((key, index) => (
-              <Page key={key} pageNumber={index + 1} width={760} />
-            ))}
-          </Document>
         </Preview>
+        <Iframe src={url} />
       </PreviewBeholder>
     </FullBeholder>
   );
@@ -88,15 +78,18 @@ const PreviewBeholder = styled.div`
   display: block;
   width: 100%;
   height: 100%;
-  overflow: scroll;
 `;
 
 const Preview = styled.div`
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
   z-index: 0;
+`;
+const Iframe = styled.iframe`
+  height: calc(100% - 3.5em);
+  border: none;
+  width: 100%;
 `;
 const PreviewTitle = styled.div`
   background: #cde7d8;
