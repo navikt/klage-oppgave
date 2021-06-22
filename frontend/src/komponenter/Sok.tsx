@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Oppsett from "../komponenter/Oppsett";
 import "../stilark/App.less";
 import "../stilark/Lists.less";
@@ -16,6 +16,7 @@ import { velgKodeverk } from "../tilstand/moduler/kodeverk.velgere";
 import { Knapp } from "nav-frontend-knapper";
 import { tildelMegHandling } from "../tilstand/moduler/saksbehandler";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
+import { velgSaksbehandlerHandling } from "../tilstand/moduler/sakbehandler.velgere";
 
 const R = require("ramda");
 
@@ -38,7 +39,8 @@ let SokeTabell = styled.table`
 let SokeTabellAvsluttede = styled.table`
   max-width: 60em;
   width: 60em;
-  margin: 2em 0 8em 0;
+  margin: 2em 0 0 0;
+  padding: 0 0 8em 0;
 `;
 let Tr = styled.tr`
   background: #e5f3ff;
@@ -66,9 +68,6 @@ let Th = styled.th`
   text-align: left;
   border-bottom: 1px solid #c6c2bf;
 `;
-let TableCell = styled.td`
-  cursor: pointer !important;
-`;
 
 function Kodeverk(kodeverk: any, data: string) {
   if (!data) return "";
@@ -92,7 +91,7 @@ function dispatchOppgave(
   oppgaveId: string,
   klagebehandlingVersjon: number
 ) {
-  return dispatch(
+  dispatch(
     tildelMegHandling({
       oppgaveId: oppgaveId,
       ident: navIdent,
@@ -260,33 +259,41 @@ const SokeResultat = (data: any): JSX.Element => {
   );
 };
 
+function sok({ dispatch, navIdent, fnr }: { dispatch: Function; navIdent: string; fnr: string }) {
+  return dispatch(
+    startSok({
+      antall: 200,
+      navIdent,
+      start: 0,
+      fnr,
+    })
+  );
+}
+
 const Sok = (): JSX.Element => {
   let dispatch = useDispatch();
   const person = useSelector(velgMeg);
   const sokResult = useSelector(velgSok);
+  const tildelerSak = useSelector(velgSaksbehandlerHandling);
+  let [fnr, setFnr] = useState("");
+
+  useEffect(() => {
+    sok({ dispatch, navIdent: person.id, fnr });
+  }, [dispatch, person.id, fnr, tildelerSak]);
+
   return (
     <Oppsett visMeny={true}>
       <div>
         <SokInput>
-          <Input
-            type={"text"}
-            onChange={(e) =>
-              dispatch(
-                startSok({
-                  antall: 200,
-                  navIdent: person.id,
-                  start: 0,
-                  fnr: e.target.value.trim(),
-                })
-              )
-            }
-          />
+          <Input type={"text"} onChange={(e) => setFnr(e.target.value.trim())} />
         </SokInput>
 
         <Result>
-          {sokResult.laster && <NavFrontendSpinner />}
-
-          {!sokResult.laster && <SokeResultat {...sokResult?.response} />}
+          {(() => {
+            if (sokResult.laster) {
+              return <NavFrontendSpinner />;
+            } else return <SokeResultat {...sokResult?.response} />;
+          })()}
         </Result>
       </div>
     </Oppsett>
