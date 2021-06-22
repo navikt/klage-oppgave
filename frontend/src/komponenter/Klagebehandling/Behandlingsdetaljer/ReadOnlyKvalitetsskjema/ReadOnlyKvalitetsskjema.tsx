@@ -65,7 +65,11 @@ export const ReadOnlyKvalitetsskjema = ({ klagebehandling }: ReadOnlyKvalitetssk
       </Row>
       <Row>
         <b>Utfallet er basert på lovhjemmel:</b>
-        <Etikettliste elementer={hjemler.map(({ navn }) => navn)} />
+        {hjemler.length > 0 ? (
+          <Etikettliste elementer={hjemler.map(({ navn }) => navn)} />
+        ) : (
+          <p>Ingen</p>
+        )}
       </Row>
       <Omgjoeringsgrunn vis={visOmgjoeringsgrunner} grunn={omgjoeringsgrunn} />
       <Row>

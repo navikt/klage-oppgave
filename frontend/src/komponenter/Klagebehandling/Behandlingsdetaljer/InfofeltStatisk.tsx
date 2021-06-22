@@ -6,16 +6,27 @@ interface InfofeltProps {
   info: string;
 }
 
+interface InfoProps {
+  info: string;
+}
+
 export const InfofeltStatisk = ({ header, info }: InfofeltProps) => (
-  <Info>
+  <Infofelt>
     <b>{header}:</b>
-    <p>{info}</p>
-  </Info>
+    <Info info={info} />
+  </Infofelt>
 );
 
-const Info = styled.div`
+const Infofelt = styled.div`
   p {
     margin: 0;
     white-space: pre-wrap;
   }
 `;
+
+const Info = ({ info }: InfoProps) => {
+  if (info === "") {
+    return <p>'-'</p>;
+  }
+  return <p>{info}</p>;
+};
