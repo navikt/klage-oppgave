@@ -4,9 +4,13 @@ import styled from "styled-components";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
 // @ts-ignore
-import CloseSVG from "../../cancelblack.svg";
+import CloseSVG from "./ikoner/cancelblack.svg";
 // @ts-ignore
-import ExtLink from "../../extlink.svg";
+import ExtLink from "./ikoner/extlink.svg";
+// @ts-ignore
+import ZoomIn from "./ikoner/ZoomIn.svg";
+// @ts-ignore
+import ZoomOut from "./ikoner/ZoomOut.svg";
 
 interface ShowDokumentProps {
   klagebehandlingId: string;
@@ -21,7 +25,38 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
     [dokument]
   );
 
+  const MIN_BREDDE_FORHANDSVISNING = 760;
+  const MAX_BREDDE_FORHANDSVISNING = 1960;
+
+  const zoom = (zoomValg: "ut" | "inn") => {
+    const zoomStorrelse = 150;
+    let valgtBredde = forhandsvisningsbredde;
+    if (zoomValg === "ut" && forhandsvisningsbredde > MIN_BREDDE_FORHANDSVISNING) {
+      if (forhandsvisningsbredde - zoomStorrelse < MIN_BREDDE_FORHANDSVISNING) {
+        valgtBredde = MIN_BREDDE_FORHANDSVISNING;
+      }
+      valgtBredde = forhandsvisningsbredde - zoomStorrelse;
+    } else if (zoomValg === "inn" && forhandsvisningsbredde < MAX_BREDDE_FORHANDSVISNING) {
+      if (forhandsvisningsbredde + zoomStorrelse > MIN_BREDDE_FORHANDSVISNING) {
+        valgtBredde = MAX_BREDDE_FORHANDSVISNING;
+      }
+      valgtBredde = forhandsvisningsbredde + zoomStorrelse;
+    }
+    settForhandsvisningsbredde(valgtBredde);
+    localStorage.setItem("valgtBreddeForhandsvisning", valgtBredde.toString());
+  };
+
+  const hentStartStoerrelseZoom = () => {
+    const localStorageVerdi = localStorage.getItem("valgtBreddeForhandsvisning");
+    if (localStorageVerdi) {
+      return Number(localStorageVerdi);
+    }
+    return MIN_BREDDE_FORHANDSVISNING;
+  };
+
   const [numPages, setNumPages] = useState(0);
+  const [forhandsvisningsbredde, settForhandsvisningsbredde] =
+    useState<number>(hentStartStoerrelseZoom);
 
   const pageKeys = useMemo<string[]>(() => {
     if (dokument === null || numPages === 0) {
@@ -38,12 +73,14 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
   }
 
   return (
-    <FullBeholder>
+    <FullBeholder forhandsvisningsbredde={forhandsvisningsbredde}>
       <PreviewBeholder>
         <Preview>
           <PreviewTitle>
             {dokument.tittel}
             <div>
+              <SVGIkon alt="Zoom ut på PDF" src={ZoomOut} onClick={() => zoom("ut")} />
+              <SVGIkon alt="Zoom inn på PDF" src={ZoomIn} onClick={() => zoom("inn")} />
               <a href={url} target={"_blank"}>
                 <EksternalSVGIkon alt="Ekstern lenke" src={ExtLink} />
               </a>
@@ -62,9 +99,9 @@ const options = {
   cMapPacked: true,
 };
 
-const FullBeholder = styled.section`
+const FullBeholder = styled.section<{ forhandsvisningsbredde: number }>`
   display: block;
-  min-width: 760px;
+  min-width: ${(props) => props.forhandsvisningsbredde}px;
   height: 100%;
   margin: 0.25em 0.5em;
   background: white;
@@ -85,6 +122,10 @@ const Preview = styled.div`
   overflow-x: hidden;
   position: relative;
   z-index: 0;
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
 `;
 const Iframe = styled.iframe`
   height: calc(100% - 3.5em);
