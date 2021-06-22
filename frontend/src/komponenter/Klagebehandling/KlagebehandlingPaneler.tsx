@@ -14,12 +14,11 @@ interface KlagebehandlingPanelerProps {
 
 export const KlagebehandlingPaneler = ({ faner, klagebehandling }: KlagebehandlingPanelerProps) => {
   const [fullvisning, settFullvisning] = useState<boolean>(true);
-  const grid = useMemo(() => (fullvisning ? "1fr 1fr 1fr 1fr" : ".5fr 1fr 1fr 1fr"), [fullvisning]);
 
   useKlagebehandlingUpdater(klagebehandling);
 
   return (
-    <SideBeholder data-testid={"behandlingsdetaljer"} grid={grid}>
+    <SideBeholder data-testid={"behandlingsdetaljer"}>
       <Dokumenter
         skjult={!faner.dokumenter.checked}
         settFullvisning={settFullvisning}
@@ -32,7 +31,7 @@ export const KlagebehandlingPaneler = ({ faner, klagebehandling }: Klagebehandli
   );
 };
 
-const SideBeholder = styled.div<{ grid: string }>`
+const SideBeholder = styled.div`
   display: flex;
   margin: 0 0.25em 0 0;
   height: calc(100% - 3em);
