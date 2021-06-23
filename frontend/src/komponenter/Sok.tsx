@@ -4,7 +4,7 @@ import "../stilark/App.less";
 import "../stilark/Lists.less";
 import "nav-frontend-tabell-style";
 import { useDispatch, useSelector } from "react-redux";
-import { settSokLaster, startSok } from "../tilstand/moduler/sok";
+import { settSokLaster, startSok, tomSok } from "../tilstand/moduler/sok";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { velgSok } from "../tilstand/moduler/sok.velgere";
@@ -335,9 +335,14 @@ const Sok = (): JSX.Element => {
   }, [window.location.search, dispatch, person.id]);
 
   useEffect(() => {
-    //todo pass på at denne ikke kjører et dobbelt søk
     if (fnr && !tildelerMeg) sok({ dispatch, navIdent: person.id, fnr });
   }, [sok, dispatch, person.id, tildelerMeg]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(tomSok());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

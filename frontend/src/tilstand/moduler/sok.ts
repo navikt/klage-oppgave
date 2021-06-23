@@ -90,6 +90,14 @@ export const sokSlice = createSlice({
       };
       return state;
     },
+    SOK_TOM: (state) => {
+      state.laster = false;
+      state.response = {
+        antallTreffTotalt: 0,
+        personer: [],
+      };
+      return state;
+    },
   },
 });
 
@@ -101,6 +109,7 @@ export default sokSlice.reducer;
 const { SOK_FAIL, SOK_LASTER, SOK_RESPONSE } = sokSlice.actions;
 export const startSok = createAction<IPersonSokPayload>("sok/SOK");
 export const settSokLaster = createAction<boolean>("sok/SOK_LASTER");
+export const tomSok = createAction("sok/SOK_TOM");
 
 const performSearch = (
   payload: IPersonSokPayload,
