@@ -116,19 +116,15 @@ const OppgaveTabellRad = ({
 
   const curriedVisHandlinger = visHandlinger(fradelOppgave)(id);
   const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);
-  const { kodeverk, lasterKodeverk } = useAppSelector(velgKodeverk);
+  const { kodeverk } = useAppSelector(velgKodeverk);
 
   const KodeverkHjemmel = R.curry(Kodeverk)(kodeverk.hjemmel);
   const KodeverkType = R.curry(Kodeverk)(kodeverk.type);
   const KodeverkTema = R.curry(Kodeverk)(kodeverk.tema);
+  const KodeverkUtfall = R.curry(Kodeverk)(kodeverk.utfall);
 
   const location = useLocation();
   const history = useHistory();
-
-  const utfallObjekt = useMemo<IKodeverkVerdi | null>(
-    () => (lasterKodeverk ? null : kodeverk.utfall.find(({ id }) => id === utfall) ?? null),
-    [utfall, kodeverk.utfall, lasterKodeverk, kodeverk.utfall.length]
-  );
 
   const rerouteToKlage = (location: any) => {
     if (location.pathname.startsWith("/mineoppgaver")) history.push(`/klagebehandling/${id}`);
@@ -218,11 +214,11 @@ const OppgaveTabellRad = ({
         </td>
       )}
 
-      {utfallObjekt ? <TableCell>{utfallObjekt.navn}</TableCell> : null}
-      {!utfallObjekt &&
+      {utfall && <TableCell>{KodeverkUtfall(utfall)}</TableCell>}
+      {!utfall &&
         location.pathname.startsWith("/oppgaver") &&
         curriedVelgOppgave(klagebehandlingVersjon)(it)}
-      {!utfallObjekt &&
+      {!utfall &&
         location.pathname.startsWith("/mineoppgaver") &&
         curriedVisHandlinger(klagebehandlingVersjon)}
     </TableRow>
