@@ -291,6 +291,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             person: { fnr: rad.fnr, navn: rad.navn },
             klagebehandlingVersjon: rad.klagebehandlingVersjon,
             erMedunderskriver: rad.erMedunderskriver,
+            tildeltSaksbehandlerNavn: rad.tildeltSaksbehandlerNavn,
             avsluttetAvSaksbehandler: rad.avsluttetAvSaksbehandler,
             utfall: rad.utfall,
           }))
@@ -305,6 +306,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             tema: rad.tema,
             frist: rad.frist,
             mottatt: rad.mottatt,
+            tildeltSaksbehandlerNavn: rad.tildeltSaksbehandlerNavn,
             klagebehandlingVersjon: rad.klagebehandlingVersjon,
             erMedunderskriver: rad.erMedunderskriver,
           }))
@@ -321,6 +323,7 @@ export async function filtrerOppgaver(query: OppgaveQuery) {
             mottatt: rad.mottatt,
             person: { fnr: rad.fnr, navn: rad.navn },
             klagebehandlingVersjon: rad.klagebehandlingVersjon,
+            tildeltSaksbehandlerNavn: rad.tildeltSaksbehandlerNavn,
             erMedunderskriver: rad.erMedunderskriver,
             avsluttetAvSaksbehandler: rad.avsluttetAvSaksbehandler,
           }))
