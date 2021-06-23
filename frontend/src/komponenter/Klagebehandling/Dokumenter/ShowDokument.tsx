@@ -1,7 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Document, Page } from "react-pdf";
 import styled from "styled-components";
-import NavFrontendSpinner from "nav-frontend-spinner";
 import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
 // @ts-ignore
 import CloseSVG from "./ikoner/cancelblack.svg";
@@ -54,19 +52,8 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
     return MIN_BREDDE_FORHANDSVISNING;
   };
 
-  const [numPages, setNumPages] = useState(0);
   const [forhandsvisningsbredde, settForhandsvisningsbredde] =
     useState<number>(hentStartStoerrelseZoom);
-
-  const pageKeys = useMemo<string[]>(() => {
-    if (dokument === null || numPages === 0) {
-      return [];
-    }
-    return Array.from(
-      new Array(numPages),
-      (_, index) => `dokument_${dokument.journalpostId}-${dokument.dokumentInfoId}/page_${index}`
-    );
-  }, [numPages, dokument]);
 
   if (dokument === null) {
     return null;
@@ -88,16 +75,21 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
             </div>
           </PreviewTitle>
         </Preview>
-        <Iframe src={`${url}#toolbar=0`} />
+        <PDF
+          data={url}
+          role="document"
+          type="application/pdf"
+          name={dokument.tittel ?? undefined}
+        />
       </PreviewBeholder>
     </FullBeholder>
   );
 };
 
-const options = {
-  cMapUrl: "cmaps/",
-  cMapPacked: true,
-};
+const PDF = styled.object`
+  width: 100%;
+  height: calc(100% - 3.5em);
+`;
 
 const FullBeholder = styled.section<{ forhandsvisningsbredde: number }>`
   display: block;
@@ -127,11 +119,7 @@ const Preview = styled.div`
     height: auto !important;
   }
 `;
-const Iframe = styled.iframe`
-  height: calc(100% - 3.5em);
-  border: none;
-  width: 100%;
-`;
+
 const PreviewTitle = styled.div`
   background: #cde7d8;
   display: flex;
@@ -155,6 +143,7 @@ const SVGIkon = styled.img`
   width: 1em;
   height: 1em;
 `;
+
 const EksternalSVGIkon = styled.img`
   cursor: pointer;
   color: black;
@@ -164,9 +153,4 @@ const EksternalSVGIkon = styled.img`
   &:hover {
     transform: scale(1.1);
   }
-`;
-
-const Feil = styled.div`
-  display: block;
-  margin: 1em;
 `;
