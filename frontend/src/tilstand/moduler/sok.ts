@@ -72,7 +72,7 @@ export const sokSlice = createSlice({
   },
   reducers: {
     SOK: (state, action: PayloadAction) => {
-      //state.laster = true;
+      state.laster = true;
       return state;
     },
     SOK_FAIL: (state, action: PayloadAction) => {
@@ -100,6 +100,7 @@ export default sokSlice.reducer;
 //==========
 const { SOK_FAIL, SOK_LASTER, SOK_RESPONSE } = sokSlice.actions;
 export const startSok = createAction<IPersonSokPayload>("sok/SOK");
+export const settSokLaster = createAction<boolean>("sok/SOK_LASTER");
 
 const performSearch = (
   payload: IPersonSokPayload,

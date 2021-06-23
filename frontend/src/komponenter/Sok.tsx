@@ -4,7 +4,7 @@ import "../stilark/App.less";
 import "../stilark/Lists.less";
 import "nav-frontend-tabell-style";
 import { useDispatch, useSelector } from "react-redux";
-import { startSok } from "../tilstand/moduler/sok";
+import { settSokLaster, startSok } from "../tilstand/moduler/sok";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { velgSok } from "../tilstand/moduler/sok.velgere";
@@ -17,6 +17,9 @@ import { Knapp } from "nav-frontend-knapper";
 import { tildelMegHandling } from "../tilstand/moduler/saksbehandler";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
 import { velgSaksbehandlerHandling } from "../tilstand/moduler/sakbehandler.velgere";
+import { useHistory, useParams } from "react-router";
+import { useDebounce } from "../utility/usedebounce";
+import { lagreKlagebehandling } from "../tilstand/moduler/klagebehandling/actions";
 
 const R = require("ramda");
 
@@ -67,6 +70,10 @@ let TdResultat = styled.td`
 let Th = styled.th`
   text-align: left;
   border-bottom: 1px solid #c6c2bf;
+`;
+
+let SokeForklaring = styled.div`
+  margin: 0 0 1em 0;
 `;
 
 function Kodeverk(kodeverk: any, data: string) {
@@ -274,18 +281,44 @@ const Sok = (): JSX.Element => {
   let dispatch = useDispatch();
   const person = useSelector(velgMeg);
   const sokResult = useSelector(velgSok);
-  const tildelerSak = useSelector(velgSaksbehandlerHandling);
+  const history = useHistory();
   let [fnr, setFnr] = useState("");
+  const [debouncedState, setDebouncedState] = useDebounce(fnr);
+
+  const handleChange = (event: any) => {
+    setFnr(event.target.value.trim());
+    setDebouncedState(event.target.value);
+  };
 
   useEffect(() => {
-    sok({ dispatch, navIdent: person.id, fnr });
-  }, [dispatch, person.id, fnr, tildelerSak]);
+    dispatch(settSokLaster(true));
+    const timeout = setTimeout(() => {
+      let searchQuery = new URLSearchParams(window.location.search).get("s");
+      if (searchQuery) {
+        sok({ dispatch, navIdent: person.id, fnr: searchQuery });
+        setFnr(searchQuery);
+      }
+    }, 500);
+    return () => clearTimeout(timeout); // Clear existing timer every time it runs.
+  }, [window.location.search, dispatch, person.id]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (fnr) {
+        const params = new URLSearchParams();
+        params.append("s", fnr);
+        history.push({ search: params.toString() });
+      }
+    }, 500);
+    return () => clearTimeout(timeout); // Clear existing timer every time it runs.
+  }, [fnr]);
 
   return (
     <Oppsett visMeny={true}>
       <div>
         <SokInput>
-          <Input type={"text"} onChange={(e) => setFnr(e.target.value.trim())} />
+          <SokeForklaring>Søk med fullt personnummer:</SokeForklaring>
+          <Input type={"text"} value={fnr} onChange={(e) => setFnr(e.target.value.trim())} />
         </SokInput>
 
         <Result>
