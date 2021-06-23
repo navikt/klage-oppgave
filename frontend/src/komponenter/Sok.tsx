@@ -20,6 +20,7 @@ import { useHistory } from "react-router";
 import { useDebounce } from "../utility/usedebounce";
 // @ts-ignore
 import SokSvg from "./sok.svg";
+import { velgSaksbehandlerHandling } from "../tilstand/moduler/sakbehandler.velgere";
 
 const R = require("ramda");
 
@@ -309,6 +310,7 @@ const Sok = (): JSX.Element => {
   let dispatch = useDispatch();
   const person = useSelector(velgMeg);
   const sokResult = useSelector(velgSok);
+  const tildelerMeg = useSelector(velgSaksbehandlerHandling);
   const history = useHistory();
   let [fnr, setFnr] = useState("");
   const [debouncedState, setDebouncedState] = useDebounce(fnr);
@@ -333,6 +335,11 @@ const Sok = (): JSX.Element => {
   }, [window.location.search, dispatch, person.id]);
 
   useEffect(() => {
+    //todo pass på at denne ikke kjører et dobbelt søk
+    if (fnr && !tildelerMeg) sok({ dispatch, navIdent: person.id, fnr });
+  }, [sok, dispatch, person.id, tildelerMeg]);
+
+  useEffect(() => {
     const timeout = setTimeout(() => {
       if (fnr) {
         const params = new URLSearchParams();
@@ -354,7 +361,7 @@ const Sok = (): JSX.Element => {
               style={{ position: "absolute", left: 0, top: 0 }}
               type={"text"}
               value={fnr}
-              onChange={(e) => setFnr(e.target.value.trim())}
+              onChange={handleChange}
             />
           </SokBeholder>
         </SokInput>
