@@ -9,17 +9,17 @@ import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import NavFrontendSpinner from "nav-frontend-spinner";
 import { velgSok } from "../tilstand/moduler/sok.velgere";
 import styled from "styled-components";
-import { Input } from "nav-frontend-skjema";
 import { IKodeverkVerdi } from "../tilstand/moduler/kodeverk";
 import EtikettBase from "nav-frontend-etiketter";
 import { velgKodeverk } from "../tilstand/moduler/kodeverk.velgere";
 import { Knapp } from "nav-frontend-knapper";
 import { tildelMegHandling } from "../tilstand/moduler/saksbehandler";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
-import { velgSaksbehandlerHandling } from "../tilstand/moduler/sakbehandler.velgere";
-import { useHistory, useParams } from "react-router";
+
+import { useHistory } from "react-router";
 import { useDebounce } from "../utility/usedebounce";
-import { lagreKlagebehandling } from "../tilstand/moduler/klagebehandling/actions";
+// @ts-ignore
+import SokSvg from "./sok.svg";
 
 const R = require("ramda");
 
@@ -31,7 +31,7 @@ let SokInput = styled.div`
 
 let Result = styled.div`
   display: block;
-  margin: 1em;
+  margin: 4.5em 1em 0 1em;
 `;
 
 let SokeTabell = styled.table`
@@ -73,7 +73,35 @@ let Th = styled.th`
 `;
 
 let SokeForklaring = styled.div`
-  margin: 0 0 1em 0;
+  margin: 0 0 0.5em 0;
+`;
+let SokBeholder = styled.div`
+  position: relative;
+  width: 40em;
+`;
+let SokIkon = styled.img`
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  height: 2.5em;
+`;
+let SokeTekst = styled.input`
+    width: 40em;
+    position; absolute;
+    font-family: "Source Sans Pro", Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    appearance: none;
+    padding: 0.5rem;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #6a6a6a;
+    box-sizing: border-box;
+    line-height: 1.375rem;
+    &:hover{
+    border-color: #0067c5;
+    }
 `;
 
 function Kodeverk(kodeverk: any, data: string) {
@@ -320,7 +348,15 @@ const Sok = (): JSX.Element => {
       <div>
         <SokInput>
           <SokeForklaring>Søk med fullt personnummer:</SokeForklaring>
-          <Input type={"text"} value={fnr} onChange={(e) => setFnr(e.target.value.trim())} />
+          <SokBeholder>
+            <SokIkon src={SokSvg} />
+            <SokeTekst
+              style={{ position: "absolute", left: 0, top: 0 }}
+              type={"text"}
+              value={fnr}
+              onChange={(e) => setFnr(e.target.value.trim())}
+            />
+          </SokBeholder>
         </SokInput>
 
         <Result>
