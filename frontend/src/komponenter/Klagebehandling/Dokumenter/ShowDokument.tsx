@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
 // @ts-ignore
@@ -9,6 +9,10 @@ import ExtLink from "./ikoner/extlink.svg";
 import ZoomIn from "./ikoner/ZoomIn.svg";
 // @ts-ignore
 import ZoomOut from "./ikoner/ZoomOut.svg";
+
+const MIN_BREDDE_FORHANDSVISNING = 760;
+const MAX_BREDDE_FORHANDSVISNING = 1960;
+const ZOOM_STEP = 150;
 
 interface ShowDokumentProps {
   klagebehandlingId: string;
@@ -22,38 +26,19 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
       `/api/klagebehandlinger/${klagebehandlingId}/journalposter/${dokument?.journalpostId}/dokumenter/${dokument?.dokumentInfoId}`,
     [dokument]
   );
-
-  const MIN_BREDDE_FORHANDSVISNING = 760;
-  const MAX_BREDDE_FORHANDSVISNING = 1960;
-
-  const zoom = (zoomValg: "ut" | "inn") => {
-    const zoomStorrelse = 150;
-    let valgtBredde = forhandsvisningsbredde;
-    if (zoomValg === "ut" && forhandsvisningsbredde > MIN_BREDDE_FORHANDSVISNING) {
-      if (forhandsvisningsbredde - zoomStorrelse < MIN_BREDDE_FORHANDSVISNING) {
-        valgtBredde = MIN_BREDDE_FORHANDSVISNING;
-      }
-      valgtBredde = forhandsvisningsbredde - zoomStorrelse;
-    } else if (zoomValg === "inn" && forhandsvisningsbredde < MAX_BREDDE_FORHANDSVISNING) {
-      if (forhandsvisningsbredde + zoomStorrelse > MIN_BREDDE_FORHANDSVISNING) {
-        valgtBredde = MAX_BREDDE_FORHANDSVISNING;
-      }
-      valgtBredde = forhandsvisningsbredde + zoomStorrelse;
-    }
-    settForhandsvisningsbredde(valgtBredde);
-    localStorage.setItem("valgtBreddeForhandsvisning", valgtBredde.toString());
-  };
-
-  const hentStartStoerrelseZoom = () => {
-    const localStorageVerdi = localStorage.getItem("valgtBreddeForhandsvisning");
-    if (localStorageVerdi) {
-      return Number(localStorageVerdi);
-    }
-    return MIN_BREDDE_FORHANDSVISNING;
-  };
-
   const [forhandsvisningsbredde, settForhandsvisningsbredde] =
     useState<number>(hentStartStoerrelseZoom);
+
+  const zoom = useCallback(
+    (isZoomIn: boolean) => {
+      const bredde = isZoomIn
+        ? Math.min(forhandsvisningsbredde + ZOOM_STEP, MAX_BREDDE_FORHANDSVISNING)
+        : Math.max(forhandsvisningsbredde - ZOOM_STEP, MIN_BREDDE_FORHANDSVISNING);
+      settForhandsvisningsbredde(bredde);
+      localStorage.setItem("valgtBreddeForhandsvisning", bredde.toString());
+    },
+    [forhandsvisningsbredde, settForhandsvisningsbredde]
+  );
 
   if (dokument === null) {
     return null;
@@ -61,35 +46,47 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
 
   return (
     <FullBeholder forhandsvisningsbredde={forhandsvisningsbredde}>
-      <PreviewBeholder>
-        <Preview>
-          <PreviewTitle>
-            {dokument.tittel}
-            <div>
-              <SVGIkon alt="Zoom ut på PDF" src={ZoomOut} onClick={() => zoom("ut")} />
-              <SVGIkon alt="Zoom inn på PDF" src={ZoomIn} onClick={() => zoom("inn")} />
-              <a href={url} target={"_blank"}>
-                <EksternalSVGIkon alt="Ekstern lenke" src={ExtLink} />
-              </a>
-              <SVGIkon alt="Lukk forhåndsvisning" src={CloseSVG} onClick={close} />
-            </div>
-          </PreviewTitle>
-        </Preview>
-        <PDF
-          data={url}
-          role="document"
-          type="application/pdf"
-          name={dokument.tittel ?? undefined}
-        />
-      </PreviewBeholder>
+      <Header>
+        {dokument.tittel}
+        <div>
+          <HeaderButton onClick={() => zoom(false)} text="Zoom ut på PDF" icon={ZoomOut} />
+          <HeaderButton onClick={() => zoom(true)} text="Zoom inn på PDF" icon={ZoomIn} />
+          <a href={url} target={"_blank"} title="Åpne i ny fane">
+            <EksternalSVGIkon alt="Ekstern lenke" src={ExtLink} />
+          </a>
+          <HeaderButton onClick={close} text="Lukk forhåndsvisning" icon={CloseSVG} />
+        </div>
+      </Header>
+      <PDF
+        data={`${url}#toolbar=0&view=fitH&zoom=page-width`}
+        role="document"
+        type="application/pdf"
+        name={dokument.tittel ?? undefined}
+      />
     </FullBeholder>
   );
 };
 
-const PDF = styled.object`
-  width: 100%;
-  height: calc(100% - 3.5em);
-`;
+const hentStartStoerrelseZoom = () => {
+  const localStorageVerdi = localStorage.getItem("valgtBreddeForhandsvisning");
+  if (localStorageVerdi === null) {
+    return MIN_BREDDE_FORHANDSVISNING;
+  }
+  const parsed = Number.parseInt(localStorageVerdi, 10);
+  return Number.isNaN(parsed) ? MIN_BREDDE_FORHANDSVISNING : parsed;
+};
+
+interface HeaderButtonProps {
+  icon: string;
+  text: string;
+  onClick: () => void;
+}
+
+const HeaderButton = ({ icon, text, onClick }: HeaderButtonProps) => (
+  <StyledHeaderButton onClick={onClick} title={text}>
+    <SVGIkon alt={text} src={icon} />
+  </StyledHeaderButton>
+);
 
 const FullBeholder = styled.section<{ forhandsvisningsbredde: number }>`
   display: block;
@@ -103,24 +100,19 @@ const FullBeholder = styled.section<{ forhandsvisningsbredde: number }>`
   overflow: hidden;
 `;
 
-const PreviewBeholder = styled.div`
-  display: block;
+const StyledHeaderButton = styled.button`
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+`;
+
+const PDF = styled.object`
   width: 100%;
-  height: 100%;
+  height: calc(100% - 3.5em);
 `;
 
-const Preview = styled.div`
-  overflow-y: auto;
-  overflow-x: hidden;
-  position: relative;
-  z-index: 0;
-  canvas {
-    width: 100% !important;
-    height: auto !important;
-  }
-`;
-
-const PreviewTitle = styled.div`
+const Header = styled.div`
   background: #cde7d8;
   display: flex;
   position: sticky;
