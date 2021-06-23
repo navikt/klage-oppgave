@@ -291,12 +291,14 @@ const Sok = (): JSX.Element => {
   };
 
   useEffect(() => {
-    dispatch(settSokLaster(true));
+    let searchQuery = new URLSearchParams(window.location.search).get("s");
+    if (searchQuery) {
+      dispatch(settSokLaster(true));
+      setFnr(searchQuery);
+    }
     const timeout = setTimeout(() => {
-      let searchQuery = new URLSearchParams(window.location.search).get("s");
       if (searchQuery) {
         sok({ dispatch, navIdent: person.id, fnr: searchQuery });
-        setFnr(searchQuery);
       }
     }, 500);
     return () => clearTimeout(timeout); // Clear existing timer every time it runs.
