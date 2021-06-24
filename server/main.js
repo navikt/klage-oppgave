@@ -13,22 +13,23 @@ let bodyParser = require("body-parser");
 // for debugging during development
 let morganBody = require("morgan-body");
 let morgan = require("morgan");
-let morganJson = require("morgan-json");
-
-const morganJsonFormat = morganJson({
-  short: ":method :url :status",
-  length: ":res[content-length]",
-  "response-time": ":response-time ms",
-});
 
 const server = express();
 const port = config.server.port;
+
+/*
+const speedLimiter = slowDown({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  delayAfter: 100, // allow 100 requests per 15 minutes, then...
+  delayMs: 500, // begin adding 500ms of delay per request above 100:
+});
+*/
 
 async function startApp() {
   try {
     //ikke bruk global bodyParser, det gir timeout på spørringer mot API
     server.use(
-      morgan(morganJsonFormat, {
+      morgan("combined", {
         skip: (req, res) => {
           if (req.originalUrl === "/metrics") {
             return true;
@@ -38,6 +39,8 @@ async function startApp() {
       })
     );
     session.setup(server);
+
+    //server.use(speedLimiter);
 
     // setup sane defaults for CORS and HTTP headers
     server.use(

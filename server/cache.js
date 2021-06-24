@@ -3,6 +3,7 @@ const { promisify } = require("util");
 
 const envVar = ({ name, required = true }) => {
   if (!process.env[name] && required) {
+    console.error(`Missing required environment variable '${name}'`);
     process.exit(1);
   }
   return process.env[name];
@@ -20,6 +21,7 @@ function lagreIRedis(key, value) {
 
   client.select(1, function (err, res) {
     if (err) {
+      console.error("REDIS ERR", err);
       return err;
     }
     client.set(key, bufferData);
@@ -35,6 +37,7 @@ async function hentFraRedis(key) {
   return new Promise((resolve, reject) => {
     client.select(1, function (err, res) {
       if (err) {
+        console.error("REDIS ERR", err);
         reject(err);
       }
       resolve(getAsync(key));
@@ -43,6 +46,7 @@ async function hentFraRedis(key) {
 }
 
 function cacheMiddleWare(req, res, next) {
+  console.log(req.method);
   if (req.path !== "/oppgaver") next();
   else {
     return hentFraRedis("oppgaver")
@@ -55,6 +59,7 @@ function cacheMiddleWare(req, res, next) {
         }
       })
       .catch((err) => {
+        console.error(err);
         next();
       });
   }

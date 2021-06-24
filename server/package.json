@@ -29,7 +29,6 @@
     "https-proxy-agent": "^5.0.0",
     "morgan": "^1.9.1",
     "morgan-body": "^2.5.1",
-    "morgan-json": "^1.1.0",
     "node-fetch": "^2.6.1",
     "openid-client": "^4.0.2",
     "passport": "^0.4.0",

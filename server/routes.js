@@ -118,8 +118,16 @@ const setup = (authClient) => {
     }
   });
 
+  const onProxyReq = function (proxyRes, req, res) {
+    console.log("onProxyReq");
+  };
+  const onProxyRes = function (proxyRes, req, res) {
+    console.log("onProxyRes");
+  };
+
   router.use(
     "/api",
+    // cacheMiddleWare,
     createProxyMiddleware({
       target: "http://kabal-api",
       pathRewrite: {

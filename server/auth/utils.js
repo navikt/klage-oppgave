@@ -6,6 +6,7 @@ let util = require("util");
 const tokenSetSelfId = "self";
 
 const getOnBehalfOfAccessToken = (authClient, req, api) => {
+  console.log(util.inspect(api));
   return new Promise((resolve, reject) => {
     if (hasValidAccessToken(req, api.clientId)) {
       const tokenSets = getTokenSetsFromSession(req);
@@ -19,14 +20,18 @@ const getOnBehalfOfAccessToken = (authClient, req, api) => {
         scope: createOnBehalfOfScope(api),
         assertion: req.user.tokenSets[tokenSetSelfId].access_token,
       };
+      console.log(util.inspect(params));
 
       authClient
         .grant(params)
         .then((tokenSet) => {
+          console.log(util.inspect(tokenSet));
+
           req.user.tokenSets[api.clientId] = tokenSet;
           resolve(tokenSet.access_token);
         })
         .catch((err) => {
+          console.error(err);
           reject(err);
         });
     }
