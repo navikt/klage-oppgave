@@ -3,10 +3,9 @@ import { Header } from "./Header/Header";
 import Alertstripe from "nav-frontend-alertstriper";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
-
 import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
 import { velgExpire } from "../tilstand/moduler/token.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
@@ -16,6 +15,7 @@ import { toasterSkjul } from "../tilstand/moduler/toaster";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
 import { hentKodeverk } from "../tilstand/moduler/kodeverk";
 import { velgKodeverk } from "../tilstand/moduler/kodeverk.velgere";
+import { hentMegHandling, hentMegUtenEnheterHandling } from "../tilstand/moduler/meg";
 
 const R = require("ramda");
 
@@ -68,12 +68,26 @@ export default function Oppsett({
     return () => clearInterval(interval);
   }, []);
 
+  const adminEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
+  const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.generellTilgang");
+
+  useEffect(() => {
+    if (adminEnabled !== undefined) {
+      if (adminEnabled.isEnabled) {
+        if (window.location.hostname.indexOf("dev.nav.no") !== -1) dispatch(hentMegHandling());
+        else dispatch(hentMegUtenEnheterHandling());
+      } else {
+        dispatch(hentMegHandling());
+      }
+    }
+  }, [adminEnabled]);
+
   useEffect(() => {
     const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.generellTilgang");
     if (tilgangEnabled?.isEnabled !== undefined) {
       settTilgang(tilgangEnabled.isEnabled);
     }
-  }, [featureToggles]);
+  }, [tilgangEnabled]);
   if (generellTilgang === undefined) {
     return <NavFrontendSpinner />;
   }

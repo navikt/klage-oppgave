@@ -44,7 +44,8 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   useEffect(() => {
     const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
     if (tilgangEnabled?.isEnabled !== undefined) {
-      settHarAdminTilgang(tilgangEnabled.isEnabled);
+      if (window.location.hostname.indexOf("dev.nav.no") !== -1) settHarAdminTilgang(true);
+      else settHarAdminTilgang(tilgangEnabled.isEnabled);
     }
   }, [featureToggles]);
 
@@ -82,21 +83,25 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
       </button>
       <div className={classNames(aapen ? "velg-enhet maksimert" : "minimert")} ref={ref}>
         <div className={"enheter"}>
-          {enheter.map((enhet, index) => {
-            return (
-              <div
-                className={classNames({
-                  enhet: true,
-                  active: person.enheter[person.valgtEnhet].id === enhet.id,
-                })}
-                key={enhet.id}
-              >
-                <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
-                  {enhet.id} {enhet.navn}
-                </NavLink>
-              </div>
-            );
-          })}
+          {(() => {
+            if (person.enheter) {
+              enheter.map((enhet, index) => {
+                return (
+                  <div
+                    className={classNames({
+                      enhet: true,
+                      active: person.enheter[person.valgtEnhet].id === enhet.id,
+                    })}
+                    key={enhet.id}
+                  >
+                    <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
+                      {enhet.id} {enhet.navn}
+                    </NavLink>
+                  </div>
+                );
+              });
+            }
+          })()}
           <hr />
           {harAdminTilgang && (
             <NavLink to={"/admin"} className={classNames({ enhet: true, navlink: true })}>

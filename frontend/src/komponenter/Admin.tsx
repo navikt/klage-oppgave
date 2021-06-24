@@ -53,7 +53,8 @@ const Admin = (): JSX.Element => {
   useEffect(() => {
     const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
     if (tilgangEnabled?.isEnabled !== undefined) {
-      settTilgang(tilgangEnabled.isEnabled);
+      if (window.location.hostname.indexOf("dev.nav.no") !== -1) settTilgang(true);
+      else settTilgang(tilgangEnabled.isEnabled);
     }
   }, [featureToggles]);
   if (tilgang === undefined) {

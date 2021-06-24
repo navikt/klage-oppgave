@@ -4,11 +4,17 @@ import "../stilark/App.less";
 import "../stilark/Lists.less";
 import "nav-frontend-tabell-style";
 import OppgaveTabell from "../komponenter/Tabell/Tabell";
+import { withErrorBoundary } from "../utility/ErrorBoundary";
+import { ErrorMessage } from "./error-message";
+
+const ErrorMessageWithErrorBoundary = withErrorBoundary(ErrorMessage);
 
 const App = (): JSX.Element => {
   return (
     <Oppsett visMeny={true}>
-      <OppgaveTabell visFilter={false} />
+      <ErrorMessageWithErrorBoundary>
+        <OppgaveTabell visFilter={false} />
+      </ErrorMessageWithErrorBoundary>
     </Oppsett>
   );
 };

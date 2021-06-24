@@ -6,10 +6,13 @@ import megTilstand, {
   hentetEnhetHandling,
   hentetHandling,
   hentetInnstillingerHandling,
+  hentetUtenEnheterHandling,
   hentInnstillingerEpos,
   hentInnstillingerHandling,
   hentMegEpos,
   hentMegHandling,
+  hentMegUtenEnheterEpos,
+  hentMegUtenEnheterHandling,
   IInnstillinger,
 } from "./meg";
 import { ajax } from "rxjs/ajax";
@@ -120,6 +123,70 @@ describe("'Meg' epos", () => {
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
         const actual$ = hentMegEpos(action$, state$, <Dependencies>dependencies);
+        ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
+      });
+    })
+  );
+
+  /** Test henting av meg med /enheter slått av */
+  test(
+    "+++ HENT 'MEG' uten enheter",
+    marbles(() => {
+      ts.run((m) => {
+        const inputMarble = "a-";
+        const expectedMarble = "d-";
+
+        const inputValues = {
+          a: hentMegUtenEnheterHandling(),
+        };
+        const initState = {
+          meg: {
+            id: "",
+            navn: "",
+            fornavn: "",
+            mail: "",
+            etternavn: "",
+            valgtEnhet: 0,
+            lovligeTemaer: undefined,
+            enheter: [],
+            innstillinger: undefined,
+          },
+        };
+        const mockedResponse = {
+          displayName: "Rboert dEniro",
+          givenName: "rBot",
+          onPremisesSamAccountName: "Z994488",
+          mail: "rbo@de.ninro",
+          surname: "dENiro",
+        };
+        const reducerResponse = hentetHandling({
+          fornavn: mockedResponse.givenName,
+          id: mockedResponse.onPremisesSamAccountName,
+          etternavn: mockedResponse.surname,
+          navn: mockedResponse.displayName,
+          mail: mockedResponse.mail,
+          enheter: undefined,
+        });
+
+        const dependencies = {
+          ajax: {
+            getJSON: (url: string) => {
+              return of(mockedResponse);
+            },
+          },
+        };
+
+        const observableValues = {
+          a: initState,
+          d: {
+            payload: reducerResponse.payload,
+            type: hentetUtenEnheterHandling.type,
+          },
+        };
+
+        const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
+        const state$ = new StateObservable(m.hot("a", observableValues), initState);
+        const actual$ = hentMegUtenEnheterEpos(action$, state$, <Dependencies>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
