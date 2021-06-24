@@ -15,6 +15,10 @@ import { velgKodeverk } from "../tilstand/moduler/kodeverk.velgere";
 import { Knapp } from "nav-frontend-knapper";
 import { tildelMegHandling } from "../tilstand/moduler/saksbehandler";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
+import { withErrorBoundary } from "../utility/ErrorBoundary";
+import { ErrorMessage } from "./ErrorMessage";
+
+const ErrorMessageWithErrorBoundary = withErrorBoundary(ErrorMessage);
 
 import { useHistory } from "react-router";
 import { useDebounce } from "../utility/usedebounce";
@@ -357,7 +361,7 @@ const Sok = (): JSX.Element => {
 
   return (
     <Oppsett visMeny={true}>
-      <div>
+      <ErrorMessageWithErrorBoundary>
         <SokInput>
           <SokeForklaring>Søk med fullt personnummer:</SokeForklaring>
           <SokBeholder>
@@ -378,7 +382,7 @@ const Sok = (): JSX.Element => {
             } else return <SokeResultat {...sokResult?.response} />;
           })()}
         </Result>
-      </div>
+      </ErrorMessageWithErrorBoundary>
     </Oppsett>
   );
 };

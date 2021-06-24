@@ -7,6 +7,11 @@ import "../../stilark/klagebehandling.less";
 import { useAppSelector } from "../../tilstand/konfigurerTilstand";
 import { velgInnstillinger } from "../../tilstand/moduler/meg.velgere";
 
+import { withErrorBoundary } from "../../utility/ErrorBoundary";
+import { ErrorMessage } from "../ErrorMessage";
+
+const ErrorMessageWithErrorBoundary = withErrorBoundary(ErrorMessage);
+
 export interface IFaner {
   detaljer: {
     checked: boolean;
@@ -64,7 +69,9 @@ export const Klagebehandling = ({ klagebehandling }: KlagebehandlingProps) => {
         faner={faner}
         settAktiveFaner={settAktiveFaner}
       />
-      <KlagebehandlingPaneler faner={faner} klagebehandling={klagebehandling} />
+      <ErrorMessageWithErrorBoundary>
+        <KlagebehandlingPaneler faner={faner} klagebehandling={klagebehandling} />
+      </ErrorMessageWithErrorBoundary>
     </Oppsett>
   );
 };

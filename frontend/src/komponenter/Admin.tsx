@@ -11,6 +11,7 @@ import NavFrontendSpinner from "nav-frontend-spinner";
 import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
+import isDev from "../utility/isDev";
 
 let Container = styled.div`
   display: flex;
@@ -51,9 +52,10 @@ const Admin = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
-    if (tilgangEnabled?.isEnabled !== undefined) {
-      settTilgang(tilgangEnabled.isEnabled);
+    const adminEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
+    if (adminEnabled?.isEnabled !== undefined) {
+      if (isDev()) settTilgang(true);
+      else settTilgang(adminEnabled.isEnabled);
     }
   }, [featureToggles]);
   if (tilgang === undefined) {

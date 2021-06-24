@@ -18,6 +18,7 @@ import { provIgjenStrategi } from "../../utility/rxUtils";
 import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { Dependencies } from "../konfigurerTilstand";
+import { RootState } from "../root";
 
 //==========
 // Interfaces
@@ -121,6 +122,15 @@ export const megSlice = createSlice({
       state.mail = action.payload.mail;
       return state;
     },
+    MEG_HENTET_UTEN_ENHETER: (state, action: PayloadAction<MegType>) => {
+      state.fornavn = action.payload.fornavn;
+      state.etternavn = action.payload.etternavn;
+      state.navn = action.payload.navn;
+      state.enheter = [];
+      state.id = action.payload.id;
+      state.mail = action.payload.mail;
+      return state;
+    },
     INNSTILLINGER_HENTET: (state, action: PayloadAction<IInnstillinger>) => {
       state.innstillinger = action.payload;
       return state;
@@ -144,7 +154,11 @@ export default megSlice.reducer;
 //==========
 export const { MEG_HENTET, FEILET } = megSlice.actions;
 export const hentMegHandling = createAction("meg/HENT_MEG");
+export const hentMegUtenEnheterHandling = createAction("meg/HENT_MEG_UTEN_ENHETER");
 export const hentetHandling = createAction<Partial<MegType>>("meg/MEG_HENTET");
+export const hentetUtenEnheterHandling = createAction<Partial<MegType>>(
+  "meg/MEG_HENTET_UTEN_ENHETER"
+);
 export const settEnhetHandling = createAction<number>("meg/SETT_ENHET");
 export const hentetEnhetHandling = createAction<Array<IEnhetData>>("meg/ENHETER_HENTET");
 export const sattInnstillinger = createAction<IInnstillinger>("meg/INNSTILLINGER_SATT");
@@ -225,8 +239,53 @@ export function hentMegEpos(
             if (Array.isArray(data)) {
               return hentetEnhetHandling(data as Array<IEnhetData>);
             } else {
-              return hentetHandling(data as MegType);
+              return hentetHandling(data);
             }
+          })
+        )
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 3 })),
+          catchError((error) => {
+            let err = error?.response?.detail || "ukjent feil";
+
+            return concat([
+              feiletHandling(err),
+              oppgaveFeiletHandling(),
+              displayToast(err),
+              skjulToaster(),
+            ]);
+          })
+        );
+    })
+  );
+}
+
+export function hentMegUtenEnheterEpos(
+  action$: ActionsObservable<PayloadAction>,
+  state$: StateObservable<RootStateOrAny>,
+  { ajax }: Dependencies
+) {
+  return action$.pipe(
+    ofType(hentMegUtenEnheterHandling.type),
+    withLatestFrom(state$),
+    mergeMap(([action, state]) => {
+      return ajax
+        .getJSON<GraphOgEnhet>(megUrl)
+        .pipe(
+          timeout(5000),
+          map((response: Graphdata) => {
+            return {
+              fornavn: response.givenName,
+              id: response.onPremisesSamAccountName,
+              etternavn: response.surname,
+              navn: response.displayName,
+              mail: response.mail,
+            };
+          })
+        )
+        .pipe(
+          map((data) => {
+            return hentetUtenEnheterHandling(data);
           })
         )
         .pipe(
@@ -311,4 +370,9 @@ export function settInnstillingerEpos(
   );
 }
 
-export const MEG_EPICS = [hentMegEpos, hentInnstillingerEpos, settInnstillingerEpos];
+export const MEG_EPICS = [
+  hentMegEpos,
+  hentInnstillingerEpos,
+  hentMegUtenEnheterEpos,
+  settInnstillingerEpos,
+];

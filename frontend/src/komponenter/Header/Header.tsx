@@ -10,6 +10,7 @@ import { useOnInteractOutside } from "../Tabell/FiltrerbarHeader";
 import styled from "styled-components";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
 import { useAppDispatch } from "../../tilstand/konfigurerTilstand";
+import isDev from "../../utility/isDev";
 
 const BrukerBoks = styled.div`
   z-index: 2;
@@ -42,9 +43,10 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   const history = useHistory();
 
   useEffect(() => {
-    const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
-    if (tilgangEnabled?.isEnabled !== undefined) {
-      settHarAdminTilgang(tilgangEnabled.isEnabled);
+    const adminEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
+    if (adminEnabled?.isEnabled !== undefined) {
+      if (isDev()) settHarAdminTilgang(true);
+      else settHarAdminTilgang(adminEnabled.isEnabled);
     }
   }, [featureToggles]);
 
@@ -82,21 +84,25 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
       </button>
       <div className={classNames(aapen ? "velg-enhet maksimert" : "minimert")} ref={ref}>
         <div className={"enheter"}>
-          {enheter.map((enhet, index) => {
-            return (
-              <div
-                className={classNames({
-                  enhet: true,
-                  active: person.enheter[person.valgtEnhet].id === enhet.id,
-                })}
-                key={enhet.id}
-              >
-                <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
-                  {enhet.id} {enhet.navn}
-                </NavLink>
-              </div>
-            );
-          })}
+          {(() => {
+            if (person.enheter) {
+              enheter.map((enhet, index) => {
+                return (
+                  <div
+                    className={classNames({
+                      enhet: true,
+                      active: person.enheter[person.valgtEnhet].id === enhet.id,
+                    })}
+                    key={enhet.id}
+                  >
+                    <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
+                      {enhet.id} {enhet.navn}
+                    </NavLink>
+                  </div>
+                );
+              });
+            }
+          })()}
           <hr />
           {harAdminTilgang && (
             <NavLink to={"/admin"} className={classNames({ enhet: true, navlink: true })}>

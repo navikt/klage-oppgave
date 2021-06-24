@@ -7,12 +7,9 @@ import MineSaker from "./komponenter/MineSaker";
 import Sok from "./komponenter/Sok";
 import AlleSaker from "./komponenter/AlleSaker";
 import Innstillinger from "./komponenter/Innstillinger";
-import { hentMegHandling } from "./tilstand/moduler/meg";
 import Admin from "./komponenter/Admin";
 import Kvalitetsskjema from "./komponenter/Kvalitetsskjema";
 import { KlagebehandlingLaster } from "./komponenter/Klagebehandling/KlagebehandlingLaster";
-
-store.dispatch(hentMegHandling());
 
 ReactDOM.render(
   <React.StrictMode>
