@@ -1,7 +1,9 @@
 let fs = require("fs");
 let path = require("path");
 
-require("dotenv-flow").config();
+require("dotenv-flow").config({
+  silent: true,
+});
 
 const envVar = ({ name, required = true }) => {
   if (!process.env[name] && required) {
