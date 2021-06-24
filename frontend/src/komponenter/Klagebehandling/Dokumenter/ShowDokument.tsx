@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
 // @ts-ignore
@@ -10,8 +10,8 @@ import ZoomIn from "./ikoner/ZoomIn.svg";
 // @ts-ignore
 import ZoomOut from "./ikoner/ZoomOut.svg";
 
-const MIN_BREDDE_FORHANDSVISNING = 760;
-const MAX_BREDDE_FORHANDSVISNING = 1960;
+const MIN_PDF_WIDTH = 760;
+const MAX_PDF_WIDTH = 1960;
 const ZOOM_STEP = 150;
 
 interface ShowDokumentProps {
@@ -26,18 +26,14 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
       `/api/klagebehandlinger/${klagebehandlingId}/journalposter/${dokument?.journalpostId}/dokumenter/${dokument?.dokumentInfoId}`,
     [dokument]
   );
-  const [forhandsvisningsbredde, settForhandsvisningsbredde] =
-    useState<number>(hentStartStoerrelseZoom);
 
-  const zoom = useCallback(
-    (isZoomIn: boolean) => {
-      const bredde = isZoomIn
-        ? Math.min(forhandsvisningsbredde + ZOOM_STEP, MAX_BREDDE_FORHANDSVISNING)
-        : Math.max(forhandsvisningsbredde - ZOOM_STEP, MIN_BREDDE_FORHANDSVISNING);
-      settForhandsvisningsbredde(bredde);
-      localStorage.setItem("valgtBreddeForhandsvisning", bredde.toString());
-    },
-    [forhandsvisningsbredde, settForhandsvisningsbredde]
+  const [pdfWidth, setPdfWidth] = useState<number>(getSavedPdfWidth);
+  const increase = () => setPdfWidth(Math.min(pdfWidth + ZOOM_STEP, MAX_PDF_WIDTH));
+  const decrease = () => setPdfWidth(Math.max(pdfWidth - ZOOM_STEP, MIN_PDF_WIDTH));
+
+  useEffect(
+    () => localStorage.setItem("valgtBreddeForhandsvisning", pdfWidth.toString()),
+    [pdfWidth]
   );
 
   if (dokument === null) {
@@ -45,12 +41,12 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
   }
 
   return (
-    <FullBeholder forhandsvisningsbredde={forhandsvisningsbredde}>
+    <Beholder width={pdfWidth}>
       <Header>
         {dokument.tittel}
         <div>
-          <HeaderButton onClick={() => zoom(false)} text="Zoom ut på PDF" icon={ZoomOut} />
-          <HeaderButton onClick={() => zoom(true)} text="Zoom inn på PDF" icon={ZoomIn} />
+          <HeaderButton onClick={decrease} text="Zoom ut på PDF" icon={ZoomOut} />
+          <HeaderButton onClick={increase} text="Zoom inn på PDF" icon={ZoomIn} />
           <a href={url} target={"_blank"} title="Åpne i ny fane">
             <EksternalSVGIkon alt="Ekstern lenke" src={ExtLink} />
           </a>
@@ -63,17 +59,17 @@ export const ShowDokument = ({ klagebehandlingId, dokument, close }: ShowDokumen
         type="application/pdf"
         name={dokument.tittel ?? undefined}
       />
-    </FullBeholder>
+    </Beholder>
   );
 };
 
-const hentStartStoerrelseZoom = () => {
+const getSavedPdfWidth = () => {
   const localStorageVerdi = localStorage.getItem("valgtBreddeForhandsvisning");
   if (localStorageVerdi === null) {
-    return MIN_BREDDE_FORHANDSVISNING;
+    return MIN_PDF_WIDTH;
   }
   const parsed = Number.parseInt(localStorageVerdi, 10);
-  return Number.isNaN(parsed) ? MIN_BREDDE_FORHANDSVISNING : parsed;
+  return Number.isNaN(parsed) ? MIN_PDF_WIDTH : parsed;
 };
 
 interface HeaderButtonProps {
@@ -88,9 +84,13 @@ const HeaderButton = ({ icon, text, onClick }: HeaderButtonProps) => (
   </StyledHeaderButton>
 );
 
-const FullBeholder = styled.section<{ forhandsvisningsbredde: number }>`
+interface BeholderProps {
+  width: number;
+}
+
+const Beholder = styled.section<BeholderProps>`
   display: block;
-  min-width: ${(props) => props.forhandsvisningsbredde}px;
+  min-width: ${(props) => props.width}px;
   height: 100%;
   margin: 0.25em 0.5em;
   background: white;
