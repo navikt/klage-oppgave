@@ -28,17 +28,11 @@ const options = (api, authClient) => ({
     );
 
     const queryString = urlFromRequest.query;
-    const newPath =
+    return (
       (pathFromApi ? pathFromApi : "") +
       (pathFromRequest ? pathFromRequest : "") +
-      (queryString ? "?" + queryString : "");
-
-    console.log(
-      `Proxying request from '${req.originalUrl}' to '${stripTrailingSlash(
-        urlFromApi.href
-      )}${newPath}'`
+      (queryString ? "?" + queryString : "")
     );
-    return newPath;
   },
 });
 

@@ -118,9 +118,6 @@ const loadReverseProxyConfig = () => {
   let config = null;
   if (configPath) {
     try {
-      console.log(
-        `Loading reverse proxy config from '${configPath}' (defined by DOWNSTREAM_APIS_CONFIG_PATH)`
-      );
       config = JSON.parse(fs.readFileSync(path.resolve(configPath), "utf-8"));
     } catch (err) {
       console.log(`Could not read config: '${err}'`);
