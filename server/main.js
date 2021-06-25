@@ -1,16 +1,11 @@
 let azure = require("./auth/azure");
 let config = require("./config");
-let routes = require("./routes");
-let routesDev = require("./routesDev");
 let cors = require("./cors");
 let express = require("express");
 let helmet = require("helmet");
 let passport = require("passport");
 let session = require("./session");
-let bodyParser = require("body-parser");
-//let slowDown = require("express-slow-down");
 
-// for debugging during development
 let morganBody = require("morgan-body");
 let morgan = require("morgan");
 let morganJson = require("morgan-json");
@@ -39,7 +34,6 @@ async function startApp() {
     );
     session.setup(server);
 
-    // setup sane defaults for CORS and HTTP headers
     server.use(
       helmet({
         contentSecurityPolicy: false,
@@ -57,11 +51,10 @@ async function startApp() {
       passport.use("azureOidc", azureOidcStrategy);
       passport.serializeUser((user, done) => done(null, user));
       passport.deserializeUser((user, done) => done(null, user));
-      server.use("/", routes.setup(azureAuthClient));
-
+      server.use("/", require("./routes").setup(azureAuthClient));
       server.listen(8080, () => console.log(`Listening on port ${port}`));
     } else {
-      server.use("/", routesDev.setup());
+      server.use("/", require("./routesDev").setup());
       server.listen(
         8090,
         () => console.log(`Listening on port ${port}`),
