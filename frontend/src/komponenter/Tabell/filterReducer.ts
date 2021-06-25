@@ -23,7 +23,7 @@ function filterReducer(antall: number, start: number) {
     meta: {
       transformasjoner_satt: false,
       saksbehandler_satt: false,
-      kan_hente_oppgaver: false,
+      kan_hente_oppgaver: true,
     },
     meg: undefined,
     ident: "",
@@ -45,20 +45,6 @@ function filterReducer(antall: number, start: number) {
       },
     },
   };
-
-  function kanHenteOppgaver(state: any) {
-    let klar = true;
-    if (!state.ident) {
-      klar = false;
-    }
-    if (!state.meta.transformasjoner_satt) {
-      klar = false;
-    }
-    if (!state.meta.saksbehandler_satt) {
-      klar = false;
-    }
-    return klar;
-  }
 
   function reducer(state: any, action: any) {
     switch (action.type) {
@@ -97,7 +83,7 @@ function filterReducer(antall: number, start: number) {
           meta: {
             ...state.meta,
             transformasjoner_satt: true,
-            kan_hente_oppgaver: kanHenteOppgaver(state),
+            kan_hente_oppgaver: true,
           },
           transformasjoner: {
             ...state.transformasjoner,
@@ -167,7 +153,7 @@ function filterReducer(antall: number, start: number) {
       case "sett_navident": {
         return {
           ...state,
-          meta: { ...state.meta, kan_hente_oppgaver: kanHenteOppgaver(state) },
+          meta: { ...state.meta, kan_hente_oppgaver: true },
           ident: action.payload.id,
           enhetId: action.payload.valgtEnhet.id,
           meg: { ...action.payload },
