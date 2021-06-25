@@ -6,6 +6,7 @@ import { concat, of } from "rxjs";
 import {
   catchError,
   concatMap,
+  debounceTime,
   map,
   mergeMap,
   retryWhen,
@@ -322,6 +323,7 @@ export function hentEnkeltOppgaveEpos(
 ) {
   return action$.pipe(
     ofType(enkeltOppgave.type),
+    debounceTime(500),
     withLatestFrom(state$),
     switchMap(([action, state]) => {
       let rader = state.klagebehandlinger.rader.slice();
@@ -356,6 +358,7 @@ export function hentFullforteOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(ferdigstilteRequest.type),
+    debounceTime(500),
     switchMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
@@ -406,6 +409,7 @@ export function hentOppgaverEpos(
 ) {
   return action$.pipe(
     ofType(oppgaveRequest.type),
+    debounceTime(500),
     concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/klagebehandlinger`,
@@ -455,8 +459,8 @@ export function hentUtgaatteFristerEpos(
 ) {
   return action$.pipe(
     ofType(hentUtgatte.type),
-    withLatestFrom(state$),
-    concatMap(([action, state]) => {
+    debounceTime(500),
+    concatMap((action) => {
       let oppgaveUrl = buildQuery(
         `/api/ansatte/${action.payload.ident}/antallklagebehandlingermedutgaattefrister`,
         action.payload

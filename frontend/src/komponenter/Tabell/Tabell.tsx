@@ -201,8 +201,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
   const skiftSorteringFrist = (event: React.MouseEvent<HTMLElement | HTMLButtonElement>) =>
     R.curry(skiftSortering)("frist")(event);
-  const skiftSorteringMottatt = (event: React.MouseEvent<HTMLElement | HTMLButtonElement>) =>
-    R.curry(skiftSortering)("mottatt")(event);
 
   function toValue<T>(filters: Array<string | string | Filter>) {
     return filters.map((filter: any) => filter.value);
