@@ -16,7 +16,11 @@ interface GodkjennOgSendUtVedtakProps {
 
 export const GodkjennOgSendUtVedtak = ({ klagebehandling }: GodkjennOgSendUtVedtakProps) => {
   const dispatch = useAppDispatch();
-  const { id, enheter, valgtEnhet } = useAppSelector(velgMeg);
+  const {
+    graphData: { id },
+    enheter,
+    valgtEnhet,
+  } = useAppSelector(velgMeg);
   const isSaved = useIsSaved();
   const {
     id: klagebehandlingId,
@@ -29,7 +33,7 @@ export const GodkjennOgSendUtVedtak = ({ klagebehandling }: GodkjennOgSendUtVedt
 
   const { id: vedtakId, ferdigstilt, file } = vedtak;
 
-  const journalfoerendeEnhet = useMemo(() => enheter[valgtEnhet]?.id, [enheter, valgtEnhet]);
+  const journalfoerendeEnhet = useMemo(() => valgtEnhet.id, [enheter, valgtEnhet]);
 
   const godkjennOgSendUt = useCallback(
     () =>

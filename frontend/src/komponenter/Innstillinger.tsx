@@ -7,12 +7,7 @@ import { useSelector } from "react-redux";
 import { velgFiltrering } from "../tilstand/moduler/oppgave.velgere";
 import EtikettBase from "nav-frontend-etiketter";
 import { Knapp } from "nav-frontend-knapper";
-import {
-  velgInnstillinger,
-  velgEnheter,
-  velgMeg,
-  valgtEnhet,
-} from "../tilstand/moduler/meg.velgere";
+import { velgInnstillinger, velgMeg } from "../tilstand/moduler/meg.velgere";
 import {
   Faner,
   hentInnstillingerHandling,
@@ -38,7 +33,7 @@ const Innstillinger = (): JSX.Element => {
   const filtrering = useSelector(velgFiltrering);
   const faner = {};
   const meg = useSelector(velgMeg);
-  const enheter = useSelector(velgEnheter);
+  const { enheter, valgtEnhet } = meg;
   const innstillinger = useSelector(velgInnstillinger);
   const [reload, settReload] = useState<boolean>(false);
   const [typeFilter, settTypeFilter] = useState<string[] | undefined>(undefined);
@@ -52,18 +47,22 @@ const Innstillinger = (): JSX.Element => {
   const [gyldigeHjemler, settGyldigeHjemler] = useState<Filter[]>([]);
   const [gyldigeTyper, settGyldigeTyper] = useState<Filter[]>([]);
 
-  const valgtEnhetIdx = useSelector(valgtEnhet);
   const kodeverk = useSelector(velgKodeverk);
 
   useEffect(() => {
-    if (meg.id)
-      dispatch(hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id }));
-  }, [meg.id, valgtEnhetIdx, reload]);
+    if (meg.graphData.id)
+      dispatch(
+        hentInnstillingerHandling({
+          navIdent: meg.graphData.id,
+          enhetId: valgtEnhet.id,
+        })
+      );
+  }, [meg.graphData.id, valgtEnhet, reload]);
 
   useEffect(() => {
     let lovligeTemaer: Filter[] = [];
     if (enheter.length > 0) {
-      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: string | any) => {
+      valgtEnhet.lovligeTemaer?.forEach((tema: string | any) => {
         if (kodeverk?.kodeverk.tema) {
           let kodeverkTema = kodeverk.kodeverk.tema.filter(
             (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
@@ -93,20 +92,20 @@ const Innstillinger = (): JSX.Element => {
       });
       settGyldigeTyper(typer);
     }
-  }, [enheter, valgtEnhetIdx, reload]);
+  }, [enheter, valgtEnhet, reload]);
 
   useEffect(() => {
     settAktiveHjemler(innstillinger?.aktiveHjemler ?? []);
     settAktiveTyper(innstillinger?.aktiveTyper ?? []);
     settAktiveTemaer(innstillinger?.aktiveTemaer ?? []);
-  }, [innstillinger, meg.id, reload]);
+  }, [innstillinger, meg.graphData.id, reload]);
 
   const lagreInnstillinger = () => {
     settReload(true);
     dispatch(
       settInnstillingerHandling({
-        navIdent: meg.id,
-        enhetId: enheter[valgtEnhetIdx].id,
+        navIdent: meg.graphData.id,
+        enhetId: valgtEnhet.id,
         innstillinger: {
           aktiveHjemler,
           aktiveTyper,

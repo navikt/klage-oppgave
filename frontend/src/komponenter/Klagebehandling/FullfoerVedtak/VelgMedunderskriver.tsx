@@ -14,7 +14,9 @@ interface VelgMedunderskriverProps {
 export const VelgMedunderskriver = ({ value, onSelect, tema }: VelgMedunderskriverProps) => {
   const dispatch = useAppDispatch();
   const { loading, medunderskrivere } = useAppSelector(velgMedunderskrivere);
-  const { id } = useAppSelector(velgMeg);
+  const {
+    graphData: { id },
+  } = useAppSelector(velgMeg);
 
   useEffect(() => {
     dispatch(lastMedunderskrivere({ id, tema }));

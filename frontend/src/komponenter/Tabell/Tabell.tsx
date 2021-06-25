@@ -7,12 +7,7 @@ import {
 import { IKodeverkVerdi } from "../../tilstand/moduler/kodeverk";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import {
-  valgtEnhet,
-  velgEnheter,
-  velgInnstillinger,
-  velgMeg,
-} from "../../tilstand/moduler/meg.velgere";
+import { velgInnstillinger, velgMeg } from "../../tilstand/moduler/meg.velgere";
 import {
   velgFerdigstilteOppgaver,
   velgOppgaver,
@@ -38,12 +33,14 @@ import { ParamTypes } from "./interfaces";
 import { Feil, FullforteOppgaver, IkkeFiltrerbarHeader } from "./Styled";
 import { velgKodeverk } from "../../tilstand/moduler/kodeverk.velgere";
 import { dateToISODateString } from "nav-datovelger/lib/utils/dateFormatUtils";
+import { useAppDispatch } from "../../tilstand/konfigurerTilstand";
 
 const R = require("ramda");
 
 function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const meg = useSelector(velgMeg);
+  const { enheter, valgtEnhet } = meg;
   const sideLaster = useSelector(velgOppgaveLaster);
   const kodeverk = useSelector(velgKodeverk);
   const klagebehandlinger = useSelector(velgOppgaver);
@@ -78,8 +75,6 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const history = useHistory();
   const pathname = location.pathname.split("/")[1];
   const innstillinger = useSelector(velgInnstillinger);
-  const enheter = useSelector(velgEnheter);
-  const valgtEnhetIdx = useSelector(valgtEnhet);
   const featureToggles = useSelector(velgFeatureToggles);
 
   const { filter_state, filter_dispatch } = filterReducer(antall, start);
@@ -92,6 +87,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   const settTyper = (payload: Filter[]) => R.curry(settFiltrering)("sett_aktive_typer")(payload);
   const sorteringFrist: "synkende" | "stigende" =
     filter_state?.transformasjoner?.sortering?.frist || "synkende";
+
   const sorteringMottatt: "synkende" | "stigende" =
     filter_state?.transformasjoner?.sortering?.mottatt || "synkende";
   const [visFnr, settVisFnr] = useState<boolean>(location.pathname.startsWith("/mineoppgaver"));
@@ -115,13 +111,13 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   }, [featureToggles, settVisFnr, filter_dispatch, location]);
 
   useEffect(() => {
-    dispatch(hentInnstillingerHandling({ navIdent: meg.id, enhetId: enheter[valgtEnhetIdx].id }));
-  }, [meg, enheter, valgtEnhetIdx]);
+    dispatch(hentInnstillingerHandling({ navIdent: meg.graphData.id, enhetId: valgtEnhet.id }));
+  }, [meg, enheter, valgtEnhet]);
 
   useEffect(() => {
     let lovligeTemaer: Filter[] = [];
     if (enheter.length > 0) {
-      enheter[valgtEnhetIdx].lovligeTemaer?.forEach((tema: string | any) => {
+      valgtEnhet.lovligeTemaer?.forEach((tema: string | any) => {
         if (kodeverk.kodeverk.tema) {
           let kodeverkTema = kodeverk.kodeverk.tema.filter(
             (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
@@ -168,7 +164,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       if (innstillinger?.aktiveTyper) settGyldigeTyper(innstillinger.aktiveTyper);
       else settGyldigeTyper(typer);
     }
-  }, [enheter, valgtEnhetIdx, kodeverk]);
+  }, [enheter, valgtEnhet, kodeverk]);
 
   function skiftSortering(type: string, event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
     event.preventDefault();
@@ -218,7 +214,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
     if (!filter_state.ident) {
       //todo dette er ikke riktig, ident skal ikke mangle
-      ident = meg.id;
+      ident = meg.graphData.id;
     }
     if (ident && enhetId) {
       dispatch(
@@ -310,7 +306,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   };
 
   useEffect(() => {
-    if (meg.id) {
+    if (meg.graphData.id) {
       if (location.pathname.startsWith("/mineoppgaver")) {
         settVisFnr(true);
         filter_dispatch({ type: "sett_projeksjon", payload: true });
@@ -327,12 +323,12 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
         }
       }
       if (location.pathname.startsWith("/mineoppgaver") && !filter_state.tildeltSaksbehandler) {
-        filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: meg.id });
+        filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: meg.graphData.id });
       } else if (!location.pathname.startsWith("/mineoppgaver")) {
         filter_dispatch({ type: "sett_tildelt_saksbehandler", payload: undefined });
       }
     }
-  }, [location, meg.id]);
+  }, [location, meg.graphData.id]);
 
   useEffect(() => {
     let filtre = {
@@ -384,10 +380,10 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       dispatch(
         tildelMegHandling({
           oppgaveId: valgtOppgave.id,
-          ident: meg.id,
+          ident: meg.graphData.id,
           kjorOppgavesokVedSuksess: true,
           klagebehandlingVersjon: valgtOppgave.klagebehandlingVersjon,
-          enhetId: enheter[valgtEnhetIdx].id,
+          enhetId: valgtEnhet.id,
         })
       );
     }
@@ -399,7 +395,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       !R.equals(forrigeTemaFilter, temaFilter) ||
       !R.equals(forrigeTypeFilter, typeFilter)
     ) {
-      if (meg.id) {
+      if (meg.graphData.id) {
         console.debug(
           "%chenter oppgaver basert på endring/setting av filter ",
           "background: #af7; color: #222255"

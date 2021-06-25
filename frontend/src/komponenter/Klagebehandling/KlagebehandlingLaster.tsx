@@ -16,6 +16,7 @@ import { Klagebehandling } from "./KlageBehandling";
 
 export const KlagebehandlingLaster = () => {
   const { id } = useParams<{ id: string }>();
+
   const dispatch = useAppDispatch();
   const klagebehandling = useAppSelector(velgKlagebehandling);
   const klagebehandlingError = useAppSelector(velgKlagebehandlingError);

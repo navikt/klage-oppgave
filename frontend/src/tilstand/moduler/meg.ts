@@ -24,13 +24,15 @@ import { RootState } from "../root";
 // Interfaces
 //==========
 export interface MegType {
-  navn: string;
-  fornavn: string;
-  mail: string;
-  id: string;
-  etternavn: string;
+  graphData: {
+    navn: string;
+    fornavn: string;
+    mail: string;
+    id: string;
+    etternavn: string;
+  };
   enheter: Array<IEnhetData>;
-  valgtEnhet: number;
+  valgtEnhet: IEnhetData;
   innstillinger?: IInnstillinger;
 }
 
@@ -46,6 +48,11 @@ export interface IEnhetData {
   id: string;
   navn: string;
   lovligeTemaer?: [Filter];
+}
+
+export interface ISettEnhet {
+  navIdent: string;
+  enhetId: string;
 }
 
 export interface Faner {
@@ -93,42 +100,43 @@ export interface IHentInnstilingerPayload {
 //==========
 export const megSlice = createSlice({
   name: "meg",
-  initialState: {
-    id: "",
-    navn: "",
-    fornavn: "",
-    mail: "",
-    etternavn: "",
-    valgtEnhet: 0,
+  initialState: <MegType>{
+    graphData: {
+      id: "",
+      navn: "",
+      fornavn: "",
+      mail: "",
+      etternavn: "",
+    },
+    valgtEnhet: {
+      id: "",
+      navn: "",
+      lovligeTemaer: undefined,
+    },
     lovligeTemaer: undefined,
     enheter: [],
     innstillinger: undefined,
-  } as MegType,
+  },
   reducers: {
-    SETT_ENHET: (state, action: PayloadAction<number>) => {
-      state.valgtEnhet = action.payload;
-      return state;
-    },
-    ENHETER_HENTET: (state, action: PayloadAction<Array<IEnhetData>>) => {
-      state.enheter = action.payload;
-      return state;
-    },
     MEG_HENTET: (state, action: PayloadAction<MegType>) => {
-      state.fornavn = action.payload.fornavn;
-      state.etternavn = action.payload.etternavn;
-      state.navn = action.payload.navn;
+      let person = action.payload.graphData;
+      state.graphData.fornavn = person.fornavn;
+      state.graphData.etternavn = person.etternavn;
+      state.graphData.navn = person.navn;
+      state.graphData.id = person.id;
+      state.graphData.mail = person.mail;
       state.enheter = action.payload.enheter;
-      state.id = action.payload.id;
-      state.mail = action.payload.mail;
+      state.valgtEnhet = action.payload.valgtEnhet;
       return state;
     },
     MEG_HENTET_UTEN_ENHETER: (state, action: PayloadAction<MegType>) => {
-      state.fornavn = action.payload.fornavn;
-      state.etternavn = action.payload.etternavn;
-      state.navn = action.payload.navn;
+      let person = action.payload.graphData;
+      state.graphData.fornavn = person.fornavn;
+      state.graphData.etternavn = person.etternavn;
+      state.graphData.navn = person.navn;
+      state.graphData.id = person.id;
+      state.graphData.mail = person.mail;
       state.enheter = [];
-      state.id = action.payload.id;
-      state.mail = action.payload.mail;
       return state;
     },
     INNSTILLINGER_HENTET: (state, action: PayloadAction<IInnstillinger>) => {
@@ -143,6 +151,10 @@ export const megSlice = createSlice({
       state.innstillinger = action.payload;
       return state;
     },
+    ENHET_LAGRET: (state, action: PayloadAction<IEnhetData>) => {
+      state.valgtEnhet = action.payload;
+      return state;
+    },
     FEILET: (state, action: PayloadAction<string>) => {},
   },
 });
@@ -152,15 +164,14 @@ export default megSlice.reducer;
 //==========
 // Actions
 //==========
-export const { MEG_HENTET, FEILET } = megSlice.actions;
+export const { MEG_HENTET, FEILET, ENHET_LAGRET } = megSlice.actions;
 export const hentMegHandling = createAction("meg/HENT_MEG");
 export const hentMegUtenEnheterHandling = createAction("meg/HENT_MEG_UTEN_ENHETER");
-export const hentetHandling = createAction<Partial<MegType>>("meg/MEG_HENTET");
+export const hentetMegHandling = createAction<Partial<MegType>>("meg/MEG_HENTET");
 export const hentetUtenEnheterHandling = createAction<Partial<MegType>>(
   "meg/MEG_HENTET_UTEN_ENHETER"
 );
-export const settEnhetHandling = createAction<number>("meg/SETT_ENHET");
-export const hentetEnhetHandling = createAction<Array<IEnhetData>>("meg/ENHETER_HENTET");
+export const settEnhetHandling = createAction<ISettEnhet>("meg/SETT_ENHET");
 export const sattInnstillinger = createAction<IInnstillinger>("meg/INNSTILLINGER_SATT");
 export const hentInnstillingerHandling =
   createAction<IHentInnstilingerPayload>("meg/HENT_INNSTILLINGER");
@@ -191,17 +202,14 @@ export function skjulToaster() {
 const megUrl = `/me`;
 const innstillingerUrl = `/internal/innstillinger`;
 
-let resultData: any;
-
 export function hentMegEpos(
   action$: ActionsObservable<PayloadAction>,
-  state$: StateObservable<RootStateOrAny>,
+  state$: StateObservable<RootState>,
   { ajax }: Dependencies
 ) {
   return action$.pipe(
     ofType(hentMegHandling.type),
-    withLatestFrom(state$),
-    mergeMap(([action, state]) => {
+    mergeMap((action) => {
       return ajax
         .getJSON<GraphOgEnhet>(megUrl)
         .pipe(
@@ -217,30 +225,36 @@ export function hentMegEpos(
           })
         )
         .pipe(
-          map((graphData) => {
+          mergeMap((graphData) => {
             return ajax.getJSON<Array<IEnhetData>>(`/api/ansatte/${graphData.id}/enheter`).pipe(
               timeout(5000),
-              map((response: Array<IEnhetData>) => {
-                return concat([
-                  <Array<IEnhetData>>response,
-                  <MegType>{
-                    ...graphData,
-                    enheter: response,
-                  },
-                ]);
+              map((enheter: Array<IEnhetData>) => {
+                return {
+                  graphData,
+                  enheter,
+                };
               })
             );
           })
         )
         .pipe(
-          concatAll(),
-          concatAll(),
+          mergeMap((graph_og_enheter) => {
+            return ajax
+              .getJSON<IEnhetData>(`/api/ansatte/${graph_og_enheter.graphData.id}/valgtenhet`)
+              .pipe(
+                timeout(5000),
+                map((valgtEnhet) => {
+                  return {
+                    ...graph_og_enheter,
+                    valgtEnhet,
+                  };
+                })
+              );
+          })
+        )
+        .pipe(
           map((data) => {
-            if (Array.isArray(data)) {
-              return hentetEnhetHandling(data as Array<IEnhetData>);
-            } else {
-              return hentetHandling(data);
-            }
+            return hentetMegHandling(data);
           })
         )
         .pipe(
@@ -285,7 +299,7 @@ export function hentMegUtenEnheterEpos(
         )
         .pipe(
           map((data) => {
-            return hentetUtenEnheterHandling(data);
+            return hentetUtenEnheterHandling({ graphData: data });
           })
         )
         .pipe(
@@ -370,8 +384,37 @@ export function settInnstillingerEpos(
   );
 }
 
+export function settEnhetEpos(
+  action$: ActionsObservable<PayloadAction<ISettEnhet>>,
+  state$: StateObservable<RootStateOrAny>,
+  { ajax }: Dependencies
+) {
+  return action$.pipe(
+    ofType(settEnhetHandling.type),
+    switchMap((action) => {
+      return ajax
+        .put(
+          `/api/ansatte/${action.payload.navIdent}/valgtenhet`,
+          {
+            enhetId: action.payload.enhetId,
+          },
+          { "Content-Type": "application/json" }
+        )
+        .pipe(map((payload: { response: IEnhetData }) => ENHET_LAGRET(payload.response)))
+        .pipe(
+          retryWhen(provIgjenStrategi({ maksForsok: 1 })),
+          catchError((error) => {
+            let err = error?.response?.detail || "ukjent feil";
+            return concat([feiletHandling(err), displayToast(err), skjulToaster()]);
+          })
+        );
+    })
+  );
+}
+
 export const MEG_EPICS = [
   hentMegEpos,
+  settEnhetEpos,
   hentInnstillingerEpos,
   hentMegUtenEnheterEpos,
   settInnstillingerEpos,

@@ -12,7 +12,9 @@ interface VisSattMedunderskriverProps {
 
 export const VisSattMedunderskriver = ({ klagebehandling }: VisSattMedunderskriverProps) => {
   const dispatch = useAppDispatch();
-  const { id } = useAppSelector(velgMeg);
+  const {
+    graphData: { id },
+  } = useAppSelector(velgMeg);
   const { medunderskrivere } = useAppSelector(velgMedunderskrivere);
   const { medunderskriverident, tema } = klagebehandling;
 

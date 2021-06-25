@@ -40,9 +40,13 @@ export const useKanEndre = () => {
   const meg = useAppSelector(velgMeg);
   return useMemo(
     () =>
-      klagebehandling?.tildeltSaksbehandlerident === meg.id &&
+      klagebehandling?.tildeltSaksbehandlerident === meg.graphData.id &&
       klagebehandling?.avsluttetAvSaksbehandler === null,
-    [klagebehandling?.tildeltSaksbehandlerident, klagebehandling?.avsluttetAvSaksbehandler, meg.id]
+    [
+      klagebehandling?.tildeltSaksbehandlerident,
+      klagebehandling?.avsluttetAvSaksbehandler,
+      meg.graphData.id,
+    ]
   );
 };
 

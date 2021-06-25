@@ -77,7 +77,7 @@ export default function Oppsett({
   if (!generellTilgang) {
     return <div>Beklager, men din bruker har ikke tilgang til denne siden</div>;
   }
-  if (R.isEmpty(kodeverk) || R.isEmpty(person.id)) {
+  if (R.isEmpty(kodeverk) || R.isEmpty(person.graphData.id)) {
     return <NavFrontendSpinner />;
   }
 
@@ -87,7 +87,7 @@ export default function Oppsett({
         <Header
           backLink={backLink ?? "/"}
           tittel="KABAL"
-          brukerinfo={{ navn: person.navn, ident: person.id }}
+          brukerinfo={{ navn: person.graphData.navn, ident: person.graphData.id }}
         >
           {/* <Sok onSok={() => Promise.resolve("test")} /> */}
         </Header>

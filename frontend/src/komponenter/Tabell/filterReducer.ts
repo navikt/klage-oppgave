@@ -169,7 +169,7 @@ function filterReducer(antall: number, start: number) {
           ...state,
           meta: { ...state.meta, kan_hente_oppgaver: kanHenteOppgaver(state) },
           ident: action.payload.id,
-          enhetId: action.payload.enheter[action.payload.valgtEnhet].id,
+          enhetId: action.payload.valgtEnhet.id,
           meg: { ...action.payload },
         };
       }

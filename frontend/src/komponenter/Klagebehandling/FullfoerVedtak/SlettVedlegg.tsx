@@ -13,7 +13,9 @@ interface SlettVedleggProps {
 export const SlettVedlegg = ({ klagebehandling }: SlettVedleggProps) => {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector(velgVedtak);
-  const { id } = useAppSelector(velgMeg);
+  const {
+    graphData: { id },
+  } = useAppSelector(velgMeg);
 
   const {
     id: klagebehandlingId,

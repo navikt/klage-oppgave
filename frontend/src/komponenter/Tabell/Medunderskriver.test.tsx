@@ -9,7 +9,9 @@ import { screen } from "@testing-library/dom";
 describe("Medunderskriver", () => {
   test('Vis "medunderskriver" som status', () => {
     let meg = {
-      id: "saksbehandler1",
+      graphData: {
+        id: "saksbehandler1",
+      },
     };
     let klagebehandlinger = {
       rader: [
@@ -58,7 +60,9 @@ describe("Medunderskriver", () => {
 
   test('Vis "sendt til medunderskriver" som status', () => {
     let meg = {
-      id: "saksbehandler1",
+      graphData: {
+        id: "saksbehandler1",
+      },
     };
     let klagebehandlinger = {
       rader: [
@@ -107,7 +111,9 @@ describe("Medunderskriver", () => {
 
   test('Vis default innhold hvis "medunderskriver"-status er ugyldig', () => {
     let meg = {
-      id: "saksbehandler1",
+      graphData: {
+        id: "saksbehandler1",
+      },
     };
     let klagebehandlinger = {
       rader: [

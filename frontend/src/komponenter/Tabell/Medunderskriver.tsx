@@ -18,7 +18,7 @@ function MedunderskriverStatus({ id, children }: { id: any; children: any }) {
   }
 
   if (oppgaveMedunderskriver[0] && oppgaveMedunderskriver[0][1]) {
-    if (oppgaveMedunderskriver[0][1] === meg.id) {
+    if (oppgaveMedunderskriver[0][1] === meg.graphData.id) {
       return (
         <td data-testid={`${id}-text`}>
           <div className={"etikett etikett--medunderskriver"}>Medunderskriver</div>

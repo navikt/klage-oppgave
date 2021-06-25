@@ -13,7 +13,11 @@ interface LastOppVedleggProps {
 export const LastOppVedlegg = ({ klagebehandling }: LastOppVedleggProps) => {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector(velgVedtak);
-  const { id, valgtEnhet, enheter } = useAppSelector(velgMeg);
+  const {
+    graphData: { id },
+    valgtEnhet,
+    enheter,
+  } = useAppSelector(velgMeg);
 
   const {
     id: klagebehandlingId,
@@ -24,7 +28,7 @@ export const LastOppVedlegg = ({ klagebehandling }: LastOppVedleggProps) => {
   } = klagebehandling;
   const { id: vedtakId, file } = vedtak;
 
-  const journalfoerendeEnhet = useMemo(() => enheter[valgtEnhet]?.id, [enheter, valgtEnhet]);
+  const journalfoerendeEnhet = useMemo(() => valgtEnhet.id, [enheter, valgtEnhet]);
 
   const fileInput = useRef<HTMLInputElement>(null);
   const handleClick = useCallback(

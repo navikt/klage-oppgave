@@ -205,10 +205,20 @@ app.get("/ansatte/:id/enheter", async (req, res) => {
     {
       id: "4291",
       navn: "NAV Klageinstans Oslo og Akershus",
-      lovligeTemaer: ["43", "30", "56", "7"],
+      lovligeTemaer: ["43", "27"],
     },
-    { id: "0118", navn: "NAV Aremark", lovligeTemaer: ["30"] },
+    { id: "4293", navn: "NAV Klageinstans øst", lovligeTemaer: ["27", "43"] },
+    { id: "4295", navn: "NAV Klageinstans nord", lovligeTemaer: ["27", "43"] },
+    { id: "0118", navn: "NAV Aremark", lovligeTemaer: [] },
   ]);
+});
+
+app.get("/ansatte/:id/valgtenhet", async (req, res) => {
+  res.send({
+    id: "4291",
+    navn: "NAV Klageinstans Oslo og Akershus",
+    lovligeTemaer: ["43", "27"],
+  });
 });
 
 app.get("/featuretoggle/:feature", (req, res) => {

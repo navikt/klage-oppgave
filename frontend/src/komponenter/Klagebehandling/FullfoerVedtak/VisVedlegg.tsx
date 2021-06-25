@@ -17,7 +17,9 @@ interface VisVedleggProps {
 
 export const VisVedlegg = ({ klagebehandling }: VisVedleggProps) => {
   const { loading } = useAppSelector(velgVedtak);
-  const { id } = useAppSelector(velgMeg);
+  const {
+    graphData: { id },
+  } = useAppSelector(velgMeg);
   const {
     id: klagebehandlingId,
     avsluttetAvSaksbehandler,

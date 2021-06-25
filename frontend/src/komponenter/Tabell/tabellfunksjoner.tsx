@@ -112,7 +112,7 @@ const OppgaveTabellRad = ({
 }: OppgaveRadMedFunksjoner) => {
   const dispatch = useDispatch();
   const meg = useSelector(velgMeg);
-  const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.id)(meg.enheter[meg.valgtEnhet].id);
+  const fradelOppgave = leggTilbakeOppgave(dispatch)(meg.graphData.id)(meg.valgtEnhet.id);
 
   const curriedVisHandlinger = visHandlinger(fradelOppgave)(id);
   const curriedVelgOppgave = velgOppgave(settValgtOppgave)(id);

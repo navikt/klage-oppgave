@@ -3,8 +3,7 @@ import { TestScheduler } from "rxjs/testing";
 import { marbles } from "rxjs-marbles/jest";
 import megTilstand, {
   feiletHandling,
-  hentetEnhetHandling,
-  hentetHandling,
+  hentetMegHandling,
   hentetInnstillingerHandling,
   hentetUtenEnheterHandling,
   hentInnstillingerEpos,
@@ -20,6 +19,7 @@ import { of, throwError } from "rxjs";
 import { oppgaveHentingFeilet } from "./oppgave";
 import { toasterSett, toasterSkjul } from "./toaster";
 import { Dependencies } from "../konfigurerTilstand";
+import { RootStateOrAny } from "react-redux";
 
 describe("'Meg' epos", () => {
   let ts: TestScheduler;
@@ -42,7 +42,7 @@ describe("'Meg' epos", () => {
     marbles(() => {
       ts.run((m) => {
         const inputMarble = "a-";
-        const expectedMarble = "(cd)-";
+        const expectedMarble = "d-";
 
         const inputValues = {
           a: hentMegHandling(),
@@ -54,7 +54,11 @@ describe("'Meg' epos", () => {
             fornavn: "",
             mail: "",
             etternavn: "",
-            valgtEnhet: 0,
+            valgtEnhet: {
+              id: "",
+              navn: "",
+              lovligeTemaer: undefined,
+            },
             lovligeTemaer: undefined,
             enheter: [],
             innstillinger: undefined,
@@ -67,12 +71,14 @@ describe("'Meg' epos", () => {
           mail: "rbo@de.ninro",
           surname: "dENiro",
         };
-        const reducerResponse = hentetHandling({
-          fornavn: mockedResponse.givenName,
-          id: mockedResponse.onPremisesSamAccountName,
-          etternavn: mockedResponse.surname,
-          navn: mockedResponse.displayName,
-          mail: mockedResponse.mail,
+        const reducerResponse = hentetMegHandling({
+          graphData: {
+            fornavn: mockedResponse.givenName,
+            id: mockedResponse.onPremisesSamAccountName,
+            etternavn: mockedResponse.surname,
+            navn: mockedResponse.displayName,
+            mail: mockedResponse.mail,
+          },
           enheter: [
             {
               id: "42",
@@ -80,15 +86,12 @@ describe("'Meg' epos", () => {
               lovligeTemaer: [{ label: "test", value: "5" }],
             },
           ],
-        });
-
-        const enhetResponse = hentetEnhetHandling([
-          {
-            navn: "test",
-            id: "42",
-            lovligeTemaer: [{ label: "test", value: "5" }],
+          valgtEnhet: {
+            navn: "valgtenhet",
+            id: "50",
+            lovligeTemaer: [{ label: "gyldigtema", value: "1" }],
           },
-        ]);
+        });
 
         const dependencies = {
           ajax: {
@@ -101,6 +104,12 @@ describe("'Meg' epos", () => {
                     lovligeTemaer: [{ label: "test", value: "5" }],
                   },
                 ]);
+              } else if (url.endsWith("valgtenhet")) {
+                return of({
+                  navn: "valgtenhet",
+                  id: "50",
+                  lovligeTemaer: [{ label: "gyldigtema", value: "1" }],
+                });
               } else {
                 return of(mockedResponse);
               }
@@ -110,19 +119,15 @@ describe("'Meg' epos", () => {
 
         const observableValues = {
           a: initState,
-          c: {
-            payload: enhetResponse.payload,
-            type: hentetEnhetHandling.type,
-          },
           d: {
             payload: reducerResponse.payload,
-            type: hentetHandling.type,
+            type: hentetMegHandling.type,
           },
         };
 
         const action$ = new ActionsObservable(ts.createHotObservable(inputMarble, inputValues));
         const state$ = new StateObservable(m.hot("a", observableValues), initState);
-        const actual$ = hentMegEpos(action$, state$, <Dependencies>dependencies);
+        const actual$ = hentMegEpos(action$, state$ as RootStateOrAny, <Dependencies>dependencies);
         ts.expectObservable(actual$).toBe(expectedMarble, observableValues);
       });
     })
@@ -146,7 +151,11 @@ describe("'Meg' epos", () => {
             fornavn: "",
             mail: "",
             etternavn: "",
-            valgtEnhet: 0,
+            valgtEnhet: {
+              id: "",
+              navn: "",
+              lovligeTemaer: undefined,
+            },
             lovligeTemaer: undefined,
             enheter: [],
             innstillinger: undefined,
@@ -159,12 +168,14 @@ describe("'Meg' epos", () => {
           mail: "rbo@de.ninro",
           surname: "dENiro",
         };
-        const reducerResponse = hentetHandling({
-          fornavn: mockedResponse.givenName,
-          id: mockedResponse.onPremisesSamAccountName,
-          etternavn: mockedResponse.surname,
-          navn: mockedResponse.displayName,
-          mail: mockedResponse.mail,
+        const reducerResponse = hentetMegHandling({
+          graphData: {
+            fornavn: mockedResponse.givenName,
+            id: mockedResponse.onPremisesSamAccountName,
+            etternavn: mockedResponse.surname,
+            navn: mockedResponse.displayName,
+            mail: mockedResponse.mail,
+          },
           enheter: undefined,
         });
 
@@ -244,12 +255,18 @@ describe("'Meg' epos", () => {
     expect(
       megTilstand(
         {
-          id: "",
-          navn: "",
-          fornavn: "",
-          mail: "",
-          etternavn: "",
-          valgtEnhet: 0,
+          graphData: {
+            id: "",
+            navn: "",
+            fornavn: "",
+            mail: "",
+            etternavn: "",
+          },
+          valgtEnhet: {
+            id: "",
+            navn: "",
+            lovligeTemaer: undefined,
+          },
           enheter: [
             {
               id: "",
@@ -259,23 +276,28 @@ describe("'Meg' epos", () => {
           ],
         },
         {
-          type: hentetHandling.type,
+          type: hentetMegHandling.type,
           payload: {
-            id: "1",
-            navn: "Robert Hansen",
-            fornavn: "Robert",
-            mail: "rob@han.no",
-            etternavn: "Hansen",
+            graphData: {
+              id: "1",
+              navn: "Robert Hansen",
+              fornavn: "Robert",
+              mail: "rob@han.no",
+              etternavn: "Hansen",
+            },
           },
         }
       )
     ).toEqual({
-      id: "1",
-      navn: "Robert Hansen",
-      fornavn: "Robert",
-      mail: "rob@han.no",
-      etternavn: "Hansen",
-      valgtEnhet: 0,
+      graphData: {
+        id: "1",
+        navn: "Robert Hansen",
+        fornavn: "Robert",
+        mail: "rob@han.no",
+        etternavn: "Hansen",
+      },
+
+      valgtEnhet: undefined,
       enheter: undefined,
     });
   });
@@ -323,10 +345,9 @@ describe("'Meg' epos", () => {
         spyOn(dependencies.ajax, "getJSON").and.returnValue(
           throwError({ message: "ukjent feil", status: 503 })
         );
-        expectObservable(hentMegEpos(action$, state$, <Dependencies>dependencies)).toBe(
-          "12001ms (tsxy)",
-          observableValues
-        );
+        expectObservable(
+          hentMegEpos(action$, state$ as RootStateOrAny, <Dependencies>dependencies)
+        ).toBe("12001ms (tsxy)", observableValues);
       });
     })
   );

@@ -4,7 +4,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import IkonSystem from "./icons/IkonSystem";
 import "./Header.less";
-import { valgtEnhet, velgEnheter, velgMeg } from "../../tilstand/moduler/meg.velgere";
+import { velgMeg } from "../../tilstand/moduler/meg.velgere";
 import { settEnhetHandling } from "../../tilstand/moduler/meg";
 import { useOnInteractOutside } from "../Tabell/FiltrerbarHeader";
 import styled from "styled-components";
@@ -34,10 +34,9 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   const [aapen, setAapen] = useState(false);
   const [satte_valgtEnhet, settValgtEnhet] = useState(0);
   const [harAdminTilgang, settHarAdminTilgang] = useState(false);
-  const enhetNo = useSelector(valgtEnhet);
-  const enheter = useSelector(velgEnheter);
   const person = useSelector(velgMeg);
   const dispatch = useAppDispatch();
+  const { enheter, valgtEnhet } = person;
   const ref = useRef<HTMLDivElement>(null);
   const featureToggles = useSelector(velgFeatureToggles);
   const history = useHistory();
@@ -56,14 +55,18 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
     active: aapen,
   });
 
-  const settEnhet = (event: React.MouseEvent<HTMLElement | HTMLButtonElement>, id: number) => {
-    settValgtEnhet(id);
-    dispatch(settEnhetHandling(id));
+  const settEnhet = (
+    event: React.MouseEvent<HTMLElement | HTMLButtonElement>,
+    index: number,
+    id: string
+  ) => {
+    settValgtEnhet(index);
+    dispatch(settEnhetHandling({ enhetId: id, navIdent: person.graphData.id }));
     setAapen(false);
   };
 
   const visValgtEnhet = () => {
-    return enheter[enhetNo]?.navn ?? "";
+    return valgtEnhet.navn ?? "";
   };
 
   return (
@@ -91,11 +94,11 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
                   <div
                     className={classNames({
                       enhet: true,
-                      active: person.enheter[person.valgtEnhet].id === enhet.id,
+                      active: person.valgtEnhet.id === enhet.id,
                     })}
                     key={enhet.id}
                   >
-                    <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
+                    <NavLink to={"#"} onClick={(e) => settEnhet(e, index, enhet.id)}>
                       {enhet.id} {enhet.navn}
                     </NavLink>
                   </div>

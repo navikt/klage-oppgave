@@ -16,7 +16,9 @@ interface VelgOgSendTilMedunderskriverProps {
 export const VelgOgSendTilMedunderskriver = ({
   klagebehandling,
 }: VelgOgSendTilMedunderskriverProps) => {
-  const { id } = useAppSelector(velgMeg);
+  const {
+    graphData: { id },
+  } = useAppSelector(velgMeg);
   const { loading, medunderskrivere } = useAppSelector(velgMedunderskrivere);
   const isSaved = useIsSaved();
   const {

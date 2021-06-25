@@ -10,7 +10,7 @@ import {
   toasterInitialState,
   toasterSatt,
 } from "./toaster";
-import megTilstand, { hentetHandling } from "./meg";
+import megTilstand, { hentetMegHandling } from "./meg";
 import { AlertStripeType } from "nav-frontend-alertstriper";
 
 describe("Oppgave epos", () => {

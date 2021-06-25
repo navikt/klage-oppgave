@@ -153,8 +153,8 @@ function AapneKlagebehandlinger(data: any): JSX.Element {
 
   const curriedDispatchOppgave = R.curry(dispatchOppgave)(
     dispatch,
-    meg.id,
-    meg.enheter[meg.valgtEnhet].id
+    meg.graphData.id,
+    meg.valgtEnhet
   );
   const curriedVelgOppgave = R.curry(tildelOppgave)(curriedDispatchOppgave);
 
@@ -332,15 +332,15 @@ const Sok = (): JSX.Element => {
     }
     const timeout = setTimeout(() => {
       if (searchQuery) {
-        sok({ dispatch, navIdent: person.id, fnr: searchQuery });
+        sok({ dispatch, navIdent: person.graphData.id, fnr: searchQuery });
       }
     }, 500);
     return () => clearTimeout(timeout); // Clear existing timer every time it runs.
-  }, [window.location.search, dispatch, person.id]);
+  }, [window.location.search, dispatch, person.graphData.id]);
 
   useEffect(() => {
-    if (fnr && !tildelerMeg) sok({ dispatch, navIdent: person.id, fnr });
-  }, [sok, dispatch, person.id, tildelerMeg]);
+    if (fnr && !tildelerMeg) sok({ dispatch, navIdent: person.graphData.id, fnr });
+  }, [sok, dispatch, person.graphData.id, tildelerMeg]);
 
   useEffect(() => {
     return () => {
