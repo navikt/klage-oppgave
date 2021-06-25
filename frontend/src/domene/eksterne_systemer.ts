@@ -2,9 +2,9 @@ const gosysEnvironment = (hostname: string) => {
   if (hostname === "localhost") {
     return "http://localhost:3000";
   } else if (hostname.indexOf("dev.nav.no") !== -1) {
-    return "https://gosys.nais.preprod.local";
+    return "https://gosys.nais.preprod.local/gosys";
   }
-  return "https://gosys-nais.nais.adeo.no";
+  return "https://gosys-nais.nais.adeo.no/gosys";
 };
 
 // TODO de tre nederste er trolig feil og må endres
