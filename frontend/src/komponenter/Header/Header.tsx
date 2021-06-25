@@ -84,25 +84,22 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
       </button>
       <div className={classNames(aapen ? "velg-enhet maksimert" : "minimert")} ref={ref}>
         <div className={"enheter"}>
-          {(() => {
-            if (person.enheter) {
-              enheter.map((enhet, index) => {
-                return (
-                  <div
-                    className={classNames({
-                      enhet: true,
-                      active: person.enheter[person.valgtEnhet].id === enhet.id,
-                    })}
-                    key={enhet.id}
-                  >
-                    <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
-                      {enhet.id} {enhet.navn}
-                    </NavLink>
-                  </div>
-                );
-              });
-            }
-          })()}
+          {!harAdminTilgang &&
+            enheter.map((enhet, index) => {
+              return (
+                <div
+                  className={classNames({
+                    enhet: true,
+                    active: person.enheter[person.valgtEnhet].id === enhet.id,
+                  })}
+                  key={enhet.id}
+                >
+                  <NavLink to={"#"} onClick={(e) => settEnhet(e, index)}>
+                    {enhet.id} {enhet.navn}
+                  </NavLink>
+                </div>
+              );
+            })}
           <hr />
           {harAdminTilgang && (
             <NavLink to={"/admin"} className={classNames({ enhet: true, navlink: true })}>
