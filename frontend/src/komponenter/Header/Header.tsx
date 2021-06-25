@@ -10,7 +10,7 @@ import { useOnInteractOutside } from "../Tabell/FiltrerbarHeader";
 import styled from "styled-components";
 import { velgFeatureToggles } from "../../tilstand/moduler/unleash.velgere";
 import { useAppDispatch } from "../../tilstand/konfigurerTilstand";
-import isDev from "../../utility/isDev";
+import isDevLocation from "../../utility/isDevLocation";
 
 const BrukerBoks = styled.div`
   z-index: 2;
@@ -45,7 +45,7 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
   useEffect(() => {
     const adminEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
     if (adminEnabled?.isEnabled !== undefined) {
-      if (isDev()) settHarAdminTilgang(true);
+      if (isDevLocation()) settHarAdminTilgang(true);
       else settHarAdminTilgang(adminEnabled.isEnabled);
     }
   }, [featureToggles]);
@@ -85,7 +85,7 @@ export const Bruker = ({ navn, ident, enhet, rolle }: Brukerinfo) => {
       <div className={classNames(aapen ? "velg-enhet maksimert" : "minimert")} ref={ref}>
         <div className={"enheter"}>
           {(() => {
-            if (isDev() || !harAdminTilgang) {
+            if (isDevLocation() || !harAdminTilgang) {
               return enheter.map((enhet, index) => {
                 return (
                   <div

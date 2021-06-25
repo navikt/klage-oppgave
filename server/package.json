@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "env-cmd -f .env.development nodemon --exec node main.js",
     "docker": "node main.js",
-    "start": "env-cmd -f .env node main.js",
+    "start": "node main.js",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect",
     "test": "snyk test"

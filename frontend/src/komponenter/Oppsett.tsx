@@ -14,7 +14,7 @@ import { useAppDispatch } from "../tilstand/konfigurerTilstand";
 import { hentKodeverk } from "../tilstand/moduler/kodeverk";
 import { velgKodeverk } from "../tilstand/moduler/kodeverk.velgere";
 import { hentMegHandling, hentMegUtenEnheterHandling } from "../tilstand/moduler/meg";
-import isDev from "../utility/isDev";
+import isDevLocation from "../utility/isDevLocation";
 
 const R = require("ramda");
 
@@ -57,7 +57,7 @@ export default function Oppsett({
   useEffect(() => {
     if (adminEnabled !== undefined) {
       if (adminEnabled.isEnabled) {
-        if (isDev()) dispatch(hentMegHandling());
+        if (isDevLocation()) dispatch(hentMegHandling());
         else dispatch(hentMegUtenEnheterHandling());
       } else {
         dispatch(hentMegHandling());
