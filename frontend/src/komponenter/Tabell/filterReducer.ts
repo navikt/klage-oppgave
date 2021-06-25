@@ -23,7 +23,7 @@ function filterReducer(antall: number, start: number) {
     meta: {
       transformasjoner_satt: false,
       saksbehandler_satt: false,
-      kan_hente_oppgaver: false,
+      kan_hente_oppgaver: true,
     },
     meg: undefined,
     ident: "",
@@ -57,7 +57,8 @@ function filterReducer(antall: number, start: number) {
     if (!state.meta.saksbehandler_satt) {
       klar = false;
     }
-    return klar;
+    //return klar;
+    return true;
   }
 
   function reducer(state: any, action: any) {

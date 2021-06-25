@@ -71,7 +71,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   });
 
   const [antall] = useState<number>(10);
-  const [start, settStart] = useState<number>(0);
+  const [start, settStart] = useState<number>(-1);
   const history = useHistory();
   const pathname = location.pathname.split("/")[1];
   const innstillinger = useSelector(velgInnstillinger);
@@ -112,24 +112,22 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
 
   useEffect(() => {
     dispatch(hentInnstillingerHandling({ navIdent: meg.graphData.id, enhetId: valgtEnhet.id }));
-  }, [meg, enheter, valgtEnhet]);
+  }, [meg, valgtEnhet]);
 
   useEffect(() => {
     let lovligeTemaer: Filter[] = [];
-    if (enheter.length > 0) {
-      valgtEnhet.lovligeTemaer?.forEach((tema: string | any) => {
-        if (kodeverk.kodeverk.tema) {
-          let kodeverkTema = kodeverk.kodeverk.tema.filter(
-            (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
-          )[0];
-          if (kodeverkTema?.id)
-            lovligeTemaer.push({
-              label: kodeverkTema?.beskrivelse,
-              value: kodeverkTema?.id.toString(),
-            });
-        }
-      });
-    }
+    valgtEnhet.lovligeTemaer?.forEach((tema: string | any) => {
+      if (kodeverk.kodeverk.tema) {
+        let kodeverkTema = kodeverk.kodeverk.tema.filter(
+          (t: IKodeverkVerdi) => t.id.toString() === tema.toString()
+        )[0];
+        if (kodeverkTema?.id)
+          lovligeTemaer.push({
+            label: kodeverkTema?.beskrivelse,
+            value: kodeverkTema?.id.toString(),
+          });
+      }
+    });
     if (innstillinger?.aktiveTemaer) settLovligeTemaer(innstillinger.aktiveTemaer);
     else settLovligeTemaer(lovligeTemaer);
 
@@ -164,7 +162,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       if (innstillinger?.aktiveTyper) settGyldigeTyper(innstillinger.aktiveTyper);
       else settGyldigeTyper(typer);
     }
-  }, [enheter, valgtEnhet, kodeverk]);
+  }, [valgtEnhet, kodeverk]);
 
   function skiftSortering(type: string, event: React.MouseEvent<HTMLElement | HTMLButtonElement>) {
     event.preventDefault();
@@ -190,6 +188,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       }
     }
 
+    console.debug("dispatcher oppgaverequest fra filter-endring");
     dispatchTransformering({ sortType, sortOrder });
     filter_dispatch({ type: "sett_start", payload: 0 });
     history.push(location.pathname.replace(/\d+$/, "1"));
@@ -217,6 +216,7 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
       ident = meg.graphData.id;
     }
     if (ident && enhetId) {
+      console.debug("dispatching oppgaveRequest");
       dispatch(
         hentUtgatte({
           ident: ident,
@@ -412,13 +412,19 @@ function OppgaveTabell({ visFilter }: { visFilter: boolean }) {
   }, [hjemmelFilter, temaFilter, typeFilter]);
 
   useEffect(() => {
-    if (filter_state.meta.kan_hente_oppgaver || start > -1) {
+    console.log("filter_state.meta.kan_hente_oppgaver", filter_state.meta.kan_hente_oppgaver);
+    if (start > -1) {
+      console.debug(
+        "dispatcher fra start, filter_state.meta.kan_hente_oppgaver",
+        start,
+        filter_state.meta.kan_hente_oppgaver
+      );
       dispatchTransformering({
         sortType: filter_state.transformasjoner.sortering.type,
         sortOrder: filter_state.transformasjoner.sortering.frist,
       });
     }
-  }, [start, filter_state.meta.kan_hente_oppgaver, meg, enheter]);
+  }, [filter_state.meta.kan_hente_oppgaver, start]);
 
   useEffect(() => {
     const ny_start = (tolketStart - 1) * antall;
