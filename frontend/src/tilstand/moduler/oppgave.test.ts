@@ -454,7 +454,7 @@ describe("Oppgave epos", () => {
     marbles(() => {
       ts.run((m) => {
         const inputMarble = "a-";
-        const expectedMarble = "(cd)-";
+        const expectedMarble = "500ms (cd)-";
 
         const inputValues = {
           a: oppgaveRequest({
@@ -540,7 +540,7 @@ describe("Oppgave epos", () => {
     marbles(() => {
       ts.run((m) => {
         const inputMarble = "a-";
-        const expectedMarble = "(cd)-";
+        const expectedMarble = "500ms (cd)-";
 
         const inputValues = {
           a: oppgaveRequest({
@@ -668,7 +668,7 @@ describe("Oppgave epos", () => {
         const state$ = new StateObservable(hot("-a", observableValues), initState);
         spyOn(dependencies.ajax, "getJSON").and.returnValue(throwError({ status: 503 }));
         expectObservable(hentOppgaverEpos(action$, state$, <Dependencies>dependencies)).toBe(
-          "12001ms s",
+          "12501ms s",
           observableValues
         );
       });
