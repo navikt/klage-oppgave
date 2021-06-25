@@ -8,7 +8,6 @@ import toaster, { TOASTER_EPICS } from "./moduler/toaster";
 import oppgavelaster, { OPPGAVELASTER_EPOS } from "./moduler/oppgavelaster";
 import featureToggles, { UNLEASH_EPICS } from "./moduler/unleash";
 import klagebehandling, { KLAGEBEHANDLING_EPOS } from "./moduler/klagebehandling";
-import token, { EXPIRE_EPICS } from "./moduler/token";
 import admin, { ADMIN_EPICS } from "./moduler/admin";
 import sok, { SOK_EPICS } from "./moduler/sok";
 import vedtak, { VEDTAK_EPOS } from "./moduler/vedtak";
@@ -28,7 +27,6 @@ const epics = [
   ...UNLEASH_EPICS,
   ...TOASTER_EPICS,
   ...ROUTING_EPICS,
-  ...EXPIRE_EPICS,
   ...ADMIN_EPICS,
   ...VEDTAK_EPOS,
   ...MEDUNDERSKRIVERE_EPOS,
@@ -50,7 +48,6 @@ const rootReducer = combineReducers({
   klagebehandling,
   featureToggles,
   saksbehandler,
-  token,
   admin,
   vedtak,
   medunderskrivere,

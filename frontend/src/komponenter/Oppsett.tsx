@@ -7,10 +7,8 @@ import { NavLink } from "react-router-dom";
 import { velgMeg } from "../tilstand/moduler/meg.velgere";
 import { velgFeatureToggles } from "../tilstand/moduler/unleash.velgere";
 import { velgToaster, velgToasterMelding } from "../tilstand/moduler/toaster.velgere";
-import { velgExpire } from "../tilstand/moduler/token.velgere";
 import { hentFeatureToggleHandling } from "../tilstand/moduler/unleash";
 import NavFrontendSpinner from "nav-frontend-spinner";
-import { hentExpiry } from "../tilstand/moduler/token";
 import { toasterSkjul } from "../tilstand/moduler/toaster";
 import { useAppDispatch } from "../tilstand/konfigurerTilstand";
 import { hentKodeverk } from "../tilstand/moduler/kodeverk";
@@ -37,7 +35,6 @@ export default function Oppsett({
 }: LayoutType) {
   const person = useSelector(velgMeg);
   const visFeilmelding = useSelector(velgToaster);
-  const expireTime = useSelector(velgExpire);
   const feilmelding = useSelector(velgToasterMelding);
   const featureToggles = useSelector(velgFeatureToggles);
   const kodeverk = useSelector(velgKodeverk);
@@ -49,25 +46,10 @@ export default function Oppsett({
     dispatch(hentFeatureToggleHandling("klage.admin"));
     dispatch(hentFeatureToggleHandling("klage.listFnr"));
 
-    //sjekk innlogging
-    dispatch(hentExpiry());
     if (R.empty(kodeverk)) {
       dispatch(hentKodeverk());
     }
   }, [dispatch, hentKodeverk, hentFeatureToggleHandling]);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      let expiration = expireTime;
-      if (expiration) {
-        const now = Math.round(new Date().getTime() / 1000);
-        if (Number(expiration) < now) {
-          // @ts-ignore
-          window.location = "/login";
-        }
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const adminEnabled = featureToggles.features.find((f) => f?.navn === "klage.admin");
   const tilgangEnabled = featureToggles.features.find((f) => f?.navn === "klage.generellTilgang");

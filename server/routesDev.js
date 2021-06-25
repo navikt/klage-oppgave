@@ -78,10 +78,6 @@ const setup = (authClient) => {
       changeOrigin: true,
     })
   );
-  router.get("/internal/token_expiration", (req, res) => {
-    let expiration = Math.round(new Date().getTime() / 1000) + 3600;
-    res.send(expiration.toString());
-  });
 
   router.use(
     "/me",

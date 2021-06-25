@@ -71,17 +71,6 @@ const setup = (authClient) => {
     }
   );
 
-  router.use("/internal/token_expiration", async (req, res) => {
-    let expire = "";
-    try {
-      expire = JSON.stringify(req.user.tokenSets.self.expires_at);
-    } catch (e) {
-      expire = "n/a";
-    } finally {
-      res.send(expire);
-    }
-  });
-
   router.use(
     "/oauth2/callback",
     passport.authenticate("azureOidc", { failureRedirect: "/error" }),
