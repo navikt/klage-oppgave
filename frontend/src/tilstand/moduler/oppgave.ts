@@ -307,9 +307,7 @@ export function buildQuery(url: string, data: OppgaveParams) {
     query.push(`erTildeltSaksbehandler=true`);
   } else query.push(`erTildeltSaksbehandler=false`);
   query.push(`enhetId=${data.enhetId}`);
-  let result = `${url}?${filters}&${R.compose(R.join("&"))(query)}`;
-  result = result.replace("Sykepenger", "43"); //WIP for endring av dataparametre i API
-  return result;
+  return `${url}?${filters}&${R.compose(R.join("&"))(query)}`;
 }
 
 //==========
