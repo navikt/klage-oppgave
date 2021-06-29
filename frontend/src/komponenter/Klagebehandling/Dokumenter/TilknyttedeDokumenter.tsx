@@ -1,7 +1,11 @@
 import NavFrontendSpinner from "nav-frontend-spinner";
 import React, { useMemo } from "react";
 import { formattedDate } from "../../../domene/datofunksjoner";
-import { IDokument, IDokumentListe } from "../../../tilstand/moduler/dokumenter/stateTypes";
+import {
+  IDokument,
+  IDokumentListe,
+  IDokumentVedlegg,
+} from "../../../tilstand/moduler/dokumenter/stateTypes";
 import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
 import { dokumentMatcher } from "./helpers";
 import {
@@ -57,18 +61,32 @@ export const TilknyttedeDokumenter = ({
           </TilknyttetTittel>
           <DokumenterMinivisning>
             {dokument.vedlegg.map((vedlegg) => (
-              <Tilknyttet key={dokument.journalpostId + vedlegg.dokumentInfoId}>
-                <TilknyttetTittel
-                  tilknyttet={true}
-                  onClick={() => visDokument({ ...dokument, ...vedlegg })}
-                >
-                  {vedlegg.tittel}
-                </TilknyttetTittel>
-              </Tilknyttet>
+              <Vedlegg
+                key={dokument.journalpostId + vedlegg.dokumentInfoId}
+                dokument={dokument}
+                vedlegg={vedlegg}
+                visDokument={visDokument}
+              />
             ))}
           </DokumenterMinivisning>
         </Tilknyttet>
       ))}
     </DokumenterMinivisning>
+  );
+};
+
+interface VedleggProps {
+  dokument: IDokument;
+  vedlegg: IDokumentVedlegg;
+  visDokument: (dokument: IDokument) => void;
+}
+
+const Vedlegg = ({ dokument, vedlegg, visDokument }: VedleggProps) => {
+  return (
+    <Tilknyttet>
+      <TilknyttetTittel tilknyttet={true} onClick={() => visDokument({ ...dokument, ...vedlegg })}>
+        {vedlegg.tittel}
+      </TilknyttetTittel>
+    </Tilknyttet>
   );
 };
