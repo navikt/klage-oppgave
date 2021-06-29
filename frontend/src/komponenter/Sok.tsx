@@ -154,7 +154,7 @@ function AapneKlagebehandlinger(data: any): JSX.Element {
   const curriedDispatchOppgave = R.curry(dispatchOppgave)(
     dispatch,
     meg.graphData.id,
-    meg.valgtEnhet
+    meg.valgtEnhet.id
   );
   const curriedVelgOppgave = R.curry(tildelOppgave)(curriedDispatchOppgave);
 
