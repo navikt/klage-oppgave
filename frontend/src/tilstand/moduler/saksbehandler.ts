@@ -104,7 +104,13 @@ export function tildelEpos(
                 displayToast("Oppgaven er tildelt og er flyttet til Mine Oppgaver", "suksess"),
                 skjulToaster(),
               ]);
-            } else return concat([tildeltHandling(response), settOppgaverFerdigLastet()]);
+            } else
+              return concat([
+                tildeltHandling(response),
+                settOppgaverFerdigLastet(),
+                displayToast("Oppgaven er tildelt og er flyttet til Mine Oppgaver", "suksess"),
+                skjulToaster(),
+              ]);
           })
         )
         .pipe(
