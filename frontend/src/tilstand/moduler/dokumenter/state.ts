@@ -38,7 +38,18 @@ export const dokumenterSlice = createSlice({
       if (exists) {
         return state;
       }
-      state.tilknyttedeDokumenter.dokumenter.push(payload);
+      state.tilknyttedeDokumenter.dokumenter = [
+        ...state.tilknyttedeDokumenter.dokumenter,
+        payload,
+      ].sort((a, b) => {
+        if (a.registrert > b.registrert) {
+          return 1;
+        }
+        if (a.registrert < b.registrert) {
+          return -1;
+        }
+        return 0;
+      });
       return state;
     },
     FRAKOBLE_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
