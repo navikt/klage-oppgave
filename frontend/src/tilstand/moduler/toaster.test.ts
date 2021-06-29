@@ -60,7 +60,7 @@ describe("Oppgave epos", () => {
     marbles(() => {
       ts.run(({ hot, expectObservable }) => {
         const inputValues = {
-          a: toasterSkjul(),
+          a: toasterSkjul(15),
         };
         const action$ = new ActionsObservable(hot("-a", inputValues));
 

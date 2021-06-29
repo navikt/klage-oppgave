@@ -134,7 +134,7 @@ const performSearch = (
             type: "feil",
             feilmelding: `Søk feilet ${error}`,
           }),
-          toasterSkjul(),
+          toasterSkjul(15),
         ]);
       })
     );

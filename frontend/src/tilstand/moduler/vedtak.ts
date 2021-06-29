@@ -119,7 +119,7 @@ export const slettVedleggEpos = (
         mergeMap((res) => of(VEDLEGG_OPPDATERT(res), DONE())),
         catchError((error: CustomError) => {
           const message = error.response?.detail ?? "Ukjent feil";
-          return concat([ERROR(error), displayToast(message), toasterSkjul()]);
+          return concat([ERROR(error), displayToast(message), toasterSkjul(15)]);
         })
       );
     })
@@ -160,7 +160,7 @@ export const lastOppVedleggEpos = (
         mergeMap((vedlegg) => of(VEDLEGG_OPPDATERT(vedlegg), DONE())),
         catchError((error: CustomError) => {
           const message = error.response?.detail ?? "Ukjent feil";
-          return concat([ERROR(error), displayToast(message), toasterSkjul()]);
+          return concat([ERROR(error), displayToast(message), toasterSkjul(15)]);
         })
       );
     })
@@ -196,7 +196,7 @@ export const fullfoerVedtakEpos = (
           mergeMap((res: IVedtakFullfoertResponse) => of(VEDTAK_FULLFOERT(res), DONE())),
           catchError((error: CustomError) => {
             const message = error.response?.detail ?? "Ukjent feil";
-            return concat([ERROR(error), displayToast(message), toasterSkjul()]);
+            return concat([ERROR(error), displayToast(message), toasterSkjul(15)]);
           })
         )
     )

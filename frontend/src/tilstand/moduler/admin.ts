@@ -71,7 +71,7 @@ export function adminEpos(
                 type: "feil",
                 feilmelding: `Elastic feilet ${error}`,
               }),
-              toasterSkjul(),
+              toasterSkjul(15),
             ]);
           })
         );
@@ -90,7 +90,7 @@ function toasterSuccessEpos(action$: ActionsObservable<PayloadAction>) {
           type: "suksess",
           feilmelding: beskjed,
         }),
-        toasterSkjul(),
+        toasterSkjul(15),
       ]);
     })
   );

@@ -336,7 +336,7 @@ describe("'Meg' epos", () => {
             type: toasterSett.type,
           },
           y: {
-            payload: undefined,
+            payload: 15,
             type: toasterSkjul.type,
           },
         };

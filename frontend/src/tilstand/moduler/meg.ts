@@ -19,6 +19,7 @@ import { Filter, oppgaveHentingFeilet as oppgaveFeiletHandling } from "./oppgave
 import { toasterSett, toasterSkjul } from "./toaster";
 import { Dependencies } from "../konfigurerTilstand";
 import { RootState } from "../root";
+import { AlertStripeType } from "nav-frontend-alertstriper";
 
 //==========
 // Interfaces
@@ -183,17 +184,17 @@ export const feiletHandling = createAction<string>("meg/FEILET");
 //==========
 // Vis feilmeldinger ved feil
 //==========
-export function displayToast(error: string) {
+export function displayToast(error: string, type: AlertStripeType = "feil") {
   const message = error || "Kunne ikke lagre innstillinger";
   return toasterSett({
     display: true,
-    type: "feil",
+    type,
     feilmelding: message,
   });
 }
 
 export function skjulToaster() {
-  return toasterSkjul();
+  return toasterSkjul(15);
 }
 
 //==========

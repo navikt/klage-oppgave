@@ -244,6 +244,21 @@ app.delete(
   }
 );
 
+//tildeling saksbehandler oppgave
+app.post(
+  "/ansatte/:navIdent/klagebehandlinger/:oppgaveId/saksbehandlertildeling",
+  async (req, res) => {
+    res.send("OK");
+  }
+);
+//tildeling saksbehandler oppgave
+app.post(
+  "/ansatte/:navIdent/klagebehandlinger/:oppgaveId/saksbehandlerfradeling",
+  async (req, res) => {
+    res.send("OK");
+  }
+);
+
 // Opplasting av vedtak.
 app.post(
   "/klagebehandlinger/:klagebehandlingId/vedtak/:vedtakId/vedlegg",

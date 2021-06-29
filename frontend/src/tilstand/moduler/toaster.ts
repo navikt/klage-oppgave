@@ -48,7 +48,7 @@ export default toasterSlice.reducer;
 //==========
 export const toasterSett = createAction<IToaster>("toaster/SETT");
 export const toasterSatt = createAction<IToaster>("toaster/SATT");
-export const toasterSkjul = createAction("toaster/SKJUL");
+export const toasterSkjul = createAction<number>("toaster/SKJUL");
 
 //==========
 // Epos
@@ -72,11 +72,12 @@ export function visToasterEpos(
   );
 }
 
-export function skjulToasterEpos(action$: ActionsObservable<PayloadAction>) {
+export function skjulToasterEpos(action$: ActionsObservable<PayloadAction<number>>) {
   return action$.pipe(
     ofType(toasterSkjul.type),
-    delay(15 * 1000),
-    switchMap(() => of(toasterSatt(toasterInitialState)))
+    switchMap((action) => {
+      return of(toasterSatt(toasterInitialState)).pipe(delay(action.payload * 1000));
+    })
   );
 }
 

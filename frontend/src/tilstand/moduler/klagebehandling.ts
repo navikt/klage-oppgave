@@ -362,7 +362,7 @@ export function klagebehandlingEpos(
                 type: "feil",
                 feilmelding: `Henting av klagebehandling med id ${action.payload} feilet. Feilmelding: ${error?.response?.detail}`,
               }),
-              toasterSkjul(),
+              toasterSkjul(15),
             ]);
           })
         );
@@ -408,7 +408,7 @@ export function klagebehandlingDokumenterAlleEpos(
                 type: "feil",
                 feilmelding: `Henting av dokumenter feilet: ${error?.response?.detail}`,
               }),
-              toasterSkjul(),
+              toasterSkjul(15),
             ]);
           })
         );
@@ -466,7 +466,7 @@ export function klagebehandlingDokumenterTilordnedeEpos(
                 type: "feil",
                 feilmelding: `Henting av tilordnede dokumenter feilet: ${error.response.detail}`,
               }),
-              toasterSkjul(),
+              toasterSkjul(15),
             ]);
           })
         );
@@ -509,7 +509,7 @@ export function ToggleKlageDokumentEpos(
                 type: "feil",
                 feilmelding: `Tilordning av dokument feilet: (${error?.response?.detail})`,
               }),
-              toasterSkjul(),
+              toasterSkjul(15),
             ]);
           })
         );

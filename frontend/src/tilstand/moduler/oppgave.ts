@@ -480,7 +480,7 @@ export function hentUtgaatteFristerEpos(
               type: "feil",
               feilmelding: `Henting av utgåtte frister feilet`,
             }),
-            toasterSkjul(),
+            toasterSkjul(15),
           ])
         )
       );

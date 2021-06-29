@@ -60,7 +60,7 @@ export const settMedunderskriverEpos = (
                 type: "feil",
                 feilmelding: `Lagring av medunderskriver feilet. Feilmelding: ${message}`,
               }),
-              toasterSkjul(),
+              toasterSkjul(15),
             ]);
           })
         )
@@ -96,7 +96,7 @@ export const lastMedunderskrivereEpos = (
               type: "feil",
               feilmelding: `Kunne ikke laste medunderskrivere. Feilmelding: ${message}`,
             }),
-            toasterSkjul(),
+            toasterSkjul(15),
           ]);
         })
       );

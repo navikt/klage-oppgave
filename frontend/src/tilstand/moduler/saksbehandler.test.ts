@@ -18,7 +18,9 @@ describe("TILDEL 'Meg' epos", () => {
           id: "42",
         },
       ],
-      valgtEnhet: 0,
+      valgtEnhet: {
+        id: "42",
+      },
     },
     klagebehandlinger: {
       meta: {
@@ -51,7 +53,7 @@ describe("TILDEL 'Meg' epos", () => {
     marbles(() => {
       ts.run((m) => {
         const inputMarble = "a-";
-        const expectedMarble = "(cd)-";
+        const expectedMarble = "(cdfg)-";
 
         const inputValues = {
           a: tildelMegHandling({
@@ -93,6 +95,18 @@ describe("TILDEL 'Meg' epos", () => {
           e: {
             payload: undefined,
             type: "oppgavelaster/SETT_FERDIG_LASTET",
+          },
+          f: {
+            payload: {
+              display: true,
+              feilmelding: "Oppgaven er tildelt og er flyttet til Mine Oppgaver",
+              type: "suksess",
+            },
+            type: "toaster/SETT",
+          },
+          g: {
+            payload: 15,
+            type: "toaster/SKJUL",
           },
           d: {
             payload: {
@@ -211,7 +225,7 @@ describe("TILDEL 'Meg' epos", () => {
             type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
-            payload: undefined,
+            payload: 15,
             type: "toaster/SKJUL",
           },
         };
@@ -263,7 +277,7 @@ describe("TILDEL 'Meg' epos", () => {
             type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
-            payload: undefined,
+            payload: 15,
             type: "toaster/SKJUL",
           },
         };
@@ -316,7 +330,7 @@ describe("TILDEL 'Meg' epos", () => {
             type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
-            payload: undefined,
+            payload: 15,
             type: "toaster/SKJUL",
           },
         };
@@ -372,7 +386,7 @@ describe("TILDEL 'Meg' epos", () => {
             type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
-            payload: undefined,
+            payload: 15,
             type: "toaster/SKJUL",
           },
         };
@@ -430,7 +444,7 @@ describe("TILDEL 'Meg' epos", () => {
             type: "oppgavelaster/SETT_FERDIG_LASTET",
           },
           u: {
-            payload: undefined,
+            payload: 15,
             type: "toaster/SKJUL",
           },
         };

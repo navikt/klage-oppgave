@@ -93,13 +93,18 @@ export function tildelEpos(
               antall: state$.value.klagebehandlinger.meta.antall,
               transformasjoner: state$.value.klagebehandlinger.transformasjoner,
               ident: state$.value.meg.id,
-              enhetId: state$.value.meg.enheter[state$.value.meg.valgtEnhet].id,
+              enhetId: state$.value.meg.valgtEnhet.id,
               projeksjon: state$.value.klagebehandlinger.meta.projeksjon,
               tildeltSaksbehandler: state$.value.klagebehandlinger.meta.tildeltSaksbehandler,
             } as OppgaveParams;
             if (action.payload.kjorOppgavesokVedSuksess) {
-              return concat([tildeltHandling(response), oppgaveRequest(params)]);
-            } else return concat([tildeltHandling(response)]);
+              return concat([
+                tildeltHandling(response),
+                oppgaveRequest(params),
+                displayToast("Oppgaven er tildelt og er flyttet til Mine Oppgaver", "suksess"),
+                skjulToaster(),
+              ]);
+            } else return concat([tildeltHandling(response), settOppgaverFerdigLastet()]);
           })
         )
         .pipe(
@@ -148,7 +153,7 @@ export function fradelEpos(
               antall: state$.value.klagebehandlinger.meta.antall,
               transformasjoner: state$.value.klagebehandlinger.transformasjoner,
               ident: state$.value.meg.id,
-              enhetId: state$.value.meg.enheter[state$.value.meg.valgtEnhet].id,
+              enhetId: state$.value.meg.valgtEnhet.id,
               projeksjon: state$.value.klagebehandlinger.meta.projeksjon,
               tildeltSaksbehandler: state$.value.klagebehandlinger.meta.tildeltSaksbehandler,
             } as OppgaveParams;

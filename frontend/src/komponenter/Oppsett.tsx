@@ -34,8 +34,8 @@ export default function Oppsett({
   children,
 }: LayoutType) {
   const person = useSelector(velgMeg);
-  const visFeilmelding = useSelector(velgToaster);
-  const feilmelding = useSelector(velgToasterMelding);
+  const visToaster = useSelector(velgToaster);
+  const toastBeskjed = useSelector(velgToasterMelding);
   const featureToggles = useSelector(velgFeatureToggles);
   const kodeverk = useSelector(velgKodeverk);
   const dispatch = useAppDispatch();
@@ -110,13 +110,24 @@ export default function Oppsett({
             </li>
           </ul>
         </nav>
-        <div className={`toaster ${visFeilmelding.display ? "active" : ""}`}>
-          {visFeilmelding.display && (
-            <Alertstripe onClick={() => dispatch(toasterSkjul())} type={visFeilmelding.type}>
-              <span>{feilmelding}</span>
-            </Alertstripe>
-          )}
-        </div>
+        {(() => {
+          if (!visToaster.display) {
+            return null;
+          }
+          return (
+            <div
+              role={"alert"}
+              className="toaster"
+              onClick={() => {
+                dispatch(toasterSkjul(0));
+              }}
+            >
+              <Alertstripe type={visToaster.type}>
+                <span>{toastBeskjed}</span>
+              </Alertstripe>
+            </div>
+          );
+        })()}
         <article className={`content ${contentClass}`}>{children}</article>
       </main>
       <footer className="main-footer">Klagesaksbehandling</footer>

@@ -60,7 +60,7 @@ export const hentDokumenterEpic = (
                 type: "feil",
                 feilmelding: `Henting av dokumenter for klagebehandling "${klagebehandlingId}" feilet. Feilmelding: ${error?.response?.detail}`,
               }),
-              toasterSkjul()
+              toasterSkjul(15)
             )
           )
         )
@@ -91,7 +91,7 @@ export const hentTilknyttedeDokumenterEpic = (
                 type: "feil",
                 feilmelding: `Henting av tilknyttede dokumenter for klagebehandling "${payload}" feilet. Feilmelding: ${error?.response?.detail}`,
               }),
-              toasterSkjul()
+              toasterSkjul(15)
             )
           )
         )

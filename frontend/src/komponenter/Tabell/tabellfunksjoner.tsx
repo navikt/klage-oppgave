@@ -1,6 +1,6 @@
 import { OppgaveRad, OppgaveRader, OppgaveRadMedFunksjoner } from "../../tilstand/moduler/oppgave";
 import { IKodeverkVerdi } from "../../tilstand/moduler/kodeverk";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import EtikettBase from "nav-frontend-etiketter";
 import { Knapp } from "nav-frontend-knapper";
 import classNames from "classnames";

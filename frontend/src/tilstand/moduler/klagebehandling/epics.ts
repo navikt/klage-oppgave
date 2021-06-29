@@ -81,7 +81,7 @@ export const lagreKlagebehandlingEpic = (
                 type: "feil",
                 feilmelding: err,
               }),
-              toasterSkjul()
+              toasterSkjul(15)
             );
           })
         )
@@ -126,7 +126,7 @@ export const hentKlagebehandlingEpic = (
                 type: "feil",
                 feilmelding: `Henting av klagebehandling med id ${payload} feilet. Feilmelding: ${error?.response?.detail}`,
               }),
-              toasterSkjul()
+              toasterSkjul(15)
             )
           )
         )
