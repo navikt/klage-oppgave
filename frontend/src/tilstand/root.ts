@@ -9,7 +9,9 @@ import oppgavelaster, { OPPGAVELASTER_EPOS } from "./moduler/oppgavelaster";
 import featureToggles, { UNLEASH_EPICS } from "./moduler/unleash";
 import klagebehandling, { KLAGEBEHANDLING_EPOS } from "./moduler/klagebehandling";
 import admin, { ADMIN_EPICS } from "./moduler/admin";
-import sok, { SOK_EPICS } from "./moduler/sok";
+import { SOK_EPICS } from "./moduler/sok/epics";
+import sok from "./moduler/sok/state";
+
 import vedtak, { VEDTAK_EPOS } from "./moduler/vedtak";
 import { MEDUNDERSKRIVERE_EPOS } from "./moduler/medunderskrivere/epics";
 import { medunderskrivere } from "./moduler/medunderskrivere/state";

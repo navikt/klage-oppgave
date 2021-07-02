@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import store from "./tilstand/konfigurerTilstand";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import MineSaker from "./komponenter/MineSaker";
-import Sok from "./komponenter/Sok";
+import Sok from "./komponenter/Sok/Sok";
 import AlleSaker from "./komponenter/AlleSaker";
 import Innstillinger from "./komponenter/Innstillinger";
 import Admin from "./komponenter/Admin";
