@@ -10,6 +10,21 @@ import { initialState } from "./initialState";
 import { IDokument } from "./stateTypes";
 import { IDokumenterRespons } from "./types";
 
+export const sorterSynkendePaaRegistrert = (dokumenter: IDokument[]) => {
+  if (dokumenter.length === 0) {
+    return [];
+  }
+  return dokumenter.sort((a, b) => {
+    if (a.registrert > b.registrert) {
+      return -1;
+    }
+    if (a.registrert < b.registrert) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
 export const dokumenterSlice = createSlice({
   name: "dokumenter",
   initialState,
@@ -26,7 +41,7 @@ export const dokumenterSlice = createSlice({
       return state;
     },
     SETT_TILKNYTTEDE_DOKUMENTER: (state, action: PayloadAction<IDokument[]>) => {
-      state.tilknyttedeDokumenter.dokumenter = action.payload;
+      state.tilknyttedeDokumenter.dokumenter = sorterSynkendePaaRegistrert(action.payload);
       state.tilknyttedeDokumenter.loading = false;
       return state;
     },
@@ -38,18 +53,10 @@ export const dokumenterSlice = createSlice({
       if (exists) {
         return state;
       }
-      state.tilknyttedeDokumenter.dokumenter = [
+      state.tilknyttedeDokumenter.dokumenter = sorterSynkendePaaRegistrert([
         ...state.tilknyttedeDokumenter.dokumenter,
         payload,
-      ].sort((a, b) => {
-        if (a.registrert > b.registrert) {
-          return -1;
-        }
-        if (a.registrert < b.registrert) {
-          return 1;
-        }
-        return 0;
-      });
+      ]);
       return state;
     },
     FRAKOBLE_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
