@@ -16,7 +16,7 @@ export const TilknyttetDato = styled.time`
   font-size: 12px;
 `;
 
-export const TilknyttetTittel = styled.button<{ tilknyttet: boolean }>`
+export const TilknyttetKnapp = styled.button<{ tilknyttet: boolean }>`
   display: block;
   cursor: pointer;
   padding: 0;

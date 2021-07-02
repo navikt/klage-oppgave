@@ -7,7 +7,7 @@ import {
   IDokumentListe,
   IDokumentVedlegg,
 } from "../../../tilstand/moduler/dokumenter/stateTypes";
-import { ITilknyttetDokument, ITilknyttetVedlegg } from "./typer";
+import { IShownDokument, ITilknyttetDokument, ITilknyttetVedlegg } from "./typer";
 import {
   frakobleDokument,
   hentDokumenter,
@@ -33,12 +33,17 @@ import {
   VedleggTittel,
   StyledLastFlereKnapp,
 } from "./styled-components/fullvisning";
+import {
+  FRAKOBLE_DOKUMENT as FRAKOBLE_DOKUMENT_KLAGEBEHANDLING,
+  TILKNYTT_DOKUMENT as TILKNYTT_DOKUMENT_KLAGEBEHANDLING,
+} from "../../../tilstand/moduler/klagebehandling/state";
+import { FRAKOBLE_DOKUMENT, TILKNYTT_DOKUMENT } from "../../../tilstand/moduler/dokumenter/state";
 
 interface AlleDokumenterProps {
   dokumenter: IDokumentListe;
   klagebehandling: IKlagebehandling;
   skjult: boolean;
-  visDokument: (dokument: IDokument) => void;
+  visDokument: (dokument: IShownDokument) => void;
 }
 
 export const AlleDokumenter = ({
@@ -66,6 +71,14 @@ export const AlleDokumenter = ({
     [dispatch]
   );
 
+  const onShowDokument = ({
+    journalpostId,
+    dokumentInfoId,
+    tittel,
+    harTilgangTilArkivvariant,
+  }: IDokument) =>
+    visDokument({ journalpostId, dokumentInfoId, tittel, harTilgangTilArkivvariant });
+
   if (skjult) {
     return null;
   }
@@ -80,18 +93,18 @@ export const AlleDokumenter = ({
         {alleDokumenter.map(({ dokument, tilknyttet }) => (
           <ListItem key={dokument.journalpostId + dokument.dokumentInfoId}>
             <DokumentRad>
-              <DokumentTittel onClick={() => visDokument(dokument)}>
+              <DokumentTittel onClick={() => onShowDokument(dokument)}>
                 {dokument.tittel}
               </DokumentTittel>
               <DokumentTema
-                onClick={() => visDokument(dokument)}
+                onClick={() => onShowDokument(dokument)}
                 className={`etikett etikett--mw etikett--info etikett--${dokument
                   .tema!.split(" ")[0]
                   .toLowerCase()}`}
               >
                 <TemaText>{dokument.tema}</TemaText>
               </DokumentTema>
-              <DokumentDato onClick={() => visDokument(dokument)} className={"liten"}>
+              <DokumentDato onClick={() => onShowDokument(dokument)} className={"liten"}>
                 {formattedDate(dokument.registrert)}
               </DokumentDato>
 
@@ -127,7 +140,7 @@ export const AlleDokumenter = ({
 interface VedleggListeProps {
   klagebehandling: IKlagebehandling;
   dokument: IDokument;
-  visDokument: (dokument: IDokument) => void;
+  visDokument: (dokument: IShownDokument) => void;
   onCheck: (checked: boolean, dokument: IDokument) => void;
 }
 
@@ -157,7 +170,6 @@ const VedleggListe = ({ klagebehandling, dokument, visDokument, onCheck }: Vedle
           dokument={dokument}
           tilknyttet={tilknyttet}
           visDokument={visDokument}
-          onCheck={onCheck}
         />
       ))}
     </VedleggBeholder>
@@ -168,8 +180,7 @@ interface VedleggKomponentProps {
   dokument: IDokument;
   vedlegg: IDokumentVedlegg;
   tilknyttet: boolean;
-  visDokument: (dokument: IDokument) => void;
-  onCheck: (checked: boolean, dokument: IDokument) => void;
+  visDokument: (dokument: IShownDokument) => void;
 }
 
 const VedleggKomponent = ({
@@ -177,28 +188,46 @@ const VedleggKomponent = ({
   dokument,
   tilknyttet,
   visDokument,
-  onCheck,
 }: VedleggKomponentProps) => {
   const kanEndre = useKanEndre();
-  const vedleggDokument = useMemo(
-    () => ({
-      ...dokument,
-      ...vedlegg,
-    }),
-    [dokument, vedlegg]
+  const dispatch = useAppDispatch();
+
+  const onCheckVedlegg = useCallback(
+    (checked: boolean) => {
+      const d = {
+        dokumentInfoId: vedlegg.dokumentInfoId,
+        journalpostId: dokument.journalpostId,
+      };
+      dispatch(TILKNYTT_DOKUMENT(dokument));
+      dispatch(
+        checked ? TILKNYTT_DOKUMENT_KLAGEBEHANDLING(d) : FRAKOBLE_DOKUMENT_KLAGEBEHANDLING(d)
+      );
+    },
+    [dispatch, vedlegg.dokumentInfoId, dokument]
   );
 
   return (
     <VedleggRad key={dokument.journalpostId + vedlegg.dokumentInfoId}>
-      <VedleggTittel onClick={() => visDokument(vedleggDokument)}>{vedlegg.tittel}</VedleggTittel>
+      <VedleggTittel
+        onClick={() =>
+          visDokument({
+            journalpostId: dokument.journalpostId,
+            dokumentInfoId: vedlegg.dokumentInfoId,
+            tittel: vedlegg.tittel,
+            harTilgangTilArkivvariant: vedlegg.harTilgangTilArkivvariant,
+          })
+        }
+      >
+        {vedlegg.tittel}
+      </VedleggTittel>
 
       <DokumentSjekkboks className={"dokument-sjekkboks"}>
         <RightAlign>
           <DokumentCheckbox
             label={""}
-            disabled={!dokument.harTilgangTilArkivvariant || !kanEndre}
+            disabled={!vedlegg.harTilgangTilArkivvariant || !kanEndre}
             defaultChecked={tilknyttet}
-            onChange={(e) => onCheck(e.currentTarget.checked, vedleggDokument)}
+            onChange={(e) => onCheckVedlegg(e.currentTarget.checked)}
           />
         </RightAlign>
       </DokumentSjekkboks>
@@ -218,11 +247,9 @@ const LastFlere = ({ dokumenter, klagebehandlingId, loading }: LoadMoreProps) =>
     () => dispatch(hentDokumenter({ klagebehandlingId, pageReference: dokumenter.pageReference })),
     [dokumenter.pageReference, klagebehandlingId]
   );
-  const remaining = useMemo(
-    () => dokumenter.totaltAntall - dokumenter.dokumenter.length,
-    [dokumenter.dokumenter.length, dokumenter.totaltAntall]
-  );
-  const hasMore = useMemo(() => remaining !== 0, [remaining]);
+
+  const remaining = dokumenter.totaltAntall - dokumenter.dokumenter.length;
+  const hasMore = remaining !== 0;
 
   if (!hasMore) {
     return null;

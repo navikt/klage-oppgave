@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
+import { IShownDokument } from "./typer";
 // @ts-ignore
 import CloseSVG from "./ikoner/cancelblack.svg";
 // @ts-ignore
@@ -16,7 +16,7 @@ const ZOOM_STEP = 150;
 
 interface ShowDokumentProps {
   klagebehandlingId: string;
-  dokument: IDokument | null;
+  dokument: IShownDokument | null;
   close: () => void;
 }
 

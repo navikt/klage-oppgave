@@ -1,51 +1,51 @@
 import NavFrontendSpinner from "nav-frontend-spinner";
 import React, { useMemo } from "react";
 import { formattedDate } from "../../../domene/datofunksjoner";
-import {
-  IDokument,
-  IDokumentListe,
-  IDokumentVedlegg,
-} from "../../../tilstand/moduler/dokumenter/stateTypes";
+import { IDokument, IDokumentVedlegg } from "../../../tilstand/moduler/dokumenter/stateTypes";
 import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
+import { TilknyttetDokument } from "../../../tilstand/moduler/klagebehandling/types";
 import { dokumentMatcher } from "./helpers";
 import {
   DokumenterMinivisning,
   Tilknyttet,
   TilknyttetDato,
-  TilknyttetTittel,
+  TilknyttetKnapp,
 } from "./styled-components/minivisning";
-import { ITilknyttetDokument } from "./typer";
+import { IShownDokument, ITilknyttetDokument } from "./typer";
 
 interface TilknyttedeDokumenterProps {
-  dokumenter: IDokumentListe;
+  dokumenter: IDokument[];
+  loading: boolean;
   skjult: boolean;
   klagebehandling: IKlagebehandling;
-  visDokument: (dokument: IDokument) => void;
+  visDokument: (dokument: IShownDokument) => void;
 }
 
 export const TilknyttedeDokumenter = ({
   dokumenter,
+  loading,
   visDokument,
   klagebehandling,
   skjult,
 }: TilknyttedeDokumenterProps) => {
   const tilknyttedeDokumenter = useMemo<ITilknyttetDokument[]>(
     () =>
-      dokumenter.loading
+      loading
         ? []
-        : dokumenter.dokumenter.map((dokument) => ({
+        : dokumenter.map((dokument) => ({
             dokument,
             tilknyttet: klagebehandling.tilknyttedeDokumenter.some((t) =>
               dokumentMatcher(t, dokument)
             ),
           })),
-    [dokumenter.dokumenter, dokumenter.loading, klagebehandling.tilknyttedeDokumenter]
+    [dokumenter, loading, klagebehandling.tilknyttedeDokumenter]
   );
+
   if (skjult) {
     return null;
   }
 
-  if (dokumenter.loading) {
+  if (loading) {
     return <NavFrontendSpinner />;
   }
 
@@ -56,37 +56,88 @@ export const TilknyttedeDokumenter = ({
           <TilknyttetDato dateTime={dokument.registrert}>
             {formattedDate(dokument.registrert)}
           </TilknyttetDato>
-          <TilknyttetTittel tilknyttet={tilknyttet} onClick={() => visDokument(dokument)}>
+          <TilknyttetKnapp
+            tilknyttet={tilknyttet}
+            onClick={() =>
+              visDokument({
+                journalpostId: dokument.journalpostId,
+                dokumentInfoId: dokument.dokumentInfoId,
+                tittel: dokument.tittel,
+                harTilgangTilArkivvariant: dokument.harTilgangTilArkivvariant,
+              })
+            }
+          >
             {dokument.tittel}
-          </TilknyttetTittel>
-          <DokumenterMinivisning>
-            {dokument.vedlegg.map((vedlegg) => (
-              <Vedlegg
-                key={dokument.journalpostId + vedlegg.dokumentInfoId}
-                dokument={dokument}
-                vedlegg={vedlegg}
-                visDokument={visDokument}
-              />
-            ))}
-          </DokumenterMinivisning>
+          </TilknyttetKnapp>
+          <VedleggListe
+            journalpostId={dokument.journalpostId}
+            vedleggListe={dokument.vedlegg}
+            tilknyttedeDokumenter={klagebehandling.tilknyttedeDokumenter}
+            visDokument={visDokument}
+          />
         </Tilknyttet>
       ))}
     </DokumenterMinivisning>
   );
 };
 
-interface VedleggProps {
-  dokument: IDokument;
-  vedlegg: IDokumentVedlegg;
-  visDokument: (dokument: IDokument) => void;
+interface VedleggListeProps {
+  vedleggListe: IDokumentVedlegg[];
+  tilknyttedeDokumenter: TilknyttetDokument[];
+  journalpostId: string;
+  visDokument: (dokument: IShownDokument) => void;
 }
 
-const Vedlegg = ({ dokument, vedlegg, visDokument }: VedleggProps) => {
+const VedleggListe = ({
+  vedleggListe,
+  tilknyttedeDokumenter,
+  journalpostId,
+  visDokument,
+}: VedleggListeProps) => {
+  const tilknyttedeVedlegg = useMemo<IDokumentVedlegg[]>(
+    () =>
+      vedleggListe.filter((vedlegg) =>
+        tilknyttedeDokumenter.some(
+          ({ dokumentInfoId }) => dokumentInfoId === vedlegg.dokumentInfoId
+        )
+      ),
+    [tilknyttedeDokumenter, vedleggListe]
+  );
+
   return (
-    <Tilknyttet>
-      <TilknyttetTittel tilknyttet={true} onClick={() => visDokument({ ...dokument, ...vedlegg })}>
-        {vedlegg.tittel}
-      </TilknyttetTittel>
-    </Tilknyttet>
+    <DokumenterMinivisning>
+      {tilknyttedeVedlegg.map((vedlegg) => (
+        <Vedlegg
+          key={journalpostId + vedlegg.dokumentInfoId}
+          journalpostId={journalpostId}
+          vedlegg={vedlegg}
+          visDokument={visDokument}
+        />
+      ))}
+    </DokumenterMinivisning>
   );
 };
+
+interface VedleggProps {
+  journalpostId: string;
+  vedlegg: IDokumentVedlegg;
+  visDokument: (dokument: IShownDokument) => void;
+}
+
+const Vedlegg = ({ journalpostId, vedlegg, visDokument }: VedleggProps) => (
+  <Tilknyttet>
+    <TilknyttetKnapp
+      tilknyttet={true}
+      onClick={() =>
+        visDokument({
+          journalpostId,
+          dokumentInfoId: vedlegg.dokumentInfoId,
+          tittel: vedlegg.tittel,
+          harTilgangTilArkivvariant: vedlegg.harTilgangTilArkivvariant,
+        })
+      }
+    >
+      {vedlegg.tittel}
+    </TilknyttetKnapp>
+  </Tilknyttet>
+);

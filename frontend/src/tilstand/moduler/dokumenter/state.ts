@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { dokumentMatcher } from "../../../komponenter/Klagebehandling/Dokumenter/helpers";
 import {
   frakobleDokumentEpic,
   hentDokumenterEpic,
@@ -46,9 +47,8 @@ export const dokumenterSlice = createSlice({
       return state;
     },
     TILKNYTT_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
-      const exists = state.tilknyttedeDokumenter.dokumenter.some(
-        (e) =>
-          e.dokumentInfoId === payload.dokumentInfoId && e.journalpostId === payload.journalpostId
+      const exists = state.tilknyttedeDokumenter.dokumenter.some((tilknyttet) =>
+        dokumentMatcher(tilknyttet, payload)
       );
       if (exists) {
         return state;
@@ -61,8 +61,7 @@ export const dokumenterSlice = createSlice({
     },
     FRAKOBLE_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
       state.tilknyttedeDokumenter.dokumenter = state.tilknyttedeDokumenter.dokumenter.filter(
-        ({ dokumentInfoId, journalpostId }) =>
-          !(dokumentInfoId === payload.dokumentInfoId && journalpostId === payload.journalpostId)
+        (tilknyttet) => !dokumentMatcher(tilknyttet, payload)
       );
       return state;
     },

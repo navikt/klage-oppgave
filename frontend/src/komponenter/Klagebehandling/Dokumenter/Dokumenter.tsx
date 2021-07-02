@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../tilstand/konfigurerTilstand";
 import {
   velgAlleDokumenter,
   velgTilknyttedeDokumenter,
 } from "../../../tilstand/moduler/dokumenter/selectors";
-import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
 import { ShowDokument } from "./ShowDokument";
 import { DokumenterBeholder } from "./styled-components/container";
 import { TilknyttedeDokumenter } from "./TilknyttedeDokumenter";
@@ -16,6 +15,10 @@ import {
 import { NULLSTILL_DOKUMENTER } from "../../../tilstand/moduler/dokumenter/state";
 import { Header } from "./Header";
 import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
+import { IShownDokument, ITilknyttetDokument } from "./typer";
+import { isNotUndefined } from "../utils/helpers";
+import { dokumentMatcher } from "./helpers";
+import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
 
 export interface DokumenterProps {
   skjult: boolean;
@@ -32,8 +35,31 @@ export const Dokumenter = ({
 }: DokumenterProps) => {
   const dispatch = useAppDispatch();
   const alleDokumenter = useAppSelector(velgAlleDokumenter);
-  const tilknyttedeDokumenter = useAppSelector(velgTilknyttedeDokumenter);
-  const [dokument, settDokument] = useState<IDokument | null>(null);
+  const lagredeTilknyttedeDokumenter = useAppSelector(velgTilknyttedeDokumenter);
+  const [dokument, settDokument] = useState<IShownDokument | null>(null);
+
+  const tilknyttedeDokumenter = useMemo<IDokument[]>(
+    () =>
+      alleDokumenter.dokumenter
+        .filter(
+          (dokument) =>
+            !lagredeTilknyttedeDokumenter.dokumenter.some((t) => dokumentMatcher(t, dokument)) &&
+            klagebehandling.tilknyttedeDokumenter.some(
+              (t) => t.journalpostId === dokument.journalpostId
+            )
+        )
+        .concat(lagredeTilknyttedeDokumenter.dokumenter)
+        .sort((a, b) => {
+          if (a.registrert > b.registrert) {
+            return 1;
+          }
+          if (a.registrert < b.registrert) {
+            return -1;
+          }
+          return 0;
+        }),
+    [lagredeTilknyttedeDokumenter, alleDokumenter]
+  );
 
   useEffect(() => {
     dispatch(hentDokumenter({ klagebehandlingId: klagebehandling.id, pageReference: null }));
@@ -42,15 +68,6 @@ export const Dokumenter = ({
       dispatch(NULLSTILL_DOKUMENTER());
     };
   }, [klagebehandling.id, dispatch]);
-
-  const visDokument = useCallback(
-    (dokument: IDokument) => {
-      if (dokument.harTilgangTilArkivvariant) {
-        settDokument(dokument);
-      }
-    },
-    [settDokument]
-  );
 
   if (skjult) {
     return null;
@@ -63,13 +80,14 @@ export const Dokumenter = ({
         <TilknyttedeDokumenter
           skjult={fullvisning}
           dokumenter={tilknyttedeDokumenter}
-          visDokument={visDokument}
+          loading={lagredeTilknyttedeDokumenter.loading || alleDokumenter.loading}
+          visDokument={settDokument}
           klagebehandling={klagebehandling}
         />
         <AlleDokumenter
           skjult={!fullvisning}
           dokumenter={alleDokumenter}
-          visDokument={visDokument}
+          visDokument={settDokument}
           klagebehandling={klagebehandling}
         />
       </DokumenterBeholder>
