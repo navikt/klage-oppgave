@@ -43,10 +43,10 @@ export const dokumenterSlice = createSlice({
         payload,
       ].sort((a, b) => {
         if (a.registrert > b.registrert) {
-          return 1;
+          return -1;
         }
         if (a.registrert < b.registrert) {
-          return -1;
+          return 1;
         }
         return 0;
       });
