@@ -43,10 +43,7 @@ const Klager = () => {
   const info =
     klagebehandling === null
       ? "-"
-      : faaFulltNavnMedFnr(
-          klagebehandling.sakenGjelderNavn,
-          klagebehandling.sakenGjelderFoedselsnummer
-        );
+      : faaFulltNavnMedFnr(klagebehandling.klagerNavn, klagebehandling.klagerFoedselsnummer);
   return <InfofeltStatisk header="Klager" info={info} />;
 };
 
