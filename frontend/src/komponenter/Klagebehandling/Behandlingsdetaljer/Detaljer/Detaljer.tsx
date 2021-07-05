@@ -9,6 +9,7 @@ import { MottattFoersteinstans } from "./MottattFoersteinstans";
 import { OversendtKA } from "./OversendtKA";
 import { faaFulltNavnMedFnr } from "./navn";
 import { InfofeltStatisk } from "../InfofeltStatisk";
+import { IKlagebehandling } from "../../../../tilstand/moduler/klagebehandling/stateTypes";
 
 export const Detaljer = () => (
   <>
@@ -40,11 +41,23 @@ export const Detaljer = () => (
 
 const Klager = () => {
   const klagebehandling = useAppSelector(velgKlagebehandling);
-  const info =
-    klagebehandling === null
-      ? "-"
-      : faaFulltNavnMedFnr(klagebehandling.klagerNavn, klagebehandling.klagerFoedselsnummer);
+  const info = getKlager(klagebehandling);
   return <InfofeltStatisk header="Klager" info={info} />;
+};
+
+const getKlager = (klagebehandling: IKlagebehandling | null): string => {
+  if (klagebehandling === null) {
+    return "-";
+  }
+  const { klagerNavn, klagerFoedselsnummer, klagerVirksomhetsnavn, klagerVirksomhetsnummer } =
+    klagebehandling;
+  if (klagerNavn !== null && klagerFoedselsnummer !== null) {
+    return faaFulltNavnMedFnr(klagerNavn, klagerFoedselsnummer);
+  }
+  if (klagerVirksomhetsnavn !== null && klagerVirksomhetsnummer !== null) {
+    return `${klagerVirksomhetsnavn} (${klagerVirksomhetsnummer})`;
+  }
+  return "-";
 };
 
 const VurderingFraFoersteinstans = () => {
