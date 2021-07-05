@@ -61,7 +61,7 @@ export const AlleDokumenter = ({
         dokument,
         tilknyttet: klagebehandling.tilknyttedeDokumenter.some((t) => dokumentMatcher(t, dokument)),
       })),
-    [dokumenter.dokumenter, dokumenter.loading, klagebehandling.tilknyttedeDokumenter]
+    [dokumenter.dokumenter, klagebehandling.tilknyttedeDokumenter]
   );
 
   const onCheck = useCallback(
@@ -197,19 +197,19 @@ const VedleggKomponent = ({
   const kanEndre = useKanEndre();
   const dispatch = useAppDispatch();
 
+  const d: TilknyttetDokument = {
+    dokumentInfoId: vedlegg.dokumentInfoId,
+    journalpostId: dokument.journalpostId,
+  };
   const onCheckVedlegg = useCallback(
     (checked: boolean) => {
-      const d: TilknyttetDokument = {
-        dokumentInfoId: vedlegg.dokumentInfoId,
-        journalpostId: dokument.journalpostId,
-      };
       // dispatch(TILKNYTT_DOKUMENT(dokument));
       dispatch(checked ? TILKNYTT_DOKUMENT(d) : FRAKOBLE_DOKUMENT(d));
       // dispatch(
       //   checked ? tilknyttDokumentDokumenter(dokument) : frakobleDokumentDokumenter(dokument)
       // );
     },
-    [dispatch, vedlegg.dokumentInfoId, dokument]
+    [dispatch]
   );
 
   return (

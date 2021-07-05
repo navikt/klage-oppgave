@@ -5,6 +5,7 @@ import {
   hentDokumenterEpic,
   hentTilknyttedeDokumenterEpic,
   loadingDokumenterEpic,
+  loadingTilknyttedeDokumenterEpic,
   // tilknyttDokumentEpic,
 } from "./epics";
 import { initialState } from "./initialState";
@@ -95,9 +96,10 @@ export const {
 export const DOKUMENTER_EPICS = [
   hentDokumenterEpic,
   hentTilknyttedeDokumenterEpic,
+  loadingDokumenterEpic,
+  loadingTilknyttedeDokumenterEpic,
   // tilknyttDokumentEpic,
   // frakobleDokumentEpic,
-  loadingDokumenterEpic,
 ];
 
 export const dokumenter = dokumenterSlice.reducer;

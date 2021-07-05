@@ -41,11 +41,11 @@ export const TilknyttedeDokumenter = ({
 }: TilknyttedeDokumenterProps) => {
   // const alleDokumenter = useAppSelector(velgAlleDokumenter);
   const lagredeTilknyttedeDokumenter = useAppSelector(velgTilknyttedeDokumenter);
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(hentTilknyttedeDokumenter(klagebehandling.id));
-  }, [klagebehandling.id, klagebehandling.tilknyttedeDokumenter, dispatch]);
+  // useEffect(() => {
+  //   dispatch(hentTilknyttedeDokumenter(klagebehandling.id));
+  // }, [klagebehandling.id, klagebehandling.tilknyttedeDokumenter, dispatch]);
 
   // const loading = alleDokumenter.loading || lagredeTilknyttedeDokumenter.loading;
 
