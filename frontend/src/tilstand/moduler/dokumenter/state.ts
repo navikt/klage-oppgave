@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { dokumentMatcher } from "../../../komponenter/Klagebehandling/Dokumenter/helpers";
+// import { dokumentMatcher } from "../../../komponenter/Klagebehandling/Dokumenter/helpers";
 import {
-  frakobleDokumentEpic,
+  // frakobleDokumentEpic,
   hentDokumenterEpic,
   hentTilknyttedeDokumenterEpic,
   loadingDokumenterEpic,
-  tilknyttDokumentEpic,
+  // tilknyttDokumentEpic,
 } from "./epics";
 import { initialState } from "./initialState";
 import { IDokument } from "./stateTypes";
 import { IDokumenterRespons } from "./types";
 
-export const sorterSynkendePaaRegistrert = (dokumenter: IDokument[]) => {
+const sorterSynkendePaaRegistrert = (dokumenter: IDokument[]) => {
   if (dokumenter.length === 0) {
     return [];
   }
@@ -41,30 +41,30 @@ export const dokumenterSlice = createSlice({
       state.dokumenter.loading = false;
       return state;
     },
-    SETT_TILKNYTTEDE_DOKUMENTER: (state, action: PayloadAction<IDokument[]>) => {
-      state.tilknyttedeDokumenter.dokumenter = sorterSynkendePaaRegistrert(action.payload);
+    SETT_TILKNYTTEDE_DOKUMENTER: (state, { payload }: PayloadAction<IDokument[]>) => {
+      state.tilknyttedeDokumenter.dokumenter = sorterSynkendePaaRegistrert(payload);
       state.tilknyttedeDokumenter.loading = false;
       return state;
     },
-    TILKNYTT_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
-      const exists = state.tilknyttedeDokumenter.dokumenter.some((tilknyttet) =>
-        dokumentMatcher(tilknyttet, payload)
-      );
-      if (exists) {
-        return state;
-      }
-      state.tilknyttedeDokumenter.dokumenter = sorterSynkendePaaRegistrert([
-        ...state.tilknyttedeDokumenter.dokumenter,
-        payload,
-      ]);
-      return state;
-    },
-    FRAKOBLE_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
-      state.tilknyttedeDokumenter.dokumenter = state.tilknyttedeDokumenter.dokumenter.filter(
-        (tilknyttet) => !dokumentMatcher(tilknyttet, payload)
-      );
-      return state;
-    },
+    // TILKNYTT_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
+    //   const exists = state.tilknyttedeDokumenter.dokumenter.some((tilknyttet) =>
+    //     dokumentMatcher(tilknyttet, payload)
+    //   );
+    //   if (exists) {
+    //     return state;
+    //   }
+    //   state.tilknyttedeDokumenter.dokumenter = sorterSynkendePaaRegistrert([
+    //     ...state.tilknyttedeDokumenter.dokumenter,
+    //     payload,
+    //   ]);
+    //   return state;
+    // },
+    // FRAKOBLE_DOKUMENT: (state, { payload }: PayloadAction<IDokument>) => {
+    //   state.tilknyttedeDokumenter.dokumenter = state.tilknyttedeDokumenter.dokumenter.filter(
+    //     (tilknyttet) => !dokumentMatcher(tilknyttet, payload)
+    //   );
+    //   return state;
+    // },
     DOKUMENTER_LOADING: (state) => {
       state.dokumenter.loading = true;
       return state;
@@ -87,16 +87,16 @@ export const {
   TILKNYTTEDE_DOKUMENTER_LOADING,
   ERROR,
   NULLSTILL_DOKUMENTER,
-  TILKNYTT_DOKUMENT,
-  FRAKOBLE_DOKUMENT,
+  // TILKNYTT_DOKUMENT,
+  // FRAKOBLE_DOKUMENT,
   SETT_TILKNYTTEDE_DOKUMENTER,
 } = dokumenterSlice.actions;
 
 export const DOKUMENTER_EPICS = [
   hentDokumenterEpic,
   hentTilknyttedeDokumenterEpic,
-  tilknyttDokumentEpic,
-  frakobleDokumentEpic,
+  // tilknyttDokumentEpic,
+  // frakobleDokumentEpic,
   loadingDokumenterEpic,
 ];
 

@@ -9,9 +9,9 @@ import {
 } from "../../../tilstand/moduler/dokumenter/stateTypes";
 import { IShownDokument, ITilknyttetDokument, ITilknyttetVedlegg } from "./typer";
 import {
-  frakobleDokument,
+  // frakobleDokument,
   hentDokumenter,
-  tilknyttDokument,
+  // tilknyttDokument,
 } from "../../../tilstand/moduler/dokumenter/actions";
 import { useKanEndre } from "../utils/hooks";
 import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
@@ -34,10 +34,10 @@ import {
   StyledLastFlereKnapp,
 } from "./styled-components/fullvisning";
 import {
-  FRAKOBLE_DOKUMENT as FRAKOBLE_DOKUMENT_KLAGEBEHANDLING,
-  TILKNYTT_DOKUMENT as TILKNYTT_DOKUMENT_KLAGEBEHANDLING,
+  FRAKOBLE_DOKUMENT,
+  TILKNYTT_DOKUMENT,
 } from "../../../tilstand/moduler/klagebehandling/state";
-import { FRAKOBLE_DOKUMENT, TILKNYTT_DOKUMENT } from "../../../tilstand/moduler/dokumenter/state";
+import { TilknyttetDokument } from "../../../tilstand/moduler/klagebehandling/types";
 
 interface AlleDokumenterProps {
   dokumenter: IDokumentListe;
@@ -66,7 +66,12 @@ export const AlleDokumenter = ({
 
   const onCheck = useCallback(
     (checked: boolean, dokument: IDokument) => {
-      dispatch(checked ? tilknyttDokument(dokument) : frakobleDokument(dokument));
+      // dispatch(checked ? tilknyttDokument(dokument) : frakobleDokument(dokument));
+      const d: TilknyttetDokument = {
+        dokumentInfoId: dokument.dokumentInfoId,
+        journalpostId: dokument.journalpostId,
+      };
+      dispatch(checked ? TILKNYTT_DOKUMENT(dokument) : FRAKOBLE_DOKUMENT(dokument));
     },
     [dispatch]
   );
@@ -122,7 +127,7 @@ export const AlleDokumenter = ({
                 dokument={dokument}
                 klagebehandling={klagebehandling}
                 visDokument={visDokument}
-                onCheck={onCheck}
+                // onCheck={onCheck}
               />
             </DokumentRad>
           </ListItem>
@@ -141,10 +146,10 @@ interface VedleggListeProps {
   klagebehandling: IKlagebehandling;
   dokument: IDokument;
   visDokument: (dokument: IShownDokument) => void;
-  onCheck: (checked: boolean, dokument: IDokument) => void;
+  // onCheck: (checked: boolean, dokument: IDokument) => void;
 }
 
-const VedleggListe = ({ klagebehandling, dokument, visDokument, onCheck }: VedleggListeProps) => {
+const VedleggListe = ({ klagebehandling, dokument, visDokument }: VedleggListeProps) => {
   const vedleggListe = useMemo<ITilknyttetVedlegg[]>(
     () =>
       dokument.vedlegg.map((vedlegg) => ({
@@ -194,14 +199,15 @@ const VedleggKomponent = ({
 
   const onCheckVedlegg = useCallback(
     (checked: boolean) => {
-      const d = {
+      const d: TilknyttetDokument = {
         dokumentInfoId: vedlegg.dokumentInfoId,
         journalpostId: dokument.journalpostId,
       };
-      dispatch(TILKNYTT_DOKUMENT(dokument));
-      dispatch(
-        checked ? TILKNYTT_DOKUMENT_KLAGEBEHANDLING(d) : FRAKOBLE_DOKUMENT_KLAGEBEHANDLING(d)
-      );
+      // dispatch(TILKNYTT_DOKUMENT(dokument));
+      dispatch(checked ? TILKNYTT_DOKUMENT(d) : FRAKOBLE_DOKUMENT(d));
+      // dispatch(
+      //   checked ? tilknyttDokumentDokumenter(dokument) : frakobleDokumentDokumenter(dokument)
+      // );
     },
     [dispatch, vedlegg.dokumentInfoId, dokument]
   );

@@ -5,27 +5,27 @@ import { catchError, map, mergeMap, retryWhen, timeout } from "rxjs/operators";
 import { provIgjenStrategi } from "../../../utility/rxUtils";
 import { Dependencies } from "../../konfigurerTilstand";
 import { RootState } from "../../root";
-import {
-  TILKNYTT_DOKUMENT as TILKNYTT_DOKUMENT_TIL_BEHANDLING,
-  FRAKOBLE_DOKUMENT as FRAKOBLE_DOKUMENT_FRA_BEHANDLING,
-} from "../klagebehandling/state";
+// import {
+//   TILKNYTT_DOKUMENT as TILKNYTT_DOKUMENT_TIL_BEHANDLING,
+//   FRAKOBLE_DOKUMENT as FRAKOBLE_DOKUMENT_FRA_BEHANDLING,
+// } from "../klagebehandling/state";
 import { toasterSett, toasterSkjul } from "../toaster";
 import {
-  frakobleDokument,
+  // frakobleDokument,
   hentDokumenter,
   hentTilknyttedeDokumenter,
-  tilknyttDokument,
+  // tilknyttDokument,
 } from "./actions";
 import {
   ERROR,
   DOKUMENTER_LOADING,
   LEGG_TIL_DOKUMENTER,
-  TILKNYTT_DOKUMENT,
-  FRAKOBLE_DOKUMENT,
+  // TILKNYTT_DOKUMENT,
+  // FRAKOBLE_DOKUMENT,
   SETT_TILKNYTTEDE_DOKUMENTER,
   TILKNYTTEDE_DOKUMENTER_LOADING,
 } from "./state";
-import { IDokument } from "./stateTypes";
+// import { IDokument } from "./stateTypes";
 import { IDokumenterParams, IDokumenterRespons } from "./types";
 
 export const loadingDokumenterEpic = (action$: ActionsObservable<PayloadAction<never>>) =>
@@ -98,38 +98,38 @@ export const hentTilknyttedeDokumenterEpic = (
     )
   );
 
-export const tilknyttDokumentEpic = (
-  action$: ActionsObservable<PayloadAction<IDokument>>,
-  _: StateObservable<RootState> | null,
-  __: Dependencies
-) =>
-  action$.pipe(
-    ofType(tilknyttDokument.type),
-    mergeMap(({ payload }) =>
-      of(
-        TILKNYTT_DOKUMENT_TIL_BEHANDLING({
-          dokumentInfoId: payload.dokumentInfoId,
-          journalpostId: payload.journalpostId,
-        }),
-        TILKNYTT_DOKUMENT(payload)
-      )
-    )
-  );
+// export const tilknyttDokumentEpic = (
+//   action$: ActionsObservable<PayloadAction<IDokument>>,
+//   _: StateObservable<RootState> | null,
+//   __: Dependencies
+// ) =>
+//   action$.pipe(
+//     ofType(tilknyttDokument.type),
+//     mergeMap(({ payload }) =>
+//       of(
+//         TILKNYTT_DOKUMENT_TIL_BEHANDLING({
+//           dokumentInfoId: payload.dokumentInfoId,
+//           journalpostId: payload.journalpostId,
+//         }),
+//         TILKNYTT_DOKUMENT(payload)
+//       )
+//     )
+//   );
 
-export const frakobleDokumentEpic = (
-  action$: ActionsObservable<PayloadAction<IDokument>>,
-  _: StateObservable<RootState> | null,
-  __: Dependencies
-) =>
-  action$.pipe(
-    ofType(frakobleDokument.type),
-    mergeMap(({ payload }) =>
-      of(
-        FRAKOBLE_DOKUMENT_FRA_BEHANDLING({
-          dokumentInfoId: payload.dokumentInfoId,
-          journalpostId: payload.journalpostId,
-        }),
-        FRAKOBLE_DOKUMENT(payload)
-      )
-    )
-  );
+// export const frakobleDokumentEpic = (
+//   action$: ActionsObservable<PayloadAction<IDokument>>,
+//   _: StateObservable<RootState> | null,
+//   __: Dependencies
+// ) =>
+//   action$.pipe(
+//     ofType(frakobleDokument.type),
+//     mergeMap(({ payload }) =>
+//       of(
+//         FRAKOBLE_DOKUMENT_FRA_BEHANDLING({
+//           dokumentInfoId: payload.dokumentInfoId,
+//           journalpostId: payload.journalpostId,
+//         }),
+//         FRAKOBLE_DOKUMENT(payload)
+//       )
+//     )
+//   );

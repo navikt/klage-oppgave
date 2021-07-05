@@ -5,14 +5,26 @@ import { catchError, map, mergeMap, retryWhen, switchMap, timeout } from "rxjs/o
 import { provIgjenStrategi } from "../../../utility/rxUtils";
 import { Dependencies } from "../../konfigurerTilstand";
 import { RootState } from "../../root";
+// import {
+//   TILKNYTT_DOKUMENT as TILKNYTT_DOKUMENT_DOKUMENTER,
+//   FRAKOBLE_DOKUMENT as FRAKOBLE_DOKUMENT_DOKUMENTER,
+// } from "../dokumenter/state";
+// import { IDokument } from "../dokumenter/stateTypes";
 import { toasterSett, toasterSkjul } from "../toaster";
-import { hentKlagebehandling, lagreKlagebehandling, unloadKlagebehandling } from "./actions";
+import {
+  hentKlagebehandling,
+  lagreKlagebehandling,
+  // tilknyttDokument,
+  unloadKlagebehandling,
+} from "./actions";
 import {
   ERROR,
+  FRAKOBLE_DOKUMENT,
   KLAGEBEHANDLING_LAGRET,
   LEDIG,
   OPPTATT,
   SETT_KLAGEBEHANDLING,
+  TILKNYTT_DOKUMENT,
   UNLOAD_KLAGEBEHANDLING,
 } from "./state";
 import { IKlagebehandling } from "./stateTypes";
@@ -133,9 +145,46 @@ export const hentKlagebehandlingEpic = (
     )
   );
 
+// export const tilknyttDokumentEpic = (
+//   action$: ActionsObservable<PayloadAction<IDokument>>,
+//   _: StateObservable<RootState> | null,
+//   __: Dependencies
+// ) =>
+//   action$.pipe(
+//     ofType(tilknyttDokument.type),
+//     map(({ payload }) =>
+//       of(
+//         TILKNYTT_DOKUMENT({
+//           journalpostId: payload.journalpostId,
+//           dokumentInfoId: payload.dokumentInfoId,
+//         }),
+//         TILKNYTT_DOKUMENT_DOKUMENTER(payload)
+//       )
+//     )
+//   );
+
+// export const frakobleDokumentEpic = (
+//   action$: ActionsObservable<PayloadAction<IDokument>>,
+//   _: StateObservable<RootState> | null,
+//   __: Dependencies
+// ) =>
+//   action$.pipe(
+//     ofType(tilknyttDokument.type),
+//     map(({ payload }) =>
+//       of(
+//         FRAKOBLE_DOKUMENT({
+//           journalpostId: payload.journalpostId,
+//           dokumentInfoId: payload.dokumentInfoId,
+//         }),
+//         FRAKOBLE_DOKUMENT_DOKUMENTER(payload)
+//       )
+//     )
+//   );
+
 export const KLAGEBEHANDLING_EPICS = [
   lagreKlagebehandlingEpic,
   settOpptattEpic,
   hentKlagebehandlingEpic,
   unloadKlagebehandlingEpic,
+  // tilknyttDokumentEpic,
 ];

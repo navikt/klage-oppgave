@@ -1,9 +1,20 @@
 import NavFrontendSpinner from "nav-frontend-spinner";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { formattedDate } from "../../../domene/datofunksjoner";
-import { IDokument, IDokumentVedlegg } from "../../../tilstand/moduler/dokumenter/stateTypes";
+import { useAppDispatch, useAppSelector } from "../../../tilstand/konfigurerTilstand";
+import { hentTilknyttedeDokumenter } from "../../../tilstand/moduler/dokumenter/actions";
+import {
+  velgAlleDokumenter,
+  velgTilknyttedeDokumenter,
+} from "../../../tilstand/moduler/dokumenter/selectors";
+import {
+  IDokument,
+  IDokumentListe,
+  IDokumentVedlegg,
+} from "../../../tilstand/moduler/dokumenter/stateTypes";
 import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
 import { TilknyttetDokument } from "../../../tilstand/moduler/klagebehandling/types";
+import { isNotUndefined } from "../utils/helpers";
 import { dokumentMatcher } from "./helpers";
 import {
   DokumenterMinivisning,
@@ -14,38 +25,108 @@ import {
 import { IShownDokument, ITilknyttetDokument } from "./typer";
 
 interface TilknyttedeDokumenterProps {
-  dokumenter: IDokument[];
-  loading: boolean;
+  // dokumenter: IDokument[];
+  // loading: boolean;
   skjult: boolean;
   klagebehandling: IKlagebehandling;
   visDokument: (dokument: IShownDokument) => void;
 }
 
 export const TilknyttedeDokumenter = ({
-  dokumenter,
-  loading,
+  // dokumenter,
+  // loading,
   visDokument,
   klagebehandling,
   skjult,
 }: TilknyttedeDokumenterProps) => {
+  // const alleDokumenter = useAppSelector(velgAlleDokumenter);
+  const lagredeTilknyttedeDokumenter = useAppSelector(velgTilknyttedeDokumenter);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(hentTilknyttedeDokumenter(klagebehandling.id));
+  }, [klagebehandling.id, klagebehandling.tilknyttedeDokumenter, dispatch]);
+
+  // const loading = alleDokumenter.loading || lagredeTilknyttedeDokumenter.loading;
+
+  // const tilknyttedeDokumenter = useMemo<ITilknyttetDokument[]>(
+  //   () =>
+  //     klagebehandling.tilknyttedeDokumenter
+  //       .map(
+  //         ({ journalpostId }) =>
+  //           lagredeTilknyttedeDokumenter.dokumenter.find(
+  //             (d) => d.journalpostId === journalpostId
+  //           ) ?? alleDokumenter.dokumenter.find((d) => d.journalpostId === journalpostId)
+  //       )
+  //       .filter(isNotUndefined)
+  //       .sort((a, b) => {
+  //         if (a.registrert > b.registrert) {
+  //           return -1;
+  //         }
+  //         if (a.registrert < b.registrert) {
+  //           return 1;
+  //         }
+  //         return 0;
+  //       })
+  //       .map(({ vedlegg, ...d }) => ({
+  //         dokument: {
+  //           ...d,
+  //           vedlegg: vedlegg.filter((v) =>
+  //             klagebehandling.tilknyttedeDokumenter.some(
+  //               ({ dokumentInfoId }) => dokumentInfoId === v.dokumentInfoId
+  //             )
+  //           ),
+  //         },
+  //         tilknyttet: true,
+  //       })),
+  //   [
+  //     klagebehandling.tilknyttedeDokumenter,
+  //     lagredeTilknyttedeDokumenter.dokumenter,
+  //     alleDokumenter.dokumenter,
+  //   ]
+  // );
+
+  // const tilknyttedeDokumenter = loading
+  //   ? []
+  //   : alleDokumenter.dokumenter
+  //       .filter(
+  //         (dokument) =>
+  //           !lagredeTilknyttedeDokumenter.dokumenter.some((t) => dokumentMatcher(t, dokument)) &&
+  //           klagebehandling.tilknyttedeDokumenter.some(
+  //             (t) => t.journalpostId === dokument.journalpostId
+  //           )
+  //       )
+  //       .concat(lagredeTilknyttedeDokumenter.dokumenter)
+  // .sort((a, b) => {
+  //   if (a.registrert > b.registrert) {
+  //     return -1;
+  //   }
+  //   if (a.registrert < b.registrert) {
+  //     return 1;
+  //   }
+  //   return 0;
+  // })
+  //       .map((dokument) => ({
+  //         dokument,
+  //         tilknyttet: klagebehandling.tilknyttedeDokumenter.some((t) =>
+  //           dokumentMatcher(t, dokument)
+  //         ),
+  //       }));
+
   const tilknyttedeDokumenter = useMemo<ITilknyttetDokument[]>(
     () =>
-      loading
-        ? []
-        : dokumenter.map((dokument) => ({
-            dokument,
-            tilknyttet: klagebehandling.tilknyttedeDokumenter.some((t) =>
-              dokumentMatcher(t, dokument)
-            ),
-          })),
-    [dokumenter, loading, klagebehandling.tilknyttedeDokumenter]
+      lagredeTilknyttedeDokumenter.dokumenter.map((dokument) => ({
+        dokument,
+        tilknyttet: klagebehandling.tilknyttedeDokumenter.some((t) => dokumentMatcher(t, dokument)),
+      })),
+    [klagebehandling.tilknyttedeDokumenter, lagredeTilknyttedeDokumenter]
   );
 
   if (skjult) {
     return null;
   }
 
-  if (loading) {
+  if (lagredeTilknyttedeDokumenter.loading) {
     return <NavFrontendSpinner />;
   }
 

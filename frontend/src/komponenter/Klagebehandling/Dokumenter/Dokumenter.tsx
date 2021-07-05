@@ -15,8 +15,7 @@ import {
 import { NULLSTILL_DOKUMENTER } from "../../../tilstand/moduler/dokumenter/state";
 import { Header } from "./Header";
 import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
-import { IShownDokument, ITilknyttetDokument } from "./typer";
-import { isNotUndefined } from "../utils/helpers";
+import { IShownDokument } from "./typer";
 import { dokumentMatcher } from "./helpers";
 import { IDokument } from "../../../tilstand/moduler/dokumenter/stateTypes";
 
@@ -35,31 +34,31 @@ export const Dokumenter = ({
 }: DokumenterProps) => {
   const dispatch = useAppDispatch();
   const alleDokumenter = useAppSelector(velgAlleDokumenter);
-  const lagredeTilknyttedeDokumenter = useAppSelector(velgTilknyttedeDokumenter);
+  // const lagredeTilknyttedeDokumenter = useAppSelector(velgTilknyttedeDokumenter);
   const [dokument, settDokument] = useState<IShownDokument | null>(null);
 
-  const tilknyttedeDokumenter = useMemo<IDokument[]>(
-    () =>
-      alleDokumenter.dokumenter
-        .filter(
-          (dokument) =>
-            !lagredeTilknyttedeDokumenter.dokumenter.some((t) => dokumentMatcher(t, dokument)) &&
-            klagebehandling.tilknyttedeDokumenter.some(
-              (t) => t.journalpostId === dokument.journalpostId
-            )
-        )
-        .concat(lagredeTilknyttedeDokumenter.dokumenter)
-        .sort((a, b) => {
-          if (a.registrert > b.registrert) {
-            return 1;
-          }
-          if (a.registrert < b.registrert) {
-            return -1;
-          }
-          return 0;
-        }),
-    [lagredeTilknyttedeDokumenter, alleDokumenter]
-  );
+  // const tilknyttedeDokumenter = useMemo<IDokument[]>(
+  //   () =>
+  //     alleDokumenter.dokumenter
+  //       .filter(
+  //         (dokument) =>
+  //           !lagredeTilknyttedeDokumenter.dokumenter.some((t) => dokumentMatcher(t, dokument)) &&
+  //           klagebehandling.tilknyttedeDokumenter.some(
+  //             (t) => t.journalpostId === dokument.journalpostId
+  //           )
+  //       )
+  //       .concat(lagredeTilknyttedeDokumenter.dokumenter)
+  //       .sort((a, b) => {
+  //         if (a.registrert > b.registrert) {
+  //           return 1;
+  //         }
+  //         if (a.registrert < b.registrert) {
+  //           return -1;
+  //         }
+  //         return 0;
+  //       }),
+  //   [lagredeTilknyttedeDokumenter, alleDokumenter]
+  // );
 
   useEffect(() => {
     dispatch(hentDokumenter({ klagebehandlingId: klagebehandling.id, pageReference: null }));
@@ -79,8 +78,8 @@ export const Dokumenter = ({
         <Header settFullvisning={settFullvisning} fullvisning={fullvisning} />
         <TilknyttedeDokumenter
           skjult={fullvisning}
-          dokumenter={tilknyttedeDokumenter}
-          loading={lagredeTilknyttedeDokumenter.loading || alleDokumenter.loading}
+          // dokumenter={tilknyttedeDokumenter}
+          // loading={lagredeTilknyttedeDokumenter.loading || alleDokumenter.loading}
           visDokument={settDokument}
           klagebehandling={klagebehandling}
         />
