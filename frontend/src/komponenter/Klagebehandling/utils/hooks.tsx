@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../tilstand/konfigurerTilstand";
+import { velgTilknyttedeDokumenter } from "../../../tilstand/moduler/dokumenter/selectors";
 import { lagreKlagebehandling } from "../../../tilstand/moduler/klagebehandling/actions";
 import {
   velgKlagebehandling,
@@ -24,11 +25,12 @@ export const useKlagebehandlingUpdater = ({
 }: IKlagebehandling) => {
   const dispatch = useAppDispatch();
   const opptatt = useAppSelector(velgKlagebehandlingOpptatt);
+  const { loading } = useAppSelector(velgTilknyttedeDokumenter);
 
   const oppdatering = useGetUpdate();
 
   useEffect(() => {
-    if (opptatt || oppdatering === null) {
+    if (opptatt || loading || oppdatering === null) {
       return;
     }
     const timeout = setTimeout(() => dispatch(lagreKlagebehandling(oppdatering)), 200);

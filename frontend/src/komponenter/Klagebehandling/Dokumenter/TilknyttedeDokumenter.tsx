@@ -115,10 +115,14 @@ export const TilknyttedeDokumenter = ({
 
   const tilknyttedeDokumenter = useMemo<ITilknyttetDokument[]>(
     () =>
-      lagredeTilknyttedeDokumenter.dokumenter.map((dokument) => ({
-        dokument,
-        tilknyttet: klagebehandling.tilknyttedeDokumenter.some((t) => dokumentMatcher(t, dokument)),
-      })),
+      lagredeTilknyttedeDokumenter.dokumenter
+        .map((dokument) => ({
+          dokument,
+          tilknyttet: klagebehandling.tilknyttedeDokumenter.some((t) =>
+            dokumentMatcher(t, dokument)
+          ),
+        }))
+        .filter(({ dokument, tilknyttet }) => tilknyttet || dokument.vedlegg.length !== 0),
     [klagebehandling.tilknyttedeDokumenter, lagredeTilknyttedeDokumenter]
   );
 

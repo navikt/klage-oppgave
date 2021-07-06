@@ -6,6 +6,8 @@ import { provIgjenStrategi } from "../../../utility/rxUtils";
 import { Dependencies } from "../../konfigurerTilstand";
 import { RootState } from "../../root";
 import { hentTilknyttedeDokumenter } from "../dokumenter/actions";
+import { SETT_TILKNYTTEDE_DOKUMENTER } from "../dokumenter/state";
+import { IDokumenterRespons } from "../dokumenter/types";
 // import {
 //   TILKNYTT_DOKUMENT as TILKNYTT_DOKUMENT_DOKUMENTER,
 //   FRAKOBLE_DOKUMENT as FRAKOBLE_DOKUMENT_DOKUMENTER,
@@ -83,6 +85,16 @@ export const lagreKlagebehandlingEpic = (
               hentTilknyttedeDokumenter(payload.klagebehandlingId)
             )
           )
+          // mergeMap((lagret) =>
+          //   ajax
+          //     .getJSON<IDokumenterRespons>(
+          //       `/api/klagebehandlinger/${payload.klagebehandlingId}/dokumenter`
+          //     )
+          //     .pipe(
+          //       timeout(15000),
+          //       mergeMap(({ dokumenter }) => of(SETT_TILKNYTTEDE_DOKUMENTER(dokumenter), lagret))
+          //     )
+          // )
         )
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),
@@ -99,7 +111,7 @@ export const lagreKlagebehandlingEpic = (
           })
         )
     ),
-    mergeMap((res) => of(LEDIG(), res))
+    mergeMap((res) => of(res, LEDIG()))
   );
 
 const createPayload = ({
