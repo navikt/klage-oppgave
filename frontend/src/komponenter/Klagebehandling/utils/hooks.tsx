@@ -58,7 +58,7 @@ export const useGetUpdate = () => {
   const klagebehandling = useAppSelector(velgKlagebehandling);
   const lagretVersjon = useAppSelector(velgLagretKlagebehandlingVersjon);
 
-  return useMemo<IKlagebehandlingOppdatering | null>(() => {
+  const update = useMemo<IKlagebehandlingOppdatering | null>(() => {
     if (!kanEndre) {
       return null;
     }
@@ -68,6 +68,10 @@ export const useGetUpdate = () => {
         : createOppdatering({ ...klagebehandling, klagebehandlingId: klagebehandling.id });
     return isEqual(oppdatering, lagretVersjon) ? null : oppdatering;
   }, [klagebehandling, lagretVersjon, kanEndre]);
+
+  console.debug("UPDATE", update);
+
+  return update;
 };
 
 export const useIsSaved = () => useGetUpdate() === null;

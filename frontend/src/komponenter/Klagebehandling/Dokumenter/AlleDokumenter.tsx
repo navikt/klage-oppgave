@@ -8,11 +8,7 @@ import {
   IDokumentVedlegg,
 } from "../../../tilstand/moduler/dokumenter/stateTypes";
 import { IShownDokument, ITilknyttetDokument, ITilknyttetVedlegg } from "./typer";
-import {
-  // frakobleDokument,
-  hentDokumenter,
-  // tilknyttDokument,
-} from "../../../tilstand/moduler/dokumenter/actions";
+import { hentDokumenter } from "../../../tilstand/moduler/dokumenter/actions";
 import { useKanEndre } from "../utils/hooks";
 import { IKlagebehandling } from "../../../tilstand/moduler/klagebehandling/stateTypes";
 import { dokumentMatcher } from "./helpers";
@@ -52,9 +48,6 @@ export const AlleDokumenter = ({
   skjult,
   visDokument,
 }: AlleDokumenterProps) => {
-  const dispatch = useAppDispatch();
-  const kanEndre = useKanEndre();
-
   const alleDokumenter = useMemo<ITilknyttetDokument[]>(
     () =>
       dokumenter.dokumenter.map((dokument) => ({
@@ -63,26 +56,6 @@ export const AlleDokumenter = ({
       })),
     [dokumenter.dokumenter, klagebehandling.tilknyttedeDokumenter]
   );
-
-  const onCheck = useCallback(
-    (checked: boolean, dokument: IDokument) => {
-      // dispatch(checked ? tilknyttDokument(dokument) : frakobleDokument(dokument));
-      const d: TilknyttetDokument = {
-        dokumentInfoId: dokument.dokumentInfoId,
-        journalpostId: dokument.journalpostId,
-      };
-      dispatch(checked ? TILKNYTT_DOKUMENT(dokument) : FRAKOBLE_DOKUMENT(dokument));
-    },
-    [dispatch]
-  );
-
-  const onShowDokument = ({
-    journalpostId,
-    dokumentInfoId,
-    tittel,
-    harTilgangTilArkivvariant,
-  }: IDokument) =>
-    visDokument({ journalpostId, dokumentInfoId, tittel, harTilgangTilArkivvariant });
 
   if (skjult) {
     return null;
@@ -97,39 +70,12 @@ export const AlleDokumenter = ({
       <List data-testid={"dokumenter"}>
         {alleDokumenter.map(({ dokument, tilknyttet }) => (
           <ListItem key={dokument.journalpostId + dokument.dokumentInfoId}>
-            <DokumentRad>
-              <DokumentTittel onClick={() => onShowDokument(dokument)}>
-                {dokument.tittel}
-              </DokumentTittel>
-              <DokumentTema
-                onClick={() => onShowDokument(dokument)}
-                className={`etikett etikett--mw etikett--info etikett--${dokument
-                  .tema!.split(" ")[0]
-                  .toLowerCase()}`}
-              >
-                <TemaText>{dokument.tema}</TemaText>
-              </DokumentTema>
-              <DokumentDato onClick={() => onShowDokument(dokument)} className={"liten"}>
-                {formattedDate(dokument.registrert)}
-              </DokumentDato>
-
-              <DokumentSjekkboks>
-                <RightAlign>
-                  <DokumentCheckbox
-                    label={""}
-                    disabled={!dokument.harTilgangTilArkivvariant || !kanEndre}
-                    defaultChecked={tilknyttet}
-                    onChange={(e) => onCheck(e.currentTarget.checked, dokument)}
-                  />
-                </RightAlign>
-              </DokumentSjekkboks>
-              <VedleggListe
-                dokument={dokument}
-                klagebehandling={klagebehandling}
-                visDokument={visDokument}
-                // onCheck={onCheck}
-              />
-            </DokumentRad>
+            <Dokument
+              dokument={dokument}
+              tilknyttet={tilknyttet}
+              visDokument={visDokument}
+              klagebehandling={klagebehandling}
+            />
           </ListItem>
         ))}
       </List>
@@ -142,11 +88,68 @@ export const AlleDokumenter = ({
   );
 };
 
+interface DokumentProps extends ITilknyttetDokument {
+  klagebehandling: IKlagebehandling;
+  visDokument: (dokument: IShownDokument) => void;
+}
+
+const Dokument = ({ dokument, tilknyttet, visDokument, klagebehandling }: DokumentProps) => {
+  const dispatch = useAppDispatch();
+  const kanEndre = useKanEndre();
+
+  const onShowDokument = ({
+    journalpostId,
+    dokumentInfoId,
+    tittel,
+    harTilgangTilArkivvariant,
+  }: IDokument) =>
+    visDokument({ journalpostId, dokumentInfoId, tittel, harTilgangTilArkivvariant });
+
+  const d: TilknyttetDokument = {
+    journalpostId: dokument.journalpostId,
+    dokumentInfoId: dokument.dokumentInfoId,
+  };
+  const onCheck = (checked: boolean) =>
+    dispatch(checked ? TILKNYTT_DOKUMENT(d) : FRAKOBLE_DOKUMENT(d));
+
+  return (
+    <DokumentRad>
+      <DokumentTittel onClick={() => onShowDokument(dokument)}>{dokument.tittel}</DokumentTittel>
+      <DokumentTema
+        onClick={() => onShowDokument(dokument)}
+        className={`etikett etikett--mw etikett--info etikett--${dokument
+          .tema!.split(" ")[0]
+          .toLowerCase()}`}
+      >
+        <TemaText>{dokument.tema}</TemaText>
+      </DokumentTema>
+      <DokumentDato onClick={() => onShowDokument(dokument)} className={"liten"}>
+        {formattedDate(dokument.registrert)}
+      </DokumentDato>
+
+      <DokumentSjekkboks>
+        <RightAlign>
+          <DokumentCheckbox
+            label={""}
+            disabled={!dokument.harTilgangTilArkivvariant || !kanEndre}
+            defaultChecked={tilknyttet}
+            onChange={(e) => onCheck(e.currentTarget.checked)}
+          />
+        </RightAlign>
+      </DokumentSjekkboks>
+      <VedleggListe
+        dokument={dokument}
+        klagebehandling={klagebehandling}
+        visDokument={visDokument}
+      />
+    </DokumentRad>
+  );
+};
+
 interface VedleggListeProps {
   klagebehandling: IKlagebehandling;
   dokument: IDokument;
   visDokument: (dokument: IShownDokument) => void;
-  // onCheck: (checked: boolean, dokument: IDokument) => void;
 }
 
 const VedleggListe = ({ klagebehandling, dokument, visDokument }: VedleggListeProps) => {
@@ -198,42 +201,30 @@ const VedleggKomponent = ({
   const dispatch = useAppDispatch();
 
   const d: TilknyttetDokument = {
-    dokumentInfoId: vedlegg.dokumentInfoId,
     journalpostId: dokument.journalpostId,
+    dokumentInfoId: vedlegg.dokumentInfoId,
   };
-  const onCheckVedlegg = useCallback(
-    (checked: boolean) => {
-      // dispatch(TILKNYTT_DOKUMENT(dokument));
-      dispatch(checked ? TILKNYTT_DOKUMENT(d) : FRAKOBLE_DOKUMENT(d));
-      // dispatch(
-      //   checked ? tilknyttDokumentDokumenter(dokument) : frakobleDokumentDokumenter(dokument)
-      // );
-    },
-    [dispatch]
-  );
+  const onCheck = (checked: boolean) =>
+    dispatch(checked ? TILKNYTT_DOKUMENT(d) : FRAKOBLE_DOKUMENT(d));
+
+  const onVisDokument = () =>
+    visDokument({
+      journalpostId: dokument.journalpostId,
+      dokumentInfoId: vedlegg.dokumentInfoId,
+      tittel: vedlegg.tittel,
+      harTilgangTilArkivvariant: vedlegg.harTilgangTilArkivvariant,
+    });
 
   return (
     <VedleggRad key={dokument.journalpostId + vedlegg.dokumentInfoId}>
-      <VedleggTittel
-        onClick={() =>
-          visDokument({
-            journalpostId: dokument.journalpostId,
-            dokumentInfoId: vedlegg.dokumentInfoId,
-            tittel: vedlegg.tittel,
-            harTilgangTilArkivvariant: vedlegg.harTilgangTilArkivvariant,
-          })
-        }
-      >
-        {vedlegg.tittel}
-      </VedleggTittel>
-
+      <VedleggTittel onClick={onVisDokument}>{vedlegg.tittel}</VedleggTittel>
       <DokumentSjekkboks className={"dokument-sjekkboks"}>
         <RightAlign>
           <DokumentCheckbox
             label={""}
             disabled={!vedlegg.harTilgangTilArkivvariant || !kanEndre}
             defaultChecked={tilknyttet}
-            onChange={(e) => onCheckVedlegg(e.currentTarget.checked)}
+            onChange={(e) => onCheck(e.currentTarget.checked)}
           />
         </RightAlign>
       </DokumentSjekkboks>
