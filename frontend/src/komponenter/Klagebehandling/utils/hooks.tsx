@@ -28,15 +28,10 @@ export const useKlagebehandlingUpdater = ({
   const update = useGetUpdate();
 
   useEffect(() => {
-    if (update === null) {
-      console.debug("NO UPDATE", update);
+    if (opptatt || update === null) {
       return;
     }
-    if (opptatt) {
-      console.debug("UPDATER BUSY", update);
-      return;
-    }
-    console.debug("QUEUEING UPDATE", update);
+
     const timeout = setTimeout(() => dispatch(lagreKlagebehandling(update)), 200);
     return () => clearTimeout(timeout); // Clear existing timer every time it runs.
   }, [opptatt, klagebehandlingVersjon, id, internVurdering, vedtak, tilknyttedeDokumenter]);
