@@ -25,12 +25,12 @@ export const useKlagebehandlingUpdater = ({
 }: IKlagebehandling) => {
   const dispatch = useAppDispatch();
   const opptatt = useAppSelector(velgKlagebehandlingOpptatt);
-  const { loading } = useAppSelector(velgTilknyttedeDokumenter);
+  // const { loading } = useAppSelector(velgTilknyttedeDokumenter);
 
   const oppdatering = useGetUpdate();
 
   useEffect(() => {
-    if (opptatt || loading || oppdatering === null) {
+    if (opptatt || oppdatering === null) {
       return;
     }
     const timeout = setTimeout(() => dispatch(lagreKlagebehandling(oppdatering)), 200);
