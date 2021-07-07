@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../../../tilstand/konfigurerTilstand";
-import { velgTilknyttedeDokumenter } from "../../../tilstand/moduler/dokumenter/selectors";
 import { lagreKlagebehandling } from "../../../tilstand/moduler/klagebehandling/actions";
 import {
   velgKlagebehandling,
@@ -25,15 +24,16 @@ export const useKlagebehandlingUpdater = ({
 }: IKlagebehandling) => {
   const dispatch = useAppDispatch();
   const opptatt = useAppSelector(velgKlagebehandlingOpptatt);
-  // const { loading } = useAppSelector(velgTilknyttedeDokumenter);
 
-  const oppdatering = useGetUpdate();
+  const update = useGetUpdate();
 
   useEffect(() => {
-    if (opptatt || oppdatering === null) {
+    if (opptatt || update === null) {
+      console.debug("SKIPPING UPDATE", update);
       return;
     }
-    const timeout = setTimeout(() => dispatch(lagreKlagebehandling(oppdatering)), 200);
+    console.debug("QUEUEING UPDATE", update);
+    const timeout = setTimeout(() => dispatch(lagreKlagebehandling(update)), 200);
     return () => clearTimeout(timeout); // Clear existing timer every time it runs.
   }, [opptatt, klagebehandlingVersjon, id, internVurdering, vedtak, tilknyttedeDokumenter]);
 };
@@ -68,8 +68,6 @@ export const useGetUpdate = () => {
         : createOppdatering({ ...klagebehandling, klagebehandlingId: klagebehandling.id });
     return isEqual(oppdatering, lagretVersjon) ? null : oppdatering;
   }, [klagebehandling, lagretVersjon, kanEndre]);
-
-  console.debug("UPDATE", update);
 
   return update;
 };
