@@ -28,8 +28,12 @@ export const useKlagebehandlingUpdater = ({
   const update = useGetUpdate();
 
   useEffect(() => {
-    if (opptatt || update === null) {
-      console.debug("SKIPPING UPDATE", update);
+    if (update === null) {
+      console.debug("NO UPDATE", update);
+      return;
+    }
+    if (opptatt) {
+      console.debug("UPDATER BUSY", update);
       return;
     }
     console.debug("QUEUEING UPDATE", update);
@@ -74,7 +78,7 @@ export const useGetUpdate = () => {
 
 export const useIsSaved = () => useGetUpdate() === null;
 
-const isEqual = (
+export const isEqual = (
   a: IKlagebehandlingOppdatering | null,
   b: IKlagebehandlingOppdatering | null
 ): boolean => {

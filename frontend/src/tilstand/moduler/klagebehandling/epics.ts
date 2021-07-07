@@ -6,28 +6,14 @@ import { provIgjenStrategi } from "../../../utility/rxUtils";
 import { Dependencies } from "../../konfigurerTilstand";
 import { RootState } from "../../root";
 import { hentTilknyttedeDokumenter } from "../dokumenter/actions";
-import { SETT_TILKNYTTEDE_DOKUMENTER } from "../dokumenter/state";
-import { IDokumenterRespons } from "../dokumenter/types";
-// import {
-//   TILKNYTT_DOKUMENT as TILKNYTT_DOKUMENT_DOKUMENTER,
-//   FRAKOBLE_DOKUMENT as FRAKOBLE_DOKUMENT_DOKUMENTER,
-// } from "../dokumenter/state";
-// import { IDokument } from "../dokumenter/stateTypes";
 import { toasterSett, toasterSkjul } from "../toaster";
-import {
-  hentKlagebehandling,
-  lagreKlagebehandling,
-  // tilknyttDokument,
-  unloadKlagebehandling,
-} from "./actions";
+import { hentKlagebehandling, lagreKlagebehandling, unloadKlagebehandling } from "./actions";
 import {
   ERROR,
-  FRAKOBLE_DOKUMENT,
   KLAGEBEHANDLING_LAGRET,
   LEDIG,
   OPPTATT,
   SETT_KLAGEBEHANDLING,
-  TILKNYTT_DOKUMENT,
   UNLOAD_KLAGEBEHANDLING,
 } from "./state";
 import { IKlagebehandling } from "./stateTypes";
@@ -85,16 +71,6 @@ export const lagreKlagebehandlingEpic = (
               hentTilknyttedeDokumenter(payload.klagebehandlingId)
             )
           )
-          // mergeMap((lagret) =>
-          //   ajax
-          //     .getJSON<IDokumenterRespons>(
-          //       `/api/klagebehandlinger/${payload.klagebehandlingId}/dokumenter`
-          //     )
-          //     .pipe(
-          //       timeout(15000),
-          //       mergeMap(({ dokumenter }) => of(SETT_TILKNYTTEDE_DOKUMENTER(dokumenter), lagret))
-          //     )
-          // )
         )
         .pipe(
           retryWhen(provIgjenStrategi({ maksForsok: 1 })),

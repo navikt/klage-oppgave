@@ -34,15 +34,19 @@ export const klagebehandlingSlice = createSlice({
     },
     KLAGEBEHANDLING_LAGRET: (
       state,
-      action: PayloadAction<IKlagebehandlingOppdateringResponse & IKlagebehandlingOppdatering>
+      { payload }: PayloadAction<IKlagebehandlingOppdateringResponse & IKlagebehandlingOppdatering>
     ) => {
       if (state.klagebehandling === null) {
         return state;
       }
       return {
         ...state,
-        lagretVersjon: createLagretVersjon(action.payload),
-        klagebehandling: { ...state.klagebehandling, ...action.payload },
+        lagretVersjon: createLagretVersjon(payload),
+        klagebehandling: {
+          ...state.klagebehandling,
+          klagebehandlingVersjon: payload.klagebehandlingVersjon,
+          modified: payload.modified,
+        },
       };
     },
     TILKNYTT_DOKUMENT: (state, { payload }: PayloadAction<TilknyttetDokument>) => {
